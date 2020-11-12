@@ -1,17 +1,17 @@
 // size of the simulated world
 
-const GROUND_SIZE = 1510; 				// in meters
+const GROUND_SIZE = 300; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 
 	
 
 // debug flags
 R = 1+Math.floor(Math.random()*100000);
-//R = 889;
+R = 78060;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
-const DEBUG_AGENT_MAX_COUNT = 32000;
-const DEBUG_TIME_SPEED = timeMs(0,1,0)/1000;	// time ellapsed for 1 second
+const DEBUG_AGENT_MAX_COUNT = 1;
+const DEBUG_TIME_SPEED = timeMs(0,1,0)/10000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
@@ -34,7 +34,7 @@ const DEBUG_FOLLOW_AGENT = -1;	// -1 for not following any
 const DEBUG_SHOW_DIRECTIONS = false;
 const DEBUG_APARTMENT_ADD_FLOORS = false;
 const DEBUG_SHOW_HOME_TO_WORK_ARROW = false;
-const DEBUG_SHOW_ROUTES = false;
+const DEBUG_SHOW_ROUTES = !false;
 var DEBUG_FLAG_1 = false;
 
 

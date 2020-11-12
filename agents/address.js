@@ -164,7 +164,7 @@ class WorkAddress extends Address
 			// first look for office in office building
 			if( buildings.offices.length )
 			{
-				WorkAddress.buildingIndex = THREE.Math.randInt( 0, buildings.offices.length );
+				WorkAddress.buildingIndex = THREE.Math.randInt( 0, buildings.offices.length-1 );
 				WorkAddress.building = buildings.offices[ WorkAddress.buildingIndex ];
 				WorkAddress.floor = THREE.Math.randInt( 1, WorkAddress.building.floors-1 );
 				WorkAddress.number = THREE.Math.randInt( 0, WorkAddress.building.rooms.length-1 );
@@ -173,7 +173,7 @@ class WorkAddress extends Address
 			// then try houses
 			if( buildings.houses.length )
 			{
-				WorkAddress.buildingIndex = THREE.Math.randInt( 0, buildings.houses.length );
+				WorkAddress.buildingIndex = THREE.Math.randInt( 0, buildings.houses.length-1 );
 				WorkAddress.building = buildings.houses[ WorkAddress.buildingIndex ];
 				WorkAddress.floor = 0;
 				WorkAddress.number = 0;
@@ -182,7 +182,7 @@ class WorkAddress extends Address
 			// then try apartments
 			if( buildings.apartments.length )
 			{
-				WorkAddress.buildingIndex = THREE.Math.randInt( 0, buildings.apartments.length );
+				WorkAddress.buildingIndex = THREE.Math.randInt( 0, buildings.apartments.length-1 );
 				WorkAddress.building = buildings.apartments[ WorkAddress.buildingIndex ];
 				WorkAddress.floor = THREE.Math.randInt( 1, WorkAddress.building.floors-1 );
 				WorkAddress.number = THREE.Math.randInt( 0, WorkAddress.building.rooms.length-1 );
