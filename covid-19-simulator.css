@@ -1,0 +1,17 @@
+body {
+	background-color: black;
+	margin: 0px;
+	overflow: hidden;
+}
+
+#hud {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 1000;
+	font-family: 'Consolas';
+	font-size: 0.75em;
+	background: rgba(255,255,255,0.75);
+	padding: 0.1em 0.5em;
+}

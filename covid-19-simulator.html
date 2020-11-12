@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>COVID-19-Simulator</title>
+	<meta charset="utf-8">
+
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<meta name="description" content="COVID-19 Simulator">
+	<meta name="keywords" content="COVID-19, Coronavirus, SARS-CoV-2, Coronavirus disease 2019, Simulator">
+	<meta name="author" content="Pavel Boytchev">
+	<meta name="version" content="1">
+	<meta name="date" content="2020.04.21">
+	
+	<link rel="stylesheet" href="covid-19-simulator.css">
+</head>
+
+<body>
+	<div id="container"></div>
+	<div id="hud">
+		<span id="time" style = "float: right; margin-right:1em"></span>
+		<span id="fps"></span>
+		<span id="agents"></span>
+	<div>
+
+	<script src="js/three.min.js"></script>
+	<script src="js/LineSegments2.js"></script>
+	<script src="js/LineSegmentsGeometry.js"></script>
+	<script src="js/Line2.js"></script>
+	<script src="js/LineGeometry.js"></script>
+	<script src="js/LineMaterial.js"></script>
+	<!--script src="js/stats.min.js"></script-->
+	<script src="js/dat.gui.min.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script src="js/perlin.js"></script>
+	<script src="js/seedrandom.min.js"></script> <!-- from: https://github.com/davidbau/seedrandom -->
+	
+	<script src="core.js"></script>
+	<script src="config.js"></script>
+	
+	<script src="textures/textures.js"></script>
+	<script src="textures/gridTexture.js"></script>
+	<script src="textures/officeTexture.js"></script>
+	<script src="textures/officeDoorTexture.js"></script>
+	<script src="textures/houseTexture.js"></script>
+	<script src="textures/sidewalkTexture.js"></script>
+	<script src="textures/apartmentTexture.js"></script>
+	<script src="textures/crossingTexture.js"></script>
+
+	<script src="objects/ground.js"></script>
+	<script src="objects/blocks.js"></script>
+	<script src="objects/buildings.js"></script>
+	<script src="objects/rooms.js"></script>
+	<script src="objects/elevators.js"></script>
+	<script src="objects/officeBuildings.js"></script>
+	<script src="objects/officeDoors.js"></script>
+	<script src="objects/houseBuildings.js"></script>
+	<script src="objects/houseSidewalks.js"></script>
+	<script src="objects/apartmentBuildings.js"></script>
+	<script src="objects/trees.js"></script>
+	<script src="objects/crossings.js"></script>
+	
+	<script src="agents/navmesh.js"></script>
+	<script src="agents/address.js"></script>
+	<script src="agents/agentBehaviour.js"></script>
+	<script src="agents/agent.js"></script>
+	<script src="agents/agents.js"></script>
+	
+	<script src="font.js"></script>
+
+	
+	<script>
+		if( DEBUG_RANDOM_SEED )
+			Math.seedrandom( DEBUG_RANDOM_SEED );
+		
+		var container = document.getElementById( 'container' );
+
+		//var stats = new Stats();
+		//var statsCalls = stats.addPanel( new Stats.Panel( 'calls', '#ff8', '#221' ) );
+		//var statsTrigs = stats.addPanel( new Stats.Panel( '△', '#ff8', '#221' ) );
+		//	container.appendChild( stats.dom );
+
+		//var gui = new dat.GUI();
+		//	gui.controls = { }
+
+		var renderer = new THREE.WebGLRenderer( { antialias: true } );
+			renderer.setPixelRatio( window.devicePixelRatio );
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			container.appendChild( renderer.domElement );
+
+		var scene = new THREE.Scene();
+			scene.background = new THREE.Color( 'skyblue' );
+			scene.add( new THREE.AmbientLight( 0x404040 ) );
+
+		var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 4*GROUND_SIZE );
+			camera.position.set( 10*GROUND_SIZE, 3*GROUND_SIZE, 10*GROUND_SIZE );
+			camera.position.set( GROUND_SIZE/1.5, GROUND_SIZE/4, GROUND_SIZE/1.5 );
+			camera.position.set( 0.01+0*GROUND_SIZE/0.8, GROUND_SIZE*2, 0 );
+			camera.position.set( GROUND_SIZE/2, GROUND_SIZE/10, GROUND_SIZE/3 );
+			//camera.position.set( GROUND_SIZE/1, GROUND_SIZE/4, GROUND_SIZE/1 );
+			camera.position.set( 0, 1.2*GROUND_SIZE, 0 );
+			
+		var light = new THREE.PointLight( 'white', 0.5 );
+			scene.add( light );
+			scene.add( new THREE.AmbientLight( 'white', 0.25 ) );
+
+		var controls = new THREE.OrbitControls( camera, renderer.domElement );
+			controls.maxPolarAngle = Math.PI * 0.495;
+			controls.minDistance = 20;
+			controls.maxDistance = 1.5*GROUND_SIZE;
+			controls.enableDamping = true;
+			controls.dampingFactor = 0.25;
+			controls.rotateSpeed = 0.3;
+			controls.panSpeed = 0.15;
+			controls.target.set( 0, 0, 0 );
+			controls.autoRotate = DEBUG_AUTOROTATE;
+			controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
+			controls.update();
+
+		var clock = new THREE.Clock(),
+			deltaTime = DEBUG_TIME_SPEED*clock.getDelta(),
+			frame = 0;
+
+		var currentTimeMs = START_TIME,
+			dayTimeMs = currentTimeMs % HOURS_24_MS;
+
+			
+		var currentTime_elem = document.getElementById('time'),
+			currentFps_elem = document.getElementById('fps'),
+			agents_elem = document.getElementById('agents');
+
+		clock.getDelta();
+		var font = new Font();
+		var navmesh = new NavMesh();		//console.log('navmesh\t\t',clock.getDelta());
+		var textures = new Textures();		//console.log('textures\t',clock.getDelta());
+		var ground = new Ground();			//console.log('ground\t\t',clock.getDelta());
+		var blocks = new Blocks();			//console.log('blocks\t\t',clock.getDelta());
+
+//randomTarget = pick(blocks.allTrueBlocks).randomPos();
+//drawArrow( randomTarget, randomTarget.addY(30) );
+
+		var buildings = new Buildings();	//console.log('buildings\t',clock.getDelta());
+		new Trees();						//console.log('trees\t\t',clock.getDelta());
+		var crossings = new Crossings();	//console.log('crossings\t',clock.getDelta());
+			var agents = new Agents();			//console.log('agents\t\t',clock.getDelta());
+
+		agents_elem.innerHTML = 'ppl='+agents.agents.length;
+		
+		if( DEBUG_FOLLOW_AGENT>=0 && DEBUG_FOLLOW_AGENT<this.agents.agents.length )
+		{
+			var agent = this.agents.agents[DEBUG_FOLLOW_AGENT];
+			agent.mesh.material = agent.mesh.material.clone();
+			agent.mesh.material.color = new THREE.Color('cornflowerblue');
+		}
+
+		if( DEBUG_NAVMESH_SHOW_MESHES )
+		{
+			navmesh.imageMesh();
+		}
+		
+		window.onresize = function ()
+		{
+			let width = window.innerWidth;
+			let height = window.innerHeight;
+				
+			camera.aspect = width / height;
+			camera.updateProjectionMatrix();
+
+			renderer.setSize( width, height );
+		}; // onresize
+
+		
+
+		// setup time
+						
+		var oncePerSecond_timeMs = 0,
+			oncePerSecond_frames = 0;
+			
+		function oncePerSecond()
+		{
+			currentTime_elem.innerHTML = msToString( currentTimeMs );
+			
+			if( oncePerSecond_frames )
+				currentFps_elem.innerHTML = 'fps='+round(1000*DEBUG_TIME_SPEED*(frame-oncePerSecond_frames)/(currentTimeMs-oncePerSecond_timeMs),1);
+			
+			oncePerSecond_timeMs = currentTimeMs;
+			oncePerSecond_frames = frame;
+			
+		} // oncePerSecond
+		setInterval( oncePerSecond, 1000 );
+		
+		
+		
+		// main animation cycle
+		function animate()
+		{
+			requestAnimationFrame( animate );
+
+			deltaTime = DEBUG_TIME_SPEED*clock.getDelta()
+			currentTimeMs += 1000*deltaTime;
+			dayTimeMs = currentTimeMs % HOURS_24_MS;
+			frame++;
+			
+			light.position.copy( camera.position );
+
+			//statsCalls.update( renderer.info.render.calls, 460  );
+			//statsTrigs.update( renderer.info.render.triangles, 460  );
+			// mesh.quaternion.copy(camera.quaternion);
+			//stats.update();
+
+			controls.update();
+			
+			agents.update();
+			
+			renderer.render(scene, camera);
+			
+			if (DEBUG_RENDERER_INFO && frame==10)
+			{
+				console.log( 'renderer.info' );
+				console.log( '\tgeometries',renderer.info.memory.geometries );
+				console.log( '\ttextures',renderer.info.memory.textures );
+				console.log( '\tcalls',renderer.info.render.calls );
+				console.log( '\tlines',renderer.info.render.lines );
+				console.log( '\tpoints',renderer.info.render.points );
+				console.log( '\ttriangles',renderer.info.render.triangles );
+			}
+		} //animate
+
+		animate();		
+	</script>
+
+</body>
+</html>
