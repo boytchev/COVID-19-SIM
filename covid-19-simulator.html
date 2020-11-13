@@ -91,7 +91,7 @@
 			if( SHADOWS )
 			{
 				renderer.shadowMap.enabled = true;
-				renderer.shadowMap.type = THREE.VSMShadowMap;
+				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 			}
 			
 		var scene = new THREE.Scene();
@@ -115,7 +115,7 @@
 				light.shadow.mapSize.height = SHADOW_MAP_SIZE;	
 				light.shadow.camera.near = 1;
 				light.shadow.camera.far = 1000;
-				light.shadow.bias = -0.00001;
+				light.shadow.bias = 0.00001;
 			}
 			scene.add( light );
 			scene.add( new THREE.AmbientLight( 'white', 0.15 ) );

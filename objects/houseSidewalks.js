@@ -146,19 +146,21 @@ class HouseSidewalks
 		
 		var vertexBuffer = new THREE.InterleavedBuffer( new Float32Array( [
 			// Top (from Y+)
-			+0.5, 0, -0.5,		1, 0,
-			-0.5, 0, -0.5,		0, 0,
-			+0.5, 0, +0.5,		1, 1,
+			+0.5, 0, -0.5,		1, 0,	0, 1, 0,
+			-0.5, 0, -0.5,		0, 0,	0, 1, 0,
+			+0.5, 0, +0.5,		1, 1,	0, 1, 0,
 			
-			-0.5, 0, -0.5,		0, 0,
-			-0.5, 0, +0.5,		0, 1,
-			+0.5, 0, +0.5,		1, 1,
-		]), 5);
+			-0.5, 0, -0.5,		0, 0,	0, 1, 0,
+			-0.5, 0, +0.5,		0, 1,	0, 1, 0,
+			+0.5, 0, +0.5,		1, 1,	0, 1, 0,
+		]), 8);
 	
 		var positions = new THREE.InterleavedBufferAttribute( vertexBuffer, 3/*values*/, 0/*offset*/ );
+		var normals   = new THREE.InterleavedBufferAttribute( vertexBuffer, 3/*values*/, 5/*offset*/ );
 		var uvs       = new THREE.InterleavedBufferAttribute( vertexBuffer, 2/*values*/, 3/*offset*/ );
 		
 		geometry.setAttribute( 'position', positions );
+		geometry.setAttribute( 'normal', normals );
 		geometry.setAttribute( 'uv', uvs);
 		
 		return geometry;
@@ -170,7 +172,7 @@ class HouseSidewalks
 	static material()
 	{
 		
-		var material = new THREE.MeshBasicMaterial({
+		var material = new THREE.MeshLambertMaterial({
 				color: 'white',
 				map: textures.sidewalk.map( 4, 4 ),
 				depthTest: false,
@@ -232,6 +234,7 @@ class HouseSidewalks
 			mesh.setMatrixAt( i, matrix );
 		}
 
+		mesh.receiveShadow = true;
 		mesh.renderOrder = -80;
 		
 		scene.add( mesh );

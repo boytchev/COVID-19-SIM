@@ -415,6 +415,7 @@ class Crossings
 	image( crossings )
 	{
 		var vertices = [];
+		var normals = [];
 		var uvs = [];
 		
 		for (var i=0; i<crossings.length; i++)
@@ -424,6 +425,11 @@ class Crossings
 			vertices.push(
 				crossing.zone.a.x,0,crossing.zone.a.z, crossing.zone.b.x,0,crossing.zone.b.z, crossing.zone.d.x,0,crossing.zone.d.z,
 				crossing.zone.d.x,0,crossing.zone.d.z, crossing.zone.b.x,0,crossing.zone.b.z, crossing.zone.c.x,0,crossing.zone.c.z
+			);
+			
+			normals.push(
+				0,1,0, 0,1,0, 0,1,0,
+				0,1,0, 0,1,0, 0,1,0
 			);
 			
 			var s = crossing.scale;
@@ -444,7 +450,7 @@ class Crossings
 			}
 		}
 		
-		var material = new THREE.MeshBasicMaterial({
+		var material = new THREE.MeshLambertMaterial({
 				map: textures.crossing.map( 1/CROSSING_TEXTURE_SCALE, 1/CROSSING_TEXTURE_SCALE ),
 				depthTest: false,
 				transparent: DEBUG_BLOCKS_OPACITY<1,
@@ -456,6 +462,9 @@ class Crossings
 				'position',
 				new THREE.BufferAttribute(new Float32Array(vertices),3));
 			geometry.setAttribute(
+				'normal',
+				new THREE.BufferAttribute(new Float32Array(normals),3));
+			geometry.setAttribute(
 				'uv',
 				new THREE.BufferAttribute(new Float32Array(uvs),2));
 			
@@ -463,7 +472,8 @@ class Crossings
 			image.updateMatrix();
 			image.matrixAutoUpdate = false;
 			image.renderOrder = -70;
-
+			image.receiveShadow = true;
+			
 		scene.add(image);
 	} // Crossings.image
 	

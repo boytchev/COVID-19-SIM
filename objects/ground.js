@@ -23,7 +23,7 @@ class Ground
 	{
 		let geometry = new THREE.PlaneBufferGeometry( GROUND_SIZE, GROUND_SIZE );
 
-		let material = new THREE.MeshBasicMaterial( {
+		let material = new THREE.MeshLambertMaterial( {
 				color: '#404040',
 				depthTest: false,
 				// map: textures.grid.map( Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE), Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE) )
@@ -36,6 +36,7 @@ class Ground
 			image.rotation.x = -Math.PI/2;
 			image.updateMatrix();
 			image.matrixAutoUpdate = false;
+			image.receiveShadow = true;
 			
 		scene.add( image );
 	
