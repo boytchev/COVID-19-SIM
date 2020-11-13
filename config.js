@@ -1,6 +1,6 @@
 // size of the simulated world
 
-const GROUND_SIZE = 1270; 				// in meters
+const GROUND_SIZE = 170; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 
 	
@@ -20,9 +20,9 @@ const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 const DEBUG_AUTOROTATE = false;
 const DEBUG_AUTOROTATE_SPEED = 0.03;
 const DEBUG_RENDERER_INFO = false;
-const DEBUG_BUILDINGS_OPACITY = 0/4;				// for buildings and trees
-const DEBUG_BLOCKS_OPACITY = 0.5/4;					// for blocks
-const DEBUG_NAVMESH_OPACITY = 1/4;			// for navmesh blocks
+const DEBUG_BUILDINGS_OPACITY = 4/4;				// for buildings and trees
+const DEBUG_BLOCKS_OPACITY = 4/4;					// for blocks
+const DEBUG_NAVMESH_OPACITY = 0/4;			// for navmesh blocks
 const DEBUG_NAVMESH_SHOW_MESHES = !false;
 const DEBUG_NAVMESH_SHOW_FLOORS = !false;
 const DEBUG_NAVMESH_SHOW_LINES = false;
@@ -133,6 +133,10 @@ const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
 const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 3 );
 const AGENT_ADULTS_PER_APARTMENT = new Range( 1, 3 );
 const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 2 );
+
+// realism
+const SHADOWS = true;
+const SHADOW_MAP_SIZE = 4096/4;
 
 
 // global simulation time

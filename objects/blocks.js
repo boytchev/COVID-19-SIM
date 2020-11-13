@@ -302,6 +302,7 @@ class Blocks
 	constructBlockImages( blockType, texture=textures.grid, textureScale=GROUND_TEXTURE_SCALE )
 	{
 		var vertices = [];
+		var normals = [];
 		var uvs = [];
 		
 		var blocks = this[blockType.name];
@@ -318,6 +319,11 @@ class Blocks
 				a.x,0,a.z, b.x,0,b.z, d.x,0,d.z,
 				d.x,0,d.z, b.x,0,b.z, c.x,0,c.z
 			);
+
+			normals.push(
+				0,1,0, 0,1,0, 0,1,0,
+				0,1,0, 0,1,0, 0,1,0
+			);
 			
 			uvs.push(
 				a.x,a.z, b.x,b.z, d.x,d.z,
@@ -325,7 +331,7 @@ class Blocks
 			);
 		}
 		
-		var material = new THREE.MeshBasicMaterial({
+		var material = new THREE.MeshPhongMaterial({
 				color: blockType.color,
 				map: texture.map( 1/textureScale, 1/textureScale ),
 				depthTest: false,
@@ -338,6 +344,9 @@ class Blocks
 				'position',
 				new THREE.BufferAttribute(new Float32Array(vertices),3));
 			geometry.setAttribute(
+				'normal',
+				new THREE.BufferAttribute(new Float32Array(normals),3));
+			geometry.setAttribute(
 				'uv',
 				new THREE.BufferAttribute(new Float32Array(uvs),2));
 			
@@ -345,6 +354,7 @@ class Blocks
 			image.updateMatrix();
 			image.matrixAutoUpdate = false;
 			image.renderOrder = blockType.renderOrder;
+			image.receiveShadow = true;
 
 		scene.add(image);
 		

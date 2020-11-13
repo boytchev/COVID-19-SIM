@@ -88,7 +88,12 @@
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.appendChild( renderer.domElement );
-
+			if( SHADOWS )
+			{
+				renderer.shadowMap.enabled = true;
+				renderer.shadowMap.type = THREE.VSMShadowMap;
+			}
+			
 		var scene = new THREE.Scene();
 			scene.background = new THREE.Color( 'skyblue' );
 			scene.add( new THREE.AmbientLight( 0x404040 ) );
@@ -102,8 +107,18 @@
 			camera.position.set( 0, 1.2*GROUND_SIZE, 0 );
 			
 		var light = new THREE.PointLight( 'white', 0.5 );
+			light.position.set( 100, 100, 0 );
+			light.castShadow = true;
+			if( SHADOWS )
+			{
+				light.shadow.mapSize.width = SHADOW_MAP_SIZE;
+				light.shadow.mapSize.height = SHADOW_MAP_SIZE;	
+				light.shadow.camera.near = 1;
+				light.shadow.camera.far = 1000;
+				light.shadow.bias = -0.00001;
+			}
 			scene.add( light );
-			scene.add( new THREE.AmbientLight( 'white', 0.25 ) );
+			scene.add( new THREE.AmbientLight( 'white', 0.15 ) );
 
 		var controls = new THREE.OrbitControls( camera, renderer.domElement );
 			controls.maxPolarAngle = Math.PI * 0.495;
@@ -202,7 +217,9 @@
 			dayTimeMs = currentTimeMs % HOURS_24_MS;
 			frame++;
 			
-			light.position.copy( camera.position );
+//			light.position.copy ( camera.position );
+//			light.position.set ( GROUND_SIZE*Math.cos(currentTimeMs/1000000), GROUND_SIZE, GROUND_SIZE*Math.sin(currentTimeMs/1000000) );
+			light.position.set ( GROUND_SIZE*Math.cos(1), GROUND_SIZE/2, GROUND_SIZE*Math.sin(1) );
 
 			//statsCalls.update( renderer.info.render.calls, 460  );
 			//statsTrigs.update( renderer.info.render.triangles, 460  );

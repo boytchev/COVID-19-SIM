@@ -509,6 +509,9 @@ class ApartmentBuildings
 			mesh.setMatrixAt( i, matrix );
 		}
 
+		mesh.receiveShadow = true;
+		mesh.castShadow = true;
+
 		scene.add( mesh );
 	} // ApartmentBuildings.image
 	

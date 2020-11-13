@@ -560,6 +560,9 @@ class HouseBuildings
 			mesh.setMatrixAt( i+1, matrix );
 		}
 
+		mesh.receiveShadow = true;
+		mesh.castShadow = true;
+		
 		scene.add( mesh );
 		
 		HouseSidewalks.image( sidewalks );
