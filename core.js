@@ -11,6 +11,7 @@
 //		isRectangular( )					→ boolean
 //		static midX( a, b, x )				→ Pos
 //		static midZ( a, b, z )				→ Pos
+//		randomPos( )						→ Pos
 //		maxX( )								→ float
 //		minX( )								→ float
 //		maxZ( )								→ float
@@ -416,11 +417,15 @@ class Zone
 			kc = kx*(1-kz),
 			kd = (1-kx)*(1-kz);
 			
-		return new Pos(
+		var pos = new Pos(
 			this.a.x*ka + this.b.x*kb + this.c.x*kc + this.d.x*kd,
 			this.a.z*ka + this.b.z*kb + this.c.z*kc + this.d.z*kd,
 			this.block || this.a.block
 		);
+		
+		pos.zone = this;
+		
+		return pos;
 
 	} // Zone.randomPos
 

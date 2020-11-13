@@ -310,7 +310,6 @@ class AgentBehaviour
 		
 		var that = this;
 
-		
 		if( from.block === to.block )
 		{ // 1 - same blocks
 	
@@ -485,13 +484,18 @@ class AgentBehaviour
 			// cross a block to a crossing, and then cross that crossing
 			var countProtection = 0;
 			var lastCrossings = [undefined, undefined, undefined];
+			var blocks = []; // blocks[i]=n -> block i starts from position n in the route
+			var loopIndex = -1; // index in the route
+			
+			blocks[this.routePosition.block.id] = this.gotoPosition.length-1;
+//console.log('start loop-check area',(this.gotoPosition.length-1));
 			
 			while( this.routePosition.block !== to.block )
 			{
 				// find the next crossing
 				var block = this.routePosition.block,	
-					crossing = pickDirection( this.routePosition, block.crossings, to.position, lastCrossings );
-					
+					crossing = pickDirection( this.routePosition, block.crossings, to.position/*, lastCrossings*/ );
+//console.log(block.id,'#'+(this.gotoPosition.length-1));
 				lastCrossings[2] = lastCrossings[1];
 				lastCrossings[1] = lastCrossings[0];
 				lastCrossings[0] = crossing;
@@ -510,11 +514,9 @@ class AgentBehaviour
 							this.routerGoToIndex( ringIndex, crossing.ringIndex );
 							break;
 					case BLOCK_APARTMENTS:
-							// 2.4.2 todo
-							this.addToRoute( clipLineRoute( this.routePosition, crossing.randomPos(), block.buildings ) );
-							break;
 					case BLOCK_OFFICE:
-							// 2.5.2
+							// 2.4.2 - apartments
+							// 2.5.2 - offices
 							this.addToRoute( clipLineRoute( this.routePosition, crossing.randomPos(), block.buildings ) );
 							break;
 					default:
@@ -525,13 +527,58 @@ class AgentBehaviour
 				this.addToRoute( crossing.pairZone, '521' );
 				ringIndex = crossing.pairZone.ringIndex;
 				
+				if( blocks[this.routePosition.block.id] )
+				{
+//console.log('Possible loop from #'+blocks[this.routePosition.block.id]);
+					if( loopIndex<0 )
+						loopIndex = blocks[this.routePosition.block.id];
+					else
+						loopIndex = Math.min(loopIndex,blocks[this.routePosition.block.id]);
+				}
+				else
+				{
+					blocks[this.routePosition.block.id] = this.gotoPosition.length-1;
+				}
+				
 				countProtection++;
 				if( countProtection>1000 )
 				{
-					console.error('Too many loop in the router. Code 1130.');
+					console.error('Too many loops in the router. Code 1130.');
 					break;
 				}
-			} // while final block not reache
+			} // while final block not reached
+			
+//console.log('actual loop-check area',loopIndex);
+//console.log('end loop-check area',(this.gotoPosition.length-1));
+
+			// if there is loop, remove it now, do not check for Y position, it should be all 0
+			// loops are checked only for the block-to-block route
+			// loops are not checked for route in the beginning or ending block
+			if( loopIndex>=0 )
+			{
+				//console.log('check for loops from',loopIndex,'to',this.gotoPosition.length-1);
+				var end = this.gotoPosition.length-1;
+				while( loopIndex < end )
+				{
+					var zone = this.gotoPosition[loopIndex].zone;
+					if( zone )
+					{
+						while( end-- > loopIndex )
+						{
+							if( zone===this.gotoPosition[end].zone )
+								break;
+						}
+						if( end>loopIndex )
+						{
+							//console.log('remove loop from',loopIndex,'to',end);
+							this.gotoPosition.splice( loopIndex, end-loopIndex );
+						}
+					}
+					end = this.gotoPosition.length-1;
+					loopIndex++;
+				}
+			}
+
 
 			// reached the final block
 			switch( to.block.type )
@@ -580,16 +627,36 @@ class AgentBehaviour
 					console.error('Unknown block type in router. Code 1050.');
 			}
 		}
+//console.log('total points',(this.gotoPosition.length-1));
 		
 		if( DEBUG_SHOW_ROUTES )
 		{
+/*			
+			console.group('New route');
+			console.log('from\t',from);
+			console.log('to\t',to);
+*/			
 			for( var i=0; i<this.gotoPosition.length; i++)
 			{
+/*				
+				console.log(
+					'#'+i+'\t'+
+					'zn='+(this.gotoPosition[i].zone?this.gotoPosition[i].zone.id:'    ')+'\t'+
+					'bl='+(this.gotoPosition[i].block?this.gotoPosition[i].block.id:'    ')+'\t'+
+					'fl='+this.gotoPosition[i].y/FLOOR_HEIGHT);
+*/				
+				// vertical black arrows
+				//if( this.gotoPosition[i].zone )
+				//	drawArrow( this.gotoPosition[i].zone.center.addY(this.gotoPosition[i].y+0.2), this.gotoPosition[i].zone.center.addY(this.gotoPosition[i].y+5), 'black' );
+				
 				if( i )
 					drawArrow( this.gotoPosition[i-1].addY(0.2), this.gotoPosition[i].addY(0.2) );
 				else
 					drawArrow( from.position.addY(0.2), this.gotoPosition[i].addY(0.2) );
 			}
+/*
+			console.groupEnd('New route');
+*/			
 		}
 		
 //		if( this.id==0 )

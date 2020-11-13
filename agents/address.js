@@ -70,7 +70,6 @@ class Address
 	{
 		var position;
 		
-		
 		if( this.building instanceof HouseBuilding )
 		{
 			// for houses the available position depends on the current position
