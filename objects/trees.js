@@ -222,6 +222,7 @@ class Trees
 		
 		mesh.receiveShadow = true;
 		mesh.castShadow = true;
+		mesh.position.y = -0.2;
 		
 		scene.add( mesh );
 		

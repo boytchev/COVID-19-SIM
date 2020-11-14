@@ -1,6 +1,6 @@
 // size of the simulated world
 
-const GROUND_SIZE = 700; 				// in meters
+const GROUND_SIZE = 1200; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 
 	
