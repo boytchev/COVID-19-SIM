@@ -62,6 +62,23 @@ class Trees
 			
 			vec.normalize();
 			
+			vec.x = vec.x/2;
+			vec.y = vec.y/2+1;
+			vec.z = vec.z/2;
+			
+			if( vec.y < 0.6 )
+			{
+				vec.x *= 0.4;
+				vec.y = 0;
+				vec.z *= 0.4;
+			}
+			
+			if( vec.y>=0.6 && vec.y<0.75)
+			{
+				vec.x *= 0.15;
+				vec.z *= 0.15;
+			}
+			
 			pos.setXYZ( i, vec.x, vec.y, vec.z );
 		}
 		
@@ -94,30 +111,19 @@ class Trees
 				shader.vertexShader.replace(
 					'#include <project_vertex>',
 
-					
+					'vec4 mvPosition = vec4( transformed, 1.0 );\n'+
 					'vec3 limits = vec3(0.6, 0.75, 1.0);\n'+
-					
-					'vec4 mvPosition = vec4( 0.5*normalize(transformed)+vec3(0,1,0), 1.0 );\n'+
-					'if (mvPosition.y<limits.x)\n'+
-					'{\n'+
-					'	mvPosition.x *= 0.4;\n'+
-					'	mvPosition.y = 0.0;\n'+
-					'	mvPosition.z *= 0.4;\n'+
-					'}\n'+	
-					'if (mvPosition.y>=limits.x && mvPosition.y<limits.y)\n'+
-					'{\n'+
-					'	mvPosition.x *= 0.15;\n'+
-					'	mvPosition.z *= 0.15;\n'+
-					'}\n'+
+
 					'if (mvPosition.y>=limits.y)\n'+
 					'{\n'+
 					'	vec2 v = vec2(12.9898,78.233); float w = 43758.5453123;\n'+
 					'	float rx = fract(cos(dot(vec2(instanceMatrix[2].yz+mvPosition.zy),v))*w)-0.5;\n'+
 					'	float ry = fract(sin(dot(vec2(instanceMatrix[1].zx-mvPosition.xz),v))*w)-0.5;\n'+
 					'	float rz = fract(cos(dot(vec2(instanceMatrix[3].xy+mvPosition.yx),v))*w)-0.5;\n'+
-					'	mvPosition.xyz = (mvPosition.xyz-vec3(0,limits.z,0))*(vec3(1)+0.4*vec3(0.8*rx,ry,0.8*rz))+vec3(0,limits.z,0);\n'+
+					'	mvPosition.xyz = (mvPosition.xyz-vec3(0,limits.z,0))*(vec3(1)+0.6*vec3(0.8*rx,ry,0.8*rz))+vec3(0,limits.z,0);\n'+
 					'}\n'+
-					'if (mvPosition.y<limits.x)\n'+
+					
+					'if (mvPosition.y>limits.x)\n'+
 					'{\n'+
 					'	vec2 v = vec2(12.9898,78.233); float w = 43758.5453123;\n'+
 					'	float rx = fract(sin(dot(vec2(instanceMatrix[2].yz+mvPosition.zy),v))*w)-0.5;\n'+
@@ -128,6 +134,7 @@ class Trees
 					'	rz = fract(cos(dot(vec2(instanceMatrix[3].xy),v))*w)-0.5;\n'+
 					'	mvPosition.xz = mvPosition.xz + 0.25*vec2(rx,rz);\n'+
 					'}\n'+
+
 					'vColor.xyz = vec3(mvPosition.y,0,0);\n'+
 					'mvPosition = instanceMatrix * mvPosition;\n'+
 					'mvPosition = modelViewMatrix * mvPosition;\n'+

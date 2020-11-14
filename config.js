@@ -1,6 +1,6 @@
 // size of the simulated world
 
-const GROUND_SIZE = 370; 				// in meters
+const GROUND_SIZE = 700; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 
 	
@@ -136,7 +136,8 @@ const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 2 );
 
 // realism
 const SHADOWS = true;
-const SHADOW_MAP_SIZE = 4096;
+const SHADOW_MAP_SIZE = 1024;
+const SHADOWS_COUNT = 4;
 
 
 // global simulation time

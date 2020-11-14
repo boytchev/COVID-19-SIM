@@ -331,7 +331,7 @@ class Blocks
 			);
 		}
 		
-		var material = new THREE.MeshPhongMaterial({
+		var material = new THREE.MeshLambertMaterial({
 				color: blockType.color,
 				map: texture.map( 1/textureScale, 1/textureScale ),
 				depthTest: false,
