@@ -71,7 +71,7 @@ class OfficeDoors
 
 	static material()
 	{
-		var material = new THREE.MeshStandardMaterial({
+		var material = new THREE.MeshLambertMaterial({
 				side: THREE.FrontSide,
 				flatShading: true,
 				vertexColors: true,
@@ -167,6 +167,7 @@ class OfficeDoors
 			mesh.setMatrixAt( i, matrix );
 		}
 
+		mesh.receiveShadow = true;
 		scene.add( mesh );
 		
 	} // OfficeDoors.imageDoors
