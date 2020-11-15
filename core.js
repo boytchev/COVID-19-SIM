@@ -855,7 +855,7 @@ function clipLineRoute( from, to, obstacles, margin = 1 )
 {
 	var route = [];
 
-	var clipData = clipLine( from, to, obstacles, margin );
+	var clipData = clipLine( from, to, obstacles, margin, route );
 
 	var countProtection = 0;
 
@@ -869,7 +869,7 @@ function clipLineRoute( from, to, obstacles, margin = 1 )
 		from = clipData.pos;
 		from.y = to.y; // take the vertical position of the target
 		route.push( from );
-		clipData = clipLine( from, to, obstacles, margin );
+		clipData = clipLine( from, to, obstacles, margin, route );
 	}
 	
 	route.push( clipData.pos );
@@ -879,7 +879,7 @@ function clipLineRoute( from, to, obstacles, margin = 1 )
 
 
 
-function clipLine( from, to, obstacles, margin = 1 )
+function clipLine( from, to, obstacles, margin = 1, avoidPositions = [] )
 {
 	var toPoint = undefined,
 		toDistance = GROUND_SIZE*GROUND_SIZE; // because we use distanceToSq
@@ -924,6 +924,11 @@ function clipLine( from, to, obstacles, margin = 1 )
 	
 	function processPos( newTo )
 	{
+		if( avoidPositions.find( function(element){
+			return almostEqual(element.x,newTo.x,0.01) && almostEqual(element.z,newTo.z,0.01);
+		} ) )
+			return; // do nothing, avoid this NEWTO
+		
 		// if FROM-TO does not intersect any obstacle,
 		// and NEWTO is closer to TO than TOPOINT,
 		// then remember NEWTO into TOPOINT

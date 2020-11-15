@@ -7,10 +7,10 @@ const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 
 // debug flags
 R = 1+Math.floor(Math.random()*100000);
-//R = 57587;
+//R = 91977;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
-const DEBUG_AGENT_MAX_COUNT = 10;
+const DEBUG_AGENT_MAX_COUNT = 1;
 const DEBUG_TIME_SPEED = timeMs(0,1,0)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
@@ -20,8 +20,8 @@ const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 const DEBUG_AUTOROTATE = false;
 const DEBUG_AUTOROTATE_SPEED = 0.03;
 const DEBUG_RENDERER_INFO = false;
-const DEBUG_BUILDINGS_OPACITY = 4/4;				// for buildings and trees
-const DEBUG_BLOCKS_OPACITY = 4/4;					// for blocks
+const DEBUG_BUILDINGS_OPACITY = 0/4;				// for buildings and trees
+const DEBUG_BLOCKS_OPACITY = 1/4;					// for blocks
 const DEBUG_NAVMESH_OPACITY = 0/4;			// for navmesh blocks
 const DEBUG_NAVMESH_SHOW_MESHES = !false;
 const DEBUG_NAVMESH_SHOW_FLOORS = !false;
@@ -30,11 +30,12 @@ const DEBUG_NAVMESH_SHOW_ELEVATORS = !false;
 const DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION = false;
 const DEBUG_HIDE_ROOFS = false;
 const DEBUG_CENTER_VIEW_ON_AGENTS = false;
-const DEBUG_FOLLOW_AGENT = -1;	// -1 for not following any
+const DEBUG_FOLLOW_AGENT = -9;	// -1 for not following any
 const DEBUG_SHOW_DIRECTIONS = false;
 const DEBUG_APARTMENT_ADD_FLOORS = false;
 const DEBUG_SHOW_HOME_TO_WORK_ARROW = false;
 const DEBUG_SHOW_ROUTES = !false;
+const DEBUG_ROUTES_PER_AGENT = 20; // default 1
 var DEBUG_FLAG_1 = false;
 
 
@@ -135,9 +136,9 @@ const AGENT_ADULTS_PER_APARTMENT = new Range( 1, 3 );
 const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 2 );
 
 // realism
-const SHADOWS = true;
+const SHADOWS = false;
 const SHADOW_MAP_SIZE = 1024*4;
-const SHADOWS_COUNT = 2;
+const SHADOWS_COUNT = 1;
 
 
 // global simulation time

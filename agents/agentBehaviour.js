@@ -855,7 +855,7 @@ class AgentBehaviour
 		if( dayTimeMs > this.dailySchedule.timeToGoToWorkMs )
 		{			
 	
-			for( var i=0; i<1; i++)
+			for( var i=0; i<DEBUG_ROUTES_PER_AGENT; i++)
 				this.router( this.home, this.work );
 			this.doing = this.AGENT_WALKING_ROUTE;
 			
