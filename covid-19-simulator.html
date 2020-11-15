@@ -91,7 +91,14 @@
 			if( SHADOWS )
 			{
 				renderer.shadowMap.enabled = true;
+				//renderer.shadowMap.type = THREE.PCFShadowMap;
 				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+				//renderer.shadowMap.type = THREE.BasicShadowMap;
+				//renderer.shadowMap.type = THREE.VSMShadowMap;
+				
+				//renderer.shadowMap.radius = 50;
+				renderer.shadowMap.autoUpdate = false;
+				renderer.shadowMap.needsUpdate = true;
 			}
 			
 		var scene = new THREE.Scene();
@@ -105,30 +112,44 @@
 			camera.position.set( 0.01+0*GROUND_SIZE/0.8, GROUND_SIZE*2, 0 );
 			camera.position.set( GROUND_SIZE/2, GROUND_SIZE/10, GROUND_SIZE/3 );
 			//camera.position.set( GROUND_SIZE/1, GROUND_SIZE/4, GROUND_SIZE/1 );
-			camera.position.set( 0, 1.2*GROUND_SIZE, 0 );
+			camera.position.set( 0, 0.2*GROUND_SIZE, 0 );
 
-		var lights = [];
+		var lights = [],
+			intensity = 0,
+			decay = 0.7;
+		for( var i=0; i<SHADOWS_COUNT; i++)
+			intensity += Math.pow(decay,i);
+		intensity = 1/intensity;	
 		for( var i=0; i<SHADOWS_COUNT; i++)
 		{
-			lights[i] = new THREE.DirectionalLight( 'white', 1.1/SHADOWS_COUNT );
-			lights[i].position.set( GROUND_EDGE, GROUND_EDGE, GROUND_EDGE );
+			lights[i] = new THREE.DirectionalLight( 'white', intensity );
+			lights[i].position.set( GROUND_EDGE, GROUND_EDGE*Math.pow(0.95,i), GROUND_EDGE );
 			//light.target = scene;
 			if( SHADOWS )
 			{
 				lights[i].castShadow = true;
-				lights[i].shadow.mapSize.width = SHADOW_MAP_SIZE<<i;
-				lights[i].shadow.mapSize.height = SHADOW_MAP_SIZE<<i;
+				lights[i].shadow.mapSize.width = SHADOW_MAP_SIZE>>i;
+				lights[i].shadow.mapSize.height = SHADOW_MAP_SIZE>>i;
 				lights[i].shadow.camera.near = -10000;
 				lights[i].shadow.camera.far = 10000;
 				lights[i].shadow.camera.left = -GROUND_SIZE;
 				lights[i].shadow.camera.right = GROUND_SIZE;
 				lights[i].shadow.camera.bottom = -GROUND_SIZE;
 				lights[i].shadow.camera.top = GROUND_SIZE;
-				//light.shadow.bias = 0.0001;
+				lights[i].shadow.bias = -0.00005;
 			}
+			intensity = intensity*decay;
 			scene.add( lights[i] );
 		}
-
+		
+		if( SHADOWS )
+		{
+			var topShadow = lights[0].clone();
+			topShadow.position.set( 0, GROUND_EDGE, 0 );
+			topShadow.intensity = 0.15;
+			scene.add( topShadow );
+		}
+		
 		var controls = new THREE.OrbitControls( camera, renderer.domElement );
 			controls.maxPolarAngle = Math.PI * 0.495;
 			controls.minDistance = 20;
@@ -165,9 +186,9 @@
 //drawArrow( randomTarget, randomTarget.addY(30) );
 
 		var buildings = new Buildings();	//console.log('buildings\t',clock.getDelta());
-		new Trees();						//console.log('trees\t\t',clock.getDelta());
+		var trees = new Trees();			//console.log('trees\t\t',clock.getDelta());
 		var crossings = new Crossings();	//console.log('crossings\t',clock.getDelta());
-			var agents = new Agents();			//console.log('agents\t\t',clock.getDelta());
+		var agents = new Agents();			//console.log('agents\t\t',clock.getDelta());
 
 		agents_elem.innerHTML = 'ppl='+agents.agents.length;
 		
@@ -213,9 +234,7 @@
 			
 		} // oncePerSecond
 		setInterval( oncePerSecond, 1000 );
-		
-		
-		
+
 		// main animation cycle
 		function animate()
 		{

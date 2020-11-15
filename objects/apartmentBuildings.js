@@ -251,7 +251,7 @@ class ApartmentBuildings
 			 -1/2, 1, -1/2,		-1, 0, 0, 	0, 1,
 			 -1/2, 0, -1/2, 	-1, 0, 0, 	0, 0, 
 		);
-		
+			
 		// x,y,z, nx,ny,nz, u,v
 		var vertexBuffer = new THREE.InterleavedBuffer( new Float32Array(data), 8);
 	
@@ -272,10 +272,10 @@ class ApartmentBuildings
 
 	static material()
 	{
-		var material = new THREE.MeshStandardMaterial({
+		var material = new THREE.MeshPhongMaterial({
 				side: DEBUG_HIDE_ROOFS?THREE.DoubleSide:THREE.FrontSide,
 				color: 'white',
-				flatShading: true,
+				//flatShading: true,
 				map: textures.apartment.map( 1/APARTMENT_TEXTURE_SCALE_U, 1/BUILDING_TEXTURE_SCALE ),
 				normalMap: textures.apartmentNormal.map( 1/APARTMENT_TEXTURE_SCALE_U, 1/BUILDING_TEXTURE_SCALE ),
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
@@ -511,9 +511,30 @@ class ApartmentBuildings
 
 		mesh.receiveShadow = true;
 		mesh.castShadow = true;
-		mesh.position.y = -0.2;
+		//mesh.position.y = 0;
 
 		scene.add( mesh );
+		
+		if( SHADOWS )
+		{
+			var geometry  = ApartmentBuildings.geometry(),
+				material  = new THREE.MeshBasicMaterial({
+					side: THREE.BackSide,
+					color: 'black',
+					transparent: true,
+					opacity: 0,
+				}),
+				mesh = new THREE.InstancedMesh( geometry, material, instances );
+			for( var i=0; i<instances; i++ )
+			{
+				matrix.makeScale( apartments[i].size.x-0.1, apartments[i].height, apartments[i].size.z-0.1 );
+				matrix.setPosition( apartments[i].center.x, -4, apartments[i].center.z );
+				mesh.setMatrixAt( i, matrix );
+			}
+			mesh.castShadow = true;
+			scene.add( mesh );
+		}
+		
 	} // ApartmentBuildings.image
 	
 	

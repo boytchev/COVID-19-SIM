@@ -290,6 +290,36 @@ class HouseBuildings
 			 -1/2, 0, -1/2, 	-1, 0, 0, 	HH0, W0,
 		);
 		
+		if( SHADOWS )
+		{
+			data.push(
+				 // Bottom (from Y-)
+				 -1/2, 0.05, -1/2,		0, 1, 0,	0, 0,
+				  1/2, 0.05,  1/2,		0, 1, 0,	0, 0,
+				 -1/2, 0.05,  1/2,		0, 1, 0,	0, 0,
+
+				 -1/2, 0.05, -1/2,		0, 1, 0,	0, 0,
+				  1/2, 0.05, -1/2,		0, 1, 0,	0, 0,
+				  1/2, 0.05,  1/2,		0, 1, 0,	0, 0,
+				 // Bottom (from Y-)
+				 -1/2, 0.1, -1/2,		0, 1, 0,	0, 0,
+				  1/2, 0.1,  1/2,		0, 1, 0,	0, 0,
+				 -1/2, 0.1,  1/2,		0, 1, 0,	0, 0,
+
+				 -1/2, 0.1, -1/2,		0, 1, 0,	0, 0,
+				  1/2, 0.1, -1/2,		0, 1, 0,	0, 0,
+				  1/2, 0.1,  1/2,		0, 1, 0,	0, 0,
+				 // Bottom (from Y-)
+				 -1/2, 0.0, -1/2,		0, 1, 0,	0, 0,
+				  1/2, 0.0,  1/2,		0, 1, 0,	0, 0,
+				 -1/2, 0.0,  1/2,		0, 1, 0,	0, 0,
+
+				 -1/2, 0.0, -1/2,		0, 1, 0,	0, 0,
+				  1/2, 0.0, -1/2,		0, 1, 0,	0, 0,
+				  1/2, 0.0,  1/2,		0, 1, 0,	0, 0,
+			);
+		}
+		
 		var vertexBuffer = new THREE.InterleavedBuffer( new Float32Array(data), 8);
 	
 		var positions = new THREE.InterleavedBufferAttribute( vertexBuffer, 3/*values*/, 0/*offset*/ );
@@ -562,9 +592,37 @@ class HouseBuildings
 
 		mesh.receiveShadow = true;
 		mesh.castShadow = true;
-		mesh.position.y = -0.2;
+		//mesh.position.y = -0.2;
 		
 		scene.add( mesh );
+		
+		if( SHADOWS )
+		{
+			var geometry  = HouseBuildings.geometry(),
+				material  = new THREE.MeshBasicMaterial({
+					side: THREE.BackSide,
+					color: 'black',
+					transparent: true,
+					opacity: 0,
+				}),
+				mesh = new THREE.InstancedMesh( geometry, material, instances );
+			for( var i=0, h=0; i<instances; i+=2, h++ )
+			{
+				var house = houses[h];
+				
+				// wing A
+				matrix.makeScale( house.wingA.size.x-0.1, 5, house.wingA.size.z-0.1 );
+				matrix.setPosition( house.wingA.center.x, -3, house.wingA.center.z );
+				mesh.setMatrixAt( i, matrix );
+				
+				// wing B
+				matrix.makeScale( house.wingB.size.x-0.1, 5, house.wingB.size.z-0.1 );
+				matrix.setPosition( house.wingB.center.x, -3, house.wingB.center.z );
+				mesh.setMatrixAt( i+1, matrix );
+			}
+			mesh.castShadow = true;
+			scene.add( mesh );
+		}
 		
 		HouseSidewalks.image( sidewalks );
 		

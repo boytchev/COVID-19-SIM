@@ -217,56 +217,59 @@ class OfficeBuildings
 		var geometry = new THREE.InstancedBufferGeometry();
 
 		// x,y,z, nx,ny,nz, u,v
-		var vertexBuffer = new THREE.InterleavedBuffer( new Float32Array( [
-			// Top (from Y+)
-			 -1/2, 1, -1/2,		0, 1, 0,	0, 0,
-			 -1/2, 1,  1/2,		0, 1, 0,	0, 1,
-			    0, 1,    0,		0, 1, 0,	1, 1/2,
-			  1/2, 1,  1/2,		0, 1, 0,	0, 1,
-			  1/2, 1, -1/2,		0, 1, 0,	0, 0,
-			    0, 1,    0,		0, 1, 0,	1, 1/2,
+		
+		var data = [
+				// Top (from Y+)
+				 -1/2, 1, -1/2,		0, 1, 0,	0, 0,
+				 -1/2, 1,  1/2,		0, 1, 0,	0, 1,
+					0, 1,    0,		0, 1, 0,	1, 1/2,
+				  1/2, 1,  1/2,		0, 1, 0,	0, 1,
+				  1/2, 1, -1/2,		0, 1, 0,	0, 0,
+					0, 1,    0,		0, 1, 0,	1, 1/2,
 
-			 1/2, 1, -1/2,		0, 1, 0,	0, 1,
-			-1/2, 1, -1/2,		0, 1, 0,	0, 0,
-			    0, 1,    0,		0, 1, 0,	1, 1/2,
-			  
-			 -1/2, 1, 1/2,		0, 1, 0,	0, 1,
-			1/2, 1, 1/2,		0, 1, 0,	0, 0,
-			    0, 1,    0,		0, 1, 0,	1, 1/2,
-			  
-			 // Front (from Z+) 
-			 -1/2, 1,  1/2,		0, 0, 1,	0, 1,
-			 -1/2, 0,  1/2,		0, 0, 1, 	0, 0,
-			  1/2, 0,  1/2, 	0, 0, 1, 	1, 0, 
-			 -1/2, 1,  1/2,		0, 0, 1,	0, 1,
-			  1/2, 0,  1/2, 	0, 0, 1, 	1, 0, 
-			  1/2, 1,  1/2,		0, 0, 1, 	1, 1,
-			  
-			 // Back (from Z-) 
-			 -1/2, 1, -1/2,		0, 0,-1,	1, 1,
-			  1/2, 0, -1/2, 	0, 0,-1, 	0, 0, 
-			 -1/2, 0, -1/2,		0, 0,-1, 	1, 0,
-			 -1/2, 1, -1/2,		0, 0,-1,	1, 1,
-			  1/2, 1, -1/2,		0, 0,-1, 	0, 1,
-			  1/2, 0, -1/2, 	0, 0,-1, 	0, 0, 
-			  
-			 // Right (from X+) 
-			  1/2, 1,  1/2,		1, 0, 0,	0, 1,
-			  1/2, 0,  1/2,		1, 0, 0, 	0, 0,
-			  1/2, 0, -1/2, 	1, 0, 0, 	1, 0, 
-			  1/2, 1,  1/2,		1, 0, 0,	0, 1,
-			  1/2, 0, -1/2, 	1, 0, 0, 	1, 0, 
-			  1/2, 1, -1/2,		1, 0, 0, 	1, 1,
-			  
-			 // Left (from X-) 
-			 -1/2, 1,  1/2,		-1, 0, 0,	1, 1,
-			 -1/2, 0, -1/2, 	-1, 0, 0, 	0, 0, 
-			 -1/2, 0,  1/2,		-1, 0, 0, 	1, 0,
-			 -1/2, 1,  1/2,		-1, 0, 0,	1, 1,
-			 -1/2, 1, -1/2,		-1, 0, 0, 	0, 1,
-			 -1/2, 0, -1/2, 	-1, 0, 0, 	0, 0, 
+				 1/2, 1, -1/2,		0, 1, 0,	0, 1,
+				-1/2, 1, -1/2,		0, 1, 0,	0, 0,
+					0, 1,    0,		0, 1, 0,	1, 1/2,
+				  
+				 -1/2, 1, 1/2,		0, 1, 0,	0, 1,
+				1/2, 1, 1/2,		0, 1, 0,	0, 0,
+					0, 1,    0,		0, 1, 0,	1, 1/2,
+				  
+				 // Front (from Z+) 
+				 -1/2, 1,  1/2,		0, 0, 1,	0, 1,
+				 -1/2, 0,  1/2,		0, 0, 1, 	0, 0,
+				  1/2, 0,  1/2, 	0, 0, 1, 	1, 0, 
+				 -1/2, 1,  1/2,		0, 0, 1,	0, 1,
+				  1/2, 0,  1/2, 	0, 0, 1, 	1, 0, 
+				  1/2, 1,  1/2,		0, 0, 1, 	1, 1,
+				  
+				 // Back (from Z-) 
+				 -1/2, 1, -1/2,		0, 0,-1,	1, 1,
+				  1/2, 0, -1/2, 	0, 0,-1, 	0, 0, 
+				 -1/2, 0, -1/2,		0, 0,-1, 	1, 0,
+				 -1/2, 1, -1/2,		0, 0,-1,	1, 1,
+				  1/2, 1, -1/2,		0, 0,-1, 	0, 1,
+				  1/2, 0, -1/2, 	0, 0,-1, 	0, 0, 
+				  
+				 // Right (from X+) 
+				  1/2, 1,  1/2,		1, 0, 0,	0, 1,
+				  1/2, 0,  1/2,		1, 0, 0, 	0, 0,
+				  1/2, 0, -1/2, 	1, 0, 0, 	1, 0, 
+				  1/2, 1,  1/2,		1, 0, 0,	0, 1,
+				  1/2, 0, -1/2, 	1, 0, 0, 	1, 0, 
+				  1/2, 1, -1/2,		1, 0, 0, 	1, 1,
+				  
+				 // Left (from X-) 
+				 -1/2, 1,  1/2,		-1, 0, 0,	1, 1,
+				 -1/2, 0, -1/2, 	-1, 0, 0, 	0, 0, 
+				 -1/2, 0,  1/2,		-1, 0, 0, 	1, 0,
+				 -1/2, 1,  1/2,		-1, 0, 0,	1, 1,
+				 -1/2, 1, -1/2,		-1, 0, 0, 	0, 1,
+				 -1/2, 0, -1/2, 	-1, 0, 0, 	0, 0, 
+			 ];
+		
 
-		]), 8);
+		var vertexBuffer = new THREE.InterleavedBuffer( new Float32Array(data), 8);
 	
 		var positions = new THREE.InterleavedBufferAttribute( vertexBuffer, 3/*values*/, 0/*offset*/ );
 		var normals   = new THREE.InterleavedBufferAttribute( vertexBuffer, 3/*values*/, 3/*offset*/ );
@@ -286,7 +289,7 @@ class OfficeBuildings
 	static material()
 	{
 		var material = new THREE.MeshStandardMaterial({
-				side: THREE.FrontSide,
+				//side: THREE.FrontSide,
 				color: 'white',
 				flatShading: true,
 				vertexColors: true,
@@ -409,7 +412,7 @@ class OfficeBuildings
 		var colors = [];
 		for( var i=0; i<instances; i++)
 		{
-			var intensity = Math.pow( THREE.Math.randFloat(0,1), 1/10 );
+			var intensity = Math.pow( THREE.Math.randFloat(0,1), 1/8 );
 			colors.push( intensity, intensity, intensity );
 		}
 		var colorAttribute = new THREE.InstancedBufferAttribute( new Float32Array(colors), 3, false, 1 );
@@ -428,10 +431,30 @@ class OfficeBuildings
 
 		mesh.receiveShadow = true;
 		mesh.castShadow = true;
-		mesh.position.y = -0.2;
+		//mesh.position.y = -0.2;
 
 		scene.add( mesh );
 
+		if( SHADOWS )
+		{
+			var geometry  = OfficeBuildings.geometry(),
+				material  = new THREE.MeshBasicMaterial({
+					side: THREE.BackSide,
+					color: 'black',
+					transparent: true,
+					opacity: 0,
+				}),
+				mesh = new THREE.InstancedMesh( geometry, material, instances );
+			for( var i=0; i<instances; i++ )
+			{
+				matrix.makeScale( offices[i].size.x-0.1, offices[i].height, offices[i].size.z-0.1 );
+				matrix.setPosition( offices[i].center.x, -4, offices[i].center.z );
+				mesh.setMatrixAt( i, matrix );
+			}
+			mesh.castShadow = true;
+			scene.add( mesh );
+		}
+		
 	} // OfficeBuildings.image
 	
 	

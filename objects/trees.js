@@ -37,6 +37,8 @@ class Trees
 
 		this.trees = [];
 		
+		this.mesh = undefined;
+		
 		this.generate( );
 		
 		this.image( );
@@ -95,6 +97,7 @@ class Trees
 		
 		var material = new THREE.MeshPhongMaterial({
 				shininess: 0,
+				side: THREE.DoubleSide,
 				//flatShading: true,
 				vertexColors: true,
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
@@ -147,7 +150,8 @@ class Trees
 				shader.fragmentShader.replace(
 					'#include <color_fragment>',
 
-					'vec3 green = vec3(0.56,0.74,0.54);\n'+
+//					'vec3 green = vec3(0.56,0.74,0.54);\n'+
+					'vec3 green = vec3(0.33,0.65,0.33);\n'+
 					'vec3 brown = vec3(0.63,0.32,0.18);\n'+
 					'float k = smoothstep(0.6, 0.7,vColor.x);\n'+
 					'diffuseColor.rgb *= green*k+brown*(1.0-k);\n'+
@@ -222,9 +226,11 @@ class Trees
 		
 		mesh.receiveShadow = true;
 		mesh.castShadow = true;
-		mesh.position.y = -0.2;
+		//mesh.position.y = -0.2;
 		
 		scene.add( mesh );
+			
+		//this.mesh = mesh;
 		
 	} // Trees.image
 

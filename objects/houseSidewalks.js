@@ -172,7 +172,7 @@ class HouseSidewalks
 	static material()
 	{
 		
-		var material = new THREE.MeshLambertMaterial({
+		var material = new THREE.MeshPhongMaterial({
 				color: 'white',
 				map: textures.sidewalk.map( 4, 4 ),
 				depthTest: false,
