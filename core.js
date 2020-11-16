@@ -644,9 +644,8 @@ function pickDistance( fromPosition, viaPositions, finalPosition )
 function pickDirection( fromPosition, viaPositions, finalPosition, avoidPositions = [] )
 {
 	// calculate probabilities intervals
-	var cosines = [],
-		maxCosine = -1,
-		probabilities = [0],
+	var scores = [],
+		minDistance = Number.POSITIVE_INFINITY,
 		n = viaPositions.length;
 
 	// vector to the final position
@@ -657,53 +656,44 @@ function pickDirection( fromPosition, viaPositions, finalPosition, avoidPosition
 	{	
 		var midPosition = getPosition( viaPositions[i] );
 
-		// vectors to a possible position
-		var vecPossible = fromPosition.to( midPosition ),
-			lenPossible = vecPossible.dot( vecPossible );
+		if( avoidPositions.indexOf(midPosition)<0 )
+		{
+			// distance to mid position and then to final position
+			var distance = fromPosition.distanceToSq( midPosition )+midPosition.distanceToSq( finalPosition );
+			minDistance = Math.min( minDistance, distance );
+				
+			// vectors to a possible position
+			var vecPossible = fromPosition.to( midPosition ),
+				lenPossible = vecPossible.dot( vecPossible );
 
-		var cosine;
-		if( lenPossible<1 || avoidPositions.indexOf(viaPositions[i])>-1 )
-			cosine = -1;
+			var cosine;
+			if( lenPossible<1 )
+				cosine = -1;
+			else
+				cosine = vecFinal.dot( vecPossible ) / Math.sqrt( lenFinal * lenPossible );
+		}
 		else
-			cosine = vecFinal.dot( vecPossible ) / Math.sqrt( lenFinal * lenPossible );
+		{
+			var distance = 2*GROUND_SIZE;
+			var cosine = -1;
+		}
 		
-		// convert [-1..1] -> [0..1]
-		cosine = (cosine+1)/2; // [0..1]
-
-		cosines[i] = cosine;
-		maxCosine = Math.max( maxCosine, cosine );
+		scores[i] = {index: i, cos: cosine, dist: distance};
 	}
 
-	// set probability value like this:
-	// 		100 - for items up to 10% from the maximal cosine
-	//		1   - for items up to 30%
-	//		0.1	- all other items
-	var value;
 	for( var i=0; i<n; i++)
-	{	
-		if( cosines[i]>0.9*maxCosine ) value = 100;
-		else if( cosines[i]>0.7*maxCosine ) value = 1;
-		else value = 0.1;
-			
-		probabilities[i+1] = probabilities[i] + value;
-	}
-	
-	// pick position according to probabilities
-	var randomPick = THREE.Math.randFloat( 0, probabilities[n] ),
-		pickedIndex = THREE.Math.randInt( 0, n-1 );
-	
-	for( var i=0; i<n; i++ )
-	  if( randomPick < probabilities[i+1] )
-	  {
-		  pickedIndex = i;
-		  break;
-	  }
+		scores[i].value = (scores[i].cos+1) + 5*minDistance/scores[i].dist;
+	scores.sort( (a,b)=>b.value-a.value );
 
-//	console.log('pickDirection------------');
-//	for( var i=0; i<n; i++ )
-//		console.log('opt['+i+'] =', (probabilities[i+1]-probabilities[i]).toFixed(2), i==pickedIndex?'*':'' );
-	
-	return viaPositions[pickedIndex]; 
+	var pickedIndex = 0;
+	for( var i=0; i<n; i++)
+		if( Math.random()<0.8 )
+		{
+			pickedIndex = i;
+			break;
+		}
+
+	return viaPositions[scores[pickedIndex].index];
 	
 } // pickDirection
 

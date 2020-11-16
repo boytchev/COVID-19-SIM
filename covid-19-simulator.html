@@ -96,7 +96,6 @@
 				//renderer.shadowMap.type = THREE.BasicShadowMap;
 				//renderer.shadowMap.type = THREE.VSMShadowMap;
 				
-				//renderer.shadowMap.radius = 50;
 				renderer.shadowMap.autoUpdate = false;
 				renderer.shadowMap.needsUpdate = true;
 			}
@@ -104,6 +103,7 @@
 		var scene = new THREE.Scene();
 			scene.background = new THREE.Color( 'skyblue' );
 			scene.add( new THREE.AmbientLight( 0x404040 ) );
+		
 			//scene.add( new THREE.AmbientLight( 0x404040 ) );
 
 		var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 4*GROUND_SIZE );
@@ -112,7 +112,7 @@
 			camera.position.set( 0.01+0*GROUND_SIZE/0.8, GROUND_SIZE*2, 0 );
 			camera.position.set( GROUND_SIZE/2, GROUND_SIZE/10, GROUND_SIZE/3 );
 			//camera.position.set( GROUND_SIZE/1, GROUND_SIZE/4, GROUND_SIZE/1 );
-			camera.position.set( 0, 1.2*GROUND_SIZE, 0 );
+			//camera.position.set( 0, 1.2*GROUND_SIZE, 0 );
 
 		var lights = [],
 			intensity = 0,
@@ -123,7 +123,7 @@
 		for( var i=0; i<SHADOWS_COUNT; i++)
 		{
 			lights[i] = new THREE.DirectionalLight( 'white', intensity );
-			lights[i].position.set( GROUND_EDGE, GROUND_EDGE*Math.pow(0.95,i), GROUND_EDGE );
+			lights[i].position.set( GROUND_EDGE, GROUND_EDGE*Math.pow(1,i), GROUND_EDGE );
 			//light.target = scene;
 			if( SHADOWS )
 			{
@@ -145,8 +145,8 @@
 		if( SHADOWS )
 		{
 			var topShadow = lights[0].clone();
-			topShadow.position.set( 0, GROUND_EDGE, 0 );
-			topShadow.intensity = 0.15;
+			topShadow.position.set( 0, GROUND_EDGE/10, 0 );
+			topShadow.intensity = 0.2;
 			scene.add( topShadow );
 		}
 		
@@ -170,7 +170,6 @@
 		var currentTimeMs = START_TIME,
 			dayTimeMs = currentTimeMs % HOURS_24_MS;
 
-			
 		var currentTime_elem = document.getElementById('time'),
 			currentFps_elem = document.getElementById('fps'),
 			agents_elem = document.getElementById('agents');

@@ -115,6 +115,9 @@ class Agent extends AgentBehaviour
 			
 		mesh.position.set( this.x, this.y, this.z );
 		mesh.scale.set( this.height/1.7, this.height/1.7, this.height/1.7 );
+		
+		//mesh.castShadow = true;
+		
 		scene.add( mesh );
 
 		// var ageMesh = new THREE.Mesh( AgentLabelGeometry[round(this.age,1)], AgentMaterial2 );
@@ -198,8 +201,7 @@ class Agent extends AgentBehaviour
 	{
 		var material = new THREE.MeshPhongMaterial( {
 				color: 'crimson',
-				shininess: 100,
-				flatShading: true
+//				shininess: 100,
 		});
 		
 		return material;

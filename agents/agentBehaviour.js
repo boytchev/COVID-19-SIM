@@ -493,8 +493,8 @@ class AgentBehaviour
 			while( this.routePosition.block !== to.block )
 			{
 				// find the next crossing
-				var block = this.routePosition.block,	
-					crossing = pickDirection( this.routePosition, block.crossings, to.position/*, lastCrossings*/ );
+				var block = this.routePosition.block,
+					crossing = pickDirection( this.routePosition, block.crossings, to.position, lastCrossings );
 //console.log(block.id,'#'+(this.gotoPosition.length-1));
 				lastCrossings[2] = lastCrossings[1];
 				lastCrossings[1] = lastCrossings[0];
@@ -636,6 +636,9 @@ class AgentBehaviour
 			console.log('from\t',from);
 			console.log('to\t',to);
 */			
+			var color = 'crimson',//new THREE.Color(Math.random(),Math.random()/3,Math.random()/2),
+				offset = 0.1;
+			
 			for( var i=0; i<this.gotoPosition.length; i++)
 			{
 /*				
@@ -650,9 +653,9 @@ class AgentBehaviour
 				//	drawArrow( this.gotoPosition[i].zone.center.addY(this.gotoPosition[i].y+0.2), this.gotoPosition[i].zone.center.addY(this.gotoPosition[i].y+5), 'black' );
 				
 				if( i )
-					drawArrow( this.gotoPosition[i-1].addY(0.2), this.gotoPosition[i].addY(0.2) );
+					drawArrow( this.gotoPosition[i-1].addY(offset), this.gotoPosition[i].addY(offset),color );
 				else
-					drawArrow( from.position.addY(0.2), this.gotoPosition[i].addY(0.2) );
+					drawArrow( from.position.addY(offset), this.gotoPosition[i].addY(offset),color );
 			}
 /*
 			console.groupEnd('New route');
