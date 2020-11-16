@@ -102,7 +102,6 @@
 			
 		var scene = new THREE.Scene();
 			scene.background = new THREE.Color( 'skyblue' );
-			scene.add( new THREE.AmbientLight( 0x404040 ) );
 		
 			//scene.add( new THREE.AmbientLight( 0x404040 ) );
 
@@ -119,11 +118,13 @@
 			decay = 0.7;
 		for( var i=0; i<SHADOWS_COUNT; i++)
 			intensity += Math.pow(decay,i);
-		intensity = 1/intensity;	
+		intensity = 0.7/intensity;	
 		for( var i=0; i<SHADOWS_COUNT; i++)
 		{
 			lights[i] = new THREE.DirectionalLight( 'white', intensity );
 			lights[i].position.set( GROUND_EDGE, GROUND_EDGE*Math.pow(1,i), GROUND_EDGE );
+			lights[i].storedIntensity = intensity;
+			
 			//light.target = scene;
 			if( SHADOWS )
 			{
@@ -147,9 +148,14 @@
 			var topShadow = lights[0].clone();
 			topShadow.position.set( 0, GROUND_EDGE/10, 0 );
 			topShadow.intensity = 0.2;
+			topShadow.storedIntensity = topShadow.intensity;
 			scene.add( topShadow );
 		}
 		
+		var ambientLight = new THREE.AmbientLight( 'white', 0.25 );
+		ambientLight.storedIntensity = ambientLight.intensity;
+		scene.add( ambientLight );
+			
 		var controls = new THREE.OrbitControls( camera, renderer.domElement );
 			controls.maxPolarAngle = Math.PI * 0.495;
 			controls.minDistance = 20;
@@ -243,6 +249,56 @@
 			currentTimeMs += 1000*deltaTime;
 			dayTimeMs = currentTimeMs % HOURS_24_MS;
 			frame++;
+			
+			if( dayTimeMs<SUN_DAYTIME_MS.min || dayTimeMs>SUN_DAYTIME_MS.max )
+			{
+				console.log('night');
+				
+				scene.background.setRGB(0,0,0.2);
+				
+				// it is night, no sun
+				for( var i=0; i<SHADOWS_COUNT; i++)
+				{
+					lights[i].intensity = 0;
+				}
+				if( SHADOWS )
+				{
+					topShadow.intensity = 0;
+				}
+				ambientLight.intensity = 0;
+			}
+			else
+			{
+				console.log('day');
+				
+				// sunAngle is from 0 (sunrise) to Pi (sunset)
+				var sunAngle = THREE.Math.mapLinear( dayTimeMs, SUN_DAYTIME_MS.min, SUN_DAYTIME_MS.max, 0, Math.PI );
+
+				// set sun position
+				var cos = Math.cos( sunAngle ),
+					sin = Math.sin( sunAngle );
+					softSin = Math.cos( 2*(sunAngle-Math.PI/2) )/2 + 1/2;
+					
+				softSin = Math.pow(softSin,1/2);
+				
+				for( var i=0; i<SHADOWS_COUNT; i++)
+				{
+					lights[i].position.set( GROUND_EDGE*cos, GROUND_EDGE*sin, GROUND_EDGE*cos );
+					lights[i].intensity = lights[i].storedIntensity * softSin;
+					lights[i].color.setRGB(1,(1+2*softSin)/3,softSin);
+				}
+				if( SHADOWS )
+				{
+					topShadow.intensity = topShadow.storedIntensity * softSin;
+				}
+				ambientLight.intensity = ambientLight.storedIntensity * softSin;
+
+				scene.background.setRGB(softSin*0.6,softSin*0.8,softSin+0.2);
+			}
+			if( SHADOWS )
+			{
+				renderer.shadowMap.needsUpdate = true;
+			}
 			
 //			light.position.copy ( camera.position );
 //			var angle = Math.PI/2 + Math.PI/2*Math.sin(currentTimeMs/500000);

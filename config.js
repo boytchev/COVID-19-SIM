@@ -10,8 +10,8 @@ R = 1+Math.floor(Math.random()*100000);
 //R = 39528;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
-const DEBUG_AGENT_MAX_COUNT = 1000;
-const DEBUG_TIME_SPEED = timeMs(0,1,0)/10000;	// time ellapsed for 1 second
+const DEBUG_AGENT_MAX_COUNT = 0;
+const DEBUG_TIME_SPEED = timeMs(0,10,0)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
@@ -139,7 +139,7 @@ const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 2 );
 const SHADOWS = true;
 const SHADOW_MAP_SIZE = 1024*4;
 const SHADOWS_COUNT = SHADOWS?3:1;
-
+const SUN_DAYTIME_MS = new Range( timeMs(6), timeMs(18) );	// sunrise at 6:00:00, sunset at 18:00:00
 
 // global simulation time
 //const START_TIME = timeMs(19);			// start time
