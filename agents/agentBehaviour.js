@@ -239,7 +239,6 @@ class AgentBehaviour
 	
 	router( from, to )
 	{
-		
 // in same park/plaza
 //		var from = new BlockAddress( pick(blocks.plazas) );
 //		var	to = new BlockAddress(from.block);
@@ -846,6 +845,10 @@ class AgentBehaviour
 
 	AGENT_STAYING_AT_HOME()
 	{
+		// ignore request if the agent has no home
+		if( !this.home.building )
+			return;
+		
 		// is it time to sleep?
 		if( !this.shouldBeAwake() )
 		{
