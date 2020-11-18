@@ -31,37 +31,3 @@ class GrassTexture extends ProceduralTexture
 	} // GrassTexture.draw
 	
 } // GrassTexture
-
-
-
-class GrassBumpTexture extends ProceduralTexture
-{
-
-	constructor( width, height )
-	{
-		super( width, height, 'rgb(128,128,128)' );
-	} // GrassBumpTexture
-
-
-
-	draw()
-	{
-		super.draw();
-		
-		var ctx = this.ctx,
-			W = this.width,
-			H = this.height;
-
-		for( var i=0; i<W+H; i++ )
-		{
-			var color = THREE.Math.randInt(0,255);
-			ctx.fillStyle = 'rgb('+color+','+color+','+color+')';
-			ctx.fillRect( THREE.Math.randInt(0,W-1), THREE.Math.randInt(0,H-1), 1, 1 );
-		}
-		
-		this.repeatU = THREE.RepeatWrapping;
-		this.repeatV = THREE.RepeatWrapping;
-		
-	} // GrassBumpTexture.draw
-	
-} // GrassBumpTexture
