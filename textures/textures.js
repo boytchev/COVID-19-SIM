@@ -141,6 +141,9 @@ class Textures
 
 		this.crossing = new CrossingTexture( 64*2, 2, '#404040' );
 		
+		this.grass = new GrassTexture( 64 );
+		this.grassBump = new GrassBumpTexture( 64 );
+		
 		//this.crossing.debugShow( '3em', 1 );
 		//this.houseBump.debugShow( '256px' );
 		

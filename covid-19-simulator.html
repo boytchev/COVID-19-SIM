@@ -47,6 +47,7 @@
 	<script src="textures/sidewalkTexture.js"></script>
 	<script src="textures/apartmentTexture.js"></script>
 	<script src="textures/crossingTexture.js"></script>
+	<script src="textures/grassTexture.js"></script>
 
 	<script src="objects/ground.js"></script>
 	<script src="objects/blocks.js"></script>
@@ -249,7 +250,7 @@
 			currentTimeMs += 1000*deltaTime;
 			dayTimeMs = currentTimeMs % HOURS_24_MS;
 			frame++;
-			
+/*			
 			if( dayTimeMs<SUN_DAYTIME_MS.min || dayTimeMs>SUN_DAYTIME_MS.max )
 			{
 				console.log('night');
@@ -299,7 +300,7 @@
 			{
 				renderer.shadowMap.needsUpdate = true;
 			}
-			
+*/			
 //			light.position.copy ( camera.position );
 //			var angle = Math.PI/2 + Math.PI/2*Math.sin(currentTimeMs/500000);
 //			light.position.set ( GROUND_SIZE*Math.cos(angle), GROUND_SIZE*Math.sin(angle), GROUND_SIZE/6 );
