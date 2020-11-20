@@ -331,12 +331,16 @@ class Blocks
 			);
 		}
 		
-		var material = new THREE.MeshPhongMaterial({
+		var MeshClass = (SHADOWS)?THREE.MeshStandardMaterial:THREE.MeshBasicMaterial;
+		
+		var material = new MeshClass({
 				color: blockType.color,
 				map: texture.map( 1/textureScale, 1/textureScale ),
 				depthTest: false,
 				transparent: DEBUG_BLOCKS_OPACITY<1,
-				opacity: DEBUG_BLOCKS_OPACITY
+				opacity: DEBUG_BLOCKS_OPACITY,
+				metalness: 0,
+				roughness: 1,
 			});
 	
 		var geometry = new THREE.BufferGeometry();

@@ -272,7 +272,7 @@ class ApartmentBuildings
 
 	static material()
 	{
-		var material = new THREE.MeshPhongMaterial({
+		var material = new THREE.MeshStandardMaterial({
 				side: DEBUG_HIDE_ROOFS?THREE.DoubleSide:THREE.FrontSide,
 				color: 'white',
 				//flatShading: true,
@@ -281,6 +281,8 @@ class ApartmentBuildings
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
 				opacity:     DEBUG_BUILDINGS_OPACITY,
 				depthWrite:  DEBUG_BUILDINGS_OPACITY>0.9,
+				metalness: 0,
+				roughness: 1,
 			});
 
 		// inject GLSL code to rescale textures vertically

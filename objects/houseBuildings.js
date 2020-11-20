@@ -342,6 +342,7 @@ class HouseBuildings
 		
 		var material = new THREE.MeshPhongMaterial({
 				color: 'cornsilk',
+				shininess: 1,
 				vertexColors: true,
 				flatShading: true,
 				map: textures.house.map(),

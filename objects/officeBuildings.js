@@ -298,6 +298,8 @@ class OfficeBuildings
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
 				opacity:     DEBUG_BUILDINGS_OPACITY,
 				depthWrite:  DEBUG_BUILDINGS_OPACITY>0.9,
+				metalness: 0,
+				roughness: 1,
 			});
 
 		// inject GLSL code to rescale textures vertically

@@ -172,12 +172,16 @@ class HouseSidewalks
 	static material()
 	{
 		
-		var material = new THREE.MeshPhongMaterial({
+		var MeshClass = (SHADOWS)?THREE.MeshStandardMaterial:THREE.MeshBasicMaterial;
+		
+		var material = new MeshClass({
 				color: 'white',
 				map: textures.sidewalk.map( 4, 4 ),
 				depthTest: false,
 				transparent: DEBUG_BLOCKS_OPACITY<1,
-				opacity: DEBUG_BLOCKS_OPACITY
+				opacity: DEBUG_BLOCKS_OPACITY,
+				metalness: 0,
+				roughness: 1,
 			});
 
 		// inject GLSL code to fix scaling

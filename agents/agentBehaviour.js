@@ -48,7 +48,7 @@ const AGENT_REST_TIME_AT_HOME_MS = new Range( 0, timeMs(0,5) );	// in millisecon
 const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(0,5) );	// in milliseconds (0-5 min), time to work on one place in the office
 
 
-const START_TIME = timeMs(5);			// start time
+const START_TIME = timeMs(8);			// start time
 
 
 

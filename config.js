@@ -1,6 +1,6 @@
 // size of the simulated world
 
-const GROUND_SIZE = 1000; 				// in meters
+const GROUND_SIZE = 500; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 
 	
@@ -12,12 +12,12 @@ console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
 const DEBUG_AGENT_MAX_COUNT = 1;
 const DEBUG_TIME_SPEED = timeMs(0,10,0)/1000;	// time ellapsed for 1 second
-const DEBUG_BLOCK_WITH_ONLY_HOUSES = !false;
+const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
-const DEBUG_AUTOROTATE = !false;
+const DEBUG_AUTOROTATE = false;
 const DEBUG_AUTOROTATE_SPEED = 0.1;
 const DEBUG_RENDERER_INFO = false;
 const DEBUG_BUILDINGS_OPACITY = 4/4;				// for buildings and trees
@@ -136,11 +136,32 @@ const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 3 );
 const AGENT_ADULTS_PER_APARTMENT = new Range( 1, 3 );
 const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 2 );
 
-// realism
-const SHADOWS = true;
-const SHADOW_MAP_SIZE = 1024*4;
-const SHADOWS_COUNT = SHADOWS?3:1;
+// nature
+
+//	no shadows, light comes from camera
+//	no shadows, light comes from static sun
+//	no shadows, light comes from dynamic sun
+//	static shadows, light comes from static sun
+//	static shadows, light comes from dynamic sun
+//	dynamic shadows, light comes from dynamic sun
+//
+
+const STATIC = 1;
+const DYNAMIC = 2;
+
+const SUN = false; // false, STATIC, DYNAMIC
+//const SUN = STATIC_SUN;
+//const SUN = DYNAMIC_SUN;
 const SUN_DAYTIME_MS = new Range( timeMs(6), timeMs(18) );	// sunrise at 6:00:00, sunset at 18:00:00
+
+//const SHADOWS = false; // false, STATIC, DYNAMIC
+const SHADOWS = STATIC;
+//const SHADOWS = DYNAMIC;
+const SHADOW_MAP_SIZE = 1024*4;
+const SHADOWS_COUNT = (SHADOWS && SUN)?3:1;
+
+
+
 
 // global simulation time
 //const START_TIME = timeMs(19);			// start time

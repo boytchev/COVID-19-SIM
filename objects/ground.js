@@ -23,12 +23,16 @@ class Ground
 	{
 		let geometry = new THREE.PlaneBufferGeometry( GROUND_SIZE, GROUND_SIZE );
 
-		let material = new THREE.MeshLambertMaterial( {
+		var MeshClass = (SHADOWS)?THREE.MeshStandardMaterial:THREE.MeshBasicMaterial;
+		
+		let material = new MeshClass( {
 				color: '#404040',
 				depthTest: false,
 				// map: textures.grid.map( Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE), Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE) )
 				transparent: DEBUG_BLOCKS_OPACITY<1,
-				opacity: DEBUG_BLOCKS_OPACITY
+				opacity: DEBUG_BLOCKS_OPACITY,
+				metalness: 0,
+				roughness: 1,
 			} );
 		
 		let image = new THREE.Mesh( geometry, material );

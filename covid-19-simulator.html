@@ -61,6 +61,7 @@
 	<script src="objects/apartmentBuildings.js"></script>
 	<script src="objects/trees.js"></script>
 	<script src="objects/crossings.js"></script>
+	<script src="objects/nature.js"></script>
 	
 	<script src="agents/navmesh.js"></script>
 	<script src="agents/address.js"></script>
@@ -89,22 +90,8 @@
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			container.appendChild( renderer.domElement );
-			if( SHADOWS )
-			{
-				renderer.shadowMap.enabled = true;
-				//renderer.shadowMap.type = THREE.PCFShadowMap;
-				renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-				//renderer.shadowMap.type = THREE.BasicShadowMap;
-				//renderer.shadowMap.type = THREE.VSMShadowMap;
-				
-				renderer.shadowMap.autoUpdate = false;
-				renderer.shadowMap.needsUpdate = true;
-			}
 			
 		var scene = new THREE.Scene();
-			scene.background = new THREE.Color( 'skyblue' );
-		
-			//scene.add( new THREE.AmbientLight( 0x404040 ) );
 
 		var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 4*GROUND_SIZE );
 			camera.position.set( 10*GROUND_SIZE, 3*GROUND_SIZE, 10*GROUND_SIZE );
@@ -114,49 +101,8 @@
 			//camera.position.set( GROUND_SIZE/1, GROUND_SIZE/4, GROUND_SIZE/1 );
 			//camera.position.set( 0, 1.2*GROUND_SIZE, 0 );
 
-		var lights = [],
-			intensity = 0,
-			decay = 0.7;
-		for( var i=0; i<SHADOWS_COUNT; i++)
-			intensity += Math.pow(decay,i);
-		intensity = 0.7/intensity;	
-		for( var i=0; i<SHADOWS_COUNT; i++)
-		{
-			lights[i] = new THREE.DirectionalLight( 'white', intensity );
-			lights[i].position.set( GROUND_EDGE, GROUND_EDGE*Math.pow(1,i), GROUND_EDGE );
-			lights[i].storedIntensity = intensity;
-			
-			//light.target = scene;
-			if( SHADOWS )
-			{
-				lights[i].castShadow = true;
-				lights[i].shadow.mapSize.width = SHADOW_MAP_SIZE>>i;
-				lights[i].shadow.mapSize.height = SHADOW_MAP_SIZE>>i;
-				lights[i].shadow.camera.near = -10000;
-				lights[i].shadow.camera.far = 10000;
-				lights[i].shadow.camera.left = -GROUND_SIZE;
-				lights[i].shadow.camera.right = GROUND_SIZE;
-				lights[i].shadow.camera.bottom = -GROUND_SIZE;
-				lights[i].shadow.camera.top = GROUND_SIZE;
-				lights[i].shadow.bias = -0.00005;
-			}
-			intensity = intensity*decay;
-			scene.add( lights[i] );
-		}
 		
-		if( SHADOWS )
-		{
-			var topShadow = lights[0].clone();
-			topShadow.position.set( 0, GROUND_EDGE/10, 0 );
-			topShadow.intensity = 0.2;
-			topShadow.storedIntensity = topShadow.intensity;
-			scene.add( topShadow );
-		}
 		
-		var ambientLight = new THREE.AmbientLight( 'white', 0.25 );
-		ambientLight.storedIntensity = ambientLight.intensity;
-		scene.add( ambientLight );
-			
 		var controls = new THREE.OrbitControls( camera, renderer.domElement );
 			controls.maxPolarAngle = Math.PI * 0.495;
 			controls.minDistance = 20;
@@ -195,6 +141,7 @@
 		var trees = new Trees();			//console.log('trees\t\t',clock.getDelta());
 		var crossings = new Crossings();	//console.log('crossings\t',clock.getDelta());
 		var agents = new Agents();			//console.log('agents\t\t',clock.getDelta());
+		var nature = new Nature();			//console.log('nature\t\t',clock.getDelta());
 
 		agents_elem.innerHTML = 'ppl='+agents.agents.length;
 		
@@ -311,8 +258,8 @@
 			//stats.update();
 
 			controls.update();
-			
 			agents.update();
+			nature.update();
 			
 			renderer.render(scene, camera);
 			
