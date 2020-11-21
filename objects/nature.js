@@ -16,7 +16,7 @@
 	camera, top shadows			no		top		static	1		ok
 	camera, full shadows		no		full	dynamic	n+1		ok
 	-------------------------	-------	------	-------	------	----
-	static sun, no shadows		static	no		static	0
+	static sun, no shadows		static	no		static	0		ok
 	static sun, top shadows		static	top		static	1
 	static sun, full shadows	static	full	static	n+1
 	-------------------------	-------	-------	-------	------	----
@@ -32,22 +32,22 @@ var NatureMaterial = ( SHADOWS != NO_SHADOWS ) ? THREE.MeshStandardMaterial : TH
 var ambientIntensities = [
 		//NO  TOP  FULL_SHADOW
 		[0.5, 0.7, 0.7],// NO_SUN
-		[0.0, 0.0, 0.0],// STATIC_SUN
-		[0.0, 0.0, 0.0]	// SYNAMIC_SUN
+		[0.5, 0.5, 0.5],// STATIC_SUN
+		[0.5, 0.5, 0.5]	// SYNAMIC_SUN
 	];
 
 var topIntensities = [
 		//NO  TOP  FULL_SHADOW
 		[0.1, 0.2, 0.2],// NO_SUN
-		[0.0, 0.0, 0.0],// STATIC_SUN
-		[0.0, 0.0, 0.0]	// SYNAMIC_SUN
+		[0.1, 0.1, 0.2],// STATIC_SUN
+		[0.1, 0.1, 0.2]	// SYNAMIC_SUN
 	];
 	
 var sunIntensities = [
 		//NO  TOP  FULL_SHADOW
 		[1.0, 0.5, 1.0],// NO_SUN
-		[0.0, 0.0, 0.0],// STATIC_SUN
-		[0.0, 0.0, 0.0]	// SYNAMIC_SUN
+		[1.0, 1.0, 1.0],// STATIC_SUN
+		[1.0, 1.0, 1.0]	// SYNAMIC_SUN
 	];
 
 
@@ -179,25 +179,27 @@ class Nature
 				scene.children[i].originalIntensity = scene.children[i].intensity;
 				console.log( scene.children[i].intensity.toFixed(2), scene.children[i].name );
 			}
-		
 	} // Nature
 
 
 	update()
 	{
-		// estimate light (sun) position
 		if( SUN )
 		{
-			
+			var sunAngle = this.getSunAngularPosition(),
+				cos = Math.cos( sunAngle ),
+				sin = Math.sin( sunAngle );
+			this.sunPosition.set( GROUND_SIZE*cos*SUN_SIN, GROUND_SIZE*sin, GROUND_SIZE*cos*SUN_COS );
 		}
 		else
 		{
 			camera.getWorldDirection( this.sunPosition );
+			this.sunPosition.multiplyScalar( -1 );
 		}
 
 		// set light (sun) positions
 		for( var i=0; i<this.sunLights.length; i++)
-			this.sunLights[i].position.copy( this.sunPosition ).multiplyScalar( -1 );
+			this.sunLights[i].position.copy( this.sunPosition );
 			
 			
 		// request regeneration of shadows
@@ -205,6 +207,27 @@ class Nature
 		{	
 			renderer.shadowMap.needsUpdate = true;
 		}
+		
+	}
+	
+	
+	
+	// calculate sun position at given time of the day
+	getSunAngularPosition()
+	{
+		var timeMs = (SUN==STATIC_SUN) ? STATIC_SUN_POSITION_MS : dayTimeMs;
+		
+		// check relative time position rT in respect to sunrise(rT=0) and sunset(rT=1)
+		var rT = THREE.Math.mapLinear( timeMs, SUNRISE_MS, SUNSET_MS, 0, 1 );
+
+		if( rT<0 || rT>1)
+		{
+			// it is nighttime, calculate how much of the night has passed
+			if( dayTimeMs<SUNRISE_MS ) timeMs += HOURS_24_MS;
+			rT = THREE.Math.mapLinear( timeMs, SUNSET_MS, SUNRISE_MS+HOURS_24_MS, 1, 2 );
+		}
+		
+		return rT*Math.PI;
 	}
 	
 } // Nature

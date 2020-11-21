@@ -1,6 +1,6 @@
 // size of the simulated world
 
-const GROUND_SIZE = 500; 				// in meters
+const GROUND_SIZE = 1000; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 
 	
@@ -11,7 +11,7 @@ R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
 const DEBUG_AGENT_MAX_COUNT = 1;
-const DEBUG_TIME_SPEED = timeMs(0,10,0)/1000;	// time ellapsed for 1 second
+const DEBUG_TIME_SPEED = timeMs(0,30,0)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
@@ -33,7 +33,7 @@ const DEBUG_CENTER_VIEW_ON_AGENTS = false;
 const DEBUG_FOLLOW_AGENT = -1;	// -1 for not following any
 const DEBUG_SHOW_DIRECTIONS = false;
 const DEBUG_APARTMENT_ADD_FLOORS = false;
-const DEBUG_SHOW_HOME_TO_WORK_ARROW = !false;
+const DEBUG_SHOW_HOME_TO_WORK_ARROW = false;
 const DEBUG_SHOW_ROUTES = false;
 const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 var DEBUG_FLAG_1 = false;
@@ -146,11 +146,19 @@ const TOP_SHADOWS = 1;
 const FULL_SHADOWS = 2;
 
 
-const SUN = NO_SUN;
+//const SUN = NO_SUN;
 //const SUN = STATIC_SUN;
-//const SUN = DYNAMIC_SUN;
-const SUN_DAYTIME_MS = new Range( timeMs(6), timeMs(18) );	// sunrise at 6:00:00, sunset at 18:00:00
+const SUN = DYNAMIC_SUN;
+const SUNRISE_MS = timeMs(6);
+const SUNSET_MS = timeMs(18);
 const STATIC_SUN_POSITION_MS = timeMs(7);
+console.assert(SUNRISE_MS<SUNSET_MS,'Sunrise must be before sunset [2125]');
+
+const SUN_HORIZONTAL_ANGLE = Math.PI/6;
+const SUN_SIN = Math.sin(SUN_HORIZONTAL_ANGLE);
+const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
+		
+
 
 //const SHADOWS = NO_SHADOWS;
 //const SHADOWS = TOP_SHADOWS;
