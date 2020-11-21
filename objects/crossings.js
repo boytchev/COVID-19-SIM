@@ -450,14 +450,11 @@ class Crossings
 			}
 		}
 
-		var MeshClass = (SHADOWS)?THREE.MeshStandardMaterial:THREE.MeshBasicMaterial;
-		var material = new MeshClass({
+		var material = new NatureMaterial({
 				map: textures.crossing.map( 1/CROSSING_TEXTURE_SCALE, 1/CROSSING_TEXTURE_SCALE ),
 				depthTest: false,
 				transparent: DEBUG_BLOCKS_OPACITY<1,
 				opacity: DEBUG_BLOCKS_OPACITY,
-				metalness: 0,
-				roughness: 1,
 			});
 	
 		var geometry = new THREE.BufferGeometry();

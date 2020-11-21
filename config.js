@@ -137,28 +137,29 @@ const AGENT_ADULTS_PER_APARTMENT = new Range( 1, 3 );
 const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 2 );
 
 // nature
+const NO_SUN = 0;
+const STATIC_SUN = 1;
+const DYNAMIC_SUN = 2;
 
-//	no shadows, light comes from camera
-//	no shadows, light comes from static sun
-//	no shadows, light comes from dynamic sun
-//	static shadows, light comes from static sun
-//	static shadows, light comes from dynamic sun
-//	dynamic shadows, light comes from dynamic sun
-//
+const NO_SHADOWS = 0;
+const TOP_SHADOWS = 1;
+const FULL_SHADOWS = 2;
 
-const STATIC = 1;
-const DYNAMIC = 2;
 
-const SUN = false; // false, STATIC, DYNAMIC
+const SUN = NO_SUN;
 //const SUN = STATIC_SUN;
 //const SUN = DYNAMIC_SUN;
 const SUN_DAYTIME_MS = new Range( timeMs(6), timeMs(18) );	// sunrise at 6:00:00, sunset at 18:00:00
+const STATIC_SUN_POSITION_MS = timeMs(7);
 
-//const SHADOWS = false; // false, STATIC, DYNAMIC
-const SHADOWS = STATIC;
-//const SHADOWS = DYNAMIC;
-const SHADOW_MAP_SIZE = 1024*4;
-const SHADOWS_COUNT = (SHADOWS && SUN)?3:1;
+//const SHADOWS = NO_SHADOWS;
+//const SHADOWS = TOP_SHADOWS;
+const SHADOWS = FULL_SHADOWS;
+const SHADOWS_MAP_SIZE = 1024*4;
+const SHADOWS_MAX_COUNT = 3;
+
+
+
 
 
 

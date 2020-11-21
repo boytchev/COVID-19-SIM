@@ -301,6 +301,7 @@ class Blocks
 
 	constructBlockImages( blockType, texture=textures.grid, textureScale=GROUND_TEXTURE_SCALE )
 	{
+
 		var vertices = [];
 		var normals = [];
 		var uvs = [];
@@ -331,16 +332,12 @@ class Blocks
 			);
 		}
 		
-		var MeshClass = (SHADOWS)?THREE.MeshStandardMaterial:THREE.MeshBasicMaterial;
-		
-		var material = new MeshClass({
+		var material = new NatureMaterial({
 				color: blockType.color,
 				map: texture.map( 1/textureScale, 1/textureScale ),
 				depthTest: false,
 				transparent: DEBUG_BLOCKS_OPACITY<1,
 				opacity: DEBUG_BLOCKS_OPACITY,
-				metalness: 0,
-				roughness: 1,
 			});
 	
 		var geometry = new THREE.BufferGeometry();
@@ -356,10 +353,9 @@ class Blocks
 			
 		var image = new THREE.Mesh(geometry, material);
 			image.updateMatrix();
-			image.matrixAutoUpdate = false;
+			image.matrixAutoUpdate = !false;
 			image.renderOrder = blockType.renderOrder;
 			image.receiveShadow = true;
-
 		scene.add(image);
 		
 	} // Blocks.constructBlockImages

@@ -8,20 +8,102 @@
 //
 
 
+/* Comments:
+												SHADOW	SHADOW
+	LIGHT SOURCE				SUN		SHADOW	TYPE	COUNT	TEST	
+	-------------------------	-------	------	-------	------	----
+	camera, no shadows			no		no		static	0		ok
+	camera, top shadows			no		top		static	1		ok
+	camera, full shadows		no		full	dynamic	n+1		ok
+	-------------------------	-------	------	-------	------	----
+	static sun, no shadows		static	no		static	0
+	static sun, top shadows		static	top		static	1
+	static sun, full shadows	static	full	static	n+1
+	-------------------------	-------	-------	-------	------	----
+	dynamic sun, no shadows		dynamic	no		static	0
+	dynamic sun, top shadows	dynamic	top		static	1
+	dynamic sun, full shadows	dynamic	full	dynamic	n+1
+	-------------------------	-------	-------	-------	------	----
+*/
+
+
+var NatureMaterial = ( SHADOWS != NO_SHADOWS ) ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
+
+var ambientIntensities = [
+		//NO  TOP  FULL_SHADOW
+		[0.5, 0.7, 0.7],// NO_SUN
+		[0.0, 0.0, 0.0],// STATIC_SUN
+		[0.0, 0.0, 0.0]	// SYNAMIC_SUN
+	];
+
+var topIntensities = [
+		//NO  TOP  FULL_SHADOW
+		[0.1, 0.2, 0.2],// NO_SUN
+		[0.0, 0.0, 0.0],// STATIC_SUN
+		[0.0, 0.0, 0.0]	// SYNAMIC_SUN
+	];
+	
+var sunIntensities = [
+		//NO  TOP  FULL_SHADOW
+		[1.0, 0.5, 1.0],// NO_SUN
+		[0.0, 0.0, 0.0],// STATIC_SUN
+		[0.0, 0.0, 0.0]	// SYNAMIC_SUN
+	];
+
+
+class AmbientLight extends THREE.AmbientLight
+{
+	constructor( intensity )
+	{
+		super( 'white', ambientIntensities[SUN][SHADOWS] );
+		this.name = 'ambient';
+		scene.add( this );
+	}
+}
+
+
+class TopLight extends THREE.DirectionalLight
+{
+	constructor( intensity )
+	{
+		super( 'white', topIntensities[SUN][SHADOWS] );
+		
+		this.position.set( 0, 2*GROUND_EDGE, 0 );
+		this.name = 'top';
+		
+		if( SHADOWS != NO_SHADOWS )
+		{
+			this.castShadow = true;
+			this.shadow.mapSize.width = SHADOWS_MAP_SIZE>>2;
+			this.shadow.mapSize.height = SHADOWS_MAP_SIZE>>2;
+			this.shadow.camera.near = -10000;
+			this.shadow.camera.far = 10000;
+			this.shadow.camera.left = -GROUND_EDGE;
+			this.shadow.camera.right = GROUND_EDGE;
+			this.shadow.camera.bottom = -GROUND_EDGE;
+			this.shadow.camera.top = GROUND_EDGE;
+			this.shadow.bias = -0.00005;
+		}
+		
+		scene.add( this );
+	}
+}
+
 
 class SunLight extends THREE.DirectionalLight
 {
-	constructor( intensity, shadowMapShift = 0 )
+	constructor( shadowMapShift = 0 )
 	{
-		super( 'white', intensity );
+		super( 'white', sunIntensities[SUN][SHADOWS]*Math.pow(0.7,shadowMapShift) );
 		
 		this.position.set( GROUND_EDGE, 2*GROUND_EDGE, GROUND_EDGE );
+		this.name = 'sun_'+shadowMapShift;
 		
-		if( SHADOWS )
+		if( SHADOWS == FULL_SHADOWS )
 		{
-			this.castShadow = SUN?true:false;
-			this.shadow.mapSize.width = SHADOW_MAP_SIZE>>shadowMapShift;
-			this.shadow.mapSize.height = SHADOW_MAP_SIZE>>shadowMapShift;
+			this.castShadow = true;
+			this.shadow.mapSize.width = SHADOWS_MAP_SIZE>>shadowMapShift;
+			this.shadow.mapSize.height = SHADOWS_MAP_SIZE>>shadowMapShift;
 			this.shadow.camera.near = -10000;
 			this.shadow.camera.far = 10000;
 			this.shadow.camera.left = -GROUND_SIZE;
@@ -45,14 +127,10 @@ class Nature
 	{
 		this.sysType = 'Nature';
 		this.sunLights = [];
+		this.sunPosition = new THREE.Vector3();
 		
-		
-		this.ambientLight = new THREE.AmbientLight( 'white', 0.5 );
-		this.ambientLight.name = 'ambient';
-		scene.add( this.ambientLight );
-		
-		// add shadow capabilities of renderer
-		if( SHADOWS )
+		// set shadow capabilities of renderer
+		if( SHADOWS != NO_SHADOWS )
 		{
 			renderer.shadowMap.enabled = true;
 			
@@ -63,31 +141,34 @@ class Nature
 			
 			renderer.shadowMap.autoUpdate = false;
 			renderer.shadowMap.needsUpdate = true;
-			
-		}
-
-		if( SHADOWS )
-		{
-			this.topLight = new SunLight( 1, 2 );
-			this.topLight.position.set( 0, GROUND_EDGE/10, 0 );
-			this.topLight.name = 'top';
-			this.topLight.castShadow = true;
-			scene.add( this.topLight );
 		}
 		
-		// add normal sun light
-		for( var i=0; i<SHADOWS_COUNT; i++)
+		
+		// set ambient light - always present
+		this.ambientLight = new AmbientLight();
+		
+
+		// set top light - present if there are any types of shadows
+		if( SHADOWS != NO_SHADOWS )
 		{
-			this.sunLights[i] = new SunLight( Math.pow(0.7,i), i );
-			this.sunLights[i].name = 'sun'+i;
+			this.topLight = new TopLight();
 		}
+		
+		
+		// set normal sun light, for full shadows there are many
+		var shadowCount = (SHADOWS==FULL_SHADOWS) ? SHADOWS_MAX_COUNT : 1;
+		for( var i=0; i<shadowCount; i++)
+		{
+			this.sunLights[i] = new SunLight( i );
+		}
+		
 		
 		// add background color
 		scene.background = new THREE.Color( 'skyblue' );
 		
 		
-		// set all light intensities, so their sum is 1
-		var totalIntensity = -0.2;
+		// adjust light intensities total to be 1
+		var totalIntensity = 0;
 		for( var i=0; i<scene.children.length; i++ )
 			if( scene.children[i] instanceof THREE.Light )
 				totalIntensity += scene.children[i].intensity;
@@ -104,13 +185,25 @@ class Nature
 
 	update()
 	{
+		// estimate light (sun) position
 		if( SUN )
 		{
+			
 		}
 		else
 		{
-			for( var i=0; i<this.sunLights.length; i++)
-				this.sunLights[i].position.copy( camera.position );
+			camera.getWorldDirection( this.sunPosition );
+		}
+
+		// set light (sun) positions
+		for( var i=0; i<this.sunLights.length; i++)
+			this.sunLights[i].position.copy( this.sunPosition ).multiplyScalar( -1 );
+			
+			
+		// request regeneration of shadows
+		if( SUN!=STATIC_SUN && SHADOWS==FULL_SHADOWS )
+		{	
+			renderer.shadowMap.needsUpdate = true;
 		}
 	}
 	

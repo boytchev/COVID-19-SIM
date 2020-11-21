@@ -437,7 +437,7 @@ class OfficeBuildings
 
 		scene.add( mesh );
 
-		if( SHADOWS )
+		if( SHADOWS != NO_SHADOWS )
 		{
 			var geometry  = OfficeBuildings.geometry(),
 				material  = new THREE.MeshBasicMaterial({

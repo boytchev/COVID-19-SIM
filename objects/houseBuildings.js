@@ -290,7 +290,7 @@ class HouseBuildings
 			 -1/2, 0, -1/2, 	-1, 0, 0, 	HH0, W0,
 		);
 		
-		if( SHADOWS )
+		if( SHADOWS != NO_SHADOWS )
 		{
 			data.push(
 				 // Bottom (from Y-)
@@ -597,7 +597,7 @@ class HouseBuildings
 		
 		scene.add( mesh );
 		
-		if( SHADOWS )
+		if( SHADOWS != NO_SHADOWS )
 		{
 			var geometry  = HouseBuildings.geometry(),
 				material  = new THREE.MeshBasicMaterial({

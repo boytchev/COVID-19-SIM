@@ -495,6 +495,7 @@ class ApartmentBuildings
 	
 	static image( apartments )
 	{
+
 		var instances = apartments.length;
 		
 		var geometry  = ApartmentBuildings.geometry(),
@@ -517,7 +518,7 @@ class ApartmentBuildings
 
 		scene.add( mesh );
 		
-		if( SHADOWS )
+		if( SHADOWS != NO_SHADOWS )
 		{
 			var geometry  = ApartmentBuildings.geometry(),
 				material  = new THREE.MeshBasicMaterial({
