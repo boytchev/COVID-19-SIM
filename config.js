@@ -173,6 +173,7 @@ const SHADOWS_MAP_SIZE = 1024*4;
 const SHADOWS_MAX_COUNT = 3;
 
 
+const START_TIME = timeMs(8);			// start time
 
 
 

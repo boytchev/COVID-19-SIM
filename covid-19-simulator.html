@@ -122,18 +122,10 @@
 			controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
 			controls.update();
 
-		var clock = new THREE.Clock(),
-			deltaTime = DEBUG_TIME_SPEED*clock.getDelta(),
-			frame = 0;
-
-		var currentTimeMs = START_TIME,
-			dayTimeMs = currentTimeMs % HOURS_24_MS;
-
 		var currentTime_elem = document.getElementById('time'),
 			currentFps_elem = document.getElementById('fps'),
 			agents_elem = document.getElementById('agents');
 
-		clock.getDelta();
 		var font = new Font();
 		var navmesh = new NavMesh();		//console.log('navmesh\t\t',clock.getDelta());
 		var textures = new Textures();		//console.log('textures\t',clock.getDelta());
@@ -181,6 +173,7 @@
 		var oncePerSecond_timeMs = 0,
 			oncePerSecond_frames = 0;
 			
+			
 		function oncePerSecond()
 		{
 			currentTime_elem.innerHTML = msToString( currentTimeMs );
@@ -194,15 +187,11 @@
 		} // oncePerSecond
 		setInterval( oncePerSecond, 1000 );
 
+
 		// main animation cycle
 		function animate()
 		{
 			requestAnimationFrame( animate );
-
-			deltaTime = DEBUG_TIME_SPEED*clock.getDelta()
-			currentTimeMs += 1000*deltaTime;
-			dayTimeMs = currentTimeMs % HOURS_24_MS;
-			frame++;
 
 			//statsCalls.update( renderer.info.render.calls, 460  );
 			//statsTrigs.update( renderer.info.render.triangles, 460  );
@@ -210,8 +199,8 @@
 			//stats.update();
 
 			controls.update();
-			agents.update();
 			nature.update();
+			agents.update();
 			
 			renderer.render(scene, camera);
 			

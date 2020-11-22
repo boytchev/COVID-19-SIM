@@ -27,6 +27,16 @@
 */
 
 
+var clock = new THREE.Clock(),
+	deltaTime = DEBUG_TIME_SPEED*clock.getDelta(),
+	frame = 0;
+
+
+var currentTimeMs = START_TIME,
+	dayTimeMs = currentTimeMs % HOURS_24_MS;
+
+
+
 var NatureMaterial = ( SHADOWS != NO_SHADOWS ) ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
 var ambientIntensities = [
@@ -185,6 +195,14 @@ class Nature
 
 	update()
 	{
+		
+		// update time markers
+		deltaTime = DEBUG_TIME_SPEED*clock.getDelta()
+		currentTimeMs += 1000*deltaTime;
+		dayTimeMs = currentTimeMs % HOURS_24_MS;
+		frame++;
+
+
 		if( SUN )
 		{
 			var sunAngle = this.getSunAngularPosition(),
@@ -210,7 +228,7 @@ class Nature
 		}
 
 		
-	}
+	} // Nature.update
 	
 	
 	
@@ -236,7 +254,8 @@ class Nature
 		}
 		
 		return rT*Math.PI;
-	}
+	} // Nature.getSunAngularPosition
+	
 	
 } // Nature
 
