@@ -1,6 +1,6 @@
 // size of the simulated world
 
-const GROUND_SIZE = 2000; 				// in meters
+const GROUND_SIZE = 500; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 const EARTH_SIZE = 50000;
 
@@ -37,6 +37,7 @@ const DEBUG_APARTMENT_ADD_FLOORS = false;
 const DEBUG_SHOW_HOME_TO_WORK_ARROW = false;
 const DEBUG_SHOW_ROUTES = false;
 const DEBUG_ROUTES_PER_AGENT = 1; // default 1
+const DEBUG_SUN_POSITION_GUI = !false;
 var DEBUG_FLAG_1 = false;
 
 
@@ -121,6 +122,7 @@ const TREE_HOUSES_RATIO = 0.15; // percentage of trees in house blocks
 
 
 const HOURS_4_MS = timeMs( 4 );
+const HOURS_12_MS = timeMs( 12 );
 const HOURS_24_MS = timeMs( 24 );
 const SECONDS_IN_DAY = 24*60*60;
 const SECONDS_IN_HOUR = 60*60;

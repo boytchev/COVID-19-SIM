@@ -25,6 +25,7 @@
 	<div>
 
 	<script src="js/three.min.js"></script>
+	<script src="js/dat.gui.min.js"></script>
 	<script src="js/LineSegments2.js"></script>
 	<script src="js/LineSegmentsGeometry.js"></script>
 	<script src="js/Line2.js"></script>
@@ -83,8 +84,13 @@
 		//var statsTrigs = stats.addPanel( new Stats.Panel( '△', '#ff8', '#221' ) );
 		//	container.appendChild( stats.dom );
 
-		//var gui = new dat.GUI();
-		//	gui.controls = { }
+		if( DEBUG_SUN_POSITION_GUI )
+		{
+			var guiObject = {sunPos:10};
+			var gui = new dat.GUI();
+				gui.remember( guiObject );
+				gui.add( guiObject, 'sunPos' ).min(0).max(24).step(1).name('Sun pos');
+		}
 
 		var renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );

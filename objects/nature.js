@@ -10,20 +10,20 @@
 
 /* Comments:
 												SHADOW	SHADOW
-	LIGHT SOURCE				SUN		SHADOW	TYPE	COUNT	TEST	
-	-------------------------	-------	------	-------	------	----
-	camera, no shadows			no		no		static	0		ok
-	camera, top shadows			no		top		static	1		ok
-	camera, full shadows		no		full	dynamic	n+1		ok
-	-------------------------	-------	------	-------	------	----
-	static sun, no shadows		static	no		static	0		ok
+	LIGHT SOURCE				SUN		SHADOW	TYPE	COUNT	
+	-------------------------	-------	------	-------	------
+	camera, no shadows			no		no		static	0		
+	camera, top shadows			no		top		static	1		
+	camera, full shadows		no		full	dynamic	n+1		
+	-------------------------	-------	------	-------	------	
+	static sun, no shadows		static	no		static	0		
 	static sun, top shadows		static	top		static	1
 	static sun, full shadows	static	full	static	n+1
-	-------------------------	-------	-------	-------	------	----
+	-------------------------	-------	-------	-------	------	
 	dynamic sun, no shadows		dynamic	no		static	0
 	dynamic sun, top shadows	dynamic	top		static	1
 	dynamic sun, full shadows	dynamic	full	dynamic	n+1
-	-------------------------	-------	-------	-------	------	----
+	-------------------------	-------	-------	-------	------	
 */
 
 
@@ -31,21 +31,21 @@ var NatureMaterial = ( SHADOWS != NO_SHADOWS ) ? THREE.MeshStandardMaterial : TH
 
 var ambientIntensities = [
 		//NO  TOP  FULL_SHADOW
-		[0.5, 0.7, 0.7],// NO_SUN
+		[0.5, 0.5, 0.5],// NO_SUN
 		[0.5, 0.5, 0.5],// STATIC_SUN
 		[0.5, 0.5, 0.5]	// SYNAMIC_SUN
 	];
 
 var topIntensities = [
 		//NO  TOP  FULL_SHADOW
-		[0.1, 0.2, 0.2],// NO_SUN
+		[0.1, 0.1, 0.2],// NO_SUN
 		[0.1, 0.1, 0.2],// STATIC_SUN
 		[0.1, 0.1, 0.2]	// SYNAMIC_SUN
 	];
 	
 var sunIntensities = [
 		//NO  TOP  FULL_SHADOW
-		[1.0, 0.5, 1.0],// NO_SUN
+		[1.0, 1.0, 1.0],// NO_SUN
 		[1.0, 1.0, 1.0],// STATIC_SUN
 		[1.0, 1.0, 1.0]	// SYNAMIC_SUN
 	];
@@ -217,16 +217,22 @@ class Nature
 	// calculate sun position at given time of the day
 	getSunAngularPosition()
 	{
-		var timeMs = (SUN==STATIC_SUN) ? STATIC_SUN_POSITION_MS : dayTimeMs;
+		var t = (SUN==STATIC_SUN) ? STATIC_SUN_POSITION_MS : dayTimeMs;
+		
+		if( DEBUG_SUN_POSITION_GUI )
+		{
+			t = timeMs(guiObject.sunPos);
+			renderer.shadowMap.needsUpdate = true;
+		}
 		
 		// check relative time position rT in respect to sunrise(rT=0) and sunset(rT=1)
-		var rT = THREE.Math.mapLinear( timeMs, SUNRISE_MS, SUNSET_MS, 0, 1 );
+		var rT = THREE.Math.mapLinear( t, SUNRISE_MS, SUNSET_MS, 0, 1 );
 
 		if( rT<0 || rT>1)
 		{
 			// it is nighttime, calculate how much of the night has passed
-			if( dayTimeMs<SUNRISE_MS ) timeMs += HOURS_24_MS;
-			rT = THREE.Math.mapLinear( timeMs, SUNSET_MS, SUNRISE_MS+HOURS_24_MS, 1, 2 );
+			if( dayTimeMs<SUNRISE_MS ) t += HOURS_24_MS;
+			rT = THREE.Math.mapLinear( t, SUNSET_MS, SUNRISE_MS+HOURS_24_MS, 1, 2 );
 		}
 		
 		return rT*Math.PI;
