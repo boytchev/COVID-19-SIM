@@ -2,6 +2,7 @@
 
 const GROUND_SIZE = 1000; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
+const EARTH_SIZE = 10000;
 
 	
 

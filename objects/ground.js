@@ -22,22 +22,44 @@ class Ground
 	constructGroundImage()
 	{
 
-		let geometry = new THREE.PlaneBufferGeometry( GROUND_SIZE, GROUND_SIZE );
+		// add black ground
+		var geometry = new THREE.PlaneBufferGeometry( GROUND_SIZE, GROUND_SIZE );
 
-		let material = new NatureMaterial( {
-				color: '#404040',
+		var material = new NatureMaterial( {
+				color: '#303030',
 				depthTest: false,
 				// map: textures.grid.map( Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE), Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE) )
 				transparent: DEBUG_BLOCKS_OPACITY<1,
 				opacity: DEBUG_BLOCKS_OPACITY,
 			} );
 		
-		let image = new THREE.Mesh( geometry, material );
+		var image = new THREE.Mesh( geometry, material );
 			image.renderOrder = -100;
 			image.rotation.x = -Math.PI/2;
 			image.updateMatrix();
 			image.matrixAutoUpdate = false;
 			image.receiveShadow = true;
+			image.castShadow = true;
+			
+		scene.add( image );
+	
+		// add green ground around the city
+		var geometry = new THREE.BoxBufferGeometry( EARTH_SIZE, 10, EARTH_SIZE );
+		var material = new NatureMaterial( {
+				color: BLOCK_PARK.color,
+				depthTest: false,
+				map: textures.grass.map( Math.round(EARTH_SIZE/GRASS_TEXTURE_SCALE), Math.round(EARTH_SIZE/GRASS_TEXTURE_SCALE) ),
+				transparent: DEBUG_BLOCKS_OPACITY<1,
+				opacity: DEBUG_BLOCKS_OPACITY,
+			} );
+		
+		var image = new THREE.Mesh( geometry, material );
+			image.renderOrder = -110;
+			image.position.y = -5;
+			image.updateMatrix();
+			image.matrixAutoUpdate = false;
+			image.receiveShadow = true;
+			image.castShadow = true;
 			
 		scene.add( image );
 	
