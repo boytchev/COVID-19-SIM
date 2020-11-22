@@ -100,13 +100,23 @@ class Agents
 	{
 		if( this.agents.length )
 		{	
+			if( DEBUG_AGENT_LOCATIONS )
+			{
+				var agentsAtHome = 0,
+					agentsAtWork = 0,
+					agentsOutside = 0,
+					agentsOther = 0;
+			}
+			
 			for( var i=0; i<this.agents.length; i++ )
 			{
-				this.agents[i].update();
-				this.agents[i].updateImage();
+				var agent = this.agents[i];
+				agent.update();
+				agent.updateImage();
+				
 				if( i==DEBUG_FOLLOW_AGENT )
 				{
-					var pos = this.agents[i].position.vector(),
+					var pos = agent.position.vector(),
 						dVect = pos.sub( controls.target );
 						
 					var t = currentTimeMs/30000,
@@ -117,15 +127,44 @@ class Agents
 						dz = r*Math.cos(t)*Math.cos(q);
 					
 					controls.target.set( 
-						THREE.Math.lerp(controls.target.x,this.agents[i].position.x,0.022),
+						THREE.Math.lerp(controls.target.x,agent.position.x,0.022),
 						0, 
-						THREE.Math.lerp(controls.target.z,this.agents[i].position.z,0.022)
+						THREE.Math.lerp(controls.target.z,agent.position.z,0.022)
 					);
 					camera.position.set( controls.target.x+dx, 5+dy, controls.target.z+dz ); 
 					
-				}
+				} // if( i==DEBUG_FOLLOW_AGENT )
+				
+				if( DEBUG_AGENT_LOCATIONS )
+				{
+					switch( agent.doing )
+					{
+						case agent.AGENT_DOING_NOTHING: 		
+								agentsOther++;
+								break;
+						case agent.AGENT_WORKING_IN_OFFICE: 	
+						case agent.AGENT_WALKING_IN_OFFICE:
+								agentsAtWork++;
+								break;
+						case agent.AGENT_STAYING_AT_HOME: 	
+						case agent.AGENT_WALKING_AT_HOME: 	
+						case agent.AGENT_SLEEPING_AT_HOME:
+								agentsAtHome++;
+								break;
+						case agent.AGENT_WALKING_ROUTE:
+								agentsOutside++;
+								break;
+						default:
+								console.error(	'Uncounted action '+this.agents[i].doing.name+' [1813]' );
+					}
+				} // if( DEBUG_AGENT_LOCATIONS )
+				
+			} // for agents
+			
+			if( DEBUG_AGENT_LOCATIONS )
+			{
+				console.log( 'home',agentsAtHome,'\tcommute',agentsOutside,'\twork',agentsAtWork);
 			}
-
 			
 //			console.log(this.agents[0].position.block==null,this.agents[0].doing);
 		}

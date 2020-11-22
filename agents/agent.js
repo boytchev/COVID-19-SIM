@@ -83,12 +83,14 @@ class Agent extends AgentBehaviour
 	
 	update()
 	{
-		
-// if( this.doing!=this.lastDoing )
-// {
-	// this.lastDoing = this.doing;
-	// console.log(msToString(dayTimeMs),this.doing);
-// }
+		if( DEBUG_AGENT_ACTIONS==this.id )
+		{
+			if( this.doing!=this.lastDoing )
+			{
+				this.lastDoing = this.doing;
+				console.log(msToString(dayTimeMs),this.doing.name);
+			}
+		}
 		this.doing();
 		
 	} // Agent.update
