@@ -38,9 +38,9 @@ var ambientIntensities = [
 
 var topIntensities = [
 		//NO  TOP  FULL_SHADOW
-		[0.1, 0.1, 0.2],// NO_SUN
-		[0.1, 0.1, 0.2],// STATIC_SUN
-		[0.1, 0.1, 0.2]	// SYNAMIC_SUN
+		[0.1, 0.2, 0.2],// NO_SUN
+		[0.1, 0.2, 0.2],// STATIC_SUN
+		[0.1, 0.2, 0.2]	// SYNAMIC_SUN
 	];
 	
 var sunIntensities = [

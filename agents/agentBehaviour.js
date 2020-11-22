@@ -42,10 +42,12 @@ const AGENT_CHILD_WAKEUP_TIME_MS = new Range( timeMs(6), timeMs(7,30) );	// in m
 const AGENT_ADULT_SLEEP_TIME_MS  = new Range( timeMs(21), timeMs(26) );		// in milliseconds (21:00-02:00)
 const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(5,30), timeMs(7) );	// in milliseconds (05:30-07:00)
 //const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6), timeMs(8) );		// in milliseconds (06:00-08:00)
-const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(8,0,1), timeMs(8,0,10) );		// in milliseconds (06:00-08:00)
+const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(8,0,1), timeMs(8,10,0) );		// in milliseconds (06:00-08:00)
+//const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(17), timeMs(20) );		// in milliseconds (17:00-20:00)
+const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(9,0,1), timeMs(9,10,0) );		// in milliseconds (06:00-08:00)
 
 const AGENT_REST_TIME_AT_HOME_MS = new Range( 0, timeMs(0,5) );	// in milliseconds (0-5 min), time to rest between walkings at home
-const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(0,5) );	// in milliseconds (0-5 min), time to work on one place in the office
+const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(1,0) );	// in milliseconds (0-5 min), time to work on one place in the office
 
 
 const START_TIME = timeMs(8);			// start time
@@ -63,7 +65,7 @@ class AgentDailySchedule
 		this.timeToSleepTimeMs = undefined;
 		this.timeToStayStillMs = undefined;
 		this.timeToGoToWorkMs = undefined;
-		//this.timeToGoHomeTimeMs = undefined;
+		this.timeToGoHomeTimeMs = undefined;
 		
 	} // AgentDailySchedule.constructor
 	
@@ -76,13 +78,15 @@ class AgentDailySchedule
 			this.timeToWakeupMs = AGENT_ADULT_WAKEUP_TIME_MS.randTime( );
 			this.timeToSleepTimeMs = AGENT_ADULT_SLEEP_TIME_MS.randTime( );
 			this.timeToGoToWorkMs = AGENT_LEAVE_HOME_TIME_MS.randFloat( );
+			this.timeToGoToHomeMs = AGENT_LEAVE_WORK_TIME_MS.randFloat( );
 		}
 		else
 		{
 			this.timeToWakeupMs = AGENT_CHILD_WAKEUP_TIME_MS.randTime( );
 			this.timeToSleepTimeMs = AGENT_CHILD_SLEEP_TIME_MS.randTime( );
 			this.timeToGoToWorkMs = undefined;
-this.timeToGoToWorkMs = AGENT_LEAVE_HOME_TIME_MS.randFloat( );// todo: temporary allow children to go to work
+			this.timeToGoToHomeMs = undefined;
+			//this.timeToGoToWorkMs = AGENT_LEAVE_HOME_TIME_MS.randFloat( );// todo: temporary allow children to go to work
 		}
 
 		this.timeToStayStillMs = AGENT_REST_TIME_AT_HOME_MS.randTime();
@@ -103,7 +107,9 @@ class AgentBehaviour
 
 		this.position = new Pos(0,0);
 
-		//this.doing = this.AGENT_DOING_NOTHING;
+		this.doing = this.AGENT_DOING_NOTHING;
+		this.doingNext = this.AGENT_DOING_NOTHING;
+		
 		this.dailySchedule = new AgentDailySchedule();
 		this.gotoPosition = undefined;			// xyz+block coordinates
 		this.routePosition = undefined;
@@ -677,7 +683,7 @@ class AgentBehaviour
 	
 	AGENT_WALKING_ROUTE()
 	{
-		this.walkRoute( this.AGENT_DOING_NOTHING );
+		this.walkRoute( this.doingNext );
 							
 	} // AgentBehaviour.AGENT_WALKING_ROUTE
 
@@ -864,6 +870,7 @@ class AgentBehaviour
 			for( var i=0; i<DEBUG_ROUTES_PER_AGENT; i++)
 				this.router( this.home, this.work );
 			this.doing = this.AGENT_WALKING_ROUTE;
+			this.doingNext = this.AGENT_WORKING_IN_OFFICE;
 			
 			return;
 		}
@@ -886,12 +893,12 @@ class AgentBehaviour
 	
 	AGENT_WORKING_IN_OFFICE()
 	{
-		/*
-		// is it time to leave for work/school?
-		if( dayTimeMs > this.dailySchedule.timeToGoToWorkMs )
+		// is it time to leave for home?
+/*		
+		if( dayTimeMs > this.dailySchedule.timeToGoToHomeMs )
 		{			
 			this.gotoPosition = null;
-			this.goal = this.work;
+			this.goal = this.home;
 			if( this.home.building instanceof HouseBuilding )
 				this.doing = this.AGENT_LEAVING_HOUSE;
 			if( this.home.building instanceof ApartmentBuilding )
