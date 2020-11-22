@@ -152,7 +152,8 @@ const SUN = DYNAMIC_SUN;
 const SUNRISE_MS = timeMs(6);
 const SUNSET_MS = timeMs(18);
 const STATIC_SUN_POSITION_MS = timeMs(7);
-console.assert(SUNRISE_MS<SUNSET_MS,'Sunrise must be before sunset [2125]');
+console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
+console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
 
 const SUN_HORIZONTAL_ANGLE = Math.PI/6;
 const SUN_SIN = Math.sin(SUN_HORIZONTAL_ANGLE);
