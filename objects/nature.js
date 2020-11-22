@@ -165,6 +165,7 @@ class Nature
 		
 		// add background color
 		scene.background = new THREE.Color( 'skyblue' );
+		scene.fog = new THREE.Fog( 'skyblue', 0.2*EARTH_SIZE, 0.4*EARTH_SIZE );
 		
 		
 		// adjust light intensities total to be 1
@@ -207,6 +208,7 @@ class Nature
 		{	
 			renderer.shadowMap.needsUpdate = true;
 		}
+
 		
 	}
 	

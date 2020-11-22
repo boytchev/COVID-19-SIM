@@ -1,8 +1,8 @@
 // size of the simulated world
 
-const GROUND_SIZE = 1000; 				// in meters
+const GROUND_SIZE = 2000; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
-const EARTH_SIZE = 10000;
+const EARTH_SIZE = 50000;
 
 	
 
@@ -148,11 +148,11 @@ const FULL_SHADOWS = 2;
 
 
 //const SUN = NO_SUN;
-//const SUN = STATIC_SUN;
-const SUN = DYNAMIC_SUN;
+const SUN = STATIC_SUN;
+//const SUN = DYNAMIC_SUN;
 const SUNRISE_MS = timeMs(6);
 const SUNSET_MS = timeMs(18);
-const STATIC_SUN_POSITION_MS = timeMs(7);
+const STATIC_SUN_POSITION_MS = timeMs(6,30);
 console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
 console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
 
