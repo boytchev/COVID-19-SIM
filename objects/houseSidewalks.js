@@ -217,7 +217,7 @@ class HouseSidewalks
 	
 	static image( sidewalks )
 	{
-return;//buggo		
+
 		var instances = sidewalks.length;
 		
 		var geometry  = HouseSidewalks.geometry(),
