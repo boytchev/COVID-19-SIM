@@ -33,7 +33,8 @@ var clock = new THREE.Clock(),
 
 
 var currentTimeMs = START_TIME,
-	dayTimeMs = currentTimeMs % HOURS_24_MS;
+	dayTimeMs = currentTimeMs % HOURS_24_MS,
+	previousDayTimeMs = dayTimeMs;
 
 
 
@@ -199,6 +200,7 @@ class Nature
 		// update time markers
 		deltaTime = DEBUG_TIME_SPEED*clock.getDelta()
 		currentTimeMs += 1000*deltaTime;
+		previousDayTimeMs = dayTimeMs;
 		dayTimeMs = currentTimeMs % HOURS_24_MS;
 		frame++;
 

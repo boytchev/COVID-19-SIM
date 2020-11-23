@@ -83,6 +83,12 @@ class Agent extends AgentBehaviour
 	
 	update()
 	{
+		// if a new day has started, reset schedule 
+		if( previousDayTimeMs > dayTimeMs )
+		{
+			this.dailySchedule.reset( this.isAdult );
+		}
+		
 		if( DEBUG_AGENT_ACTIONS==this.id )
 		{
 			if( this.doing!=this.lastDoing )
@@ -91,6 +97,8 @@ class Agent extends AgentBehaviour
 				console.log(msToString(dayTimeMs),this.doing.name);
 			}
 		}
+		
+		// do what the agen has to do
 		this.doing();
 		
 	} // Agent.update
@@ -113,7 +121,7 @@ class Agent extends AgentBehaviour
 	
 	image()
 	{
-		var mesh = new THREE.Mesh( AgentGeometry, AgentMaterial );
+		var mesh = new THREE.Mesh( AgentGeometry, this.isAdult?AgentMaterial:AgentMaterial2 );
 			
 		mesh.position.set( this.x, this.y, this.z );
 		mesh.scale.set( this.height/1.7, this.height/1.7, this.height/1.7 );
