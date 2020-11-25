@@ -4,6 +4,7 @@
 //
 //	class Crossings
 //		constructor( )
+//		denyCrossing( time )
 //		generate( block )
 //			add( crossings, crossing )
 //			existsBlockA( vertex )
@@ -32,10 +33,24 @@ class Crossing
 		this.scale = length;
 		this.priority = priority;
 	
+		// the crossing connects block A and block B
 		this.blockA = blockA;
 		this.blockB = blockB;
+		
+		// timing for green/red light - a sine curve vertically offset
+		this.timeSpan = timeMs(0,0,pick([30, 45, 60, 90]));
+		this.timeOffset = THREE.Math.randFloat(0,0.5);
 
 	} // Crossing.constructor
+	
+	denyCrossing( time = dayTimeMs )
+	{
+		// normalize time to period of [0..1]
+		time = THREE.Math.euclideanModulo( time, this.timeSpan ) / this.timeSpan;
+		
+		// if sine<0, then it is red light
+		return (Math.sin( 2*Math.PI*time ) - this.timeOffset) < 0;
+	}
 	
 } // Crossing
 

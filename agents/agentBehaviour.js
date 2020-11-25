@@ -41,17 +41,18 @@
 const AGENT_CHILD_SLEEP_TIME_MS  = new Range( timeMs(19), timeMs(21) );		// in milliseconds (19:00-21:00)
 const AGENT_CHILD_WAKEUP_TIME_MS = new Range( timeMs(6), timeMs(7,30) );	// in milliseconds (06:00-07:30)
 const AGENT_ADULT_SLEEP_TIME_MS  = new Range( timeMs(21), timeMs(26) );		// in milliseconds (21:00-02:00)
-const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(5,30), timeMs(7) );	// in milliseconds (05:30-07:00)
-const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6), timeMs(8) );		// in milliseconds (06:00-08:00)
-//const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(8), timeMs(8,20,0) );		// in milliseconds (06:00-08:00)
-const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(17), timeMs(20) );		// in milliseconds (17:00-20:00)
-//const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(8,30), timeMs(8,50) );		// in milliseconds (06:00-08:00)
+//const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(5,30), timeMs(7) );	// in milliseconds (05:30-07:00)
+//const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6), timeMs(8) );		// in milliseconds (06:00-08:00)
+//const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(17), timeMs(20) );		// in milliseconds (17:00-20:00)
 
 const AGENT_REST_TIME_AT_HOME_MS = new Range( 0, timeMs(0,5) );	// in milliseconds (0-5 min), time to rest between walkings at home
 const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(1,0) );	// in milliseconds (0-5 min), time to work on one place in the office
 
 
 
+const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(5,59), timeMs(6) );	// in milliseconds (05:30-07:00)
+const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0), timeMs(6,1) );		// in milliseconds (06:00-08:00)
+const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(8,30), timeMs(8,50) );		// in milliseconds (06:00-08:00)
 
 
 
@@ -531,6 +532,11 @@ class AgentBehaviour
 						console.error('Unknown block type in router. Code 1050.');
 				}
 				
+				// add marker for "this" side of the crossing
+				// it will be used to force the agents to stop
+				this.gotoPosition[this.gotoPosition.length-1].mark = crossing.crossing;
+//console.log('add to route',crossing.crossing);
+				
 				// cross the crossing
 				this.addToRoute( crossing.pairZone, '521' );
 				ringIndex = crossing.pairZone.ringIndex;
@@ -774,11 +780,19 @@ class AgentBehaviour
 		// if there are position in the route
 		if( this.gotoPosition.length )
 		{
+			
 			// make a step and return if the target is not reached
 			if( !this.stepTo(this.gotoPosition[0]) )
 				return
 		}
 
+		// if at crossing that is red-light, then wait
+		if( this.gotoPosition[0].mark )
+			if( this.gotoPosition[0].mark instanceof Crossing )
+				if( this.gotoPosition[0].mark.denyCrossing() )
+				{
+					return;
+				}
 		// otherwise remove the reached target
 		this.gotoPosition.shift();
 

@@ -224,6 +224,8 @@ class NavMesh
 		
 			this.zones.push( insideZone, outsideZone );
 
+			insideZone.crossing = crossing;
+			outsideZone.crossing = crossing;
 		}
 		
 	}  // NavMesh.addCrossing
