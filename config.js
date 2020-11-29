@@ -8,11 +8,11 @@ const EARTH_SIZE = 50000;
 
 // debug flags
 R = 1+Math.floor(Math.random()*100000);
-R = 9746;
+R = 97460;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
-const DEBUG_AGENT_MAX_COUNT = 10000;
-const DEBUG_TIME_SPEED = timeMs(0,0,5)/1000;	// time ellapsed for 1 second
+const DEBUG_AGENT_MAX_COUNT = 1;
+const DEBUG_TIME_SPEED = timeMs(0,3,0)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
@@ -21,7 +21,7 @@ const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 const DEBUG_AUTOROTATE = false;
 const DEBUG_AUTOROTATE_SPEED = 0.1;
 const DEBUG_RENDERER_INFO = false;
-const DEBUG_BUILDINGS_OPACITY = 4/4;				// for buildings and trees
+const DEBUG_BUILDINGS_OPACITY = 1/4;				// for buildings and trees
 const DEBUG_BLOCKS_OPACITY = 4/4;					// for blocks
 const DEBUG_NAVMESH_OPACITY = 0/4;			// for navmesh blocks
 const DEBUG_NAVMESH_SHOW_MESHES = !false;
@@ -177,53 +177,61 @@ const START_TIME = timeMs(6);			// start time
 
 
 
-
-
-// global simulation time
-//const START_TIME = timeMs(19);			// start time
-
-
 /*
-u0=1, v0=1
-u1=2, v1=1 
-u2=2, v2=2
-u3=0, v3=2
 
-//orig 01234567
-//now  02461357
-
-h5 = v0
-h2 = u0 
-h6 = ((u0-u1+u2-u3)*(v3-v2) - (u3-u2)*(v0-v1+v2-v3)) / ((u1-u2)*(v3-v2) - (u3-u2)*(v1-v2))
-h0 = u1-u0 + u1*h6
-h3 = v1-v0 + v1*h6
-h7 = ((u0-u1+u2-u3)*(v1-v2) - (u1-u2)*(v0-v1+v2-v3)) / ((u3-u2)*(v1-v2) - (u1-u2)*(v3-v2))
-h4 = v3-v0 + v3*h7
-h1 = u3-u0 + u3*h7
-
-h5 = v0
-h2 = u0 
-
-u01 = u0-u1
-u12 = u1-u2
-u23 = u2-u3
-v01 = v0-v1
-v12 = v1-v2
-v23 = v2-v3
-
-h6 = (u23*(v01+v23)-(u01+u23)*v23) / (u23*v12-u12*v23)
-h0 = -u01 + u1*h6
-h3 = -v01 + v1*h6
-h7 = ((u01+u23)*v12 - u12*(v01+v23)) / (u12*v23-u23*v12)
-h4 = v3-v0 + v3*h7
-h1 = u3-u0 + u3*h7
-
-// 1 -1 1
-// 0 0 1
-// 0 -0.5 1
-
-console.log(h0,h1,h2);
-console.log(h3,h4,h5);
-console.log(h6,h7,1);
+// https://math.stackexchange.com/questions/296794/finding-the-transform-matrix-from-4-projected-points-with-javascript/339033#339033
+// http://jsfiddle.net/dFrHS/1/
+function trapezoidMatrix(x1d, y1d,
+	  x2d, y2d,
+	  x3d, y3d,
+	  x4d, y4d)
+{
+	function adj(m) { // Compute the adjugate of m
+	  return [
+		m[4]*m[8]-m[5]*m[7], m[2]*m[7]-m[1]*m[8], m[1]*m[5]-m[2]*m[4],
+		m[5]*m[6]-m[3]*m[8], m[0]*m[8]-m[2]*m[6], m[2]*m[3]-m[0]*m[5],
+		m[3]*m[7]-m[4]*m[6], m[1]*m[6]-m[0]*m[7], m[0]*m[4]-m[1]*m[3]
+	  ];
+	}
+	function multmm(a, b) { // multiply two matrices
+	  var c = Array(9);
+	  for (var i = 0; i != 3; ++i) {
+		for (var j = 0; j != 3; ++j) {
+		  var cij = 0;
+		  for (var k = 0; k != 3; ++k) {
+			cij += a[3*i + k]*b[3*k + j];
+		  }
+		  c[3*i + j] = cij;
+		}
+	  }
+	  return c;
+	}
+	function multmv(m, v) { // multiply matrix and vector
+	  return [
+		m[0]*v[0] + m[1]*v[1] + m[2]*v[2],
+		m[3]*v[0] + m[4]*v[1] + m[5]*v[2],
+		m[6]*v[0] + m[7]*v[1] + m[8]*v[2]
+	  ];
+	}
+	function basisToPoints(x1, y1, x2, y2, x3, y3, x4, y4) {
+	  var m = [
+		x1, x2, x3,
+		y1, y2, y3,
+		 1,  1,  1
+	  ];
+	  var v = multmv(adj(m), [x4, y4, 1]);
+	  return multmm(m, [
+		v[0], 0, 0,
+		0, v[1], 0,
+		0, 0, v[2]
+	  ]);
+	}
+	
+	
+	  var adjs = [-1, -1, 1, -1, 0, 0, 0, -1, 0];
+	  var d = basisToPoints(x1d, y1d, x2d, y2d, x3d, y3d, x4d, y4d);
+	  return multmm(d, adjs);
+}
+//                          Ax Ay Bx By Dx Dy Cx Cy
+console.log(trapezoidMatrix(20,20,40,20,20,10,30,10));
 */
-
