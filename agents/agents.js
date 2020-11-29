@@ -92,6 +92,14 @@ class Agents
 		}
 		
 
+		var statAdults = 0,
+			statChildren = 0;
+		for( var i=0; i<this.agents.length; i++)
+			if( this.agents[i].isAdult )
+				statAdults++;
+			else
+				statChildren++;
+		console.log(statAdults+' adults,',statChildren+' children');
 	} // Agents.generateInRandomBlock
 
 

@@ -8,10 +8,10 @@ const EARTH_SIZE = 50000;
 
 // debug flags
 R = 1+Math.floor(Math.random()*100000);
-R = 97460;
+//R = 97460;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
-const DEBUG_AGENT_MAX_COUNT = 1;
+const DEBUG_AGENT_MAX_COUNT = 100000;
 const DEBUG_TIME_SPEED = timeMs(0,3,0)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
@@ -21,9 +21,9 @@ const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 const DEBUG_AUTOROTATE = false;
 const DEBUG_AUTOROTATE_SPEED = 0.1;
 const DEBUG_RENDERER_INFO = false;
-const DEBUG_BUILDINGS_OPACITY = 1/4;				// for buildings and trees
+const DEBUG_BUILDINGS_OPACITY = 0/4;				// for buildings and trees
 const DEBUG_BLOCKS_OPACITY = 4/4;					// for blocks
-const DEBUG_NAVMESH_OPACITY = 0/4;			// for navmesh blocks
+const DEBUG_NAVMESH_OPACITY = 2/4;			// for navmesh blocks
 const DEBUG_NAVMESH_SHOW_MESHES = !false;
 const DEBUG_NAVMESH_SHOW_FLOORS = !false;
 const DEBUG_NAVMESH_SHOW_LINES = false;
@@ -132,14 +132,14 @@ const SECONDS_IN_MINUTE = 60;
 
 // agents
 const AGENT_MAX_COUNT = DEBUG_AGENT_MAX_COUNT;					// max number of virtual people
-const AGENT_WALKING_SPEED = new Range( 1.0, 1.8 );			// in meters/second
+const AGENT_WALKING_SPEED = new Range( 0.6, 1.8 );			// in meters/second
 const AGENT_AGE_YEARS = new Range( 0, 100 );			// in years
 const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );			// in meters
 const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.5 );			// in meters
 const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
-const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 3 );
+const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );
 const AGENT_ADULTS_PER_APARTMENT = new Range( 1, 3 );
-const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 2 );
+const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 1 );
 
 // nature
 const NO_SUN = 0;

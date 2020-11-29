@@ -41,6 +41,16 @@ class Buildings
 		
 		OfficeDoors.image( doors ); // must be after apartments
 		
+		
+		// statistics
+		var statHomes = this.houses.length,
+			statOffices = 0;
+		for( var i=0; i<this.apartments.length; i++)
+			statHomes += this.apartments[i].floors * this.apartments[i].rooms.length;
+		for( var i=0; i<this.offices.length; i++)
+			statOffices += (this.offices[i].floors-1) * this.offices[i].rooms.length; // first floor has no offices
+		console.log(statHomes+' homes,',statOffices+' offices');
+		
 	} // Buildings
 
 

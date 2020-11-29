@@ -142,7 +142,6 @@ class Blocks
 		this.constructBlockImages( BLOCK_APARTMENTS, textures.sidewalk, SIDEWALK_TEXTURE_SCALE );
 		this.constructBlockImages( BLOCK_HOUSES, textures.sidewalk, SIDEWALK_TEXTURE_SCALE );
 		this.constructBlockImages( BLOCK_PARK, textures.grass, GRASS_TEXTURE_SCALE ); 
-		
 	} // Blocks
 
 	
