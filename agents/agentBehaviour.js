@@ -726,9 +726,17 @@ class AgentBehaviour
 	stepTo( target = this.gotoPosition )
 	{
 		var v = this.position.to( target ),
-			distance = v.distance( ),
-			walkDistance = this.walkingSpeed * deltaTime;
+			distance = v.distance( ), // distance to target
+			walkDistance = this.walkingSpeed * deltaTime; // distance to be walked
 
+		// if target is ouside an elevator, then approach it,
+		// but enter only of door is open
+		if( target.mark instanceof Elevator )
+			if( target.submark == Elevator.OUTSIDE )
+				if( distance < Math.max(ELEVATOR_SIZE.x,ELEVATOR_SIZE.z) )
+					if( target.mark.isClosed( target.y/FLOOR_HEIGHT ) )
+						return false;
+		
 		// set walking vector
 		if( !almostEqual(distance,0,0.0001) )
 		{
