@@ -748,7 +748,7 @@ class AgentBehaviour
 					return false;
 					
 				this.alreadyElevating = true;
-				this.debugColor( 2 );
+				//this.debugColor( 2 );
 				walkDistance = target.mark.speed * deltaTime;
 			}
 		}
