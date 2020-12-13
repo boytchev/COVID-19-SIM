@@ -89,7 +89,8 @@ class OfficeBuilding
 			{
 				// elevator size is as room size, because it is used as lobby
 				// the actual size of the shaft is OFFICE_ELEVATOR_SHAFT_WIDTH
-				room = new Elevator( this.roomCenter(x,z,0,roomSize), roomSize );
+				//room = new Elevator( this.roomCenter(x,z,0,roomSize), roomSize ); //2020-12-12 it was this, roomSize looks like wrong, it must be array of doors
+				room = new Elevator( this.roomCenter(x,z,0,roomSize), [], floors );
 				this.elevators.push( room );
 			}
 			else

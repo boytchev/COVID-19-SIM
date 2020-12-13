@@ -41,8 +41,8 @@
 const AGENT_CHILD_SLEEP_TIME_MS  = new Range( timeMs(19), timeMs(21) );		// in milliseconds (19:00-21:00)
 const AGENT_CHILD_WAKEUP_TIME_MS = new Range( timeMs(6), timeMs(7,30) );	// in milliseconds (06:00-07:30)
 const AGENT_ADULT_SLEEP_TIME_MS  = new Range( timeMs(21), timeMs(26) );		// in milliseconds (21:00-02:00)
-const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(5,30), timeMs(7) );	// in milliseconds (05:30-07:00)
-const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6), timeMs(8) );		// in milliseconds (06:00-08:00)
+//const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(5,30), timeMs(7) );	// in milliseconds (05:30-07:00)
+//const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6), timeMs(8) );		// in milliseconds (06:00-08:00)
 const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(17), timeMs(20) );		// in milliseconds (17:00-20:00)
 
 const AGENT_REST_TIME_AT_HOME_MS = new Range( 0, timeMs(0,5) );	// in milliseconds (0-5 min), time to rest between walkings at home
@@ -50,8 +50,8 @@ const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(1,0) );	// in millise
 
 
 
-//const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(5,59), timeMs(6) );	// in milliseconds (05:30-07:00)
-//const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0), timeMs(6,1) );		// in milliseconds (06:00-08:00)
+const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,3), timeMs(6,0,5) );	// in milliseconds (05:30-07:00)
+const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,10), timeMs(6,0,11) );		// in milliseconds (06:00-08:00)
 //const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(8,30), timeMs(8,50) );		// in milliseconds (06:00-08:00)
 
 
@@ -204,7 +204,7 @@ class AgentBehaviour
 		this.addToRoute( apartment.outsideZone.randomPos().setFloor(address.floor) ); 
 		
 		// go to the nearest elevator
-		this.addToRoute( apartment.closestElevator.zone.randomPos().setFloor(address.floor) ); 
+		this.addToRoute( apartment.closestElevator.zone.randomPos().setFloor(address.floor), apartment.closestElevator ); 
 	
 		// go to the ground floor if not there
 		if( address.floor )
@@ -235,7 +235,7 @@ class AgentBehaviour
 		// go to the door, then to elevator, then to floor
 		this.addToRoute( clipLineRoute( this.routePosition, door.outsideZone.randomPos(), to.block.buildings ) );
 		this.addToRoute( door.insideZone );
-		this.addToRoute( elevator.zone ); 
+		this.addToRoute( elevator.zone, elevator ); 
 		this.addToRoute( elevator.zone.randomPos().setFloor(to.floor) ); 
 		
 		// go to the door and enter trough it
@@ -390,7 +390,7 @@ class AgentBehaviour
 								this.addToRoute( fromApartment.outsideZone.randomPos().setFloor(from.floor) ); 
 
 								var elevator = pickDirection( from.position, from.building.elevators, to.position );
-								this.addToRoute( elevator.zone.randomPos().setFloor(from.floor) );
+								this.addToRoute( elevator.zone.randomPos().setFloor(from.floor), elevator );
 								this.addToRoute( elevator.zone.randomPos().setFloor(to.floor) );
 								
 								this.addToRoute( toApartment.outsideZone.randomPos().setFloor(to.floor) ); 
@@ -432,7 +432,7 @@ class AgentBehaviour
 							this.addToRoute( fromOffice.outsideZone.randomPos().setFloor(from.floor) ); 
 
 							var elevator = pickDirection( this.routePosition, from.building.elevators, to.position );
-							this.addToRoute( clipLineRoute( this.routePosition, elevator.zone.randomPos().setFloor(from.floor), to.building.rooms, 1/2 ) );
+							this.addToRoute( clipLineRoute( this.routePosition, elevator.zone.randomPos().setFloor(from.floor), to.building.rooms, 1/2 ), elevator );
 							this.addToRoute( elevator.zone.randomPos().setFloor(to.floor) );
 
 							this.addToRoute( clipLineRoute( this.routePosition, toOffice.outsideZone.randomPos().setFloor(to.floor), to.building.rooms, 1/2 ) );
@@ -480,7 +480,7 @@ class AgentBehaviour
 						var door = pickDirection( this.routePosition, from.building.doors, crossing.center );
 						var elevator = pickDirection( this.routePosition, from.building.elevators, door.insideZone.center );
 						
-						this.addToRoute( clipLineRoute( this.routePosition, elevator.zone.randomPos().setFloor(from.floor), from.building.rooms, 1/2 ) );
+						this.addToRoute( clipLineRoute( this.routePosition, elevator.zone.randomPos().setFloor(from.floor), from.building.rooms, 1/2 ), elevator );
 						this.addToRoute( elevator.zone.randomPos().setFloor(0) );
 						this.addToRoute( door.insideZone );
 						this.addToRoute( door.outsideZone );
@@ -538,7 +538,7 @@ class AgentBehaviour
 //console.log('add to route',crossing.crossing);
 				
 				// cross the crossing
-				this.addToRoute( crossing.pairZone, '521' );
+				this.addToRoute( crossing.pairZone );
 				ringIndex = crossing.pairZone.ringIndex;
 				
 				if( blocks[this.routePosition.block.id] )
@@ -628,7 +628,7 @@ class AgentBehaviour
 						
 						this.addToRoute( clipLineRoute( this.routePosition, door.outsideZone.randomPos(), to.block.buildings ) );
 						this.addToRoute( door.insideZone );
-						this.addToRoute( elevator.zone.randomPos() );
+						this.addToRoute( elevator.zone.randomPos(), elevator );
 						this.addToRoute( elevator.zone.randomPos().setFloor(to.floor) );
 
 						this.addToRoute( clipLineRoute( this.routePosition.setFloor(to.floor), toOffice.outsideZone.randomPos().setFloor(to.floor), to.building.rooms, 1/2 ) );
@@ -788,11 +788,27 @@ class AgentBehaviour
 
 		// if at crossing that is red-light, then wait
 		if( this.gotoPosition[0].mark )
+		{
 			if( this.gotoPosition[0].mark instanceof Crossing )
+			{
 				if( this.gotoPosition[0].mark.denyCrossing() )
 				{
 					return;
 				}
+			}
+			else
+			if( this.gotoPosition[0].mark instanceof Elevator )
+			{
+				if( this.gotoPosition[0].mark.denyUsing( this.position.y/FLOOR_HEIGHT ) )
+				{
+					return;
+				}
+			}
+			else
+			{
+				console.warn( 'Unknown route mark', this.gotoPosition[0].mark );
+			}
+		}
 		// otherwise remove the reached target
 		this.gotoPosition.shift();
 
@@ -824,7 +840,7 @@ class AgentBehaviour
 		while( fromIndex != toIndex )
 		{
 			fromIndex = (fromIndex+n+dir) % n;
-			this.addToRoute( ring[fromIndex], '727' ); 
+			this.addToRoute( ring[fromIndex] ); 
 		}
 	}
 	

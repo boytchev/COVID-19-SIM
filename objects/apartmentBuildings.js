@@ -59,7 +59,7 @@ class ApartmentBuilding
 				door2 = new OfficeDoor( center.addXZ(-size.x/2,positions[i]), doorWings, 3 );
 				this.doors.push( door1, door2 );
 				
-				elevator = new Elevator( center.addXZ(0,positions[i]), [door1,door2] );
+				elevator = new Elevator( center.addXZ(0,positions[i]), [door1,door2], floors );
 				this.elevators.push( elevator );
 			}
 			
@@ -97,7 +97,7 @@ class ApartmentBuilding
 				door2 = new OfficeDoor( center.addXZ(positions[i],-size.z/2), doorWings, 2);
 				this.doors.push( door1, door2 );
 				
-				elevator = new Elevator( center.addXZ(positions[i],0), [door1,door2] );
+				elevator = new Elevator( center.addXZ(positions[i],0), [door1,door2], floors );
 				this.elevators.push( elevator );
 			}
 			
