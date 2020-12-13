@@ -2,6 +2,7 @@
 //	class Elevator
 //		constructor( center, doors, floors )
 //		isClosed( floor, time )
+//		isMoving( floor, time )
 
 
 
@@ -17,22 +18,31 @@ class Elevator
 		
 		// timing for when to enter elevator
 		this.timeSpan = timeMs(0,0,pick([15, 30, 45]));
-		this.timeOffset = THREE.Math.randFloat(0,2*Math.PI);
+		this.timeOffset = THREE.Math.randFloat(0,this.timeSpan);
 		
 		this.speed = ELEVATOR_SPEED.randFloat( );	// in meters/second
 	} // Elevator.constructor
 	
 	
-	// submark=0 when outside elevator and waiting to enter elevator
-	// submark=1 when inside elevator and waiting to start elevating
-	isClosed( floor, time = dayTimeMs )
+	isClosed( time = dayTimeMs )
 	{
 		// normalize time cycle to period of [0..1]
-		time = THREE.Math.euclideanModulo( time+floor, this.timeSpan ) / this.timeSpan;
+		time = THREE.Math.euclideanModulo( time+this.timeOffset, this.timeSpan ) / this.timeSpan;
+
+		// open [0,0.2]; closed (0.1,1]
+		return time>0.2;
+	} // Elevator.isClosed
+
+
+	isMoving( time = dayTimeMs )
+	{
+		// normalize time cycle to period of [0..1]
+		time = THREE.Math.euclideanModulo( time+this.timeOffset, this.timeSpan ) / this.timeSpan;
 		
-		// open [0,0.1]; closed (0.1,1]
-		return time>0.1;
-	} // Elevator.denyUsing
+		// open [0,0.2]; closed (0.1,1]
+		return time>0.3;
+	} // Elevator.isMoving
+
 
 } // Elevator
 

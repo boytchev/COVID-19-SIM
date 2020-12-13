@@ -9,6 +9,7 @@
 //		material()
 //		material2()
 //		static generateAgeDistributionArrays()
+//		debugColor( n )
 //
 //	class Adult
 //		constructor( home )
@@ -33,6 +34,13 @@ class Agent extends AgentBehaviour
 		if( !AgentGeometry ) AgentGeometry = this.geometry();
 		if( !AgentMaterial ) AgentMaterial = this.material();
 		if( !AgentMaterial2 ) AgentMaterial2 = this.material2();
+		if( !AgentDebugMaterial ) AgentDebugMaterial = [
+			AgentMaterial,
+			new THREE.MeshPhongMaterial({color: 'pink'}),
+			new THREE.MeshPhongMaterial({color: 'green'}),
+			new THREE.MeshPhongMaterial({color: 'black'}),
+			new THREE.MeshPhongMaterial({color: 'white'}),
+		];
 		// if( AgentLabelGeometry==1 )
 		// {
 			// AgentLabelGeometry = [];
@@ -118,6 +126,12 @@ class Agent extends AgentBehaviour
 	} // Agent.updateImage
 
 
+	
+	debugColor(n)
+	{
+		this.mesh.material = AgentDebugMaterial[n];
+	}
+	
 	
 	image()
 	{
@@ -277,5 +291,6 @@ AgentGeometry = undefined;
 // AgentLabelGeometry = 1;
 AgentMaterial = undefined;
 AgentMaterial2 = undefined;
+AgentDebugMaterial = undefined;
 
 Agent.generateAgeDistributionArrays();

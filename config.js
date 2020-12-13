@@ -1,6 +1,6 @@
 // size of the simulated world
 
-const GROUND_SIZE = 120; 				// in meters
+const GROUND_SIZE = 180; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 const EARTH_SIZE = 50000;
 
@@ -8,11 +8,11 @@ const EARTH_SIZE = 50000;
 
 // debug flags
 R = 1+Math.floor(Math.random()*100000);
-R = 4160;
+R = 11260;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
-const DEBUG_AGENT_MAX_COUNT =5000;
-const DEBUG_TIME_SPEED = timeMs(0,0,2)/1000;	// time ellapsed for 1 second
+const DEBUG_AGENT_MAX_COUNT =1140;
+const DEBUG_TIME_SPEED = timeMs(0,0,4)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = !false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = !false;
