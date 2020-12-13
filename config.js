@@ -1,6 +1,6 @@
 // size of the simulated world
 
-const GROUND_SIZE = 220; 				// in meters
+const GROUND_SIZE = 120; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 const EARTH_SIZE = 50000;
 
@@ -12,7 +12,7 @@ R = 4160;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
 const DEBUG_AGENT_MAX_COUNT =5000;
-const DEBUG_TIME_SPEED = timeMs(0,0,10)/1000;	// time ellapsed for 1 second
+const DEBUG_TIME_SPEED = timeMs(0,0,2)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = !false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = !false;
@@ -23,7 +23,7 @@ const DEBUG_AUTOROTATE_SPEED = 0.1;
 const DEBUG_RENDERER_INFO = false;
 const DEBUG_BUILDINGS_OPACITY = 1/4;				// for buildings and trees
 const DEBUG_BLOCKS_OPACITY = 4/4;					// for blocks
-const DEBUG_NAVMESH_OPACITY = 0/4;			// for navmesh blocks
+const DEBUG_NAVMESH_OPACITY = 1/4;			// for navmesh blocks
 const DEBUG_NAVMESH_SHOW_MESHES = !false;
 const DEBUG_NAVMESH_SHOW_FLOORS = !false;
 const DEBUG_NAVMESH_SHOW_LINES = false;
@@ -114,6 +114,7 @@ const MAX_APARTMENT_BUILDING_FLOORS = 50;				// maximal number of floors in an a
 const APARTMENT_ROOM_SIZE = 7;							// in meters (desired size)
 const ELEVATOR_SIZE = new Size( 2, 2 );					// in meters
 
+const ELEVATOR_SPEED = new Range( 0.8, 2.4 );			// in meters/second
 
 
 // trees
@@ -131,11 +132,11 @@ const SECONDS_IN_HOUR = 60*60;
 const SECONDS_IN_MINUTE = 60;
 
 // agents
-const AGENT_MAX_COUNT = DEBUG_AGENT_MAX_COUNT;					// max number of virtual people
-const AGENT_WALKING_SPEED = new Range( 0.6, 1.2 );			// in meters/second
+const AGENT_MAX_COUNT = DEBUG_AGENT_MAX_COUNT;			// max number of virtual people
+const AGENT_WALKING_SPEED = new Range( 0.6, 1.2 );		// in meters/second
 const AGENT_AGE_YEARS = new Range( 0, 100 );			// in years
-const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );			// in meters
-const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.5 );			// in meters
+const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
+const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.5 );		// in meters
 const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
 const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );
 const AGENT_ADULTS_PER_APARTMENT = new Range( 1, 3 );
