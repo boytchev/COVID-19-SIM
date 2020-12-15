@@ -50,8 +50,8 @@ const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(1,0) );	// in millise
 
 
 
-const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,3), timeMs(6,0,3) );	// in milliseconds (05:30-07:00)
-const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,5), timeMs(6,1,10) );		// in milliseconds (06:00-08:00)
+const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,1), timeMs(6,0,2) );	// in milliseconds (05:30-07:00)
+const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,4), timeMs(6,0,4) );		// in milliseconds (06:00-08:00)
 
 
 
@@ -314,9 +314,12 @@ class AgentBehaviour
 //		if( !to) to = new Address( pick(buildings.offices) ); to.position = to.randomPos();
 
 //		drawArrow( from.position, to.position );
+
+
+		this.addToRoute( from.position );
 		this.routePosition = from.position;
-		this.position = from.position;
 		//this.gotoPosition = [];
+		
 		
 		var that = this;
 
@@ -646,36 +649,44 @@ class AgentBehaviour
 		
 		if( DEBUG_SHOW_ROUTES )
 		{
-/*			
-			console.group('New route');
-			console.log('from\t',from);
-			console.log('to\t',to);
-*/			
 			var color = 'crimson',//new THREE.Color(Math.random(),Math.random()/3,Math.random()/2),
 				offset = 0.1;
 			
 			for( var i=0; i<this.gotoPosition.length; i++)
 			{
-/*				
-				console.log(
-					'#'+i+'\t'+
-					'zn='+(this.gotoPosition[i].zone?this.gotoPosition[i].zone.id:'    ')+'\t'+
-					'bl='+(this.gotoPosition[i].block?this.gotoPosition[i].block.id:'    ')+'\t'+
-					'fl='+this.gotoPosition[i].y/FLOOR_HEIGHT);
-*/				
-				// vertical black arrows
-				//if( this.gotoPosition[i].zone )
-				//	drawArrow( this.gotoPosition[i].zone.center.addY(this.gotoPosition[i].y+0.2), this.gotoPosition[i].zone.center.addY(this.gotoPosition[i].y+5), 'black' );
 				
 				if( i )
 					drawArrow( this.gotoPosition[i-1].addY(offset), this.gotoPosition[i].addY(offset),color );
 				else
 					drawArrow( from.position.addY(offset), this.gotoPosition[i].addY(offset),color );
 			}
-/*
+		} // if( DEBUG_SHOW_ROUTES )
+		
+		if( DEBUG_DUMP_ROUTES )
+		{
+			console.group('New route');
+			console.log('from\t',from);
+			console.log('to\t',to);
+			
+			console.log('current\t',this.position.x.toFixed(2),this.position.z.toFixed(2));
+
+			for( var i=0; i<this.gotoPosition.length; i++)
+			{
+				// vertical black arrows
+				//if( this.gotoPosition[i].zone )
+				//	drawArrow( this.gotoPosition[i].zone.center.addY(this.gotoPosition[i].y+0.2), this.gotoPosition[i].zone.center.addY(this.gotoPosition[i].y+5), 'black' );
+			
+				console.log(
+					'#'+i+'\t'+
+					'zn='+(this.gotoPosition[i].zone?this.gotoPosition[i].zone.id:'    ')+'\t'+
+					'bl='+(this.gotoPosition[i].block?this.gotoPosition[i].block.id:'    ')+'\t'+
+					'fl='+this.gotoPosition[i].y/FLOOR_HEIGHT+'\t'+
+					this.gotoPosition[i].x.toFixed(2),
+					this.gotoPosition[i].z.toFixed(2),
+					);
+			}
 			console.groupEnd('New route');
-*/			
-		}
+		} // if( DEBUG_DUMP_ROUTES )
 		
 //		if( this.id==0 )
 //		{
@@ -724,6 +735,8 @@ class AgentBehaviour
 	// make a horizontal step towards a position, return TRUE if position is reached
 	stepTo( target = this.gotoPosition )
 	{
+//		console.log('current\t',this.position.x.toFixed(2),this.position.z.toFixed(2));
+			
 		var v = this.position.to( target ),
 			distance = v.distance( ), // distance to target
 			walkDistance = this.walkingSpeed * deltaTime; // distance to be walked
@@ -778,7 +791,7 @@ class AgentBehaviour
 
 	addToRoute( pos, mark, submark )
 	{
-		if( this.gotoPosition === null )
+		if( !this.gotoPosition )
 			this.gotoPosition = [];
 
 		if( pos instanceof Array )
@@ -803,6 +816,7 @@ class AgentBehaviour
 	
 	walkRoute( nextAction = this.AGENT_DOING_NOTHING )
 	{
+//console.log('walkRoute',this.position.x.toFixed(2),this.position.z.toFixed(2));
 
 		// if there are position in the route
 		if( this.gotoPosition.length )

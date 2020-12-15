@@ -1,6 +1,6 @@
 // size of the simulated world
 
-const GROUND_SIZE = 180; 				// in meters
+const GROUND_SIZE = 440; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 const EARTH_SIZE = 50000;
 
@@ -8,22 +8,23 @@ const EARTH_SIZE = 50000;
 
 // debug flags
 R = 1+Math.floor(Math.random()*100000);
-R = 11260;
+R = 3188;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
-const DEBUG_AGENT_MAX_COUNT =1140;
-const DEBUG_TIME_SPEED = timeMs(0,0,4)/1000;	// time ellapsed for 1 second
+const DEBUG_AGENT_MAX_COUNT =5000;
+const DEBUG_TIME_SPEED = timeMs(0,0,10)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = !false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = !false;
 const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 const DEBUG_AUTOROTATE = false;
-const DEBUG_AUTOROTATE_SPEED = 0.1;
+const DEBUG_AUTOROTATE_SPEED = 0.2;
 const DEBUG_RENDERER_INFO = false;
-const DEBUG_BUILDINGS_OPACITY = 1/4;				// for buildings and trees
-const DEBUG_BLOCKS_OPACITY = 4/4;					// for blocks
-const DEBUG_NAVMESH_OPACITY = 1/4;			// for navmesh blocks
+const DEBUG_BUILDINGS_OPACITY = 1/4;	// for buildings and trees
+const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
+const DEBUG_NAVMESH_OPACITY = 1/4;		// for navmesh blocks
+const DEBUG_ZONE_OPACITY = 2/4;			// for zones
 const DEBUG_NAVMESH_SHOW_MESHES = !false;
 const DEBUG_NAVMESH_SHOW_FLOORS = !false;
 const DEBUG_NAVMESH_SHOW_LINES = false;
@@ -36,6 +37,7 @@ const DEBUG_SHOW_DIRECTIONS = false;
 const DEBUG_APARTMENT_ADD_FLOORS = false;
 const DEBUG_SHOW_HOME_TO_WORK_ARROW = false;
 const DEBUG_SHOW_ROUTES = false;
+const DEBUG_DUMP_ROUTES = false;
 const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
 const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
