@@ -1,8 +1,8 @@
 //
 //	class Elevator
 //		constructor( center, doors, floors )
-//		isClosed( floor, time )
-//		isMoving( floor, time )
+//		isClosed( y, time )
+//		isMoving( y, time )
 
 
 
@@ -24,20 +24,22 @@ class Elevator
 	} // Elevator.constructor
 	
 	
-	isClosed( time = dayTimeMs )
+	
+	isClosed( y = 0, time = dayTimeMs )
 	{
 		// normalize time cycle to period of [0..1]
-		time = THREE.Math.euclideanModulo( time+this.timeOffset, this.timeSpan ) / this.timeSpan;
+		time = THREE.Math.euclideanModulo( 1000*y+time+this.timeOffset, this.timeSpan ) / this.timeSpan;
 
 		// open [0,0.2]; closed (0.1,1]
 		return time>0.2;
 	} // Elevator.isClosed
 
 
-	isMoving( time = dayTimeMs )
+
+	isMoving( y = 0, time = dayTimeMs )
 	{
 		// normalize time cycle to period of [0..1]
-		time = THREE.Math.euclideanModulo( time+this.timeOffset, this.timeSpan ) / this.timeSpan;
+		time = THREE.Math.euclideanModulo( 1000*y+time+this.timeOffset, this.timeSpan ) / this.timeSpan;
 		
 		// open [0,0.2]; closed (0.1,1]
 		return time>0.3;

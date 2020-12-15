@@ -41,8 +41,8 @@
 const AGENT_CHILD_SLEEP_TIME_MS  = new Range( timeMs(19), timeMs(21) );		// in milliseconds (19:00-21:00)
 const AGENT_CHILD_WAKEUP_TIME_MS = new Range( timeMs(6), timeMs(7,30) );	// in milliseconds (06:00-07:30)
 const AGENT_ADULT_SLEEP_TIME_MS  = new Range( timeMs(21), timeMs(26) );		// in milliseconds (21:00-02:00)
-//const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(5,30), timeMs(7) );	// in milliseconds (05:30-07:00)
-//const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6), timeMs(8) );		// in milliseconds (06:00-08:00)
+const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(5,30), timeMs(7) );	// in milliseconds (05:30-07:00)
+const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6), timeMs(8) );		// in milliseconds (06:00-08:00)
 const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(17), timeMs(20) );		// in milliseconds (17:00-20:00)
 
 const AGENT_REST_TIME_AT_HOME_MS = new Range( 0, timeMs(0,5) );	// in milliseconds (0-5 min), time to rest between walkings at home
@@ -50,8 +50,8 @@ const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(1,0) );	// in millise
 
 
 
-const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,1), timeMs(6,0,2) );	// in milliseconds (05:30-07:00)
-const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,4), timeMs(6,0,4) );		// in milliseconds (06:00-08:00)
+//const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,1), timeMs(6,0,2) );	// in milliseconds (05:30-07:00)
+//const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,4), timeMs(6,0,4) );		// in milliseconds (06:00-08:00)
 
 
 
@@ -750,14 +750,14 @@ class AgentBehaviour
 				this.alreadyElevating = false;
 				if( distance < 1.5*Math.max(ELEVATOR_SIZE.x,ELEVATOR_SIZE.z) )
 				if( distance > 1.0*Math.max(ELEVATOR_SIZE.x,ELEVATOR_SIZE.z) )
-					if( target.mark.isClosed( ) )
+					if( target.mark.isClosed( this.position.y ) )
 					{
 						return false;
 					}
 			}
 			if( target.submark == Elevator.INSIDE )
 			{
-				if( !this.alreadyElevating && !target.mark.isMoving( ) )
+				if( !this.alreadyElevating && !target.mark.isMoving( this.position.y ) )
 					return false;
 					
 				this.alreadyElevating = true;
