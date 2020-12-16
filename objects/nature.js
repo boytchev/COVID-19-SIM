@@ -35,7 +35,7 @@ var clock = new THREE.Clock(),
 var currentTimeMs = START_TIME,
 	dayTimeMs = currentTimeMs % HOURS_24_MS,
 	previousDayTimeMs = dayTimeMs;
-
+	trueCurrentTimeMs = START_TIME;
 
 
 var NatureMaterial = ( SHADOWS != NO_SHADOWS ) ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
@@ -191,6 +191,7 @@ class Nature
 				scene.children[i].originalIntensity = scene.children[i].intensity;
 				console.log( scene.children[i].intensity.toFixed(2), scene.children[i].name );
 			}
+			
 	} // Nature
 
 
@@ -198,8 +199,9 @@ class Nature
 	{
 		
 		// update time markers
-		deltaTime = DEBUG_TIME_SPEED*clock.getDelta()
-		currentTimeMs += 1000*deltaTime;
+		deltaTime = DEBUG_TIME_SPEED*clock.getDelta();
+		trueCurrentTimeMs += 1000*deltaTime;
+		currentTimeMs = THREE.Math.lerp( currentTimeMs, trueCurrentTimeMs, 0.1 );
 		previousDayTimeMs = dayTimeMs;
 		dayTimeMs = currentTimeMs % HOURS_24_MS;
 		frame++;

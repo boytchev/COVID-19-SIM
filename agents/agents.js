@@ -126,21 +126,20 @@ class Agents
 				{
 					var pos = agent.position.vector(),
 						dVect = pos.sub( controls.target );
-						
-					var t = currentTimeMs/30000,
+					var t = currentTimeMs/DEBUG_TIME_SPEED/5000,
 						q = 0.6+0.5*Math.sin(t/1.4),
-						r = 45+37*Math.sin(t/2);
+						r = 25+17*Math.sin(t/2);
 					var dx = r*Math.sin(t)*Math.cos(q),
 						dy = r*Math.sin(q),
 						dz = r*Math.cos(t)*Math.cos(q);
-					
+
 					controls.target.set( 
 						THREE.Math.lerp(controls.target.x,agent.position.x,0.022),
-						0, 
+						THREE.Math.lerp(controls.target.y,agent.position.y,0.022),
 						THREE.Math.lerp(controls.target.z,agent.position.z,0.022)
 					);
-					camera.position.set( controls.target.x+dx, 5+dy, controls.target.z+dz ); 
-					
+					camera.position.set( controls.target.x+dx, controls.target.y+dy, controls.target.z+dz ); 
+//console.log(controls.target.x.toFixed(5));					
 				} // if( i==DEBUG_FOLLOW_AGENT )
 				
 				if( DEBUG_AGENT_LOCATIONS )

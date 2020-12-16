@@ -12,7 +12,7 @@ R = 3188;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
 const DEBUG_AGENT_MAX_COUNT =15000;
-const DEBUG_TIME_SPEED = timeMs(0,0,10)/1000;	// time ellapsed for 1 second
+const DEBUG_TIME_SPEED = timeMs(0,0,15)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
@@ -24,7 +24,6 @@ const DEBUG_RENDERER_INFO = false;
 const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
 const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
-const DEBUG_ZONE_OPACITY = 0/4;			// for zones
 const DEBUG_NAVMESH_SHOW_MESHES = !false;
 const DEBUG_NAVMESH_SHOW_FLOORS = !false;
 const DEBUG_NAVMESH_SHOW_LINES = false;
@@ -32,7 +31,7 @@ const DEBUG_NAVMESH_SHOW_ELEVATORS = !false;
 const DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION = false;
 const DEBUG_HIDE_ROOFS = false;
 const DEBUG_CENTER_VIEW_ON_AGENTS = false;
-const DEBUG_FOLLOW_AGENT = -1;	// -1 for not following any
+const DEBUG_FOLLOW_AGENT = 2;	// -1 for not following any
 const DEBUG_SHOW_DIRECTIONS = false;
 const DEBUG_APARTMENT_ADD_FLOORS = false;
 const DEBUG_SHOW_HOME_TO_WORK_ARROW = false;
@@ -154,8 +153,8 @@ const TOP_SHADOWS = 1;
 const FULL_SHADOWS = 2;
 
 
-//const SUN = NO_SUN;
-const SUN = STATIC_SUN;
+const SUN = NO_SUN;
+//const SUN = STATIC_SUN;
 //const SUN = DYNAMIC_SUN;
 const SUNRISE_MS = timeMs(6);
 const SUNSET_MS = timeMs(18);
@@ -169,10 +168,10 @@ const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 		
 
 
-//const SHADOWS = NO_SHADOWS;
+const SHADOWS = NO_SHADOWS;
 //const SHADOWS = TOP_SHADOWS;
-const SHADOWS = FULL_SHADOWS;
-const SHADOWS_MAP_SIZE = 1024*4;
+//const SHADOWS = FULL_SHADOWS;
+const SHADOWS_MAP_SIZE = 1024*4*2;
 const SHADOWS_MAX_COUNT = 3;
 
 

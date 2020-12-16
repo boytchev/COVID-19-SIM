@@ -198,9 +198,9 @@
 			// mesh.quaternion.copy(camera.quaternion);
 			//stats.update();
 
-			controls.update();
 			nature.update();
 			agents.update();
+			/*if( DEBUG_FOLLOW_AGENT<0 ) */controls.update();
 			
 			renderer.render(scene, camera);
 			
