@@ -20,8 +20,10 @@ class Agents
 		this.generateAgentGeometry();
 		this.generateLabelGeometry();
 		
-		this.generateAgents( );
+		this.generateInfections();
 		
+		this.generateAgents( );
+				
 		if( DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION ) 
 			this.debugShowAgeDistribution();
 	} // Agents.constructor
@@ -53,7 +55,7 @@ class Agents
 	generateLabelGeometry()
 	{
 		Agents.labelGeometry = [];
-		for( var i=0; i<110; i++ )
+		for( var i=0; i<=100; i++ )
 		{
 			var fontGeometry = new THREE.TextBufferGeometry( ''+i+'%', {
 					font: font.font,
@@ -269,4 +271,24 @@ class Agents
 	} // Agents.debugShowAgeDistribution
 
 
+
+	generateInfections()
+	{
+		this.viralShedding = [];
+		
+		// generate infection pattern for peak day at 10%, 20%, ... 90%
+		var totalDays = INFECTION_PATTERNS_COUNT+1;
+		for( var i = 0; i<INFECTION_PATTERNS_COUNT; i++ )
+		{
+			var peakDay = i+1;
+			
+			this.viralShedding.push( new THREE.SplineCurve( [
+				new THREE.Vector2( 0, 0 ),
+				new THREE.Vector2( peakDay/2, 0.15 ),
+				new THREE.Vector2( peakDay, 1 ),
+				new THREE.Vector2( (totalDays+peakDay)/2, 0.15 ),
+				new THREE.Vector2( 10, 0 )
+			] ) );
+		}
+	}
 }

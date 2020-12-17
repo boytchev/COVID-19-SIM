@@ -121,13 +121,13 @@ class AgentBehaviour
 		this.walkingDirection = new Pos(0,0);
 		
 		this.goal = undefined;	// ultimate final gotoPosition
-		
+/*		
 		// assume agent is at home
 		if( this.shouldBeAwake() )
 			this.doing = this.AGENT_STAYING_AT_HOME;
 		else
 			this.doing = this.AGENT_SLEEPING_AT_HOME;
-		
+*/		
 //this.doing = this.AGENT_DOING_NOTHING; // todo
 				
 	} // AgentBehaviour.constructor

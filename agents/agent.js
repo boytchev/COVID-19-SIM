@@ -51,27 +51,52 @@ class Agent extends AgentBehaviour
 
 		this.dailySchedule.reset( this.isAdult );
 		
-		// fake work address
+		// work address
 		this.work = new WorkAddress();
 		this.work.position = this.work.randomPos();
-		//this.work = new BlockAddress();
+		
+		this.infectionLevel = 0;
+		this.infectionPattern = undefined;
+		this.infectionPeriodMs = undefined;
 		
 		if( DEBUG_SHOW_HOME_TO_WORK_ARROW )
 			drawArrow( this.home.center, this.work.center );
 
-		//if( this.home.building && (this.home.building === this.work.building) )
-		//	console.error('Home and work is in the same building. This case is not handled so far. Code 0937.');
-
 //	console.log(this.home, this.work);
 //	drawArrow( this.home.center, this.work.center );
 
-		
+		this.infect();
 	} // Agent.constructor
 	
 	
 	
 	update()
 	{
+		// update infection status
+		if( this.infectionPattern!=undefined )
+		{
+			// end of infection
+			if( currentTimeMs > this.infectionPeriodMs.max )
+			{
+				this.infectionLevel = 0;
+				this.infectionPattern = undefined;
+			}
+			else
+			{
+				var viralShedding = agents.viralShedding[this.infectionPattern];
+				
+				var elapsedTime = currentTimeMs-this.infectionPeriodMs.min,
+					totalTime = this.infectionPeriodMs.diff(),
+					relativeTime = elapsedTime/totalTime;
+					
+				this.infectionLevel = 100*viralShedding.getPointAt( relativeTime ).y;
+
+				// update overhead indicator
+				this.mesh.children[0].geometry = Agents.labelGeometry[ Math.round(this.infectionLevel) ];
+			}
+		}
+		
+
 		// if a new day has started, reset schedule 
 		if( previousDayTimeMs > dayTimeMs )
 		{
@@ -127,7 +152,7 @@ class Agent extends AgentBehaviour
 		
 		scene.add( mesh );
 
-		var ageMesh = new THREE.Mesh( Agents.labelGeometry[round(this.age,1)], mesh.material );
+		var ageMesh = new THREE.Mesh( Agents.labelGeometry[Math.round(this.infectionLevel)], mesh.material );
 		mesh.add( ageMesh );
 
 		return mesh;
@@ -190,6 +215,17 @@ class Agent extends AgentBehaviour
 		
 	} // Agent.material
 	
+	
+	
+	infect()
+	{
+		this.infectionLevel = 0;
+		this.infectionPattern = THREE.Math.randInt( 1, Math.round(INFECTION_PATTERNS_COUNT/2) );
+		this.infectionPeriodMs = new Range( currentTimeMs, currentTimeMs + INFECTION_TOTAL_MS.randFloat() );
+		
+		console.log('level',this.infectionLevel,'pattern',this.infectionPattern,'from',msToString(this.infectionPeriodMs.min),'to',msToString(this.infectionPeriodMs.max));
+		
+	}
 	
 } // Agent
 
