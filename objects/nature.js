@@ -294,12 +294,7 @@ class Nature
 		{
 			ctx.fillStyle = 'cornflowerblue';
 			var xx = i/10/totalDays;
-			/*
-			if(xx<=peakDay)
-				xx = THREE.Math.mapLinear(xx,0,peakDay,0,0.5);
-			else
-				xx = THREE.Math.mapLinear(xx,peakDay,totalDays,0.5,1);
-			*/
+
 			var columnHeight = (H-40)*viralShedding.getPointAt( xx ).y;
 			ctx.fillRect( 20+dX*i, H-20-columnHeight, dX, columnHeight );	
 		}

@@ -31,34 +31,14 @@ class Agent extends AgentBehaviour
 		this.sysType = 'Agent';
 		this.id = agent_id++;
 		
-		if( !AgentGeometry ) AgentGeometry = this.geometry();
-		if( !AgentMaterial ) AgentMaterial = this.material();
-		//if( !AgentMaterial2 ) AgentMaterial2 = this.material2();
-		if( !AgentDebugMaterial ) AgentDebugMaterial = [
+/*		if( !AgentDebugMaterial ) AgentDebugMaterial = [
 			AgentMaterial,
 			new THREE.MeshPhongMaterial({color: 'pink'}),
 			new THREE.MeshPhongMaterial({color: 'green'}),
 			new THREE.MeshPhongMaterial({color: 'black'}),
 			new THREE.MeshPhongMaterial({color: 'white'}),
 		];
-		if( AgentLabelGeometry === undefined )
-		{
-			AgentLabelGeometry = [];
-			for( var i=0; i<110; i++ )
-			{
-				var fontGeometry = new THREE.TextBufferGeometry( ''+i+'%', {
-						font: font.font,
-						size: 0.5,
-						height: 0.03,
-						curveSegments: 4,
-						bevelEnabled: false,
-					} );
-				fontGeometry.computeBoundingBox();
-				fontGeometry.translate( (fontGeometry.boundingBox.min.x-fontGeometry.boundingBox.max.x)/2, 1.9, 0 );
-				AgentLabelGeometry.push( fontGeometry );
-			}
-		}
-			
+*/			
 		this.isAdult = isAdult;
 		
 		// set age and height
@@ -138,7 +118,7 @@ class Agent extends AgentBehaviour
 	
 	image()
 	{
-		var mesh = new THREE.Mesh( AgentGeometry, /*this.isAdult?*/AgentMaterial/*:AgentMaterial2*/ );
+		var mesh = new THREE.Mesh( Agents.geometry, this.material() );
 			
 		mesh.position.set( this.x, this.y, this.z );
 		mesh.scale.set( this.height/1.7, this.height/1.7, this.height/1.7 );
@@ -147,7 +127,7 @@ class Agent extends AgentBehaviour
 		
 		scene.add( mesh );
 
-		var ageMesh = new THREE.Mesh( AgentLabelGeometry[round(this.age,1)], AgentMaterial );
+		var ageMesh = new THREE.Mesh( Agents.labelGeometry[round(this.age,1)], mesh.material );
 		mesh.add( ageMesh );
 
 		return mesh;
@@ -200,52 +180,15 @@ class Agent extends AgentBehaviour
 	
 	
 	
-	geometry()
-	{
-		var geometry = new THREE.CylinderBufferGeometry( 0.2, 0.4, 1.7, 6, 2 );
-		geometry.translate( 0, 1.7/2, 0 );
-		
-		var pos = geometry.getAttribute( 'position' );
-		for( var i=0; i<pos.count; i++ )
-		{
-			var x = pos.getX( i );
-			var y = pos.getY( i );
-			var z = pos.getZ( i );
-			
-			if( y>0.1 && y<1.7 )
-			{
-				pos.setXYZ( i, x/4, 1.4, z/4 );
-			}
-		}
-		
-		return geometry;
-		
-	} // Agent.geometry
-	
-	
-	
 	material()
 	{
 		var material = new THREE.MeshPhongMaterial( {
 				color: 'crimson',
-//				shininess: 100,
 		});
 		
 		return material;
 		
 	} // Agent.material
-	
-	
-	
-	material2()
-	{
-		var material = new THREE.MeshBasicMaterial( {
-				color: 'navy'
-		});
-		
-		return material;
-		
-	} // Agent.material2
 	
 	
 } // Agent
@@ -289,11 +232,5 @@ class Adult extends Agent
 } // Adult
 
 
-
-AgentGeometry = undefined;
-AgentLabelGeometry = undefined;
-AgentMaterial = undefined;
-AgentMaterial2 = undefined;
-AgentDebugMaterial = undefined;
 
 Agent.generateAgeDistributionArrays();

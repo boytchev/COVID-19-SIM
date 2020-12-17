@@ -17,14 +17,59 @@ class Agents
 		
 		this.agents = [];
 
-		this.generate( );
+		this.generateAgentGeometry();
+		this.generateLabelGeometry();
+		
+		this.generateAgents( );
 		
 		if( DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION ) 
 			this.debugShowAgeDistribution();
 	} // Agents.constructor
 
 
-	generate( )
+
+	generateAgentGeometry()
+	{
+		Agents.geometry = new THREE.CylinderBufferGeometry( 0.2, 0.4, 1.7, 6, 2 );
+		Agents.geometry.translate( 0, 1.7/2, 0 );
+		
+		var pos = Agents.geometry.getAttribute( 'position' );
+		for( var i=0; i<pos.count; i++ )
+		{
+			var x = pos.getX( i );
+			var y = pos.getY( i );
+			var z = pos.getZ( i );
+			
+			if( y>0.1 && y<1.7 )
+			{
+				pos.setXYZ( i, x/4, 1.4, z/4 );
+			}
+		}
+	} // Agents.generateAgentGeometry
+	
+
+
+
+	generateLabelGeometry()
+	{
+		Agents.labelGeometry = [];
+		for( var i=0; i<110; i++ )
+		{
+			var fontGeometry = new THREE.TextBufferGeometry( ''+i+'%', {
+					font: font.font,
+					size: 0.5,
+					height: 0.03,
+					curveSegments: 4,
+					bevelEnabled: false,
+				} );
+			fontGeometry.computeBoundingBox();
+			fontGeometry.translate( (fontGeometry.boundingBox.min.x-fontGeometry.boundingBox.max.x)/2, 1.9, 0 );
+			Agents.labelGeometry.push( fontGeometry );
+		}
+	} // Agents.generateLabelGeometry
+	
+	
+	generateAgents( )
 	{
 		// generate agents and set their homes
 		
