@@ -192,6 +192,8 @@ class Nature
 				console.log( scene.children[i].intensity.toFixed(2), scene.children[i].name );
 			}
 			
+		if( DEBUG_SHOW_VIRAL_SHEDDING ) 
+			this.debugShowViralShedding();
 	} // Nature
 
 
@@ -260,6 +262,60 @@ class Nature
 		return rT*Math.PI;
 	} // Nature.getSunAngularPosition
 	
+	
+	debugShowViralShedding()
+	{
+		var totalDays = 14,
+			peakDay = 4;
+			
+		var viralShedding = new THREE.SplineCurve( [
+				new THREE.Vector2( 0, 0 ),
+				new THREE.Vector2( peakDay/2, 0.15 ),
+				new THREE.Vector2( peakDay, 1 ),
+				new THREE.Vector2( totalDays/2+peakDay/2, 0.15 ),
+				new THREE.Vector2( totalDays, 0 )
+			] );
+			
+		var W = window.innerWidth-100,
+			H = window.innerHeight-100;
+			
+		var canvas = document.createElement( 'canvas' );
+			canvas.width = W;
+			canvas.height = H;
+		
+		var ctx = canvas.getContext( '2d' );
+			ctx.fillStyle = 'white';
+			ctx.fillRect( 0, 0, W, H );	
+		
+
+		var dX = (W-40)/(10*totalDays);
+		
+		for( var i=0; i<=10*totalDays; i++ )
+		{
+			ctx.fillStyle = 'cornflowerblue';
+			var xx = i/10/totalDays;
+			/*
+			if(xx<=peakDay)
+				xx = THREE.Math.mapLinear(xx,0,peakDay,0,0.5);
+			else
+				xx = THREE.Math.mapLinear(xx,peakDay,totalDays,0.5,1);
+			*/
+			var columnHeight = (H-40)*viralShedding.getPointAt( xx ).y;
+			ctx.fillRect( 20+dX*i, H-20-columnHeight, dX, columnHeight );	
+		}
+
+		var dX = (W-40)/(totalDays);
+		for( var i=0; i<=totalDays; i++ )
+		{
+			ctx.fillStyle = 'crimson';
+			var xx = i/totalDays;
+			var columnHeight = (H-40);
+			ctx.fillRect( 20+dX*i, H-20-columnHeight, 1, columnHeight );	
+		}
+		
+		document.body.appendChild( canvas );
+		canvas.style = "position:fixed; top:50px; left:50px; z-index:120000; border:solid 1px black;";
+	} // Agents.debugShowViralShedding
 	
 } // Nature
 
