@@ -513,13 +513,15 @@ function timeMs( hours, minutes=0, seconds=0 )
 
 function msToString( ms )
 {
-	var seconds = Math.floor( ms/1000 ) % SECONDS_IN_DAY;
+	var totalSeconds = Math.floor( ms/1000 ),
+		seconds = Math.floor( ms/1000 ) % SECONDS_IN_DAY;
 	
-	var hours = Math.floor( seconds / SECONDS_IN_HOUR ),
+	var days = Math.floor( totalSeconds / SECONDS_IN_DAY ),
+		hours = Math.floor( seconds / SECONDS_IN_HOUR ),
 		minutes = Math.floor( (seconds%SECONDS_IN_HOUR) / SECONDS_IN_MINUTE ),
 		seconds = seconds % SECONDS_IN_MINUTE;
 		
-	return (hours<10?'0':'')+hours+(minutes<10?':0':':')+minutes+(seconds<10?':0':':')+seconds;
+	return (days?days+'d ':'')+(hours<10?'0':'')+hours+(minutes<10?':0':':')+minutes+(seconds<10?':0':':')+seconds;
 } // msToString
 		
 		
