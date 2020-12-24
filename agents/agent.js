@@ -89,10 +89,25 @@ class Agent extends AgentBehaviour
 					totalTime = this.infectionPeriodMs.diff(),
 					relativeTime = elapsedTime/totalTime;
 					
-				this.infectionLevel = 100*viralShedding.getPointAt( relativeTime ).y;
+				var infLev = viralShedding.getPointAt( relativeTime ).y;
+				this.infectionLevel = 100*infLev;
 
 				// update overhead indicator
-				this.mesh.children[0].geometry = Agents.labelGeometry[ Math.round(this.infectionLevel) ];
+				if( INFECTION_OVERHEAD_INDICATOR )
+				{
+					this.mesh.children[0].geometry = Agents.labelGeometry[ Math.round(this.infectionLevel) ];
+				}
+				// update color indicator
+				if( INFECTION_COLOR_INDICATOR )
+				{
+					this.mesh.material.color.r = infLev;
+					this.mesh.material.color.g = 0.2;
+					this.mesh.material.color.b = 1-infLev;
+					if( INFECTION_OVERHEAD_INDICATOR )
+					{
+						this.mesh.children[0].material.color = this.mesh.material.color;
+					}
+				}
 			}
 		}
 		
@@ -129,7 +144,10 @@ class Agent extends AgentBehaviour
 		else
 			this.mesh.rotation.x = THREE.Math.lerp( this.mesh.rotation.x, 0, 0.1 );
 		
-		this.mesh.children[0].rotation.y = controls.getAzimuthalAngle();
+		if( INFECTION_OVERHEAD_INDICATOR )
+		{
+			this.mesh.children[0].rotation.y = controls.getAzimuthalAngle();
+		}
 		
 	} // Agent.updateImage
 
@@ -152,9 +170,12 @@ class Agent extends AgentBehaviour
 		
 		scene.add( mesh );
 
-		var ageMesh = new THREE.Mesh( Agents.labelGeometry[Math.round(this.infectionLevel)], mesh.material );
-		mesh.add( ageMesh );
-
+		if( INFECTION_OVERHEAD_INDICATOR )
+		{
+			var ageMesh = new THREE.Mesh( Agents.labelGeometry[Math.round(this.infectionLevel)], mesh.material );
+			mesh.add( ageMesh );
+		}
+		
 		return mesh;
 		
 	} // Agent.image
@@ -223,7 +244,7 @@ class Agent extends AgentBehaviour
 		this.infectionPattern = THREE.Math.randInt( 1, Math.round(INFECTION_PATTERNS_COUNT/2) );
 		this.infectionPeriodMs = new Range( currentTimeMs, currentTimeMs + INFECTION_TOTAL_MS.randFloat() );
 		
-		console.log('level',this.infectionLevel,'pattern',this.infectionPattern,'from',msToString(this.infectionPeriodMs.min),'to',msToString(this.infectionPeriodMs.max));
+//		console.log('level',this.infectionLevel,'pattern',this.infectionPattern,'from',msToString(this.infectionPeriodMs.min),'to',msToString(this.infectionPeriodMs.max));
 		
 	}
 	

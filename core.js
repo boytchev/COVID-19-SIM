@@ -845,6 +845,7 @@ function drawText( pos, text, color = 'black' )
 
 function clipLineRoute( from, to, obstacles, margin = 1 )
 {
+//	console.log('clipLineRoute',from.block, to.block);
 	var route = [];
 
 	var clipData = clipLine( from, to, obstacles, margin, route );
@@ -860,11 +861,15 @@ function clipLineRoute( from, to, obstacles, margin = 1 )
 		}
 		from = clipData.pos;
 		from.y = to.y; // take the vertical position of the target
+		if( !from.block ) from.block = to.block;
 		route.push( from );
 		clipData = clipLine( from, to, obstacles, margin, route );
 	}
 	
 	route.push( clipData.pos );
+
+//for(var i=0; i<route.length; i++)
+//	console.log('\t#'+i,route[i].block);
 	
 	return route;
 }

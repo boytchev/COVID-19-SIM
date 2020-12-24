@@ -165,11 +165,11 @@ class AgentBehaviour
 
 	
 	
-	routerGoToIndex( fromIndex, toIndex )
+	routerGoToIndex( fromIndex, toIndex, mark )
 	{	// assume we are on the sidewalk of the house block
 	
 		var ring = this.routePosition.block.ring;
-		this.addRingToRoute( ring, fromIndex, toIndex );
+		this.addRingToRoute( ring, fromIndex, toIndex, mark );
 		
 	} // AgentBehaviour.routerGoToHouse
 	
@@ -248,7 +248,7 @@ class AgentBehaviour
 	
 	
 	
-	router( from, to )
+	router( from, to ) //@@
 	{
 // in same park/plaza
 //		var from = new BlockAddress( pick(blocks.plazas) );
@@ -520,17 +520,18 @@ class AgentBehaviour
 					case BLOCK_PLAZA:
 							// 2.1.2 - park
 							// 2.2.2 - plaza
-							this.addToRoute( crossing );
+							this.addToRoute( crossing, '1020' );
 							break;
 					case BLOCK_HOUSES:
 							// 2.3.2 - house
-							this.routerGoToIndex( ringIndex, crossing.ringIndex );
+							this.routerGoToIndex( ringIndex, crossing.ringIndex, '1022' );
 							break;
 					case BLOCK_APARTMENTS:
 					case BLOCK_OFFICE:
 							// 2.4.2 - apartments
 							// 2.5.2 - offices
-							this.addToRoute( clipLineRoute( this.routePosition, crossing.randomPos(), block.buildings ) );
+							//debugger;
+							this.addToRoute( clipLineRoute( this.routePosition, crossing.randomPos(), block.buildings ), '1021' );
 							break;
 					default:
 						console.error('Unknown block type in router. Code 1050.');
@@ -668,7 +669,7 @@ class AgentBehaviour
 			console.log('from\t',from);
 			console.log('to\t',to);
 			
-			console.log('current\t',this.position.x.toFixed(2),this.position.z.toFixed(2));
+			//console.log('current\t',this.position.x.toFixed(2),this.position.z.toFixed(2));
 
 			for( var i=0; i<this.gotoPosition.length; i++)
 			{
@@ -676,14 +677,22 @@ class AgentBehaviour
 				//if( this.gotoPosition[i].zone )
 				//	drawArrow( this.gotoPosition[i].zone.center.addY(this.gotoPosition[i].y+0.2), this.gotoPosition[i].zone.center.addY(this.gotoPosition[i].y+5), 'black' );
 			
-				console.log(
-					'#'+i+'\t'+
+				var s = '#'+i+'\t'+
 					'zn='+(this.gotoPosition[i].zone?this.gotoPosition[i].zone.id:'    ')+'\t'+
 					'bl='+(this.gotoPosition[i].block?this.gotoPosition[i].block.id:'    ')+'\t'+
-					'fl='+this.gotoPosition[i].y/FLOOR_HEIGHT+'\t'+
-					this.gotoPosition[i].x.toFixed(2),
-					this.gotoPosition[i].z.toFixed(2),
-					);
+					'fl='+this.gotoPosition[i].y/FLOOR_HEIGHT+'\t';
+				if( this.gotoPosition[i].mark )
+				{
+					if( this.gotoPosition[i].mark instanceof Object )
+					{
+						s += this.gotoPosition[i].mark.constructor.name;
+					}
+					else
+					{
+						s += this.gotoPosition[i].mark;
+					}
+				}
+				console.log(s);
 			}
 			console.groupEnd('New route');
 		} // if( DEBUG_DUMP_ROUTES )
@@ -817,7 +826,11 @@ class AgentBehaviour
 	walkRoute( nextAction = this.AGENT_DOING_NOTHING )
 	{
 //console.log('walkRoute',this.position.x.toFixed(2),this.position.z.toFixed(2));
-
+/* if( this.position.block )
+	console.log('walk in block',this.position.block.id);
+else
+	console.log('walk in unknown block');
+ */
 		// if there are position in the route
 		if( this.gotoPosition.length )
 		{
@@ -848,12 +861,12 @@ class AgentBehaviour
 	
 	
 	
-	addRingToRoute( ring, fromIndex, toIndex )
+	addRingToRoute( ring, fromIndex, toIndex, mark )
 	{
 		// check if we are already there
 		if( fromIndex == toIndex )
 		{
-			this.addToRoute( ring[fromIndex] ); 
+			this.addToRoute( ring[fromIndex], mark ); 
 			return;
 		}
 		
