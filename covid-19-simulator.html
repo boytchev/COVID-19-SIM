@@ -202,7 +202,7 @@
 			agents.update();
 			/*if( DEBUG_FOLLOW_AGENT<0 ) */controls.update();
 			
-			if( frame%10 == 0 ) renderer.render(scene, camera);
+			if( frame%3 == 0 ) renderer.render(scene, camera);
 			
 			if (DEBUG_RENDERER_INFO && frame==10)
 			{

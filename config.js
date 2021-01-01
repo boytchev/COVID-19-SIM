@@ -1,26 +1,26 @@
 // size of the simulated world
 
-const GROUND_SIZE = 300; 				// in meters
+const GROUND_SIZE = 500; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 const EARTH_SIZE = 50000;
 
 	
 // debug flags
 R = 1+Math.floor(Math.random()*100000);
-//R = 35123;
+R = 79965;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
 const DEBUG_AGENT_MAX_COUNT = 5000;
-const DEBUG_TIME_SPEED = timeMs(0,0,10)/1000;	// time ellapsed for 1 second
+const DEBUG_TIME_SPEED = timeMs(0,0,5)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = !false;
-const DEBUG_BLOCK_WITH_ONLY_OFFICES = !false;
+const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 const DEBUG_AUTOROTATE = false;
 const DEBUG_AUTOROTATE_SPEED = 0.1;
 const DEBUG_RENDERER_INFO = false;
-const DEBUG_BUILDINGS_OPACITY = 1/4;	// for buildings and trees
+const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
 const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
 const DEBUG_NAVMESH_SHOW_MESHES = !false;
@@ -43,6 +43,7 @@ const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
 const DEBUG_AGENT_HEALTH = !false; // count infected agents
 const DEBUG_SUN_POSITION_GUI = false;
 const DEBUG_BLOCK_COLOR = false;
+const DEBUG_ALL_WHITE = !false;
 var DEBUG_FLAG_1 = false;
 
 
@@ -57,7 +58,7 @@ const BLOCK_MARGIN = 30; 				// in meters
 
 // types of blocks and their probabilities
 
-const BLOCK_PARK = {name:'parks', probability:0.05, color:'darkseagreen', renderOrder:-80};
+const BLOCK_PARK = {name:'parks', probability:0.05, color:(DEBUG_ALL_WHITE?'white':'darkseagreen'), renderOrder:-80};
 const BLOCK_PLAZA = {name:'plazas', probability:0.03, color:'white', renderOrder:-90};
 const BLOCK_OFFICE = {name:'offices', probability:1.00, color:'white', renderOrder:-90};
 const BLOCK_APARTMENTS = {name:'apartments', probability:1.00, color:'white', renderOrder:-90};
@@ -82,7 +83,7 @@ const SUBURB_TRESHOLD = GROUND_SIZE/6;	// in meters
 const URBAN_RURAL = Math.pow(0.3,2);	// 0.0=megapolis 0.3=city 0.5=town 0.7=small town 1.0=vilages
 const SKYSCRAPERS = 0.2;				// -1.0=minimal number +1.0 almost all is skyscrapers
 const FLOOR_HEIGHT = 2.5;				// in meters
-const MAX_FLOORS = 120;					// maximal number of floors in a building
+const MAX_FLOORS = 2//120;				// maximal number of floors in a building
 const HOUSE_BOUNDING_RADIUS = 5;		// in meters, house bounding circle radius
 
 
@@ -183,7 +184,7 @@ const START_TIME = timeMs(6);			// start time
 
 const INFECTION_PATTERNS_COUNT = 10;
 //const INFECTION_TOTAL_MS = new Range( 14*HOURS_24_MS, 28*HOURS_24_MS ); // 14-28 days in ms
-const INFECTION_TOTAL_MS = new Range( timeMs(0,10), timeMs(0,60) ); // 10-60 min in ms
+const INFECTION_TOTAL_MS = new Range( timeMs(0,10), timeMs(5,60) ); // 10-60 min in ms
 const INFECTION_OVERHEAD_INDICATOR = false;
 const INFECTION_COLOR_INDICATOR = !false;
 const INFECTION_DISTANCE = 1; // in meters

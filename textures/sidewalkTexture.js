@@ -17,7 +17,7 @@ class SidewalkTexture extends ProceduralTexture
 			H = this.height;
 
 		ctx.lineWidth = 1;
-		ctx.strokeStyle = 'dimgray';
+		ctx.strokeStyle = DEBUG_ALL_WHITE?'white':'dimgray';
 		ctx.strokeRect( 0, 0, W, H );
 		
 	} // SidewalkTexture.draw

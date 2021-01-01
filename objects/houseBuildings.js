@@ -339,15 +339,16 @@ class HouseBuildings
 
 	static material()
 	{
-		
 		var material = new THREE.MeshPhongMaterial({
-				color: 'cornsilk',
-				shininess: 1,
+				color: DEBUG_ALL_WHITE?'white':'cornsilk',
+				emissive: 'white',
+				emissiveIntensity: DEBUG_ALL_WHITE?0.2:0,
+				shininess: DEBUG_ALL_WHITE?0:1,
 				vertexColors: true,
 				flatShading: true,
 				map: textures.house.map(),
 				bumpMap: textures.houseBump.map(),
-				bumpScale: 1,
+				bumpScale: DEBUG_ALL_WHITE?0.1:1,
 				side: DEBUG_HIDE_ROOFS?THREE.DoubleSide:THREE.FrontSide,
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
 				opacity:     DEBUG_BUILDINGS_OPACITY,
@@ -564,9 +565,9 @@ class HouseBuildings
 		{
 			if( (i%2)==0 )
 			{
-				colorR = THREE.Math.randFloat(0.90,1.00);
-				colorG = THREE.Math.randFloat(0.85,1.00);
-				colorB = THREE.Math.randFloat(0.80,1.00);
+				colorR = DEBUG_ALL_WHITE?1:THREE.Math.randFloat(0.90,1.00);
+				colorG = DEBUG_ALL_WHITE?1:THREE.Math.randFloat(0.85,1.00);
+				colorB = DEBUG_ALL_WHITE?1:THREE.Math.randFloat(0.80,1.00);
 			}
 			colors.push( colorR, colorG, colorB );
 		}

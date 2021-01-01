@@ -26,7 +26,7 @@ class Ground
 		var geometry = new THREE.PlaneBufferGeometry( GROUND_SIZE, GROUND_SIZE );
 
 		var material = new NatureMaterial( {
-				color: '#303030',
+				color: DEBUG_ALL_WHITE?'lightgray':'#303030',
 				depthTest: false,
 				// map: textures.grid.map( Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE), Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE) )
 				transparent: DEBUG_BLOCKS_OPACITY<1,

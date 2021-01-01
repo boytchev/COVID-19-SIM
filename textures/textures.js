@@ -126,20 +126,20 @@ class Textures
 		
 		this.grid = new GridTexture( 64*2 );
 		
-		this.sidewalk = new SidewalkTexture( 64, 64, 'beige' );
+		this.sidewalk = new SidewalkTexture( 64, 64, DEBUG_ALL_WHITE?'white':'beige' );
 		
 		this.office = new OfficeTexture( 64, 64*2 );
-		this.officeNormal = new OfficeNormalTexture( 64, 64*2, 'rgb(128,128,255)' );
+		this.officeNormal = new OfficeNormalTexture( 64, 64*2, DEBUG_ALL_WHITE?'white':'rgb(128,128,255)' );
 		
-		this.officeDoor = new OfficeDoorTexture( 64*2, 64*2, 'dimgray' );
+		this.officeDoor = new OfficeDoorTexture( 64*2, 64*2, DEBUG_ALL_WHITE?'white':'dimgray' );
 		
 		this.house = new HouseTexture( 64*4 );
 		this.houseBump = new HouseBumpTexture( 64*4 );
 		
 		this.apartment = new ApartmentTexture( 64*2 );
-		this.apartmentNormal = new ApartmentNormalTexture( 64*2, 64*2, 'rgb(128,128,255)' );
+		this.apartmentNormal = new ApartmentNormalTexture( 64*2, 64*2, DEBUG_ALL_WHITE?'white':'rgb(128,128,255)' );
 
-		this.crossing = new CrossingTexture( 64*2, 2, '#404040' );
+		this.crossing = new CrossingTexture( 64*2, 2, DEBUG_ALL_WHITE?'lightgray':'#404040' );
 		
 		this.grass = new GrassTexture( 64 );
 		

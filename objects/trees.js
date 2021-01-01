@@ -150,9 +150,8 @@ class Trees
 				shader.fragmentShader.replace(
 					'#include <color_fragment>',
 
-//					'vec3 green = vec3(0.56,0.74,0.54);\n'+
-					'vec3 green = vec3(0.33,0.65,0.33);\n'+
-					'vec3 brown = vec3(0.63,0.32,0.18);\n'+
+					'vec3 green = vec3('+(DEBUG_ALL_WHITE?'1.5,1.5,1.5':'0.33,0.65,0.33')+');\n'+
+					'vec3 brown = vec3('+(DEBUG_ALL_WHITE?'1.5,1.5,1.5':'0.63,0.32,0.18')+');\n'+
 					'float k = smoothstep(0.6, 0.7,vColor.x);\n'+
 					'diffuseColor.rgb *= green*k+brown*(1.0-k);\n'+
 					''

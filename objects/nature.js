@@ -175,8 +175,8 @@ class Nature
 		
 		
 		// add background color
-		scene.background = new THREE.Color( 'skyblue' );
-		scene.fog = new THREE.Fog( 'skyblue', 0.2*EARTH_SIZE, 0.4*EARTH_SIZE );
+		scene.background = new THREE.Color( DEBUG_ALL_WHITE?'white':'skyblue' );
+		scene.fog = new THREE.Fog( DEBUG_ALL_WHITE?'white':'skyblue', 0.2*EARTH_SIZE, 0.4*EARTH_SIZE );
 		
 		
 		// adjust light intensities total to be 1

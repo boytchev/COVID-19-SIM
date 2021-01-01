@@ -399,7 +399,7 @@ class ApartmentBuildings
 				var z = (Math.max( c.z, d.z ) + Math.min( a.z, b.z ))/2;
 				var dZ = Math.min( a.z, b.z ) - Math.max( d.z, c.z );
 
-				var maxFloors = 4+MAX_APARTMENT_BUILDING_FLOORS*blocks.apartments[i].height,
+				var maxFloors = 2+MAX_APARTMENT_BUILDING_FLOORS*blocks.apartments[i].height,
 					floors = Math.round( THREE.Math.randFloat(maxFloors/2,maxFloors) ),
 					width = round( APARTMENT_BUILDING_WIDTH.randInt(), 2 );
 				var apartment = new ApartmentBuilding(

@@ -39,15 +39,15 @@ class ApartmentTexture extends ProceduralTexture
 		var ctx = this.ctx;
 			
 		// window separator
-		ctx.strokeStyle = 'rgba(0,0,0,0.8)';
+		ctx.strokeStyle = DEBUG_ALL_WHITE?'rgba(0,0,0,0.1)':'rgba(0,0,0,0.8)';
 		ctx.strokeRect( -1, 0, this.width+2, this.height+1 );
 
 		// dark background
-		ctx.fillStyle = 'rgb(200,150,100,0.4)';
+		ctx.fillStyle = DEBUG_ALL_WHITE?'rgb(100,100,100,0.1)':'rgb(200,150,100,0.4)';
 		ctx.fillRect( 0, 0, this.width, this.height );
 		
 		// small tiles
-		ctx.fillStyle = 'rgba(0,0,0,0.1)';
+		ctx.fillStyle = DEBUG_ALL_WHITE?'white':'rgba(0,0,0,0.1)';
 		for (var i=0; i<this.width; i+=8)
 			ctx.fillRect( i, 0, 1, this.height );
 		for (var i=0; i<this.height; i+=8)

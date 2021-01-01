@@ -16,7 +16,7 @@ class GrassTexture extends ProceduralTexture
 			W = this.width,
 			H = this.height;
 
-		ctx.fillStyle = 'rgba(100,100,100,0.1)';
+		ctx.fillStyle = DEBUG_ALL_WHITE?'rgba(200,200,200,0.1)':'rgba(100,100,100,0.1)';
 
 		for( var x=-2; x<W+2; x++ )
 		for( var y=-2; y<H+2; y++ )
