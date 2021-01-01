@@ -48,6 +48,9 @@ class Agent extends AgentBehaviour
 		this.home = home;
 		this.position = home.randomPos();
 		this.walkingSpeed = AGENT_WALKING_SPEED.randFloat( );	// in meters/second
+		
+		// add agent to block
+		this.position.block.agents.push( this );
 
 		this.dailySchedule.reset( this.isAdult );
 		
@@ -58,6 +61,7 @@ class Agent extends AgentBehaviour
 		this.infectionLevel = 0;
 		this.infectionPattern = undefined;
 		this.infectionPeriodMs = undefined;
+		this.immuneStrength = IMMUNE_STRENGTH.randFloat();
 		
 		if( DEBUG_SHOW_HOME_TO_WORK_ARROW )
 			drawArrow( this.home.center, this.work.center );
@@ -65,7 +69,6 @@ class Agent extends AgentBehaviour
 //	console.log(this.home, this.work);
 //	drawArrow( this.home.center, this.work.center );
 
-		this.infect();
 	} // Agent.constructor
 	
 	
@@ -75,6 +78,8 @@ class Agent extends AgentBehaviour
 		// update infection status
 		if( this.infectionPattern!=undefined )
 		{
+			// agent is infected
+			
 			// end of infection
 			if( currentTimeMs > this.infectionPeriodMs.max )
 			{
@@ -107,6 +112,52 @@ class Agent extends AgentBehaviour
 					{
 						this.mesh.children[0].material.color = this.mesh.material.color;
 					}
+				}
+			}
+		}
+		else
+		{
+			// agent is not infected
+			
+			// get a list of agents in the same block
+			var otherAgents = this.position.block.agents;
+
+			// if there is infected agent, which is too close, then consider infection
+			for( var otherAgent of otherAgents )
+			{
+				// skip if the other agent is healthy
+				if( otherAgent.infectionPattern == undefined ) continue;
+				
+				// skip if the other agent is on a different floor
+				if( otherAgent.position.y != this.position.y ) continue;
+
+				// skip if the other agent is too close in X direction
+				var distanceX = Math.abs( otherAgent.position.x - this.position.x );
+				if( distanceX > INFECTION_DISTANCE ) continue;
+
+				// skip if the other agent is too close in Z direction
+				var distanceZ = Math.abs( otherAgent.position.z - this.position.z );
+				if( distanceZ > INFECTION_DISTANCE ) continue;
+				
+				// calculation how strong [0,1] is the infection process depending on distance
+				var infectionStrength = Math.cos( distanceX/INFECTION_DISTANCE * Math.PI/2 ) * Math.cos( distanceZ/INFECTION_DISTANCE * Math.PI/2 );
+				
+				// calculate how much infection [0,100] is transferred in the actual time slot
+				var infectionTransfer = infectionStrength * otherAgent.infectionLevel * deltaTime;
+				
+//				console.log('agent['+this.id+'] is infected by agent['+otherAgent.id+'] @',infectionTransfer);
+
+				this.infect();
+			} // for j
+			
+			if( INFECTION_COLOR_INDICATOR )
+			{
+				this.mesh.material.color.r = 1;
+				this.mesh.material.color.g = 1;
+				this.mesh.material.color.b = 1;
+				if( INFECTION_OVERHEAD_INDICATOR )
+				{
+					this.mesh.children[0].material.color = this.mesh.material.color;
 				}
 			}
 		}
@@ -149,6 +200,10 @@ class Agent extends AgentBehaviour
 			this.mesh.children[0].rotation.y = controls.getAzimuthalAngle();
 		}
 		
+		if( DEBUG_BLOCK_COLOR )
+		{
+			this.mesh.material.color = this.position.block.color;
+		}
 	} // Agent.updateImage
 
 

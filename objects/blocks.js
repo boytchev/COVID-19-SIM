@@ -43,6 +43,16 @@ class Block
 		this.buildings = [];
 		this.ring = []; // crossings and edges
 		this.crossings = []; // only crossings
+		
+		this.agents = []; // array of agents in this block
+		
+		if( DEBUG_BLOCK_COLOR )
+		{
+			var r = Math.random()/2+0.5;
+			var g = Math.random()/2+0.5;
+			var b = Math.random()/2+0.5;
+			this.color = new THREE.Color().setRGB(r,g,b);
+		}
 	} // Block.constructor
 
 	
@@ -284,7 +294,7 @@ class Blocks
 			this.allTrueBlocks.push( block );
 	
 			// if block with houses, add shrinked park (yard) as overlayed block
-			if( type==BLOCK_HOUSES )
+			if( type==BLOCK_HOUSES && !DEBUG_BLOCK_COLOR )
 			{
 				var yardZone = zone.shrink( SIDEWALK_WIDTH ),
 					yard = new Block( yardZone, type );
@@ -304,6 +314,11 @@ class Blocks
 		var vertices = [];
 		var normals = [];
 		var uvs = [];
+		
+		if( DEBUG_BLOCK_COLOR )
+		{
+			var colors = [];
+		}
 		
 		var blocks = this[blockType.name];
 
@@ -329,10 +344,23 @@ class Blocks
 				a.x,a.z, b.x,b.z, d.x,d.z,
 				d.x,d.z, b.x,b.z, c.x,c.z
 			);
+			
+			if( DEBUG_BLOCK_COLOR )
+			{
+				colors.push(
+					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b,
+					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b,
+					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b,
+					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b,
+					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b,
+					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b
+				);
+			}
 		}
 		
 		var material = new NatureMaterial({
 				color: blockType.color,
+				vertexColors: DEBUG_BLOCK_COLOR,
 				map: texture.map( 1/textureScale, 1/textureScale ),
 				depthTest: false,
 				transparent: DEBUG_BLOCKS_OPACITY<1,
@@ -349,6 +377,12 @@ class Blocks
 			geometry.setAttribute(
 				'uv',
 				new THREE.BufferAttribute(new Float32Array(uvs),2));
+			if( DEBUG_BLOCK_COLOR )
+			{
+				geometry.setAttribute(
+					'color',
+					new THREE.BufferAttribute(new Float32Array(colors),3));
+			}
 			
 		var image = new THREE.Mesh(geometry, material);
 			image.updateMatrix();

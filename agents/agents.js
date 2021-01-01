@@ -139,6 +139,8 @@ class Agents
 		}
 		
 
+		this.agents[0].infect();
+
 		var statAdults = 0,
 			statChildren = 0;
 		for( var i=0; i<this.agents.length; i++)
@@ -162,7 +164,13 @@ class Agents
 					agentsOutside = 0,
 					agentsOther = 0;
 			}
+
+			if( DEBUG_AGENT_HEALTH )
+			{
+				var agentsInfected = 0;
+			}
 			
+			// update positions and images of agents
 			for( var i=0; i<this.agents.length; i++ )
 			{
 				var agent = this.agents[i];
@@ -213,11 +221,22 @@ class Agents
 					}
 				} // if( DEBUG_AGENT_LOCATIONS )
 				
+				if( DEBUG_AGENT_HEALTH )
+				{
+					if( agent.infectionPattern != undefined )
+						agentsInfected++;
+				} // if( DEBUG_AGENT_HEALTH )
+					
 			} // for agents
-			
+
 			if( DEBUG_AGENT_LOCATIONS )
 			{
 				console.log( 'home',agentsAtHome,'\tcommute',agentsOutside,'\twork',agentsAtWork);
+			}
+			
+			if( DEBUG_AGENT_HEALTH )
+			{
+				console.log( 'infected',agentsInfected,'of',agents.agents.length);
 			}
 			
 //			console.log(this.agents[0].position.block==null,this.agents[0].doing);

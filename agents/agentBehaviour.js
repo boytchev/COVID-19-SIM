@@ -14,7 +14,7 @@
 //				pleaseSleepHome(  )					// initiate staying at home
 //
 //		stepTo( target )
-//				closeTo( target )
+//				closeTo( target ) 
 //				inHouse( )
 //				debugBlock( pos )
 //
@@ -51,7 +51,7 @@ const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(1,0) );	// in millise
 
 
 const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,1), timeMs(6,0,2) );	// in milliseconds (05:30-07:00)
-const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,4), timeMs(6,0,4) );		// in milliseconds (06:00-08:00)
+const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,4), timeMs(6,2,4) );		// in milliseconds (06:00-08:00)
 
 
 
@@ -785,6 +785,17 @@ class AgentBehaviour
 		// target too close, go directly to target
 		if( walkDistance > distance )
 		{
+			if( this.position.block != target.block )
+			{
+				// agent moves from this.position.block to target.block
+				
+				target.block.agents.push( this );
+				
+				var idx = this.position.block.agents.indexOf( this );
+				console.assert( idx>=0 );
+				this.position.block.agents.splice( idx, 1 );
+	//			console.log('agent change blocks',(this.position.block?this.position.block.id:'?')+'→'+(target.block?target.block.id:'?'));
+			}
 			this.position = target;
 			return true;
 		}

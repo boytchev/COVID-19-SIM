@@ -509,16 +509,15 @@ class Crossings
 			return true;
 		} // missingInRing
 		
-		
 		// generate spots for each corner in the block, if there are no crossings
 		var shrinkedZone = block.zone.shrink( SIDEWALK_WIDTH/2 ),
 			size = new Size( SIDEWALK_WIDTH/2, SIDEWALK_WIDTH/2 );
+				
+		if( missingInRing(shrinkedZone.a) ) {shrinkedZone.a.block = block; block.ring.push( new Zone( shrinkedZone.a, size ) );}
+		if( missingInRing(shrinkedZone.b) ) {shrinkedZone.b.block = block; block.ring.push( new Zone( shrinkedZone.b, size ) ); }
+		if( missingInRing(shrinkedZone.c) ) {shrinkedZone.c.block = block; block.ring.push( new Zone( shrinkedZone.c, size ) ); }
+		if( missingInRing(shrinkedZone.d) ) {shrinkedZone.d.block = block; block.ring.push( new Zone( shrinkedZone.d, size ) ); }
 		
-		if( missingInRing(shrinkedZone.a) ) block.ring.push( new Zone( shrinkedZone.a, size ) );
-		if( missingInRing(shrinkedZone.b) ) block.ring.push( new Zone( shrinkedZone.b, size ) );
-		if( missingInRing(shrinkedZone.c) ) block.ring.push( new Zone( shrinkedZone.c, size ) );
-		if( missingInRing(shrinkedZone.d) ) block.ring.push( new Zone( shrinkedZone.d, size ) );
-
 		sortRing( block.ring, block.zone.center );
 		//console.log(block.ring);		
 		

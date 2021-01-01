@@ -7,22 +7,22 @@ const EARTH_SIZE = 50000;
 	
 // debug flags
 R = 1+Math.floor(Math.random()*100000);
-//R = 1;
+//R = 35123;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
-const DEBUG_AGENT_MAX_COUNT = 10000;
+const DEBUG_AGENT_MAX_COUNT = 5000;
 const DEBUG_TIME_SPEED = timeMs(0,0,10)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
-const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
-const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
+const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = !false;
+const DEBUG_BLOCK_WITH_ONLY_OFFICES = !false;
 const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 const DEBUG_AUTOROTATE = false;
-const DEBUG_AUTOROTATE_SPEED = 0.2;
+const DEBUG_AUTOROTATE_SPEED = 0.1;
 const DEBUG_RENDERER_INFO = false;
-const DEBUG_BUILDINGS_OPACITY = 2/4;	// for buildings and trees
+const DEBUG_BUILDINGS_OPACITY = 1/4;	// for buildings and trees
 const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
-const DEBUG_NAVMESH_OPACITY = 1/4;		// for navmesh blocks
+const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
 const DEBUG_NAVMESH_SHOW_MESHES = !false;
 const DEBUG_NAVMESH_SHOW_FLOORS = !false;
 const DEBUG_NAVMESH_SHOW_LINES = false;
@@ -40,7 +40,9 @@ const DEBUG_DUMP_ROUTES = false;
 const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
 const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
+const DEBUG_AGENT_HEALTH = !false; // count infected agents
 const DEBUG_SUN_POSITION_GUI = false;
+const DEBUG_BLOCK_COLOR = false;
 var DEBUG_FLAG_1 = false;
 
 
@@ -158,7 +160,7 @@ const SUN = NO_SUN;
 //const SUN = DYNAMIC_SUN;
 const SUNRISE_MS = timeMs(6);
 const SUNSET_MS = timeMs(18);
-const STATIC_SUN_POSITION_MS = timeMs(10,30);
+const STATIC_SUN_POSITION_MS = timeMs(8,30);
 console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
 console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
 
@@ -182,8 +184,10 @@ const START_TIME = timeMs(6);			// start time
 const INFECTION_PATTERNS_COUNT = 10;
 //const INFECTION_TOTAL_MS = new Range( 14*HOURS_24_MS, 28*HOURS_24_MS ); // 14-28 days in ms
 const INFECTION_TOTAL_MS = new Range( timeMs(0,10), timeMs(0,60) ); // 10-60 min in ms
-const INFECTION_OVERHEAD_INDICATOR = !false;
+const INFECTION_OVERHEAD_INDICATOR = false;
 const INFECTION_COLOR_INDICATOR = !false;
+const INFECTION_DISTANCE = 1; // in meters
+const IMMUNE_STRENGTH = new Range( 0, 100 );
 
 /*
 
