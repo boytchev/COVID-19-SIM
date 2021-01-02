@@ -212,12 +212,21 @@ class AgentBehaviour
 			this.addToRoute( elevator.zone, elevator, Elevator.INSIDE ); 
 
 		// pick a crossings (as mid-target) which is suitable
-		// for reaching the final location
-		var crossing = pickDirection( this.routePosition, address.building.block.crossings, toAddress.position );
+		// for reaching the final location, if there are no crossing,
+		// then use the destination
 		
-		// go to one of the doors, prefer the door which is suitable
-		// for reaching the crossing
-		var door = pickDirection( this.routePosition, elevator.doors, crossing.center );
+		if( address.building.block.crossings.length )
+		{
+			var crossing = pickDirection( this.routePosition, address.building.block.crossings, toAddress.position );
+		
+			// go to one of the doors, prefer the door which is suitable
+			// for reaching the crossing
+			var door = pickDirection( this.routePosition, elevator.doors, crossing.center );
+		}
+		else
+		{
+			var door = pickDirection( this.routePosition, elevator.doors, toAddress );
+		}
 		this.addToRoute( door.insideZone ); 
 		this.addToRoute( door.outsideZone ); 
 			
