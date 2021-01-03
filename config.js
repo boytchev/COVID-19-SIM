@@ -1,18 +1,18 @@
 // size of the simulated world
 
-const GROUND_SIZE = 40; 				// in meters
+const GROUND_SIZE = 220; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 const EARTH_SIZE = 50000;
 
 	
 // debug flags
 R = 1+Math.floor(Math.random()*100000);
-//R = 9696;
+R = 42807;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
 const DEBUG_AGENT_MAX_COUNT = 10000;
 const DEBUG_TIME_SPEED = timeMs(0,0,5)/1000;	// time ellapsed for 1 second
-const DEBUG_BLOCK_WITH_ONLY_HOUSES = !false;
+const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 const DEBUG_BLOCK_WITH_ONLY_PARK = false;
@@ -32,6 +32,7 @@ const DEBUG_SHOW_VIRAL_SHEDDING = false;
 const DEBUG_HIDE_ROOFS = false;
 const DEBUG_CENTER_VIEW_ON_AGENTS = false;
 const DEBUG_FOLLOW_AGENT = -1;	// -1 for not following any
+const DEBUG_FOLLOW_AGENT_HEALTH = -1;	// -1 for not following any
 const DEBUG_SHOW_DIRECTIONS = false;
 const DEBUG_APARTMENT_ADD_FLOORS = false;
 const DEBUG_SHOW_HOME_TO_WORK_ARROW = false;
@@ -40,7 +41,7 @@ const DEBUG_DUMP_ROUTES = false;
 const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
 const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
-const DEBUG_AGENT_HEALTH = false; // count infected agents
+const DEBUG_AGENT_HEALTH = !false; // count infected agents
 const DEBUG_SUN_POSITION_GUI = false;
 const DEBUG_BLOCK_COLOR = false;
 const DEBUG_ALL_WHITE = false;
@@ -137,7 +138,7 @@ const SECONDS_IN_MINUTE = 60;
 
 // agents
 const AGENT_MAX_COUNT = DEBUG_AGENT_MAX_COUNT;			// max number of virtual people
-const AGENT_WALKING_SPEED = new Range( 0.6, 1.2 );		// in meters/second
+const AGENT_WALKING_SPEED = new Range( 0.8, 2.0 );		// in meters/second
 const AGENT_AGE_YEARS = new Range( 0, 100 );			// in years
 const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
 const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.5 );		// in meters
@@ -184,11 +185,15 @@ const START_TIME = timeMs(6);			// start time
 
 const INFECTION_PATTERNS_COUNT = 10;
 //const INFECTION_TOTAL_MS = new Range( 14*HOURS_24_MS, 28*HOURS_24_MS ); // 14-28 days in ms
-const INFECTION_TOTAL_MS = new Range( timeMs(0,1), timeMs(0,10) ); // 10-60 min in ms
+const INFECTION_TOTAL_MS = new Range( timeMs(0,4), timeMs(0,20) ); // 10-60 min in ms
 const INFECTION_OVERHEAD_INDICATOR = false;
 const INFECTION_COLOR_INDICATOR = !false;
 const INFECTION_DISTANCE = 1; // in meters
-const IMMUNE_STRENGTH = new Range( 0, 100 );
+const INFECTION_STRENGTH = 0.2; // factor of how fast is the infection
+const IMMUNE_STRENGTH = new Range( 100, 200 );
+const IMMUNE_RECOVERY_FACTOR = 0.01; // recovery of immune per second
+const IMMUNE_CURE_FACTOR = new Range( 1.0, 1.2 ); // increase of immunity after cure
+const PERCENTAGE_INITIAL_INFECTED = 0.05; // 0.01=1%
 
 /*
 

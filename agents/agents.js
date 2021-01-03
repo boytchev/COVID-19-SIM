@@ -139,8 +139,6 @@ class Agents
 		}
 		
 
-		this.agents[0].infect();
-
 		var statAdults = 0,
 			statChildren = 0;
 		for( var i=0; i<this.agents.length; i++)
