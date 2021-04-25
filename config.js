@@ -1,5 +1,7 @@
 // size of the simulated world
 
+const VR = !false;
+
 const GROUND_SIZE = 220; 				// in meters
 const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 const EARTH_SIZE = 50000;
@@ -7,20 +9,20 @@ const EARTH_SIZE = 50000;
 	
 // debug flags
 R = 1+Math.floor(Math.random()*100000);
-R = 42807;
+//R = 42807;
 console.log('seed=',R);
 var DEBUG_RANDOM_SEED = R;
-const DEBUG_AGENT_MAX_COUNT = 10000;
+const DEBUG_AGENT_MAX_COUNT = 1000;
 const DEBUG_TIME_SPEED = timeMs(0,0,5)/1000;	// time ellapsed for 1 second
 const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
-const DEBUG_AUTOROTATE = !false;
+const DEBUG_AUTOROTATE = false;
 const DEBUG_AUTOROTATE_SPEED = 0.03;
 const DEBUG_RENDERER_INFO = false;
-const DEBUG_BUILDINGS_OPACITY = 1/4;	// for buildings and trees
+const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
 const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
 const DEBUG_NAVMESH_SHOW_MESHES = !false;
@@ -41,7 +43,7 @@ const DEBUG_DUMP_ROUTES = false;
 const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
 const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
-const DEBUG_AGENT_HEALTH = !false; // count infected agents
+const DEBUG_AGENT_HEALTH = false; // count infected agents
 const DEBUG_SUN_POSITION_GUI = false;
 const DEBUG_BLOCK_COLOR = false;
 const DEBUG_ALL_WHITE = false;

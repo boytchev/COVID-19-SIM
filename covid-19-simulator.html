@@ -72,7 +72,6 @@
 	
 	<script src="font.js"></script>
 
-	
 	<script>
 		if( DEBUG_RANDOM_SEED )
 			Math.seedrandom( DEBUG_RANDOM_SEED );
@@ -95,6 +94,7 @@
 		var renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setAnimationLoop( animate );
 			container.appendChild( renderer.domElement );
 			
 		var scene = new THREE.Scene();
@@ -191,7 +191,7 @@
 		// main animation cycle
 		function animate()
 		{
-			requestAnimationFrame( animate );
+			//requestAnimationFrame( animate );
 
 			//statsCalls.update( renderer.info.render.calls, 460  );
 			//statsTrigs.update( renderer.info.render.triangles, 460  );
@@ -200,7 +200,16 @@
 
 			nature.update();
 			agents.update();
+			if( VR )
+			{
+				// in VR
+				camera.position.set( 0, 0, 0 );
+			}
+			else
+			{
+				// not in VR
 			/*if( DEBUG_FOLLOW_AGENT<0 ) */controls.update();
+			}
 			
 			if( frame%6 == 0 ) renderer.render(scene, camera);
 			
@@ -227,8 +236,19 @@
 			}*/
 		} //animate
 
-		animate();		
+//		animate();		
 	</script>
 
+	<script type="module">
+		import { VRButton } from './js/VRButton.js';
+		if( VR )
+		{
+			renderer.xr.enabled = true;
+			document.body.appendChild( VRButton.createButton( renderer ) );
+			
+			camera.position.set( 0, 0, 0 );
+		}
+	</script>
+	
 </body>
 </html>
