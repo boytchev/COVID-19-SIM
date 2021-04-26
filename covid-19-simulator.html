@@ -204,14 +204,15 @@
 			{
 				// in VR
 				camera.position.set( 0, 0, 0 );
+				renderer.render(scene, camera); // render all frames in VR mode
 			}
 			else
 			{
 				// not in VR
 			/*if( DEBUG_FOLLOW_AGENT<0 ) */controls.update();
+				if( frame%6 == 0 ) renderer.render(scene, camera);
 			}
 			
-			if( frame%6 == 0 ) renderer.render(scene, camera);
 			
 			if (DEBUG_RENDERER_INFO && frame==10)
 			{
