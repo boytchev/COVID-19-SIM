@@ -166,7 +166,9 @@
 			renderer.setSize( width, height );
 		}; // onresize
 
-		
+		var user, rightController,
+			move = false,
+			v = new THREE.Vector3();
 
 		// setup time
 						
@@ -203,13 +205,22 @@
 			if( VR )
 			{
 				// in VR
-				camera.position.set( 0, 0, 0 );
+				if( move && rightController && user )
+				{
+					rightController.getWorldDirection( v );
+										
+					v.y = 0;
+					v.normalize();
+					
+					user.position.addScaledVector( v, -10*deltaTimeReal );
+				}
+
 				renderer.render(scene, camera); // render all frames in VR mode
 			}
 			else
 			{
 				// not in VR
-			/*if( DEBUG_FOLLOW_AGENT<0 ) */controls.update();
+				/*if( DEBUG_FOLLOW_AGENT<0 ) */controls.update();
 				if( frame%6 == 0 ) renderer.render(scene, camera);
 			}
 			
@@ -248,6 +259,19 @@
 			document.body.appendChild( VRButton.createButton( renderer ) );
 			
 			camera.position.set( 0, 0, 0 );
+
+			move = false;
+			
+			rightController = renderer.xr.getController( 0 );
+			rightController.addEventListener( 'selectstart', function(){ move = true; } );
+			rightController.addEventListener( 'selectend', function(){ move = false; } );
+			rightController.add( new THREE.ArrowHelper( new THREE.Vector3(0,0,-1), new THREE.Vector3(0,0,0), 10, 'red', 1, 0.4 ) );
+				
+			// подвижен потребител
+			user = new THREE.Group();
+			user.add( camera );
+			user.add( rightController );
+			scene.add( user );
 		}
 	</script>
 	
