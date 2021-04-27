@@ -73,7 +73,7 @@ class OfficeDoors
 	{
 		var material = new THREE.MeshLambertMaterial({
 				side: THREE.FrontSide,
-				flatShading: true,
+				//flatShading: true,
 				vertexColors: true,
 				map: textures.officeDoor.map( 1/OFFICE_DOOR_TEXTURE_SCALE, 1 ),
 				polygonOffset: true,

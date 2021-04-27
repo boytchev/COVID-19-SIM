@@ -272,10 +272,11 @@ class ApartmentBuildings
 
 	static material()
 	{
+//return new THREE.MeshLambertMaterial();//TODO//
+
 		var material = new THREE.MeshStandardMaterial({
 				side: DEBUG_HIDE_ROOFS?THREE.DoubleSide:THREE.FrontSide,
 				color: 'white',
-				//flatShading: true,
 				map: textures.apartment.map( 1/APARTMENT_TEXTURE_SCALE_U, 1/BUILDING_TEXTURE_SCALE ),
 				normalMap: textures.apartmentNormal.map( 1/APARTMENT_TEXTURE_SCALE_U, 1/BUILDING_TEXTURE_SCALE ),
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
@@ -339,7 +340,7 @@ class ApartmentBuildings
 				  
 				  'vec3 mapN = texture2D( normalMap, vUv*vTextureScale+vTextureOffset ).xyz * 2.0 - 1.0;\n'+
 				  'mapN.xy *= normalScale;\n'+
-				  'normal = perturbNormal2Arb( -vViewPosition, normal, mapN );\n'
+				  'normal = perturbNormal2Arb( -vViewPosition, normal, mapN, faceDirection );\n'
 				);
 				
 			//console.log(shader.vertexShader);

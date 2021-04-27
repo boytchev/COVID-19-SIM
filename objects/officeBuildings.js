@@ -289,6 +289,7 @@ class OfficeBuildings
 
 	static material()
 	{
+
 		var material = new THREE.MeshStandardMaterial({
 				//side: THREE.FrontSide,
 				color: 'white',
@@ -357,7 +358,7 @@ class OfficeBuildings
 				  
 				  'vec3 mapN = texture2D( normalMap, vUv*vTextureScale+vTextureOffset ).xyz * 2.0 - 1.0;\n'+
 				  'mapN.xy *= normalScale;\n'+
-				  'normal = perturbNormal2Arb( -vViewPosition, normal, mapN );\n'
+				  'normal = perturbNormal2Arb( -vViewPosition, normal, mapN, faceDirection );\n'
 				);
 				
 			//console.log(shader.vertexShader);
