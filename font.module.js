@@ -12979,7 +12979,7 @@ var FONT_JSON = {
 	"cssFontStyle": "normal"
 }
 
-export class Font{
+class Font{
 	constructor() {
 		this.sysType = 'Font';
 		this.font = new THREE.Font(FONT_JSON);
@@ -12987,4 +12987,4 @@ export class Font{
 
 } // Font
 
-font = new Font();
+export var font = new Font();

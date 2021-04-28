@@ -7,6 +7,7 @@
 
 
 import {ProceduralTexture} from './proceduralTexture.module.js';
+import {DEBUG_ALL_WHITE} from '../config.module.js';
 
 
 export class SidewalkTexture extends ProceduralTexture

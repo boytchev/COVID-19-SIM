@@ -21,8 +21,34 @@
 
 var agent_id = 0;
 
+import {CylinderBufferGeometry} from '../js/three.module.js';
 import {AgentBehaviour} from './agentBehaviour.module.js';
 import {Agents} from './agents.module.js';
+import {WorkAddress} from './address.module.js';
+import {INFECTION_OVERHEAD_INDICATOR, AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, DEBUG_BLOCK_COLOR, INFECTION_STRENGTH} from '../config.module.js';
+import {font} from '../font.module.js';
+import {scene, controls, agents} from '../main.module.js';
+import {Range} from '../core.module.js';
+import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs} from '../objects/nature.module.js';
+
+
+
+var agentGeometry = new CylinderBufferGeometry( 0.2, 0.4, 1.7, 6, 2 );
+	agentGeometry.translate( 0, 1.7/2, 0 );
+
+var pos = agentGeometry.getAttribute( 'position' );
+for( var i=0; i<pos.count; i++ )
+{
+	var x = pos.getX( i );
+	var y = pos.getY( i );
+	var z = pos.getZ( i );
+	
+	if( y>0.1 && y<1.7 )
+	{
+		pos.setXYZ( i, x/4, 1.4, z/4 );
+	}
+}
+
 
 if( INFECTION_OVERHEAD_INDICATOR )
 {	
@@ -257,7 +283,7 @@ class Agent extends AgentBehaviour
 	
 	image()
 	{
-		var mesh = new THREE.Mesh( Agents.geometry, this.material() );
+		var mesh = new THREE.Mesh( agentGeometry, this.material() );
 			
 		mesh.position.set( this.x, this.y, this.z );
 		mesh.scale.set( this.height/1.7, this.height/1.7, this.height/1.7 );

@@ -4,6 +4,10 @@
 //
 
 
+import {EARTH_SIZE, GROUND_SIZE, BLOCK_PARK, DEBUG_ALL_WHITE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, DEBUG_SHOW_DIRECTIONS} from '../config.module.js';
+import {NatureMaterial} from './nature.module.js';
+import {scene, textures} from '../main.module.js';
+
 
 class Ground
 {

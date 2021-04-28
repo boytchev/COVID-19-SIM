@@ -11,6 +11,9 @@
 //
 
 
+import {blocks, scene} from '../main.module.js';
+import {TREE_HOUSES_RATIO, TREE_HEIGHT, TREE_PARK_RATIO, TREE_COMPLEXITY, DEBUG_BUILDINGS_OPACITY, DEBUG_ALL_WHITE} from '../config.module.js';
+
 
 class Tree
 {

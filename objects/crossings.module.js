@@ -19,6 +19,13 @@
 // var CROSSING_TYPE_Z = 2;
 
 
+import {blocks, scene, navmesh, textures} from '../main.module.js';
+import {pick} from '../coreNav.module.js';
+import {LEFT, RIGHT, BOTTOM, TOP, Size, sortRing, Zone, timeMs, almostEqual} from '../core.module.js';
+import {SIDEWALK_WIDTH, CROSSING_MINIMAL_CLOSENESS, CROSSING_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY} from '../config.module.js';
+import {NatureMaterial, dayTimeMs} from './nature.module.js';
+
+
 export class Crossing
 {
 

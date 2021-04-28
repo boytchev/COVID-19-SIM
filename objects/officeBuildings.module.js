@@ -20,7 +20,13 @@
 //				share the same 
 
 
-class OfficeBuilding
+
+import {textures, blocks, scene, navmesh} from '../main.module.js';
+import {MAX_FLOORS, SIDEWALK_WIDTH, OFFICE_TEXTURE_SCALE_U, FLOOR_HEIGHT, OFFICE_DOOR_WIDTH, OFFICE_DOOR_DISTANCE, OFFICE_ROOM_SIZE, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, OFFICE_CORRIDOR_WIDTH, OFFICE_ROOM_COUNT, SHADOWS, NO_SHADOWS} from '../config.module.js';
+import {Size, round, TOP, RIGHT, LEFT, BOTTOM, Pos} from '../core.module.js';
+
+
+export class OfficeBuilding
 {
 	constructor( center, size, floors, block )
 	{
@@ -203,8 +209,13 @@ class OfficeBuilding
 } // OfficeBuilding
 
 
+import {OfficeDoor} from './officeDoors.module.js';
+import {Elevator} from './elevators.module.js';
+import {Room} from './rooms.module.js';
 
-class OfficeBuildings
+
+
+export class OfficeBuildings
 {
 	constructor()
 	{

@@ -37,6 +37,14 @@
 //
 
 
+import {timeMs, Pos, Range, Zone, almostEqual} from '../core.module.js';
+import {pick, pickDirection, clipLineRoute, pickDistance} from '../coreNav.module.js';
+import {dayTimeMs, deltaTime} from '../objects/nature.module.js';
+import {Crossing} from '../objects/crossings.module.js';
+import {Elevator} from '../objects/elevators.module.js';
+import {DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE} from '../config.module.js';
+
+
 
 const AGENT_CHILD_SLEEP_TIME_MS  = new Range( timeMs(19), timeMs(21) );		// in milliseconds (19:00-21:00)
 const AGENT_CHILD_WAKEUP_TIME_MS = new Range( timeMs(6), timeMs(7,30) );	// in milliseconds (06:00-07:30)
@@ -56,7 +64,6 @@ const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,1), timeMs(6,0,2) );	//
 const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,0), timeMs(6,10) );		// in milliseconds (06:00-08:00)
 
 
-import {Crossing} from '../objects/crossings.module.js';
 
 class AgentDailySchedule
 {

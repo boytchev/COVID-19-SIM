@@ -2,6 +2,7 @@
 //	class Textures()
 //
 
+import {DEBUG_ALL_WHITE} from '../config.module.js';
 import {ProceduralTexture} from './proceduralTexture.module.js';
 import {ApartmentTexture, ApartmentNormalTexture} from './apartmentTexture.module.js';
 import {CrossingTexture} from './crossingTexture.module.js';
