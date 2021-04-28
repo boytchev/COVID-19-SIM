@@ -24,6 +24,26 @@ var agent_id = 0;
 import {AgentBehaviour} from './agentBehaviour.module.js';
 import {Agents} from './agents.module.js';
 
+if( INFECTION_OVERHEAD_INDICATOR )
+{	
+	var labelGeometry = [];
+	for( var i=0; i<=100; i++ )
+	{
+		var fontGeometry = new THREE.TextBufferGeometry( ''+i+'%', {
+				font: font.font,
+				size: 0.5,
+				height: 0.03,
+				curveSegments: 4,
+				bevelEnabled: false,
+			} );
+		fontGeometry.computeBoundingBox();
+		fontGeometry.translate( (fontGeometry.boundingBox.min.x-fontGeometry.boundingBox.max.x)/2, 1.9, 0 );
+		labelGeometry.push( fontGeometry );
+	}
+} // if( INFECTION_OVERHEAD_INDICATOR )
+
+
+
 class Agent extends AgentBehaviour
 {
 	
@@ -106,7 +126,7 @@ class Agent extends AgentBehaviour
 				// update overhead indicator
 				if( INFECTION_OVERHEAD_INDICATOR )
 				{
-					this.mesh.children[0].geometry = Agents.labelGeometry[ Math.round(this.infectionLevel) ];
+					this.mesh.children[0].geometry = labelGeometry[ Math.round(this.infectionLevel) ];
 				}
 				// update color indicator
 				if( INFECTION_COLOR_INDICATOR )
@@ -252,7 +272,7 @@ class Agent extends AgentBehaviour
 
 		if( INFECTION_OVERHEAD_INDICATOR )
 		{
-			var ageMesh = new THREE.Mesh( Agents.labelGeometry[Math.round(this.infectionLevel)], mesh.material );
+			var ageMesh = new THREE.Mesh( labelGeometry[Math.round(this.infectionLevel)], mesh.material );
 			mesh.add( ageMesh );
 		}
 		

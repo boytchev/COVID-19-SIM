@@ -2,8 +2,6 @@
 //	class Textures()
 //
 
-console.log('starting texutres module');
-
 import {ProceduralTexture} from './proceduralTexture.module.js';
 import {ApartmentTexture, ApartmentNormalTexture} from './apartmentTexture.module.js';
 import {CrossingTexture} from './crossingTexture.module.js';

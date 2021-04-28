@@ -33,7 +33,7 @@
 	<script src="js/LineMaterial.js"></script>
 	<!--script src="js/stats.min.js"></script-->
 	<script src="js/dat.gui.min.js"></script>
-	<script src="js/OrbitControls.js"></script>
+	<!--script src="js/OrbitControls.js"></script-->
 	<script src="js/perlin.js"></script>
 	<script src="js/seedrandom.min.js"></script> <!-- from: https://github.com/davidbau/seedrandom -->
 	
@@ -110,7 +110,25 @@
 			camera.position.set( -GROUND_SIZE/1.2, GROUND_SIZE/5, GROUND_SIZE/1.2 );
 			//camera.position.set( 0, 0.26*GROUND_SIZE, 0 );
 			
-		var controls = new THREE.OrbitControls( camera, renderer.domElement );
+		var currentTime_elem = document.getElementById('time'),
+			currentFps_elem = document.getElementById('fps'),
+			agents_elem = document.getElementById('agents');
+
+		var textures, blocks, navmesh, font, buildings, agents, controls;
+	</script>
+	
+	<script type="module">
+		import {OrbitControls} from './js/OrbitControls.js';
+		import './font.module.js';
+		
+		import {Ground} from './objects/ground.module.js';
+		import {Textures} from './textures/textures.module.js';
+		import {Blocks} from './objects/blocks.module.js';
+		import {Trees} from './objects/trees.module.js';
+		import {Crossing,Crossings} from './objects/crossings.module.js';
+		import {Agents} from './agents/agents.module.js';
+		
+			controls = new OrbitControls( camera, renderer.domElement );
 			controls.maxPolarAngle = Math.PI * 0.495;
 			controls.minDistance = 20;
 			controls.maxDistance = 1.5*GROUND_SIZE;
@@ -123,23 +141,6 @@
 			controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
 			controls.update();
 
-		var currentTime_elem = document.getElementById('time'),
-			currentFps_elem = document.getElementById('fps'),
-			agents_elem = document.getElementById('agents');
-
-		var textures, blocks, navmesh, font, buildings, agents;
-	</script>
-	
-	<script type="module">
-		import {Font} from './font.module.js';
-		import {Ground} from './objects/ground.module.js';
-		import {Textures} from './textures/textures.module.js';
-		import {Blocks} from './objects/blocks.module.js';
-		import {Trees} from './objects/trees.module.js';
-		import {Crossing,Crossings} from './objects/crossings.module.js';
-		import {Agents} from './agents/agents.module.js';
-		
-		font = new Font();
 		navmesh = new NavMesh();		//console.log('navmesh\t\t',clock.getDelta());
 		textures = new Textures();		//console.log('textures\t',clock.getDelta());
 		var ground = new Ground();			//console.log('ground\t\t',clock.getDelta());

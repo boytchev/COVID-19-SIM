@@ -12986,3 +12986,5 @@ export class Font{
 	} // Font.constructor
 
 } // Font
+
+font = new Font();
