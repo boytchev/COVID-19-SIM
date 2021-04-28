@@ -69,10 +69,11 @@
 	
 	<script src="agents/navmesh.js"></script>
 	<script src="agents/address.js"></script>
+<!--
 	<script src="agents/agentBehaviour.js"></script>
 	<script src="agents/agent.js"></script>
 	<script src="agents/agents.js"></script>
-	
+-->	
 	<!--script src="font.js"></script-->
 
 	<script>
@@ -135,7 +136,8 @@
 		import {Textures} from './textures/textures.module.js';
 		import {Blocks} from './objects/blocks.module.js';
 		import {Trees} from './objects/trees.module.js';
-		import {Crossings} from './objects/crossings.module.js';
+		import {Crossing,Crossings} from './objects/crossings.module.js';
+		import {Agents} from './agents/agents.module.js';
 		
 		font = new Font();
 		navmesh = new NavMesh();		//console.log('navmesh\t\t',clock.getDelta());
