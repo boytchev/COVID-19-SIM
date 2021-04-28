@@ -39,7 +39,7 @@
 	
 	<script src="core.js"></script>
 	<script src="config.js"></script>
-	
+<!--	
 	<script src="textures/textures.js"></script>
 	<script src="textures/gridTexture.js"></script>
 	<script src="textures/officeTexture.js"></script>
@@ -49,8 +49,8 @@
 	<script src="textures/apartmentTexture.js"></script>
 	<script src="textures/crossingTexture.js"></script>
 	<script src="textures/grassTexture.js"></script>
-
-	<script src="objects/ground.js"></script>
+-->
+	<!--script src="objects/ground.js"></script-->
 	<script src="objects/blocks.js"></script>
 	<script src="objects/buildings.js"></script>
 	<script src="objects/rooms.js"></script>
@@ -70,7 +70,7 @@
 	<script src="agents/agent.js"></script>
 	<script src="agents/agents.js"></script>
 	
-	<script src="font.js"></script>
+	<!--script src="font.js"></script-->
 
 	<script>
 		if( DEBUG_RANDOM_SEED )
@@ -94,7 +94,6 @@
 		var renderer = new THREE.WebGLRenderer( { antialias: true } );
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
-			renderer.setAnimationLoop( animate );
 			container.appendChild( renderer.domElement );
 			
 		var scene = new THREE.Scene();
@@ -106,9 +105,7 @@
 			camera.position.set( GROUND_SIZE/2, GROUND_SIZE/10, GROUND_SIZE/3 );
 			camera.position.set( -GROUND_SIZE/1.2, GROUND_SIZE/5, GROUND_SIZE/1.2 );
 			//camera.position.set( 0, 0.26*GROUND_SIZE, 0 );
-
-		
-		
+			
 		var controls = new THREE.OrbitControls( camera, renderer.domElement );
 			controls.maxPolarAngle = Math.PI * 0.495;
 			controls.minDistance = 20;
@@ -126,19 +123,27 @@
 			currentFps_elem = document.getElementById('fps'),
 			agents_elem = document.getElementById('agents');
 
-		var font = new Font();
-		var navmesh = new NavMesh();		//console.log('navmesh\t\t',clock.getDelta());
-		var textures = new Textures();		//console.log('textures\t',clock.getDelta());
+		var textures, blocks, navmesh, font, buildings, agents;
+	</script>
+	
+	<script type="module">
+		import {Font} from './font.module.js';
+		import {Ground} from './objects/ground.module.js';
+		import {Textures} from './textures/textures.module.js';
+		
+		font = new Font();
+		navmesh = new NavMesh();		//console.log('navmesh\t\t',clock.getDelta());
+		textures = new Textures();		//console.log('textures\t',clock.getDelta());
 		var ground = new Ground();			//console.log('ground\t\t',clock.getDelta());
-		var blocks = new Blocks();			//console.log('blocks\t\t',clock.getDelta());
+		blocks = new Blocks();			//console.log('blocks\t\t',clock.getDelta());
 
 //randomTarget = pick(blocks.allTrueBlocks).randomPos();
 //drawArrow( randomTarget, randomTarget.addY(30) );
 
-		var buildings = new Buildings();	//console.log('buildings\t',clock.getDelta());
+		buildings = new Buildings();	//console.log('buildings\t',clock.getDelta());
 		var trees = new Trees();			//console.log('trees\t\t',clock.getDelta());
 		var crossings = new Crossings();	//console.log('crossings\t',clock.getDelta());
-		var agents = new Agents();			//console.log('agents\t\t',clock.getDelta());
+		agents = new Agents();			//console.log('agents\t\t',clock.getDelta());
 		var nature = new Nature();			//console.log('nature\t\t',clock.getDelta());
 
 		agents_elem.innerHTML = 'ppl='+agents.agents.length;
@@ -247,6 +252,7 @@
 				console.log(c,'of',d*d,'i.e.', (100*c/d/d).toFixed(1)+'%' );
 			}*/
 		} //animate
+		renderer.setAnimationLoop( animate );
 
 //		animate();		
 	</script>
