@@ -15,8 +15,9 @@ import * as THREE from '../js/three.module.js';
 import {HouseBuilding} from '../objects/houseBuildings.js';
 import {ApartmentBuilding} from '../objects/apartmentBuildings.js';
 import {OfficeBuilding} from '../objects/officeBuildings.js';
-import {buildings} from '../main.js';
+import {buildings, blocks} from '../main.js';
 import {drawArrow} from '../core.js';
+import {pick} from '../coreNav.js';
 import {FLOOR_HEIGHT} from '../config.js';
 
 
@@ -289,7 +290,7 @@ WorkAddress.position = undefined;
 	
 	
 	
-class BlockAddress extends Address
+export class BlockAddress extends Address
 {
 	constructor( block )
 	{

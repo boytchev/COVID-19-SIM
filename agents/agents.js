@@ -9,7 +9,7 @@
 import * as THREE from '../js/three.module.js';
 import {buildings} from '../main.js';
 import {Adult, Child} from './agent.js';
-import {Address} from './address.js';
+import {Address, BlockAddress} from './address.js';
 import {INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT} from '../config.js';
 
 
