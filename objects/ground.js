@@ -1,25 +1,29 @@
 //
-//	class Ground()
-//		constructGroundImage()
+//	class Ground( scene )
+//		constructGroundImage( scene )
 //
 
+
+import * as THREE from '../js/three.module.js';
+import {EARTH_SIZE, GROUND_SIZE, BLOCK_PARK, DEBUG_ALL_WHITE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, DEBUG_SHOW_DIRECTIONS} from '../config.js';
+import {NatureMaterial} from './nature.js';
+import {scene, textures} from '../main.js';
 
 
 class Ground
 {
 	
 	
-	
-	constructor()
+	constructor( )
 	{
-		this.sysType = 'Ground';
 		
-		this.constructGroundImage();
+		this.sysType = 'Ground';
+		this.constructGroundImage( );
+		
 	} // constructor
 
 	
-	
-	constructGroundImage()
+	constructGroundImage( )
 	{
 
 		// add black ground
@@ -108,3 +112,6 @@ class Ground
 	
 	
 } // Ground
+
+
+export { Ground };

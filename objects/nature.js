@@ -26,20 +26,25 @@
 	-------------------------	-------	-------	-------	------	
 */
 
-
-var clock = new THREE.Clock(),
-	deltaTimeReal = clock.getDelta(),
-	deltaTime = DEBUG_TIME_SPEED*deltaTimeReal,
-	frame = 0;
-
-
-var currentTimeMs = START_TIME,
-	dayTimeMs = currentTimeMs % HOURS_24_MS,
-	previousDayTimeMs = dayTimeMs;
-	trueCurrentTimeMs = START_TIME;
+import * as THREE from '../js/three.module.js';
+import {DEBUG_TIME_SPEED, START_TIME, HOURS_24_MS, SHADOWS, NO_SHADOWS, SUN, FULL_SHADOWS, GROUND_EDGE, DEBUG_ALL_WHITE, EARTH_SIZE, DEBUG_SHOW_VIRAL_SHEDDING, STATIC_SUN, SHADOWS_MAP_SIZE, STATIC_SUN_POSITION_MS, DEBUG_SUN_POSITION_GUI, SUNRISE_MS, SUNSET_MS, GROUND_SIZE, SUN_SIN, SUN_COS, SHADOWS_MAX_COUNT} from '../config.js';
+import {scene, camera, renderer, guiObject} from '../main.js';
+import {timeMs} from '../core.js';
 
 
-var NatureMaterial = ( SHADOWS != NO_SHADOWS ) ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
+var clock = new THREE.Clock();
+export var deltaTimeReal = clock.getDelta();
+export var deltaTime = DEBUG_TIME_SPEED*deltaTimeReal;
+export var	frame = 0;
+
+
+export var currentTimeMs = START_TIME;
+export var dayTimeMs = currentTimeMs % HOURS_24_MS;
+export var previousDayTimeMs = dayTimeMs;
+var trueCurrentTimeMs = START_TIME;
+
+
+export var NatureMaterial = ( SHADOWS != NO_SHADOWS ) ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
 
 var ambientIntensities = [
 		//NO  TOP  FULL_SHADOW
@@ -130,7 +135,7 @@ class SunLight extends THREE.DirectionalLight
 }
 
 
-class Nature
+export class Nature
 {
 
 

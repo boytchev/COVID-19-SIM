@@ -5,11 +5,16 @@
 //
 
 
+import {ProceduralTexture} from './proceduralTexture.js';
+import {DEBUG_ALL_WHITE} from '../config.js';
 
-class GrassTexture extends ProceduralTexture
+
+export class GrassTexture extends ProceduralTexture
 {
+	
 	draw()
 	{
+		
 		super.draw();
 		
 		var ctx = this.ctx,
@@ -28,6 +33,7 @@ class GrassTexture extends ProceduralTexture
 		
 //		 document.body.appendChild(this.canvas);
 //		 this.canvas.style="position:fixed; top:10em; left:1em; z-index:100;";
+
 	} // GrassTexture.draw
 	
 } // GrassTexture

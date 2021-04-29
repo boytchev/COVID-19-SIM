@@ -8,7 +8,12 @@
 //		static image( )
 
 
-class OfficeDoor
+import * as THREE from '../js/three.module.js';
+import {OFFICE_DOOR_WIDTH, OFFICE_DOOR_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, FLOOR_HEIGHT} from '../config.js';
+import {navmesh, textures, scene} from '../main.js';
+
+
+export class OfficeDoor
 {
 	
 	constructor( center, wings, rotation )
@@ -30,7 +35,7 @@ class OfficeDoor
 
 
 
-class OfficeDoors
+export class OfficeDoors
 {
 	constructor()
 	{

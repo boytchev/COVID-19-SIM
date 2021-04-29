@@ -1,12 +1,14 @@
 
 
 
-import {GROUND_SIZE} from '../config.module.js';
-import {Zone, Pos, almostEqual, TOP, RIGHT, LEFT, BOTTOM} from '../core.module.js';
-import {OfficeDoor} from './objects/officeDoors.module.js';
-import {Room} from './objects/rooms.module.js';
-import {Elevator} from './objects/elevators.module.js';
-import {NavMeshCrossingZone} from './agents/navmesh.module.js';
+import * as THREE from '../js/three.module.js';
+import {GROUND_SIZE, DEBUG_NAVMESH_SHOW_LINES} from '../config.js';
+import {Zone, Pos, almostEqual, TOP, RIGHT, LEFT, BOTTOM} from '../core.js';
+import {navmesh} from '../main.js';
+import {OfficeDoor} from './objects/officeDoors.js';
+import {Room} from './objects/rooms.js';
+import {Elevator} from './objects/elevators.js';
+import {NavMeshCrossingZone} from './agents/navmesh.js';
 
 
 
@@ -330,3 +332,42 @@ function clipLine( from, to, obstacles, margin = 1, avoidPositions = [] )
 	return {pos:toPoint, clipped:true};
 	
 } // clipLine
+
+
+export function sortRing( ring, center )
+{
+	// calculate polar angle of each ring element
+	for( var i=0; i<ring.length; i++)
+	{
+		var v = center.to(ring[i].center);
+		ring[i].polarAngle = Math.atan2( v.z, v.x );
+	}
+	
+	ring.sort((a,b)=>(a.polarAngle > b.polarAngle) ? 1 : -1);
+
+	for( var i=0; i<ring.length; i++)
+	{
+		if( ring[i].parent )
+			ring[i].parent.ringIndex = i;
+		
+		if( DEBUG_NAVMESH_SHOW_LINES )
+		{
+			var from = ring[i].center;
+			var to = ring[(i+1)%ring.length].center;
+			navmesh.addLine( from, to );
+		}
+	}
+} // sortRing
+
+
+
+function findRingIndex( ring, position, closeness = 1 )
+{
+	for( var i=0; i<ring.length; i++)
+	{
+		if( position.manhattanDistanceTo(ring[i].center) < closeness )
+			return i;
+	}
+	
+	return -1;
+} // findRingIndex

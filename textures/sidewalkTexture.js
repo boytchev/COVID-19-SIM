@@ -6,10 +6,16 @@
 
 
 
-class SidewalkTexture extends ProceduralTexture
+import {ProceduralTexture} from './proceduralTexture.js';
+import {DEBUG_ALL_WHITE} from '../config.js';
+
+
+export class SidewalkTexture extends ProceduralTexture
 {
+	
 	draw()
 	{
+		
 		super.draw();
 		
 		var ctx = this.ctx,

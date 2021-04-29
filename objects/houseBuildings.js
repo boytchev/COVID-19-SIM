@@ -30,6 +30,14 @@
 
 
 
+import * as THREE from '../js/three.module.js';
+import {HouseSidewalks, HouseSidewalk, HouseSidewalkPath} from './houseSidewalks.js';
+import {blocks, navmesh, textures, scene} from '../main.js';
+import {round, Pos, Size, Zone} from '../core.js';
+import {pick} from '../coreNav.js';
+import {SIDEWALK_WIDTH, HOUSE_BOUNDING_RADIUS, FLOOR_HEIGHT, DEBUG_HIDE_ROOFS, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_BUILDINGS_OPACITY} from '../config.js';
+
+
 class HouseDoor
 {
 
@@ -107,7 +115,7 @@ class HouseWing
 
 
 
-class HouseBuilding
+export class HouseBuilding
 {
 	
 	constructor( wingA, wingB, facing, block )
@@ -199,7 +207,7 @@ class HouseBuilding
 
 
 
-class HouseBuildings
+export class HouseBuildings
 {
 	constructor()
 	{

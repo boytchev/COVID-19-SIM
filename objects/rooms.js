@@ -3,7 +3,11 @@
 //		constructor( center, size )
 //
 
-class Room
+
+import {Zone} from '../core.js';
+
+
+export class Room
 {
 	constructor( center, size, facing )
 	{

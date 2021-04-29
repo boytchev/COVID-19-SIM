@@ -19,16 +19,25 @@
 
 
 
+import {ProceduralTexture} from './proceduralTexture.js';
+import {DEBUG_ALL_WHITE} from '../config.js';
 
-class ApartmentTexture extends ProceduralTexture
+
+export class ApartmentTexture extends ProceduralTexture
 {
+	
 	constructor( width, height, backgroundColor='white' )
 	{
+		
 		super( width, height, backgroundColor );
-	}
+		
+	} // ApartmentTexture
+
+
 	
 	draw()
 	{
+		
 		super.draw();
 		
 		this.heightMargin = Math.round( 0.19*this.height );
@@ -67,11 +76,12 @@ class ApartmentTexture extends ProceduralTexture
 
 
 
-class ApartmentNormalTexture extends ApartmentTexture
+export class ApartmentNormalTexture extends ApartmentTexture
 {
 
 	constructor( width, height )
 	{
+		
 		super( width, height, 'rgb(128,128,255)' );
 
 	} // OfficeNormalTexture

@@ -5,11 +5,15 @@
 //
 
 
+import {ProceduralTexture} from './proceduralTexture.js';
 
-class GridTexture extends ProceduralTexture
+
+export class GridTexture extends ProceduralTexture
 {
+	
 	draw()
 	{
+		
 		super.draw();
 		
 		var ctx = this.ctx,

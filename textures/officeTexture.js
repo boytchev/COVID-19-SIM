@@ -18,10 +18,15 @@
 
 
 
-class OfficeTexture extends ProceduralTexture
+import {ProceduralTexture} from './proceduralTexture.js';
+
+
+export class OfficeTexture extends ProceduralTexture
 {
+	
 	draw()
 	{
+		
 		super.draw();
 		
 		this.heightMargin = Math.round( 0.19*this.height );
@@ -53,18 +58,21 @@ class OfficeTexture extends ProceduralTexture
 
 
 
-class OfficeNormalTexture extends OfficeTexture
+export class OfficeNormalTexture extends OfficeTexture
 {
 
 	constructor( width, height )
 	{
+		
 		super( width, height, 'rgb(128,128,255)' );
+		
 	} // OfficeNormalTexture
 
 
 
 	draw()
 	{
+		
 		super.draw();
 		
 		this.ctx.fillStyle = 'rgb(128,128,255)';

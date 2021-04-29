@@ -1,4 +1,5 @@
 		import * as THREE from './js/three.module.js';
+		import * as dat from './js/dat.gui.module.js';
 
 
 var container = document.getElementById( 'container' );
@@ -8,7 +9,7 @@ var container = document.getElementById( 'container' );
 //var statsTrigs = stats.addPanel( new Stats.Panel( '△', '#ff8', '#221' ) );
 //	container.appendChild( stats.dom );
 
-var renderer = new THREE.WebGLRenderer( { antialias: true } );
+export var renderer = new THREE.WebGLRenderer( { antialias: true } );
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	container.appendChild( renderer.domElement );
@@ -21,33 +22,33 @@ var currentTime_elem = document.getElementById('time'),
 
 
 		import {OrbitControls} from './js/OrbitControls.js';
-		import './font.module.js';
+		import './font.js';
 
 		
-		import {DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO} from './config.module.js';
-		import {msToString, round} from './core.module.js';
-		import {Nature, currentTimeMs, frame} from './objects/nature.module.js';
+		import {DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO} from './config.js';
+		import {msToString, round} from './core.js';
+		import {Nature, currentTimeMs, frame} from './objects/nature.js';
 
 	
-		import {Ground} from './objects/ground.module.js';
-		import {Textures} from './textures/textures.module.js';
-		import {Blocks} from './objects/blocks.module.js';
-		import {Trees} from './objects/trees.module.js';
-		import {Crossing,Crossings} from './objects/crossings.module.js';
-		import {Agents} from './agents/agents.module.js';
-		import {NavMesh} from './agents/navmesh.module.js';
-		import {Buildings} from './objects/buildings.module.js';
+		import {Ground} from './objects/ground.js';
+		import {Textures} from './textures/textures.js';
+		import {Blocks} from './objects/blocks.js';
+		import {Trees} from './objects/trees.js';
+		import {Crossing,Crossings} from './objects/crossings.js';
+		import {Agents} from './agents/agents.js';
+		import {NavMesh} from './agents/navmesh.js';
+		import {Buildings} from './objects/buildings.js';
 
 		
 		if( DEBUG_RANDOM_SEED )
 			Math.seedrandom( DEBUG_RANDOM_SEED );
 		
+		export var guiObject = {sunPos:10};
 		if( DEBUG_SUN_POSITION_GUI )
 		{
-			var guiObject = {sunPos:10};
 			var gui = new dat.GUI();
 				gui.remember( guiObject );
-				gui.add( guiObject, 'sunPos' ).min(0).max(24).step(1).name('Sun pos');
+				gui.add( guiObject, 'sunPos' ).min(0).max(24).step(0.25).name('Sun pos (h)');
 		}
 
 		export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 2*EARTH_SIZE );
@@ -65,7 +66,8 @@ var currentTime_elem = document.getElementById('time'),
 			controls.enableDamping = true;
 			controls.dampingFactor = 0.25;
 			controls.rotateSpeed = 0.3;
-			controls.panSpeed = 0.15;
+			controls.panSpeed = 0.25;
+			controls.screenSpacePanning = false;
 			controls.target.set( 0, 0, 0 );
 			controls.autoRotate = DEBUG_AUTOROTATE;
 			controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;

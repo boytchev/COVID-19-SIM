@@ -13,9 +13,15 @@
 //
 
 
+import * as THREE from '../js/three.module.js';
+import {DEBUG_ALL_WHITE, SIDEWALK_WIDTH, DEBUG_BLOCKS_OPACITY} from '../config.js';
+import {RIGHT, TOP, LEFT, BOTTOM, Pos, Size} from '../core.js';
+import {NatureMaterial} from './nature.js';
+import {textures, scene} from '../main.js';
+
 
 // sidewalk around a house
-class HouseSidewalk
+export class HouseSidewalk
 {
 	
 	constructor( houseWing )
@@ -32,7 +38,7 @@ class HouseSidewalk
 	
 	
 // sidewalk from house to street
-class HouseSidewalkPath
+export class HouseSidewalkPath
 {
 	
 	constructor(  house )
@@ -128,7 +134,7 @@ class HouseSidewalkPath
 	
 	
 	
-class HouseSidewalks
+export class HouseSidewalks
 {
 	
 	constructor( )

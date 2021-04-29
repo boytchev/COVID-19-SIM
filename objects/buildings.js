@@ -10,8 +10,12 @@
 //
 
 
+import {OfficeBuildings} from './officeBuildings.js';
+import {HouseBuildings} from './houseBuildings.js';
+import {ApartmentBuildings} from './apartmentBuildings.js';
+import {OfficeDoors} from './officeDoors.js';
 
-class Buildings
+export class Buildings
 {
 
 

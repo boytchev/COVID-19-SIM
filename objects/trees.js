@@ -11,6 +11,10 @@
 //
 
 
+import * as THREE from '../js/three.module.js';
+import {blocks, scene} from '../main.js';
+import {TREE_HOUSES_RATIO, TREE_HEIGHT, TREE_PARK_RATIO, TREE_COMPLEXITY, DEBUG_BUILDINGS_OPACITY, DEBUG_ALL_WHITE} from '../config.js';
+
 
 class Tree
 {
@@ -28,7 +32,7 @@ class Tree
 	
 	
 	
-class Trees
+export class Trees
 {
 	
 	constructor( )

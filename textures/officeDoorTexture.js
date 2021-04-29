@@ -5,11 +5,16 @@
 //
 
 
+import * as THREE from '../js/three.module.js';
+import {ProceduralTexture} from './proceduralTexture.js';
 
-class OfficeDoorTexture extends ProceduralTexture
+
+export class OfficeDoorTexture extends ProceduralTexture
 {
+	
 	draw()
 	{
+		
 		super.draw();
 		
 		var ctx = this.ctx,

@@ -9,6 +9,10 @@
 
 
 
+import * as THREE from '../js/three.module.js';
+import {renderer} from '../main.js';
+
+
 export class ProceduralTexture
 {
 
@@ -52,7 +56,7 @@ export class ProceduralTexture
 	{
 		
 		var texture = new THREE.CanvasTexture(this.canvas, THREE.UVMapping, this.repeatU, this.repeatV);
-			//TODO//texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+			texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 			texture.repeat.set( uCount, vCount );
 			
 		return texture;

@@ -19,7 +19,15 @@
 // var CROSSING_TYPE_Z = 2;
 
 
-class Crossing
+import * as THREE from '../js/three.module.js';
+import {blocks, scene, navmesh, textures} from '../main.js';
+import {pick, sortRing} from '../coreNav.js';
+import {LEFT, RIGHT, BOTTOM, TOP, Size, Zone, timeMs, almostEqual} from '../core.js';
+import {SIDEWALK_WIDTH, CROSSING_MINIMAL_CLOSENESS, CROSSING_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY} from '../config.js';
+import {NatureMaterial, dayTimeMs} from './nature.js';
+
+
+export class Crossing
 {
 
 	constructor( zone, type, length, blockA, blockB, priority )
@@ -57,7 +65,7 @@ class Crossing
 
 
 
-class Crossings
+export class Crossings
 {
 	
 	constructor( )

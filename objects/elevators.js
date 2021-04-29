@@ -5,8 +5,14 @@
 //		isMoving( y, time )
 
 
+import * as THREE from '../js/three.module.js';
+import {Zone, timeMs} from '../core.js';
+import {dayTimeMs} from './nature.js';
+import {pick} from '../coreNav.js';
+import {ELEVATOR_SIZE, ELEVATOR_SPEED} from '../config.js';
 
-class Elevator
+
+export class Elevator
 {
 	constructor( center, doors = [], floors )
 	{

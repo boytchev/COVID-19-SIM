@@ -1,6 +1,8 @@
 // converted with http://gero3.github.io/facetype.js/
 
-FONT_JSON = {
+import * as THREE from './js/three.module.js';
+
+var FONT_JSON = {
 	"glyphs": {
 		"0": {
 			"ha": 704,
@@ -12986,3 +12988,5 @@ class Font{
 	} // Font.constructor
 
 } // Font
+
+export var font = new Font();

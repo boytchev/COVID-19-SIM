@@ -37,6 +37,14 @@
 //
 
 
+import {timeMs, Pos, Range, Zone, almostEqual, drawArrow} from '../core.js';
+import {pick, pickDirection, clipLineRoute, pickDistance} from '../coreNav.js';
+import {dayTimeMs, deltaTime} from '../objects/nature.js';
+import {Crossing} from '../objects/crossings.js';
+import {Elevator} from '../objects/elevators.js';
+import {DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE} from '../config.js';
+
+
 
 const AGENT_CHILD_SLEEP_TIME_MS  = new Range( timeMs(19), timeMs(21) );		// in milliseconds (19:00-21:00)
 const AGENT_CHILD_WAKEUP_TIME_MS = new Range( timeMs(6), timeMs(7,30) );	// in milliseconds (06:00-07:30)
@@ -104,7 +112,7 @@ class AgentDailySchedule
 
 
 
-class AgentBehaviour
+export class AgentBehaviour
 {
 	
 	constructor( )

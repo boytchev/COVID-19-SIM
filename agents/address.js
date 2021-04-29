@@ -11,8 +11,16 @@
 //
 
 
+import * as THREE from '../js/three.module.js';
+import {HouseBuilding} from '../objects/houseBuildings.js';
+import {ApartmentBuilding} from '../objects/apartmentBuildings.js';
+import {OfficeBuilding} from '../objects/officeBuildings.js';
+import {buildings} from '../main.js';
+import {drawArrow} from '../core.js';
+import {FLOOR_HEIGHT} from '../config.js';
 
-class Address
+
+export class Address
 {
 	
 	constructor( building = undefined, floor, number, exactPosition )
@@ -153,7 +161,7 @@ class SimpleWorkAddress extends Address
 
 
 
-class WorkAddress extends Address
+export class WorkAddress extends Address
 {
 	constructor()
 	{

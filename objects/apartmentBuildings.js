@@ -10,7 +10,17 @@
 //		static image( offices )
 //
 
-class ApartmentBuilding
+
+import * as THREE from '../js/three.module.js';
+import {OfficeDoor} from './officeDoors.js';
+import {Elevator} from './elevators.js';
+import {Room} from './rooms.js';
+import {blocks, navmesh, textures, scene} from '../main.js';
+import {Zone, round, Pos, Size, LEFT, RIGHT, BOTTOM, TOP} from '../core.js';
+import {SIDEWALK_WIDTH, APARTMENT_BUILDING_DISTANCE, MAX_APARTMENT_BUILDING_FLOORS, DEBUG_HIDE_ROOFS, APARTMENT_BUILDING_WIDTH, FLOOR_HEIGHT, DEBUG_APARTMENT_ADD_FLOORS, OFFICE_DOOR_WIDTH, APARTMENT_DOOR_DISTANCE, APARTMENT_ROOM_SIZE, APARTMENT_TEXTURE_SCALE_U, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, SHADOWS, NO_SHADOWS} from '../config.js';
+
+
+export class ApartmentBuilding
 {
 	constructor( center, size, floors, block )
 	{
@@ -184,7 +194,7 @@ class ApartmentBuilding
 
 
 
-class ApartmentBuildings
+export class ApartmentBuildings
 {
 	constructor()
 	{

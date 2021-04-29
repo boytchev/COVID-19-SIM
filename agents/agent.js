@@ -21,6 +21,55 @@
 
 var agent_id = 0;
 
+import * as THREE from '../js/three.module.js';
+import {AgentBehaviour} from './agentBehaviour.js';
+import {Agents} from './agents.js';
+import {WorkAddress} from './address.js';
+import {INFECTION_OVERHEAD_INDICATOR, AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, DEBUG_BLOCK_COLOR, INFECTION_STRENGTH, IMMUNE_CURE_FACTOR} from '../config.js';
+import {font} from '../font.js';
+import {scene, controls, agents} from '../main.js';
+import {Range, drawArrow} from '../core.js';
+import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs} from '../objects/nature.js';
+
+
+
+var agentGeometry = new THREE.CylinderBufferGeometry( 0.2, 0.4, 1.7, 6, 2 );
+	agentGeometry.translate( 0, 1.7/2, 0 );
+
+var pos = agentGeometry.getAttribute( 'position' );
+for( var i=0; i<pos.count; i++ )
+{
+	var x = pos.getX( i );
+	var y = pos.getY( i );
+	var z = pos.getZ( i );
+	
+	if( y>0.1 && y<1.7 )
+	{
+		pos.setXYZ( i, x/4, 1.4, z/4 );
+	}
+}
+
+
+if( INFECTION_OVERHEAD_INDICATOR )
+{	
+	var labelGeometry = [];
+	for( var i=0; i<=100; i++ )
+	{
+		var fontGeometry = new THREE.TextBufferGeometry( ''+i+'%', {
+				font: font.font,
+				size: 0.5,
+				height: 0.03,
+				curveSegments: 4,
+				bevelEnabled: false,
+			} );
+		fontGeometry.computeBoundingBox();
+		fontGeometry.translate( (fontGeometry.boundingBox.min.x-fontGeometry.boundingBox.max.x)/2, 1.9, 0 );
+		labelGeometry.push( fontGeometry );
+	}
+} // if( INFECTION_OVERHEAD_INDICATOR )
+
+
+
 class Agent extends AgentBehaviour
 {
 	
@@ -103,7 +152,7 @@ class Agent extends AgentBehaviour
 				// update overhead indicator
 				if( INFECTION_OVERHEAD_INDICATOR )
 				{
-					this.mesh.children[0].geometry = Agents.labelGeometry[ Math.round(this.infectionLevel) ];
+					this.mesh.children[0].geometry = labelGeometry[ Math.round(this.infectionLevel) ];
 				}
 				// update color indicator
 				if( INFECTION_COLOR_INDICATOR )
@@ -234,7 +283,7 @@ class Agent extends AgentBehaviour
 	
 	image()
 	{
-		var mesh = new THREE.Mesh( Agents.geometry, this.material() );
+		var mesh = new THREE.Mesh( agentGeometry, this.material() );
 			
 		mesh.position.set( this.x, this.y, this.z );
 		mesh.scale.set( this.height/1.7, this.height/1.7, this.height/1.7 );
@@ -249,7 +298,7 @@ class Agent extends AgentBehaviour
 
 		if( INFECTION_OVERHEAD_INDICATOR )
 		{
-			var ageMesh = new THREE.Mesh( Agents.labelGeometry[Math.round(this.infectionLevel)], mesh.material );
+			var ageMesh = new THREE.Mesh( labelGeometry[Math.round(this.infectionLevel)], mesh.material );
 			mesh.add( ageMesh );
 		}
 		
@@ -340,7 +389,7 @@ class Agent extends AgentBehaviour
 
 
 
-class Child extends Agent
+export class Child extends Agent
 {
 	
 	constructor( home )
@@ -359,7 +408,7 @@ class Child extends Agent
 
 
 
-class Adult extends Agent
+export class Adult extends Agent
 {
 	
 	constructor( home )

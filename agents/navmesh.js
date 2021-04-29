@@ -22,6 +22,15 @@
 // // //
 
 
+
+import * as THREE from '../js/three.module.js';
+import {DEBUG_NAVMESH_SHOW_LINES, DEBUG_NAVMESH_SHOW_MESHES, DEBUG_NAVMESH_SHOW_FLOORS, SIDEWALK_WIDTH, DEBUG_NAVMESH_OPACITY, DEBUG_NAVMESH_SHOW_ELEVATORS, OFFICE_ELEVATOR_SHAFT_WIDTH, FLOOR_HEIGHT} from '../config.js';
+import {scene, buildings, navmesh} from '../main.js';
+import {Zone, Size, Pos, TOP, RIGHT, LEFT, BOTTOM} from '../core.js';
+import {sortRing} from '../coreNav.js';
+
+
+
 class NavMeshZone extends Zone
 {
 	constructor( center, size, block = undefined, parent = undefined )
@@ -68,7 +77,7 @@ console.error(this.center.block?this.center.block.id:'null',block?block.id:'null
 
 
 
-class NavMeshCrossingZone extends NavMeshZone
+export class NavMeshCrossingZone extends NavMeshZone
 {
 	constructor( center, size, block = undefined )
 	{
@@ -96,7 +105,7 @@ class NavMeshHouseZone extends NavMeshZone
 
 
 
-class NavMesh
+export class NavMesh
 {
 	
 	constructor( )

@@ -6,9 +6,14 @@
 //		debugShowAgeDistribution()
 //
 
-var aa;
+import * as THREE from '../js/three.module.js';
+import {buildings} from '../main.js';
+import {Adult, Child} from './agent.js';
+import {Address} from './address.js';
+import {INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT} from '../config.js';
 
-class Agents
+
+export class Agents
 {
 	
 	constructor( )
@@ -17,9 +22,6 @@ class Agents
 		
 		this.agents = [];
 
-		this.generateAgentGeometry();
-		this.generateLabelGeometry();
-		
 		this.generateInfections();
 		
 		this.generateAgents( );
@@ -28,47 +30,6 @@ class Agents
 			this.debugShowAgeDistribution();
 	} // Agents.constructor
 
-
-
-	generateAgentGeometry()
-	{
-		Agents.geometry = new THREE.CylinderBufferGeometry( 0.2, 0.4, 1.7, 6, 2 );
-		Agents.geometry.translate( 0, 1.7/2, 0 );
-		
-		var pos = Agents.geometry.getAttribute( 'position' );
-		for( var i=0; i<pos.count; i++ )
-		{
-			var x = pos.getX( i );
-			var y = pos.getY( i );
-			var z = pos.getZ( i );
-			
-			if( y>0.1 && y<1.7 )
-			{
-				pos.setXYZ( i, x/4, 1.4, z/4 );
-			}
-		}
-	} // Agents.generateAgentGeometry
-	
-
-
-
-	generateLabelGeometry()
-	{
-		Agents.labelGeometry = [];
-		for( var i=0; i<=100; i++ )
-		{
-			var fontGeometry = new THREE.TextBufferGeometry( ''+i+'%', {
-					font: font.font,
-					size: 0.5,
-					height: 0.03,
-					curveSegments: 4,
-					bevelEnabled: false,
-				} );
-			fontGeometry.computeBoundingBox();
-			fontGeometry.translate( (fontGeometry.boundingBox.min.x-fontGeometry.boundingBox.max.x)/2, 1.9, 0 );
-			Agents.labelGeometry.push( fontGeometry );
-		}
-	} // Agents.generateLabelGeometry
 	
 	
 	generateAgents( )

@@ -5,11 +5,17 @@
 //
 
 
+import * as THREE from '../js/three.module.js';
+import {ProceduralTexture} from './proceduralTexture.js';
+import {DEBUG_ALL_WHITE} from '../config.js';
 
-class HouseTexture extends ProceduralTexture
+
+export class HouseTexture extends ProceduralTexture
 {
+	
 	draw()
 	{
+		
 		super.draw();
 		
 		var ctx = this.ctx,
@@ -86,24 +92,28 @@ class HouseTexture extends ProceduralTexture
 		
 		// document.body.appendChild(this.canvas);
 		// this.canvas.style="position:fixed; top:10em; left:1em; z-index:100;";
+		
 	} // HouseTexture.draw
 	
 } // HouseTexture
 
 
 
-class HouseBumpTexture extends ProceduralTexture
+export class HouseBumpTexture extends ProceduralTexture
 {
 
 	constructor( width, height )
 	{
+		
 		super( width, height, 'rgb(128,128,128)' );
+		
 	} // HouseNormalTexture
 
 
 
 	draw()
 	{
+		
 		super.draw();
 		
 		var ctx = this.ctx,

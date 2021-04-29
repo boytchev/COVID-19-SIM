@@ -5,11 +5,15 @@
 //
 
 
+import {ProceduralTexture} from './proceduralTexture.js';
 
-class CrossingTexture extends ProceduralTexture
+
+export class CrossingTexture extends ProceduralTexture
 {
+	
 	draw()
 	{
+		
 		super.draw();
 		
 		var ctx = this.ctx,
