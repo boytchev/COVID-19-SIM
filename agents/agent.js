@@ -354,9 +354,66 @@ class Agent extends AgentBehaviour
 	
 	material()
 	{
-		var material = new THREE.MeshPhongMaterial( {
+		var material = new THREE.MeshLambertMaterial( {
 				color: 'crimson',
 		});
+		
+		material.onBeforeCompile = shader => {
+			console.log(shader.vertexShader);
+			console.log(shader.fragmentShader);
+/*
+			shader.vertexShader =
+				shader.vertexShader.replace(
+					'void main() {\n',
+					
+					'varying vec2 vTextureOffset;\n'+
+					'varying vec2 vTextureScale;\n'+
+					'void main() {\n'+
+					'	if (normal.y>0.5)\n'+
+					'	{\n'+
+					'		vTextureScale = vec2(0);\n'+
+					'		vTextureOffset = vec2(0.1);\n'+
+					'	}\n'+
+					'	else\n'+
+					'	{\n'+
+					'		vTextureScale.x = (abs(normal.x)<0.5) ? instanceMatrix[0][0] : instanceMatrix[2][2];\n'+
+					'		vTextureScale.y = instanceMatrix[1][1];\n'+
+					'		vTextureOffset.x = 0.0;\n'+
+					'		vTextureOffset.y = 0.0;\n'+
+					'	}\n'+
+					''
+				);
+
+
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+					'void main() {\n',
+					
+					'varying vec2 vTextureScale;\n'+
+					'varying vec2 vTextureOffset;\n'+
+					'void main() {\n'
+				);
+		
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+				  '#include <map_fragment>',
+				  
+				  'vec4 texelColor = texture2D( map, vUv*vTextureScale+vTextureOffset );\n'+
+				  'texelColor = mapTexelToLinear( texelColor );\n'+
+				  'diffuseColor *= texelColor;'
+				);
+				
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+				  '#include <normal_fragment_maps>',
+				  
+				  'vec3 mapN = texture2D( normalMap, vUv*vTextureScale+vTextureOffset ).xyz * 2.0 - 1.0;\n'+
+				  'mapN.xy *= normalScale;\n'+
+				  'normal = perturbNormal2Arb( -vViewPosition, normal, mapN, faceDirection );\n'
+				);
+*/				
+			//console.log(shader.vertexShader);
+		} // material.onBeforeCompile
 		
 		return material;
 		

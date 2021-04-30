@@ -23,7 +23,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {textures, blocks, scene, navmesh} from '../main.js';
-import {MAX_FLOORS, SIDEWALK_WIDTH, OFFICE_TEXTURE_SCALE_U, FLOOR_HEIGHT, OFFICE_DOOR_WIDTH, OFFICE_DOOR_DISTANCE, OFFICE_ROOM_SIZE, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, OFFICE_CORRIDOR_WIDTH, OFFICE_ROOM_COUNT, SHADOWS, NO_SHADOWS} from '../config.js';
+import {MAX_FLOORS, SIDEWALK_WIDTH, OFFICE_TEXTURE_SCALE_U, FLOOR_HEIGHT, OFFICE_DOOR_WIDTH, OFFICE_DOOR_DISTANCE, OFFICE_ROOM_SIZE, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, OFFICE_CORRIDOR_WIDTH, OFFICE_ROOM_COUNT, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE} from '../config.js';
 import {Size, round, TOP, RIGHT, LEFT, BOTTOM, Pos} from '../core.js';
 
 
@@ -427,7 +427,7 @@ export class OfficeBuildings
 		var colors = [];
 		for( var i=0; i<instances; i++)
 		{
-			var intensity = Math.pow( THREE.Math.randFloat(0,1), 1/8 );
+			var intensity = DEBUG_ALL_WHITE ? 1.2 : Math.pow( THREE.Math.randFloat(0,1), 1/8 );
 			colors.push( intensity, intensity, intensity );
 		}
 		var colorAttribute = new THREE.InstancedBufferAttribute( new Float32Array(colors), 3, false, 1 );
