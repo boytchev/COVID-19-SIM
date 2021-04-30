@@ -146,6 +146,9 @@ export class Nature
 		this.sunLights = [];
 		this.sunPosition = new THREE.Vector3();
 		
+		this.skyColorNight = new THREE.Color( 'darkblue' );
+		this.skyColorDay = new THREE.Color( 'skyblue' );
+		
 		// set shadow capabilities of renderer
 		if( SHADOWS != NO_SHADOWS )
 		{
@@ -182,7 +185,7 @@ export class Nature
 		
 		// add background color
 		scene.background = new THREE.Color( DEBUG_ALL_WHITE?'white':'skyblue' );
-		scene.fog = new THREE.Fog( DEBUG_ALL_WHITE?'white':'skyblue', 0.1*EARTH_SIZE, 0.4*EARTH_SIZE );
+		scene.fog = new THREE.Fog( DEBUG_ALL_WHITE?'white':'skyblue', 2*GROUND_SIZE, 0.4*EARTH_SIZE );
 		
 		
 		// adjust light intensities total to be 1
@@ -195,7 +198,7 @@ export class Nature
 			{
 				scene.children[i].intensity /= totalIntensity;
 				scene.children[i].originalIntensity = scene.children[i].intensity;
-				console.log( scene.children[i].intensity.toFixed(2), scene.children[i].name );
+				//console.log( scene.children[i].intensity.toFixed(2), scene.children[i].name );
 			}
 			
 		if( DEBUG_SHOW_VIRAL_SHEDDING ) 
@@ -222,6 +225,25 @@ export class Nature
 				cos = Math.cos( sunAngle ),
 				sin = Math.sin( sunAngle );
 			this.sunPosition.set( GROUND_SIZE*cos*SUN_SIN, GROUND_SIZE*sin, GROUND_SIZE*cos*SUN_COS );
+
+			// set sun color
+			var lightness = THREE.Math.clamp( 8*sin, 0, 1 ); // 0=night, 1=day, 10=speed at morning light-up 
+			var hue = THREE.Math.clamp( 0.5*sin, 0, 0.2 ); // 0=red, 0.2 = yellow
+			for( var i=0; i<this.sunLights.length; i++)
+			{
+				this.sunLights[i].color.setHSL( hue, 1/*saturation*/, lightness );
+			}
+			
+			var lightness = THREE.Math.clamp( 8*sin, 0, 1 ); // 0=night, 1=day, 10=speed at morning light-up 
+			var hue = THREE.Math.clamp( sin, 0, 0.2 ); // 0=red, 0.2 = yellow
+			this.ambientLight.color.setHSL( hue, 1/*saturation*/, lightness );
+			
+			// set the sky color
+			var lightness = THREE.Math.clamp( 10*sin, 0, 1 );
+			var hue = THREE.Math.clamp( 1*sin, 0, 0.2 );
+			scene.background.lerpColors( this.skyColorNight, this.skyColorDay, lightness );
+			scene.background.multiplyScalar( lightness );
+			scene.fog.color = scene.background;
 		}
 		else
 		{
@@ -232,8 +254,7 @@ export class Nature
 		// set light (sun) positions
 		for( var i=0; i<this.sunLights.length; i++)
 			this.sunLights[i].position.copy( this.sunPosition );
-			
-			
+		
 		// request regeneration of shadows
 		if( SUN!=STATIC_SUN && SHADOWS==FULL_SHADOWS )
 		{	

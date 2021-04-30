@@ -48,7 +48,7 @@ var currentTime_elem = document.getElementById('time'),
 		{
 			var gui = new dat.GUI();
 				gui.remember( guiObject );
-				gui.add( guiObject, 'sunPos' ).min(0).max(24).step(0.25).name('Sun pos (h)');
+				gui.add( guiObject, 'sunPos' ).min(0).max(24).step(0.01).name('Sun pos (h)');
 		}
 
 		export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 2*EARTH_SIZE );
@@ -56,7 +56,7 @@ var currentTime_elem = document.getElementById('time'),
 			camera.position.set( GROUND_SIZE/1.5, GROUND_SIZE/4, GROUND_SIZE/1.5 );
 			camera.position.set( 0.01+0*GROUND_SIZE/0.8, GROUND_SIZE*2, 0 );
 			camera.position.set( GROUND_SIZE/2, GROUND_SIZE/10, GROUND_SIZE/3 );
-			camera.position.set( -GROUND_SIZE/1.2, GROUND_SIZE/5, GROUND_SIZE/1.2 );
+			camera.position.set( -GROUND_SIZE/2, GROUND_SIZE/10, GROUND_SIZE/2 );
 			//camera.position.set( 0, 0.26*GROUND_SIZE, 0 );
 			
 		export var controls = new OrbitControls( camera, renderer.domElement );

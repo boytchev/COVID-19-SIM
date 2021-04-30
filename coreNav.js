@@ -161,7 +161,7 @@ export function pickDirection( fromPosition, viaPositions, finalPosition, avoidP
 
 
 
-function pickClosest( fromPosition, viaPositions, finalPosition )
+export function pickClosest( fromPosition, viaPositions, finalPosition )
 {
 	var closest = viaPositions[0],
 		distance = Number.POSITIVE_INFINITY;

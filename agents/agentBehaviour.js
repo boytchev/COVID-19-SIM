@@ -38,7 +38,7 @@
 
 
 import {timeMs, Pos, Range, Zone, almostEqual, drawArrow} from '../core.js';
-import {pick, pickDirection, clipLineRoute, pickDistance} from '../coreNav.js';
+import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../coreNav.js';
 import {dayTimeMs, deltaTime} from '../objects/nature.js';
 import {Crossing} from '../objects/crossings.js';
 import {Elevator} from '../objects/elevators.js';
@@ -61,7 +61,7 @@ const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(0,10) );	// in millis
 
 
 const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,1), timeMs(6,0,2) );	// in milliseconds (05:30-07:00)
-const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,0), timeMs(6,10) );		// in milliseconds (06:00-08:00)
+const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,0), timeMs(7,10) );		// in milliseconds (06:00-08:00)
 
 
 
