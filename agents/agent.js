@@ -16,16 +16,22 @@
 //
 //	class Child
 //		constructor( home )
-
+//
+//  IMPORTANT
+//		Agent colour is used for additional data:
+//		- red component = infection level
+//		- green component = unused
+//		- blue component = unused
 
 
 var agent_id = 0;
 
 import * as THREE from '../js/three.module.js';
+
 import {AgentBehaviour} from './agentBehaviour.js';
 import {Agents} from './agents.js';
 import {WorkAddress} from './address.js';
-import {INFECTION_OVERHEAD_INDICATOR, AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, DEBUG_BLOCK_COLOR, INFECTION_STRENGTH, IMMUNE_CURE_FACTOR} from '../config.js';
+import {/*INFECTION_OVERHEAD_INDICATOR, */AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, /*DEBUG_BLOCK_COLOR, */INFECTION_STRENGTH, IMMUNE_CURE_FACTOR} from '../config.js';
 import {font} from '../font.js';
 import {scene, controls, agents} from '../main.js';
 import {Range, drawArrow} from '../core.js';
@@ -33,24 +39,7 @@ import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs} from '../objects
 
 
 
-var agentGeometry = new THREE.CylinderBufferGeometry( 0.2, 0.4, 1.7, 6, 2 );
-	agentGeometry.translate( 0, 1.7/2, 0 );
-
-var pos = agentGeometry.getAttribute( 'position' );
-for( var i=0; i<pos.count; i++ )
-{
-	var x = pos.getX( i );
-	var y = pos.getY( i );
-	var z = pos.getZ( i );
-	
-	if( y>0.1 && y<1.7 )
-	{
-		pos.setXYZ( i, x/4, 1.4, z/4 );
-	}
-}
-
-
-if( INFECTION_OVERHEAD_INDICATOR )
+/*if( INFECTION_OVERHEAD_INDICATOR )
 {	
 	var labelGeometry = [];
 	for( var i=0; i<=100; i++ )
@@ -67,7 +56,7 @@ if( INFECTION_OVERHEAD_INDICATOR )
 		labelGeometry.push( fontGeometry );
 	}
 } // if( INFECTION_OVERHEAD_INDICATOR )
-
+*/
 
 
 class Agent extends AgentBehaviour
@@ -80,14 +69,6 @@ class Agent extends AgentBehaviour
 		this.sysType = 'Agent';
 		this.id = agent_id++;
 		
-/*		if( !AgentDebugMaterial ) AgentDebugMaterial = [
-			AgentMaterial,
-			new THREE.MeshPhongMaterial({color: 'pink'}),
-			new THREE.MeshPhongMaterial({color: 'green'}),
-			new THREE.MeshPhongMaterial({color: 'black'}),
-			new THREE.MeshPhongMaterial({color: 'white'}),
-		];
-*/			
 		this.isAdult = isAdult;
 		
 		// set age and height
@@ -119,9 +100,6 @@ class Agent extends AgentBehaviour
 		if( Math.random() < PERCENTAGE_INITIAL_INFECTED )
 			this.infect();
 		
-//	console.log(this.home, this.work);
-//	drawArrow( this.home.center, this.work.center );
-
 	} // Agent.constructor
 	
 	
@@ -148,23 +126,6 @@ class Agent extends AgentBehaviour
 					
 				var infLev = viralShedding.getPointAt( relativeTime ).y;
 				this.infectionLevel = 100*infLev;
-
-				// update overhead indicator
-				if( INFECTION_OVERHEAD_INDICATOR )
-				{
-					this.mesh.children[0].geometry = labelGeometry[ Math.round(this.infectionLevel) ];
-				}
-				// update color indicator
-				if( INFECTION_COLOR_INDICATOR )
-				{
-					this.mesh.material.color.r = infLev;
-					this.mesh.material.color.g = 0.2;
-					this.mesh.material.color.b = 1-infLev;
-					if( INFECTION_OVERHEAD_INDICATOR )
-					{
-						this.mesh.children[0].material.color = this.mesh.material.color;
-					}
-				}
 			}
 		}
 		else
@@ -209,16 +170,6 @@ class Agent extends AgentBehaviour
 				
 			} // for j
 			
-			if( INFECTION_COLOR_INDICATOR )
-			{
-				this.mesh.material.color.r = 1;
-				this.mesh.material.color.g = 1;
-				this.mesh.material.color.b = 1;
-				if( INFECTION_OVERHEAD_INDICATOR )
-				{
-					this.mesh.children[0].material.color = this.mesh.material.color;
-				}
-			}
 		}
 		
 
@@ -250,12 +201,11 @@ class Agent extends AgentBehaviour
 		
 	} // Agent.update
 	
-
+/*
 
 	updateImage()
 	{
 		this.mesh.position.copy( this.position.vector() );
-		//this.mesh.rotation.y = THREE.Math.lerp(this.mesh.rotation.y,controls.getAzimuthalAngle(),0.1);
 		
 		if( this.doing == this.AGENT_SLEEPING_AT_HOME )
 			this.mesh.rotation.x = THREE.Math.lerp( this.mesh.rotation.x, Math.PI/2, 0.1 );
@@ -267,47 +217,16 @@ class Agent extends AgentBehaviour
 			this.mesh.children[0].rotation.y = controls.getAzimuthalAngle();
 		}
 		
-		if( DEBUG_BLOCK_COLOR )
-		{
-			this.mesh.material.color = this.position.block.color;
-		}
 	} // Agent.updateImage
-
+*/
 
 	
 	debugColor(n)
 	{
-		this.mesh.material = AgentDebugMaterial[n];
+//TODO		this.mesh.material = AgentDebugMaterial[n];
 	}
 	
 	
-	image()
-	{
-		var mesh = new THREE.Mesh( agentGeometry, this.material() );
-			
-		mesh.position.set( this.x, this.y, this.z );
-		mesh.scale.set( this.height/1.7, this.height/1.7, this.height/1.7 );
-		
-		//mesh.castShadow = true;
-		if( DEBUG_FOLLOW_AGENT_HEALTH == this.id )
-		{
-			mesh.add( new THREE.ArrowHelper(new THREE.Vector3(0,1,0),new THREE.Vector3(0,0,0),5,0) );
-		}
-		
-		scene.add( mesh );
-
-		if( INFECTION_OVERHEAD_INDICATOR )
-		{
-			var ageMesh = new THREE.Mesh( labelGeometry[Math.round(this.infectionLevel)], mesh.material );
-			mesh.add( ageMesh );
-		}
-		
-		return mesh;
-		
-	} // Agent.image
-
-	
-
 	getRandomAge( )
 	{
 		var index = this.isAdult ? AGENT_AGE_YEARS.max : 17,
@@ -351,76 +270,6 @@ class Agent extends AgentBehaviour
 	} // Agent.generateAgeDistributionArrays
 	
 	
-	
-	material()
-	{
-		var material = new THREE.MeshLambertMaterial( {
-				color: 'crimson',
-		});
-		
-		material.onBeforeCompile = shader => {
-			console.log(shader.vertexShader);
-			console.log(shader.fragmentShader);
-/*
-			shader.vertexShader =
-				shader.vertexShader.replace(
-					'void main() {\n',
-					
-					'varying vec2 vTextureOffset;\n'+
-					'varying vec2 vTextureScale;\n'+
-					'void main() {\n'+
-					'	if (normal.y>0.5)\n'+
-					'	{\n'+
-					'		vTextureScale = vec2(0);\n'+
-					'		vTextureOffset = vec2(0.1);\n'+
-					'	}\n'+
-					'	else\n'+
-					'	{\n'+
-					'		vTextureScale.x = (abs(normal.x)<0.5) ? instanceMatrix[0][0] : instanceMatrix[2][2];\n'+
-					'		vTextureScale.y = instanceMatrix[1][1];\n'+
-					'		vTextureOffset.x = 0.0;\n'+
-					'		vTextureOffset.y = 0.0;\n'+
-					'	}\n'+
-					''
-				);
-
-
-			shader.fragmentShader =
-				shader.fragmentShader.replace(
-					'void main() {\n',
-					
-					'varying vec2 vTextureScale;\n'+
-					'varying vec2 vTextureOffset;\n'+
-					'void main() {\n'
-				);
-		
-			shader.fragmentShader =
-				shader.fragmentShader.replace(
-				  '#include <map_fragment>',
-				  
-				  'vec4 texelColor = texture2D( map, vUv*vTextureScale+vTextureOffset );\n'+
-				  'texelColor = mapTexelToLinear( texelColor );\n'+
-				  'diffuseColor *= texelColor;'
-				);
-				
-			shader.fragmentShader =
-				shader.fragmentShader.replace(
-				  '#include <normal_fragment_maps>',
-				  
-				  'vec3 mapN = texture2D( normalMap, vUv*vTextureScale+vTextureOffset ).xyz * 2.0 - 1.0;\n'+
-				  'mapN.xy *= normalScale;\n'+
-				  'normal = perturbNormal2Arb( -vViewPosition, normal, mapN, faceDirection );\n'
-				);
-*/				
-			//console.log(shader.vertexShader);
-		} // material.onBeforeCompile
-		
-		return material;
-		
-	} // Agent.material
-	
-	
-	
 	infect()
 	{
 		this.infectionLevel = 0;
@@ -458,8 +307,6 @@ export class Child extends Agent
 		this.height = THREE.Math.mapLinear( this.age, 0, 17, AGENT_HEIGHT_CHILD.min, AGENT_HEIGHT_CHILD.max );
 		this.height = this.height * THREE.Math.randFloat( 0.9, 1.1 );
 
-		this.mesh = this.image();
-		
 	} // Child.constructor
 } // Child
 
@@ -476,8 +323,6 @@ export class Adult extends Agent
 
 		this.height = THREE.Math.mapLinear( this.age, 18, 100, AGENT_HEIGHT_ADULT.min, AGENT_HEIGHT_ADULT.max );
 		this.height = this.height * THREE.Math.randFloat( 0.9, 1.1 );
-
-		this.mesh = this.image();
 		
 	} // Adult.constructor
 } // Adult

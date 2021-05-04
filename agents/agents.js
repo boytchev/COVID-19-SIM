@@ -7,7 +7,7 @@
 //
 
 import * as THREE from '../js/three.module.js';
-import {buildings} from '../main.js';
+import {scene, buildings, agents} from '../main.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
 import {INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT} from '../config.js';
@@ -25,7 +25,9 @@ export class Agents
 		this.generateInfections();
 		
 		this.generateAgents( );
-				
+		
+		this.images = this.image( );
+console.log(this.images);				
 		if( DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION ) 
 			this.debugShowAgeDistribution();
 	} // Agents.constructor
@@ -134,7 +136,16 @@ export class Agents
 			{
 				var agent = this.agents[i];
 				agent.update();
-				agent.updateImage();
+				
+				// set agent image position
+				this.images.instanceMatrix.array[i*16+12] = agent.position.x;
+				this.images.instanceMatrix.array[i*16+13] = agent.position.y;
+				this.images.instanceMatrix.array[i*16+14] = agent.position.z;
+				
+				// set agent image infection level
+				this.images.instanceColor.array[i*3] = agent.infectionLevel/100;
+				
+				//agent.updateImage();
 				
 				if( i==DEBUG_FOLLOW_AGENT )
 				{
@@ -187,6 +198,9 @@ export class Agents
 				} // if( DEBUG_AGENT_HEALTH )
 					
 			} // for agents
+
+			this.images.instanceMatrix.needsUpdate = true;
+			this.images.instanceColor.needsUpdate = true;
 
 			if( DEBUG_AGENT_LOCATIONS )
 			{
@@ -269,4 +283,93 @@ export class Agents
 			] ) );
 		}
 	}
+	
+	material()
+	{
+		var material = new THREE.MeshPhongMaterial( {
+				flatShading: true,
+		});
+
+		material.onBeforeCompile = function( shader )
+		{
+//			console.log(shader.vertexShader);
+//			console.log(shader.fragmentShader);
+			
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+					'vec4 diffuseColor = vec4( diffuse, opacity );\n',
+					
+					`
+					float infectionLevel = vColor.r;
+					vec4 diffuseColor;
+					if( infectionLevel>0.01 )
+						diffuseColor = vec4( infectionLevel, 0.2, 1.0-infectionLevel, opacity );
+					else
+						diffuseColor = vec4( 1.0 );
+					
+					`
+				);
+
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+					'#include <color_fragment>\n',
+					
+					''
+				);
+		} // onBeforeCompile
+		
+		return material;
+	}
+	
+	geometry()
+	{
+		var geometry = new THREE.CylinderBufferGeometry( 0.2, 0.4, 1.7, 6, 2 );
+			geometry.translate( 0, 1.7/2, 0 );
+
+		var pos = geometry.getAttribute( 'position' );
+		for( var i=0; i<pos.count; i++ )
+		{
+			var x = pos.getX( i );
+			var y = pos.getY( i );
+			var z = pos.getZ( i );
+			
+			if( y>0.1 && y<1.7 )
+			{
+				pos.setXYZ( i, x/4, 1.4, z/4 );
+			}
+		}
+
+		return geometry;
+	}
+	
+	image()
+	{
+		var instances = this.agents.length;
+		
+		var geometry  = this.geometry(),
+			material  = this.material(),
+			mesh = new THREE.InstancedMesh( geometry, material, instances );
+			
+		mesh.instanceColor = new THREE.InstancedBufferAttribute( new Float32Array(3*instances), 3, false, 1 );
+//		geometry.setAttribute( 'color', colorAttribute );
+
+
+		// create agents matrices
+		var matrix = new THREE.Matrix4();
+		for( var i=0; i<instances; i++ )
+		{
+			var agent = this.agents[i];
+			matrix.makeScale( agent.height/1.7, agent.height/1.7, agent.height/1.7 );
+			matrix.setPosition( agent.position.x, agent.position.y, agent.position.z );
+
+			mesh.setMatrixAt( i, matrix );
+		}
+		
+		mesh.receiveShadow = true;
+		mesh.castShadow = true;
+		
+		scene.add( mesh );
+		return mesh;
+	}
+	
 }

@@ -23,7 +23,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {GROUND_EDGE, GROUND_SIZE, SUBURB_TRESHOLD, BLOCK_PARK, BLOCK_PLAZA, OFFICE_VS_RESIDENTIAL, MAX_FLOORS, FLOOR_HEIGHT, BLOCK_APARTMENTS, BLOCK_HOUSES, DEBUG_BLOCK_WITH_ONLY_PARK, DEBUG_BLOCK_WITH_ONLY_PLAZA, DEBUG_BLOCK_WITH_ONLY_HOUSES, BLOCK_OFFICE, DEBUG_BLOCK_WITH_ONLY_OFFICES, DEBUG_BLOCK_WITH_ONLY_APARTMENTS, AVENUE_TRESHOLD, STREET_WIDTH, BLOCK_SPLIT_TRESHOLD, BLOCK_MARGIN, DEBUG_BLOCK_COLOR, SIDEWALK_WIDTH, URBAN_RURAL, SIDEWALK_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE} from '../config.js';
+import {GROUND_EDGE, GROUND_SIZE, SUBURB_TRESHOLD, BLOCK_PARK, BLOCK_PLAZA, OFFICE_VS_RESIDENTIAL, MAX_FLOORS, FLOOR_HEIGHT, BLOCK_APARTMENTS, BLOCK_HOUSES, DEBUG_BLOCK_WITH_ONLY_PARK, DEBUG_BLOCK_WITH_ONLY_PLAZA, DEBUG_BLOCK_WITH_ONLY_HOUSES, BLOCK_OFFICE, DEBUG_BLOCK_WITH_ONLY_OFFICES, DEBUG_BLOCK_WITH_ONLY_APARTMENTS, AVENUE_TRESHOLD, STREET_WIDTH, BLOCK_SPLIT_TRESHOLD, BLOCK_MARGIN, /*DEBUG_BLOCK_COLOR, */SIDEWALK_WIDTH, URBAN_RURAL, SIDEWALK_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, AVENUE_WIDTH} from '../config.js';
 import {Pos, Zone, round, BOTTOM, RIGHT, LEFT, TOP} from '../core.js';
 import {pick} from '../coreNav.js';
 import {textures, scene} from '../main.js';
@@ -53,6 +53,7 @@ class Block
 		
 		this.agents = []; // array of agents in this block
 		
+		/*
 		if( DEBUG_BLOCK_COLOR )
 		{
 			var r = Math.random()/2+0.5;
@@ -60,6 +61,7 @@ class Block
 			var b = Math.random()/2+0.5;
 			this.color = new THREE.Color().setRGB(r,g,b);
 		}
+		*/
 	} // Block.constructor
 
 	
@@ -301,7 +303,7 @@ export class Blocks
 			this.allTrueBlocks.push( block );
 	
 			// if block with houses, add shrinked park (yard) as overlayed block
-			if( type==BLOCK_HOUSES && !DEBUG_BLOCK_COLOR )
+			if( type==BLOCK_HOUSES /*&& !DEBUG_BLOCK_COLOR*/ )
 			{
 				var yardZone = zone.shrink( SIDEWALK_WIDTH ),
 					yard = new Block( yardZone, type );
@@ -322,10 +324,12 @@ export class Blocks
 		var normals = [];
 		var uvs = [];
 		
+		/*
 		if( DEBUG_BLOCK_COLOR )
 		{
 			var colors = [];
 		}
+		*/
 		
 		var blocks = this[blockType.name];
 
@@ -352,6 +356,7 @@ export class Blocks
 				d.x,d.z, b.x,b.z, c.x,c.z
 			);
 			
+			/*
 			if( DEBUG_BLOCK_COLOR )
 			{
 				colors.push(
@@ -363,11 +368,12 @@ export class Blocks
 					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b
 				);
 			}
+			*/
 		}
 		
 		var material = new NatureMaterial({
 				color: blockType.color,
-				vertexColors: DEBUG_BLOCK_COLOR,
+				/*vertexColors: DEBUG_BLOCK_COLOR,*/
 				map: texture.map( 1/textureScale, 1/textureScale ),
 				depthTest: false,
 				transparent: DEBUG_BLOCKS_OPACITY<1,
@@ -384,12 +390,14 @@ export class Blocks
 			geometry.setAttribute(
 				'uv',
 				new THREE.BufferAttribute(new Float32Array(uvs),2));
+			/*	
 			if( DEBUG_BLOCK_COLOR )
 			{
 				geometry.setAttribute(
 					'color',
 					new THREE.BufferAttribute(new Float32Array(colors),3));
 			}
+			*/
 			
 		var image = new THREE.Mesh(geometry, material);
 			image.updateMatrix();

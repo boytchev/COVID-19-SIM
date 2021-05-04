@@ -56,7 +56,6 @@ export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.
 	camera.position.set( 0.01+0*GROUND_SIZE/0.8, GROUND_SIZE*2, 0 );
 	camera.position.set( GROUND_SIZE/2, GROUND_SIZE/10, GROUND_SIZE/3 );
 	camera.position.set( -GROUND_SIZE/2, GROUND_SIZE/10, GROUND_SIZE/2 );
-	//camera.position.set( 0, 0.26*GROUND_SIZE, 0 );
 			
 export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.maxPolarAngle = Math.PI * 0.495;
@@ -65,7 +64,7 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.enableDamping = true;
 	controls.dampingFactor = 0.25;
 	controls.rotateSpeed = 0.3;
-	controls.panSpeed = 0.25;
+	controls.panSpeed = 0.35;
 	controls.screenSpacePanning = false;
 	controls.target.set( 0, 0, 0 );
 	controls.autoRotate = DEBUG_AUTOROTATE;

@@ -4,19 +4,19 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 200; 				// in meters
+export const GROUND_SIZE = 550; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
 	
 // debug flags
 var R = 1+Math.floor(Math.random()*100000);
-//R = 42807;
+R = 41345;
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 1500;
-export const DEBUG_TIME_SPEED = timeMs(0,0,10)/1000;	// time ellapsed for 1 second
+export const DEBUG_AGENT_MAX_COUNT = 2111;
+export const DEBUG_TIME_SPEED = timeMs(0,0,3)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
@@ -25,13 +25,13 @@ export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.03;
 export const DEBUG_RENDERER_INFO = false;
-export const DEBUG_BUILDINGS_OPACITY = 0/4;	// for buildings and trees
+export const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
 export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 export const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
 export const DEBUG_NAVMESH_SHOW_MESHES = !false;
 export const DEBUG_NAVMESH_SHOW_FLOORS = !false;
-export const DEBUG_NAVMESH_SHOW_LINES = !false;
-export const DEBUG_NAVMESH_SHOW_ELEVATORS = !false;
+export const DEBUG_NAVMESH_SHOW_LINES = false;
+export const DEBUG_NAVMESH_SHOW_ELEVATORS = false;
 export const DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION = false;
 export const DEBUG_SHOW_VIRAL_SHEDDING = false;
 export const DEBUG_HIDE_ROOFS = false;
@@ -46,10 +46,10 @@ export const DEBUG_DUMP_ROUTES = false;
 export const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 export const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
 export const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
-export const DEBUG_AGENT_HEALTH = false; // count infected agents
+export const DEBUG_AGENT_HEALTH = !false; // count infected agents
 export const DEBUG_SUN_POSITION_GUI = false;
-export const DEBUG_BLOCK_COLOR = false;
-export const DEBUG_ALL_WHITE = !false;
+//export const DEBUG_BLOCK_COLOR = false;
+export const DEBUG_ALL_WHITE = false;
 export var DEBUG_FLAG_1 = false;
 
 
@@ -162,8 +162,8 @@ export const TOP_SHADOWS = 1;
 export const FULL_SHADOWS = 2;
 
 
-export const SUN = NO_SUN;
-//export const SUN = STATIC_SUN;
+//export const SUN = NO_SUN;
+export const SUN = STATIC_SUN;
 //export const SUN = DYNAMIC_SUN;
 export const SUNRISE_MS = timeMs(6);
 export const SUNSET_MS = timeMs(18);
@@ -177,9 +177,9 @@ export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 		
 
 
-export const SHADOWS = NO_SHADOWS;
+//export const SHADOWS = NO_SHADOWS;
 //export const SHADOWS = TOP_SHADOWS;
-//export const SHADOWS = FULL_SHADOWS;
+export const SHADOWS = FULL_SHADOWS;
 export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 
@@ -190,15 +190,15 @@ export const START_TIME = timeMs(6);			// start time
 
 export const INFECTION_PATTERNS_COUNT = 10;
 //const INFECTION_TOTAL_MS = new Range( 14*HOURS_24_MS, 28*HOURS_24_MS ); // 14-28 days in ms
-export const INFECTION_TOTAL_MS = new Range( timeMs(0,4), timeMs(0,20) ); // 10-60 min in ms
-export const INFECTION_OVERHEAD_INDICATOR = false;
+export const INFECTION_TOTAL_MS = new Range( timeMs(0), timeMs(1) ); // 40 min - 10 hours
+//export const INFECTION_OVERHEAD_INDICATOR = false;
 export const INFECTION_COLOR_INDICATOR = !false;
 export const INFECTION_DISTANCE = 1; // in meters
 export const INFECTION_STRENGTH = 0.2; // factor of how fast is the infection
 export const IMMUNE_STRENGTH = new Range( 100, 200 );
 export const IMMUNE_RECOVERY_FACTOR = 0.01; // recovery of immune per second
 export const IMMUNE_CURE_FACTOR = new Range( 1.0, 1.2 ); // increase of immunity after cure
-export const PERCENTAGE_INITIAL_INFECTED = 0.5; // 0.01=1%
+export const PERCENTAGE_INITIAL_INFECTED = 0.01; // 0.01=1%
 
 /*
 
