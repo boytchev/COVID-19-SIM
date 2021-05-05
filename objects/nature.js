@@ -27,8 +27,8 @@
 */
 
 import * as THREE from '../js/three.module.js';
-import {DEBUG_TIME_SPEED, START_TIME, HOURS_24_MS, SHADOWS, NO_SHADOWS, SUN, FULL_SHADOWS, GROUND_EDGE, DEBUG_ALL_WHITE, EARTH_SIZE, DEBUG_SHOW_VIRAL_SHEDDING, STATIC_SUN, SHADOWS_MAP_SIZE, STATIC_SUN_POSITION_MS, DEBUG_SUN_POSITION_GUI, SUNRISE_MS, SUNSET_MS, GROUND_SIZE, SUN_SIN, SUN_COS, SHADOWS_MAX_COUNT} from '../config.js';
-import {scene, camera, renderer, guiObject} from '../main.js';
+import {DEBUG_TIME_SPEED, START_TIME, HOURS_24_MS, SHADOWS, NO_SHADOWS, SUN, FULL_SHADOWS, GROUND_EDGE, DEBUG_ALL_WHITE, EARTH_SIZE, DEBUG_SHOW_VIRAL_SHEDDING, STATIC_SUN, SHADOWS_MAP_SIZE, STATIC_SUN_POSITION_MS, DEBUG_SUN_POSITION_GUI, SUNRISE_MS, SUNSET_MS, GROUND_SIZE, SUN_SIN, SUN_COS, SHADOWS_MAX_COUNT, AGENTS_CAST_SHADOWS} from '../config.js';
+import {agents, scene, camera, renderer, guiObject} from '../main.js';
 import {timeMs} from '../core.js';
 
 
@@ -99,7 +99,8 @@ class TopLight extends THREE.DirectionalLight
 			this.shadow.camera.right = GROUND_EDGE;
 			this.shadow.camera.bottom = -GROUND_EDGE;
 			this.shadow.camera.top = GROUND_EDGE;
-			this.shadow.bias = -0.00005;
+			this.shadow.bias = 0.00005;
+			this.shadow.normalBias = 0.00005;
 		}
 		
 		scene.add( this );
@@ -121,13 +122,14 @@ class SunLight extends THREE.DirectionalLight
 			this.castShadow = true;
 			this.shadow.mapSize.width = SHADOWS_MAP_SIZE>>shadowMapShift;
 			this.shadow.mapSize.height = SHADOWS_MAP_SIZE>>shadowMapShift;
-			this.shadow.camera.near = -10000;
+			this.shadow.camera.near = 0;
 			this.shadow.camera.far = 10000;
 			this.shadow.camera.left = -GROUND_SIZE;
 			this.shadow.camera.right = GROUND_SIZE;
 			this.shadow.camera.bottom = -GROUND_SIZE;
 			this.shadow.camera.top = GROUND_SIZE;
-			this.shadow.bias = -0.00005;
+			this.shadow.bias = 0;//0.00001;//-0.001;
+			this.shadow.normalBias = 0.15;//-0.001;
 		}
 		
 		scene.add( this );
@@ -257,6 +259,10 @@ export class Nature
 		
 		// request regeneration of shadows
 		if( SUN!=STATIC_SUN && SHADOWS==FULL_SHADOWS )
+		{	
+			renderer.shadowMap.needsUpdate = true;
+		}
+		if( SHADOWS==FULL_SHADOWS && AGENTS_CAST_SHADOWS && agents.agents.length )
 		{	
 			renderer.shadowMap.needsUpdate = true;
 		}

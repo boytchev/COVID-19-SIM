@@ -10,7 +10,7 @@ import * as THREE from '../js/three.module.js';
 import {scene, buildings, agents} from '../main.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
-import {INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT} from '../config.js';
+import {INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS} from '../config.js';
 
 
 export class Agents
@@ -27,7 +27,7 @@ export class Agents
 		this.generateAgents( );
 		
 		this.images = this.image( );
-console.log(this.images);				
+			
 		if( DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION ) 
 			this.debugShowAgeDistribution();
 	} // Agents.constructor
@@ -83,11 +83,14 @@ console.log(this.images);
 		}
 					
 					
-		// if no agents are created, but there is request to create, create one in a random block
+		// if no agents are created, but there is request to create, create 100 in a random block
 		if( this.agents.length==0 && AGENT_MAX_COUNT )
 		{
-			var agentHome = new BlockAddress( );
-			this.agents.push( new Adult(agentHome) );
+			for( var i=0; i<100; i++ )
+			{
+				var agentHome = new BlockAddress( );
+				this.agents.push( new Adult(agentHome) );
+			}
 		}
 		
 		
@@ -323,8 +326,8 @@ console.log(this.images);
 	
 	geometry()
 	{
-		var geometry = new THREE.CylinderBufferGeometry( 0.2, 0.4, 1.7, 6, 2 );
-			geometry.translate( 0, 1.7/2, 0 );
+		var geometry = new THREE.CylinderBufferGeometry( 0.12, 0.24, 1, 6, 2 );
+			geometry.translate( 0, 0.5, 0 );
 
 		var pos = geometry.getAttribute( 'position' );
 		for( var i=0; i<pos.count; i++ )
@@ -333,9 +336,9 @@ console.log(this.images);
 			var y = pos.getY( i );
 			var z = pos.getZ( i );
 			
-			if( y>0.1 && y<1.7 )
+			if( y>0.1 && y<1 )
 			{
-				pos.setXYZ( i, x/4, 1.4, z/4 );
+				pos.setXYZ( i, x/4, 0.8, z/4 );
 			}
 		}
 
@@ -359,14 +362,14 @@ console.log(this.images);
 		for( var i=0; i<instances; i++ )
 		{
 			var agent = this.agents[i];
-			matrix.makeScale( agent.height/1.7, agent.height/1.7, agent.height/1.7 );
+			matrix.makeScale( agent.height, agent.height, agent.height );
 			matrix.setPosition( agent.position.x, agent.position.y, agent.position.z );
 
 			mesh.setMatrixAt( i, matrix );
 		}
 		
 		mesh.receiveShadow = true;
-		mesh.castShadow = true;
+		if( AGENTS_CAST_SHADOWS ) mesh.castShadow = true;
 		
 		scene.add( mesh );
 		return mesh;

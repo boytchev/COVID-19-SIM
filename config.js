@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 550; 				// in meters
+export const GROUND_SIZE = 240; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -16,7 +16,7 @@ console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
 export const DEBUG_AGENT_MAX_COUNT = 2111;
-export const DEBUG_TIME_SPEED = timeMs(0,0,3)/1000;	// time ellapsed for 1 second
+export const DEBUG_TIME_SPEED = timeMs(0,0,2)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
@@ -46,7 +46,7 @@ export const DEBUG_DUMP_ROUTES = false;
 export const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 export const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
 export const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
-export const DEBUG_AGENT_HEALTH = !false; // count infected agents
+export const DEBUG_AGENT_HEALTH = false; // count infected agents
 export const DEBUG_SUN_POSITION_GUI = false;
 //export const DEBUG_BLOCK_COLOR = false;
 export const DEBUG_ALL_WHITE = false;
@@ -160,6 +160,8 @@ export const DYNAMIC_SUN = 2;
 export const NO_SHADOWS = 0;
 export const TOP_SHADOWS = 1;
 export const FULL_SHADOWS = 2;
+
+export const AGENTS_CAST_SHADOWS = true;
 
 
 //export const SUN = NO_SUN;
