@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 240; 				// in meters
+export const GROUND_SIZE = 250; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -15,12 +15,12 @@ R = 41345;
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 2111;
+export const DEBUG_AGENT_MAX_COUNT = 5000;
 export const DEBUG_TIME_SPEED = timeMs(0,0,2)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
-export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
+export const DEBUG_BLOCK_WITH_ONLY_PARK = !false;
 export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.03;
@@ -161,11 +161,11 @@ export const NO_SHADOWS = 0;
 export const TOP_SHADOWS = 1;
 export const FULL_SHADOWS = 2;
 
-export const AGENTS_CAST_SHADOWS = true;
+export const AGENTS_CAST_SHADOWS = !true;
 
 
-//export const SUN = NO_SUN;
-export const SUN = STATIC_SUN;
+export const SUN = NO_SUN;
+//export const SUN = STATIC_SUN;
 //export const SUN = DYNAMIC_SUN;
 export const SUNRISE_MS = timeMs(6);
 export const SUNSET_MS = timeMs(18);
@@ -179,9 +179,9 @@ export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 		
 
 
-//export const SHADOWS = NO_SHADOWS;
+export const SHADOWS = NO_SHADOWS;
 //export const SHADOWS = TOP_SHADOWS;
-export const SHADOWS = FULL_SHADOWS;
+//export const SHADOWS = FULL_SHADOWS;
 export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 

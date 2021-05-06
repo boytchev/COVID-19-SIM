@@ -10,6 +10,7 @@ import * as THREE from '../js/three.module.js';
 import {scene, buildings, agents} from '../main.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
+import {frame, dayTimeMs} from '../objects/nature.js';
 import {INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS} from '../config.js';
 
 
@@ -86,7 +87,7 @@ export class Agents
 		// if no agents are created, but there is request to create, create 100 in a random block
 		if( this.agents.length==0 && AGENT_MAX_COUNT )
 		{
-			for( var i=0; i<100; i++ )
+			for( var i=0; i<AGENT_MAX_COUNT; i++ )
 			{
 				var agentHome = new BlockAddress( );
 				this.agents.push( new Adult(agentHome) );
@@ -119,6 +120,8 @@ export class Agents
 
 	update()
 	{
+		this.images.material.uniforms.uTime.value = (dayTimeMs/400)%(40*2*Math.PI);
+
 		if( this.agents.length )
 		{	
 			if( DEBUG_AGENT_LOCATIONS )
@@ -147,6 +150,7 @@ export class Agents
 				
 				// set agent image infection level
 				this.images.instanceColor.array[i*3] = agent.infectionLevel/100;
+				this.images.instanceColor.array[i*3+1] = i;
 				
 				//agent.updateImage();
 				
@@ -289,6 +293,93 @@ export class Agents
 	
 	material()
 	{
+		var uniforms = THREE.UniformsUtils.merge([
+			THREE.ShaderLib.phong.uniforms,
+			{ diffuse: { value: new THREE.Color(0,1,0) } },
+			{ flatShadint: { value: true } },
+			{ uTime: { value: 1.0 } },
+		]);
+		
+		var vertexShader = THREE.ShaderLib.phong.vertexShader,
+			fragmentShader = THREE.ShaderLib.phong.fragmentShader;
+		
+		vertexShader =
+				vertexShader.replace(
+					'#include <common>',
+					
+					`
+					uniform float uTime;
+					#include <common>
+					`
+				);
+				
+		vertexShader =
+				vertexShader.replace(
+					'#include <begin_vertex>',
+					
+					`
+					#include <begin_vertex>
+					float time = uTime + instanceColor.g;
+					if( transformed.y<0.5 )
+					{
+						float s = 2.0*abs( mod( time/2.0, 2.0 ) - 1.0 ) - 1.0;
+						if( transformed.x>0.1 )
+						{
+							transformed.z += 0.2*s;
+						} else
+						if( transformed.x<-0.1 )
+						{
+							transformed.z -= 0.2*s;
+						} else
+						{
+							transformed.y = 0.5;
+						}
+					} // y<0.5
+					transformed.z += mod( time/5.0, 120.0 );
+					`
+				);
+				
+		fragmentShader =
+				fragmentShader.replace(
+					'#include <common>',
+					
+					`
+					uniform float uTime;
+					#include <common>
+					`
+				);
+				
+		fragmentShader =
+				fragmentShader.replace(
+					'vec4 diffuseColor = vec4( diffuse, opacity );\n',
+					
+					`
+					float infectionLevel = vColor.r;
+					vec4 diffuseColor;
+					if( infectionLevel>0.01 )
+						diffuseColor = vec4( infectionLevel, 0.2, 1.0-infectionLevel, opacity );
+					else
+						diffuseColor = vec4( 1.0 );
+					`
+				);
+
+		fragmentShader =
+				fragmentShader.replace(
+					'#include <color_fragment>\n',
+					
+					''
+				);
+
+		var material = new THREE.ShaderMaterial( {
+			uniforms: uniforms,
+			vertexShader: vertexShader,
+			fragmentShader: fragmentShader,
+			lights: true,
+		});
+		
+		material.defines = {FLAT_SHADED: true}
+		
+	/*	
 		var material = new THREE.MeshPhongMaterial( {
 				flatShading: true,
 		});
@@ -300,6 +391,16 @@ export class Agents
 			
 			shader.fragmentShader =
 				shader.fragmentShader.replace(
+					'#include <common>',
+					
+					`
+					float uTime;
+					#include <common>
+					`
+				);
+
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
 					'vec4 diffuseColor = vec4( diffuse, opacity );\n',
 					
 					`
@@ -309,7 +410,7 @@ export class Agents
 						diffuseColor = vec4( infectionLevel, 0.2, 1.0-infectionLevel, opacity );
 					else
 						diffuseColor = vec4( 1.0 );
-					
+					diffuseColor.g = 1.0;
 					`
 				);
 
@@ -320,7 +421,7 @@ export class Agents
 					''
 				);
 		} // onBeforeCompile
-		
+		*/
 		return material;
 	}
 	
@@ -370,7 +471,7 @@ export class Agents
 		
 		mesh.receiveShadow = true;
 		if( AGENTS_CAST_SHADOWS ) mesh.castShadow = true;
-		
+				
 		scene.add( mesh );
 		return mesh;
 	}
