@@ -322,7 +322,7 @@ export class Agents
 					float time = uTime + instanceColor.g;
 					if( transformed.y<0.5 )
 					{
-						float s = 2.0*abs( mod( time/2.0, 2.0 ) - 1.0 ) - 1.0;
+						float s = 2.0*abs( mod( time/1.0, 2.0 ) - 1.0 ) - 1.0;
 						if( transformed.x>0.1 )
 						{
 							transformed.z += 0.2*s;
@@ -335,7 +335,7 @@ export class Agents
 							transformed.y = 0.5;
 						}
 					} // y<0.5
-					transformed.z += mod( time/5.0, 120.0 );
+					//transformed.z += mod( time/5.0, 120.0 );
 					`
 				);
 				
