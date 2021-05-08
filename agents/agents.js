@@ -31,7 +31,7 @@ export class Agents
 		this.generateAgents( );
 		
 		this.images = this.image( );
-			
+
 		if( DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION ) 
 			this.debugShowAgeDistribution();
 	} // Agents.constructor
@@ -152,8 +152,9 @@ export class Agents
 				this.images.instanceMatrix.array[i*16+14] = agent.position.z;
 				
 				// set agent image infection level
-				this.images.instanceColor.array[i*3] = agent.infectionLevel/100;
-				this.images.instanceColor.array[i*3+1] = i;
+				//this.images.instanceColor.array[i*3] = agent.infectionLevel/100;
+				//this.images.instanceColor.array[i*3+1] = i;
+				this.images.infectionLevel.array[i] = agent.infectionLevel/100;
 				
 				//agent.updateImage();
 				
@@ -210,7 +211,8 @@ export class Agents
 			} // for agents
 
 			this.images.instanceMatrix.needsUpdate = true;
-			this.images.instanceColor.needsUpdate = true;
+			//this.images.instanceColor.needsUpdate = true;
+			this.images.infectionLevel.needsUpdate = true;
 
 			if( DEBUG_AGENT_LOCATIONS )
 			{
@@ -298,8 +300,8 @@ export class Agents
 	{
 		var uniforms = THREE.UniformsUtils.merge([
 			THREE.ShaderLib.phong.uniforms,
-			{ diffuse: { value: new THREE.Color(0,1,0) } },
-			{ uTime: { value: 1.0 } },
+			{ diffuse: { value: new THREE.Color(0,1,1) } },
+			{ uTime: { value: 0 } },
 		]);
 		
 		var material = new THREE.ShaderMaterial( {
@@ -307,6 +309,7 @@ export class Agents
 			vertexShader: vertexShader,
 			fragmentShader: fragmentShader,
 			lights: true,
+//			vertexColors: true,
 		});
 		
 		material.defines = {FLAT_SHADED: true}
@@ -316,10 +319,12 @@ export class Agents
 	
 	geometry()
 	{
-		var geometry = new THREE.CylinderBufferGeometry( 0.12, 0.24, 1, 6, 2 );
+		var geometry = new THREE.CylinderBufferGeometry( 0.12, 0.24, 1, 16, 12 );
 			geometry.translate( 0, 0.5, 0 );
 
 		var pos = geometry.getAttribute( 'position' );
+		//var	colors = [];
+		
 		for( var i=0; i<pos.count; i++ )
 		{
 			var x = pos.getX( i );
@@ -330,8 +335,18 @@ export class Agents
 			{
 				pos.setXYZ( i, x/4, 0.8, z/4 );
 			}
+			
+			//colors.push( Math.random(), Math.random(), Math.random() );
 		}
 
+		geometry.setAttribute(
+			'infectionLevel',
+			new THREE.InstancedBufferAttribute(new Float32Array(pos.count), 1, false, 1));
+		
+		//geometry.setAttribute(
+		//	'aVertexColor',
+		//	new THREE.BufferAttribute(new Float32Array(colors), 3));
+	  
 		return geometry;
 	}
 	
@@ -342,9 +357,9 @@ export class Agents
 		var geometry  = this.geometry(),
 			material  = this.material(),
 			mesh = new THREE.InstancedMesh( geometry, material, instances );
-			
-		mesh.instanceColor = new THREE.InstancedBufferAttribute( new Float32Array(3*instances), 3, false, 1 );
-//		geometry.setAttribute( 'color', colorAttribute );
+
+		//mesh.instanceColor = new THREE.InstancedBufferAttribute( new Float32Array(3*instances), 3, false, 1 );
+		mesh.infectionLevel = geometry.getAttribute( 'infectionLevel' );
 
 
 		// create agents matrices

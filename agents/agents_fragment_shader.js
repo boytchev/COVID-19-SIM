@@ -16,6 +16,8 @@ uniform float opacity;
 
 #ifdef COVID19SYM
 	uniform float uTime;
+	//varying vec3 vVertexColor;
+	varying float vInfectionLevel;
 #endif
 
 #include <common>
@@ -50,15 +52,16 @@ void main() {
 vec4 diffuseColor = vec4( diffuse, opacity );
 
 #ifdef COVID19SYM
-	float infectionLevel = vColor.r;
-	if( infectionLevel>0.01 )
-		diffuseColor = vec4( infectionLevel, 0.2, 1.0-infectionLevel, opacity );
-	else
-		diffuseColor = vec4( 1.0 );
+	//float infectionLevel = vColor.r;
+	diffuseColor = vec4( 1.0, 1.0-vInfectionLevel, 1.0-vInfectionLevel, opacity );
+
+	//diffuseColor = vec4(vVertexColor,1.0);
 #endif
+
 
 	ReflectedLight reflectedLight = ReflectedLight( vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ), vec3( 0.0 ) );
 	vec3 totalEmissiveRadiance = emissive;
+	
 	#include <logdepthbuf_fragment>
 	#include <map_fragment>
 
@@ -77,9 +80,13 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	#include <lights_fragment_maps>
 	#include <lights_fragment_end>
 	#include <aomap_fragment>
+
 	vec3 outgoingLight = reflectedLight.directDiffuse + reflectedLight.indirectDiffuse + reflectedLight.directSpecular + reflectedLight.indirectSpecular + totalEmissiveRadiance;
+	
 	#include <envmap_fragment>
+	
 	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+	
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>
 	#include <fog_fragment>

@@ -4,20 +4,20 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 250; 				// in meters
+export const GROUND_SIZE = 150; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
 	
 // debug flags
 var R = 1+Math.floor(Math.random()*100000);
-R = 41345;
+//R = 41345;
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 1000;
-export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
-export const DEBUG_BLOCK_WITH_ONLY_HOUSES = !false;
+export const DEBUG_AGENT_MAX_COUNT = 10000;
+export const DEBUG_TIME_SPEED = timeMs(0,0,20)/1000;	// time ellapsed for 1 second
+export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
@@ -25,7 +25,7 @@ export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.03;
 export const DEBUG_RENDERER_INFO = false;
-export const DEBUG_BUILDINGS_OPACITY = 1/4;	// for buildings and trees
+export const DEBUG_BUILDINGS_OPACITY = 0/4;	// for buildings and trees
 export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 export const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
 export const DEBUG_NAVMESH_SHOW_MESHES = !false;
@@ -192,13 +192,13 @@ export const START_TIME = timeMs(6);			// start time
 
 export const INFECTION_PATTERNS_COUNT = 10;
 //const INFECTION_TOTAL_MS = new Range( 14*HOURS_24_MS, 28*HOURS_24_MS ); // 14-28 days in ms
-export const INFECTION_TOTAL_MS = new Range( timeMs(0), timeMs(1) ); // 40 min - 10 hours
+export const INFECTION_TOTAL_MS = new Range( timeMs(0), timeMs(10) ); // 40 min - 10 hours
 //export const INFECTION_OVERHEAD_INDICATOR = false;
 export const INFECTION_COLOR_INDICATOR = !false;
 export const INFECTION_DISTANCE = 1; // in meters
-export const INFECTION_STRENGTH = 0.2; // factor of how fast is the infection
+export const INFECTION_STRENGTH = 0.5; // factor of how fast is the infection
 export const IMMUNE_STRENGTH = new Range( 100, 200 );
-export const IMMUNE_RECOVERY_FACTOR = 0.01; // recovery of immune per second
+export const IMMUNE_RECOVERY_FACTOR = 0.003; // recovery of immune per second
 export const IMMUNE_CURE_FACTOR = new Range( 1.0, 1.2 ); // increase of immunity after cure
 export const PERCENTAGE_INITIAL_INFECTED = 0.01; // 0.01=1%
 

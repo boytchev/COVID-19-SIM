@@ -15,6 +15,10 @@ varying vec3 vViewPosition;
 
 #ifdef COVID19SYM
 	uniform float uTime;
+	//attribute vec3 aVertexColor;
+	//varying vec3 vVertexColor;
+	attribute float infectionLevel;
+	varying float vInfectionLevel;
 #endif
 
 #include <common>
@@ -46,7 +50,10 @@ void main() {
 	#include <begin_vertex>
 
 #ifdef COVID19SYM
-	float time = uTime + instanceColor.g;
+	//vVertexColor = aVertexColor;
+	vInfectionLevel = infectionLevel;
+
+	float time = uTime;// + instanceColor.g;
 	if( transformed.y<0.5 )
 	{
 		float s = 2.0*abs( mod( time/1.0, 2.0 ) - 1.0 ) - 1.0;
