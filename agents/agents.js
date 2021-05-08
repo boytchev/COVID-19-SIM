@@ -13,6 +13,9 @@ import {Address, BlockAddress} from './address.js';
 import {frame, dayTimeMs} from '../objects/nature.js';
 import {INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS} from '../config.js';
 
+import vertexShader from './agents_vertex_shader.js';
+import fragmentShader from './agents_fragment_shader.js';
+
 
 export class Agents
 {
@@ -296,80 +299,9 @@ export class Agents
 		var uniforms = THREE.UniformsUtils.merge([
 			THREE.ShaderLib.phong.uniforms,
 			{ diffuse: { value: new THREE.Color(0,1,0) } },
-			{ flatShadint: { value: true } },
 			{ uTime: { value: 1.0 } },
 		]);
 		
-		var vertexShader = THREE.ShaderLib.phong.vertexShader,
-			fragmentShader = THREE.ShaderLib.phong.fragmentShader;
-		
-		vertexShader =
-				vertexShader.replace(
-					'#include <common>',
-					
-					`
-					uniform float uTime;
-					#include <common>
-					`
-				);
-				
-		vertexShader =
-				vertexShader.replace(
-					'#include <begin_vertex>',
-					
-					`
-					#include <begin_vertex>
-					float time = uTime + instanceColor.g;
-					if( transformed.y<0.5 )
-					{
-						float s = 2.0*abs( mod( time/1.0, 2.0 ) - 1.0 ) - 1.0;
-						if( transformed.x>0.1 )
-						{
-							transformed.z += 0.2*s;
-						} else
-						if( transformed.x<-0.1 )
-						{
-							transformed.z -= 0.2*s;
-						} else
-						{
-							transformed.y = 0.5;
-						}
-					} // y<0.5
-					//transformed.z += mod( time/5.0, 120.0 );
-					`
-				);
-				
-		fragmentShader =
-				fragmentShader.replace(
-					'#include <common>',
-					
-					`
-					uniform float uTime;
-					#include <common>
-					`
-				);
-				
-		fragmentShader =
-				fragmentShader.replace(
-					'vec4 diffuseColor = vec4( diffuse, opacity );\n',
-					
-					`
-					float infectionLevel = vColor.r;
-					vec4 diffuseColor;
-					if( infectionLevel>0.01 )
-						diffuseColor = vec4( infectionLevel, 0.2, 1.0-infectionLevel, opacity );
-					else
-						diffuseColor = vec4( 1.0 );
-					`
-				);
-
-		fragmentShader =
-				fragmentShader.replace(
-					'#include <color_fragment>\n',
-					
-					''
-				);
-
 		var material = new THREE.ShaderMaterial( {
 			uniforms: uniforms,
 			vertexShader: vertexShader,
@@ -379,49 +311,6 @@ export class Agents
 		
 		material.defines = {FLAT_SHADED: true}
 		
-	/*	
-		var material = new THREE.MeshPhongMaterial( {
-				flatShading: true,
-		});
-
-		material.onBeforeCompile = function( shader )
-		{
-//			console.log(shader.vertexShader);
-//			console.log(shader.fragmentShader);
-			
-			shader.fragmentShader =
-				shader.fragmentShader.replace(
-					'#include <common>',
-					
-					`
-					float uTime;
-					#include <common>
-					`
-				);
-
-			shader.fragmentShader =
-				shader.fragmentShader.replace(
-					'vec4 diffuseColor = vec4( diffuse, opacity );\n',
-					
-					`
-					float infectionLevel = vColor.r;
-					vec4 diffuseColor;
-					if( infectionLevel>0.01 )
-						diffuseColor = vec4( infectionLevel, 0.2, 1.0-infectionLevel, opacity );
-					else
-						diffuseColor = vec4( 1.0 );
-					diffuseColor.g = 1.0;
-					`
-				);
-
-			shader.fragmentShader =
-				shader.fragmentShader.replace(
-					'#include <color_fragment>\n',
-					
-					''
-				);
-		} // onBeforeCompile
-		*/
 		return material;
 	}
 	
