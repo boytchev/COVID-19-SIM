@@ -18,6 +18,7 @@ varying vec3 vViewPosition;
 	//attribute vec3 aVertexColor;
 	//varying vec3 vVertexColor;
 	attribute float infectionLevel;
+	attribute float agentId;
 	varying float vInfectionLevel;
 #endif
 
@@ -53,10 +54,11 @@ void main() {
 	//vVertexColor = aVertexColor;
 	vInfectionLevel = infectionLevel;
 
-	float time = uTime;// + instanceColor.g;
+	float time = uTime + agentId/100.0;
 	if( transformed.y<0.5 )
 	{
 		float s = 2.0*abs( mod( time/1.0, 2.0 ) - 1.0 ) - 1.0;
+		
 		if( transformed.x>0.1 )
 		{
 			transformed.z += 0.2*s;
@@ -66,7 +68,7 @@ void main() {
 			transformed.z -= 0.2*s;
 		} else
 		{
-			transformed.y = 0.5;
+			transformed.y = 0.3;
 		}
 	} // y<0.5
 	//transformed.z += mod( time/5.0, 120.0 );

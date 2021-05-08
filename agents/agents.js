@@ -123,7 +123,7 @@ export class Agents
 
 	update()
 	{
-		this.images.material.uniforms.uTime.value = (dayTimeMs/400)%(40*2*Math.PI);
+		this.images.material.uniforms.uTime.value = (dayTimeMs/400);
 
 		if( this.agents.length )
 		{	
@@ -342,6 +342,12 @@ export class Agents
 		geometry.setAttribute(
 			'infectionLevel',
 			new THREE.InstancedBufferAttribute(new Float32Array(pos.count), 1, false, 1));
+
+		var id = [];
+		for( var i=0; i<this.agents.length; i++ ) id.push( i );
+		geometry.setAttribute(
+			'agentId',
+			new THREE.InstancedBufferAttribute(new Float32Array(id), 1, false, 1));
 		
 		//geometry.setAttribute(
 		//	'aVertexColor',
@@ -361,6 +367,7 @@ export class Agents
 		//mesh.instanceColor = new THREE.InstancedBufferAttribute( new Float32Array(3*instances), 3, false, 1 );
 		mesh.infectionLevel = geometry.getAttribute( 'infectionLevel' );
 
+//console.log(geometry.getAttribute('agentId').array);
 
 		// create agents matrices
 		var matrix = new THREE.Matrix4();
