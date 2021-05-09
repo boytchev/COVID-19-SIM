@@ -53,7 +53,7 @@ void main() {
 #ifdef COVID19SYM
 	//vVertexColor = aVertexColor;
 	vInfectionLevel = infectionLevel;
-
+/*
 	float time = uTime + agentId/100.0;
 	if( transformed.y<0.5 )
 	{
@@ -71,6 +71,7 @@ void main() {
 			transformed.y = 0.3;
 		}
 	} // y<0.5
+*/	
 	//transformed.z += mod( time/5.0, 120.0 );
 #endif
 

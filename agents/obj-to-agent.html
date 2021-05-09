@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Converter from OBJ to internal agent format</title>
+	<meta charset="utf-8">
+
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<meta name="description" content="COVID-19 Simulator">
+	<meta name="keywords" content="COVID-19, Coronavirus, SARS-CoV-2, Coronavirus disease 2019, Simulator">
+	<meta name="author" content="Pavel Boytchev">
+	<meta name="version" content="1.1">
+	<meta name="date" content="2021.04.28">
+</head>
+
+<body>
+	<div id="code"></div>
+	<script type="module">
+		import objSource from './agents_model_obj.js';
+		
+		var obj = objSource;
+			obj = obj.replace(/\n/g, " ");
+			obj = obj.split(' ');
+		
+		var minY = 0,
+			maxY = 0;
+			
+		for( var i=0; i<obj.length; i++ )
+		{
+			if( obj[i]=='v' )
+			{
+				var y = parseFloat(obj[i+2]);
+				maxY = Math.max( y, maxY );
+				minY = Math.min( y, minY );
+				i += 3;
+			}
+		}
+		console.log('minY='+minY,'maxY='+maxY);
+		
+		function rescale( value )
+		{
+			// maps [minY,maxY] to [0,1]
+			return ((parseFloat(value)-minY)/(maxY-minY) );
+		}
+		
+		function parse( value )
+		{
+			return parseFloat(value);
+		}
+		
+		
+		var result = '',
+			vertices = [{}],
+			normals = [{}],
+			faces = [];
+			
+		// process data
+		for( var i=0; i<obj.length; i++ )
+		{
+			if( obj[i]=='v' )
+			{
+				vertices.push( {x:rescale(obj[i+1]), y:rescale(obj[i+2]), z:rescale(obj[i+3])} );
+				i += 3;
+			}
+			else if( obj[i]=='vt' )
+			{
+				i += 2;
+			}
+			else if( obj[i]=='vn' )
+			{
+				normals.push( {x:parse(obj[i+1]), y:parse(obj[i+2]), z:parse(obj[i+3])} );
+				i += 3;
+			}
+			else if( obj[i]=='f' )
+			{
+				var f1 = obj[i+1].split('/'),
+					f2 = obj[i+2].split('/'),
+					f3 = obj[i+3].split('/');
+				
+				faces.push( {v1:f1[0], n1:f1[2], v2:f2[0], n2:f2[2], v3:f3[0], n3:f3[2]} );
+				i += 3;
+			}
+		}
+		
+		function string(v,n=3)
+		{
+			return v.x.toFixed(n)+', '+v.y.toFixed(n)+', '+v.z.toFixed(n)+', ';
+		}
+		
+		// generate vertex data
+		result += 'vertexData = [';
+		for( var i=0; i<faces.length; i++ )
+		{
+			result += string( vertices[faces[i].v1] );
+			result += string( vertices[faces[i].v2] );
+			result += string( vertices[faces[i].v3] );
+		}
+		result = result.slice(0, -2); // remove last ", "
+		result += '];<br><br>';
+		
+		// generate normal data
+		result += 'normalData = [';
+		for( var i=0; i<faces.length; i++ )
+		{
+			result += string( normals[faces[i].n1] );
+			result += string( normals[faces[i].n2] );
+			result += string( normals[faces[i].n3] );
+		}
+		result = result.slice(0, -2); // remove last ", "
+		result += '];<br><br>';
+
+		document.getElementById('code').innerHTML = result;
+	</script>
+</body>
+</html>
