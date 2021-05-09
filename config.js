@@ -11,13 +11,13 @@ export const EARTH_SIZE = 50000;
 	
 // debug flags
 var R = 1+Math.floor(Math.random()*100000);
-//R = 41345;
+R = 83330;
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 2400;
+export const DEBUG_AGENT_MAX_COUNT = 0;
 export const DEBUG_TIME_SPEED = timeMs(0,0,2)/1000;	// time ellapsed for 1 second
-export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
+export const DEBUG_BLOCK_WITH_ONLY_HOUSES = !false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
@@ -47,7 +47,7 @@ export const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 export const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
 export const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
 export const DEBUG_AGENT_HEALTH = false; // count infected agents
-export const DEBUG_SUN_POSITION_GUI = false;
+export const DEBUG_SUN_POSITION_GUI = !false;
 //export const DEBUG_BLOCK_COLOR = false;
 export const DEBUG_ALL_WHITE = false;
 export var DEBUG_FLAG_1 = false;

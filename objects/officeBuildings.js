@@ -462,8 +462,8 @@ export class OfficeBuildings
 				mesh = new THREE.InstancedMesh( geometry, material, instances );
 			for( var i=0; i<instances; i++ )
 			{
-				matrix.makeScale( offices[i].size.x-0.1, offices[i].height, offices[i].size.z-0.1 );
-				matrix.setPosition( offices[i].center.x, -4, offices[i].center.z );
+				matrix.makeScale( offices[i].size.x-0.2, offices[i].height-0.1, offices[i].size.z-0.2 );
+				matrix.setPosition( offices[i].center.x, -0.1, offices[i].center.z );
 				mesh.setMatrixAt( i, matrix );
 			}
 			mesh.castShadow = true;

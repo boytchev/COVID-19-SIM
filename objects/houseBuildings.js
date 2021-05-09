@@ -621,13 +621,13 @@ export class HouseBuildings
 				var house = houses[h];
 				
 				// wing A
-				matrix.makeScale( house.wingA.size.x-0.1, 5, house.wingA.size.z-0.1 );
-				matrix.setPosition( house.wingA.center.x, -3, house.wingA.center.z );
+				matrix.makeScale( house.wingA.size.x-0.2, house.wingA.height-0.1, house.wingA.size.z-0.2 );
+				matrix.setPosition( house.wingA.center.x, -0.1, house.wingA.center.z );
 				mesh.setMatrixAt( i, matrix );
 				
 				// wing B
-				matrix.makeScale( house.wingB.size.x-0.1, 5, house.wingB.size.z-0.1 );
-				matrix.setPosition( house.wingB.center.x, -3, house.wingB.center.z );
+				matrix.makeScale( house.wingB.size.x-0.2, house.wingB.height-0.1, house.wingB.size.z-0.2 );
+				matrix.setPosition( house.wingB.center.x, -0.1, house.wingB.center.z );
 				mesh.setMatrixAt( i+1, matrix );
 			}
 			mesh.castShadow = true;
