@@ -106,6 +106,8 @@ export class Address
 		else
 		{
 			position = this.block.randomPos();
+			position.z = 0;
+			position.x = poss; poss+=0.5;
 		}
 		
 		if( this.building )
@@ -116,7 +118,7 @@ export class Address
 	} // Address.randomPos
 } // Address
 	
-	
+	var poss = -4.5;
 	
 class SimpleWorkAddress extends Address
 {

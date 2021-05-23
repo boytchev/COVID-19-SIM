@@ -62,7 +62,7 @@ const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(0,10) );	// in millis
 
 
 const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,1), timeMs(6,0,2) );	// in milliseconds (05:30-07:00)
-const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,0), timeMs(6,1,0) );		// in milliseconds (06:00-08:00)
+const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,0), timeMs(6,2,0) );		// in milliseconds (06:00-08:00)
 
 
 

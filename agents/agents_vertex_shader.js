@@ -15,10 +15,11 @@ varying vec3 vViewPosition;
 
 #ifdef COVID19SYM
 	uniform float uTime;
-	//attribute vec3 aVertexColor;
+	attribute int aVertexTopology;
 	//varying vec3 vVertexColor;
 	attribute float infectionLevel;
 	attribute float agentId;
+	attribute float agentHeight;
 	varying float vInfectionLevel;
 #endif
 
@@ -53,6 +54,27 @@ void main() {
 #ifdef COVID19SYM
 	//vVertexColor = aVertexColor;
 	vInfectionLevel = infectionLevel;
+	
+
+
+float from = 0.863;
+float to = 1.0 - (1.0-from)*1.7/agentHeight;
+//to = from;
+
+if(aVertexTopology==1)
+{
+	transformed.x = transformed.x * (1.0-to)/(1.0-from);
+	transformed.z = transformed.z * (1.0-to)/(1.0-from);
+	transformed.y = 1.0-(1.0-transformed.y)*(1.0-to)/(1.0-from);
+}
+else
+{
+	transformed.x = transformed.x*to/from;
+	transformed.y = transformed.y*to/from;
+	transformed.z = transformed.z*to/from;
+}
+	
+
 /*
 	float time = uTime + agentId/100.0;
 	if( transformed.y<0.5 )

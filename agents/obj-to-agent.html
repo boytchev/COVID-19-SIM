@@ -50,9 +50,9 @@
 		}
 		
 		
-		var result = '',
-			vertices = [{}],
+		var vertices = [{}],
 			normals = [{}],
+			uvs = [{}],
 			faces = [];
 			
 		// process data
@@ -65,6 +65,7 @@
 			}
 			else if( obj[i]=='vt' )
 			{
+				uvs.push( {x:parse(obj[i+1]), y:parse(obj[i+2])} );
 				i += 2;
 			}
 			else if( obj[i]=='vn' )
@@ -88,29 +89,70 @@
 			return v.x.toFixed(n)+', '+v.y.toFixed(n)+', '+v.z.toFixed(n)+', ';
 		}
 		
+		function string2(v,n=3)
+		{
+			return v.x.toFixed(n)+', '+v.y.toFixed(n)+', ';
+		}
+		
+		function topology(v)
+		{
+			// head
+			if( v.y>=0.863 )
+				return '1, ';
+				
+			// neck
+			if( v.y>=0.830 )
+				return '2, ';
+				
+			// body
+			return '3, ';
+		}
+		
 		// generate vertex data
-		result += 'vertexData = [';
+		var vertexData = 'var vertexData = [';
 		for( var i=0; i<faces.length; i++ )
 		{
-			result += string( vertices[faces[i].v1] );
-			result += string( vertices[faces[i].v2] );
-			result += string( vertices[faces[i].v3] );
+			vertexData += string( vertices[faces[i].v1] );
+			vertexData += string( vertices[faces[i].v2] );
+			vertexData += string( vertices[faces[i].v3] );
 		}
-		result = result.slice(0, -2); // remove last ", "
-		result += '];<br><br>';
+		vertexData = vertexData.slice(0, -2); // remove last ", "
+		vertexData += '];<br><br>';
 		
 		// generate normal data
-		result += 'normalData = [';
+		var normalData = 'var normalData = [';
 		for( var i=0; i<faces.length; i++ )
 		{
-			result += string( normals[faces[i].n1] );
-			result += string( normals[faces[i].n2] );
-			result += string( normals[faces[i].n3] );
+			normalData += string( normals[faces[i].n1] );
+			normalData += string( normals[faces[i].n2] );
+			normalData += string( normals[faces[i].n3] );
 		}
-		result = result.slice(0, -2); // remove last ", "
-		result += '];<br><br>';
-
-		document.getElementById('code').innerHTML = result;
+		normalData = normalData.slice(0, -2); // remove last ", "
+		normalData += '];<br><br>';
+/*
+		// generate texture data
+		var textureData = 'var textureData = [';
+		for( var i=0; i<faces.length; i++ )
+		{
+			textureData += string2( uvs[faces[i].v1] );
+			textureData += string2( uvs[faces[i].v2] );
+			textureData += string2( uvs[faces[i].v3] );
+		}
+		textureData = textureData.slice(0, -2); // remove last ", "
+		textureData += '];<br><br>';
+*/
+		// generate topology data
+		var topologyData = 'var topologyData = [';
+		for( var i=0; i<faces.length; i++ )
+		{
+			topologyData += topology( vertices[faces[i].v1] );
+			topologyData += topology( vertices[faces[i].v2] );
+			topologyData += topology( vertices[faces[i].v3] );
+		}
+		topologyData = topologyData.slice(0, -2); // remove last ", "
+		topologyData += '];<br><br>';
+		
+		document.getElementById('code').innerHTML = vertexData + normalData + /*textureData +*/ topologyData;
 	</script>
 </body>
 </html>

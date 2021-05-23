@@ -4,24 +4,24 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 350; 				// in meters
+export const GROUND_SIZE = 10; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
 	
 // debug flags
 var R = 1+Math.floor(Math.random()*100000);
-R = 83330;
+R = 63655;
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 0;
-export const DEBUG_TIME_SPEED = timeMs(0,0,2)/1000;	// time ellapsed for 1 second
-export const DEBUG_BLOCK_WITH_ONLY_HOUSES = !false;
+export const DEBUG_AGENT_MAX_COUNT = 10;
+export const DEBUG_TIME_SPEED = timeMs(0,0,5)/1000;	// time ellapsed for 1 second
+export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
-export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
+export const DEBUG_BLOCK_WITH_ONLY_PLAZA = !false;
 export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.03;
 export const DEBUG_RENDERER_INFO = false;
@@ -47,7 +47,7 @@ export const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 export const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
 export const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
 export const DEBUG_AGENT_HEALTH = false; // count infected agents
-export const DEBUG_SUN_POSITION_GUI = !false;
+export const DEBUG_SUN_POSITION_GUI = false;
 //export const DEBUG_BLOCK_COLOR = false;
 export const DEBUG_ALL_WHITE = false;
 export var DEBUG_FLAG_1 = false;
@@ -146,7 +146,7 @@ export const AGENT_MAX_COUNT = DEBUG_AGENT_MAX_COUNT;			// max number of virtual
 export const AGENT_WALKING_SPEED = new Range( 0.8, 2.0 );		// in meters/second
 export const AGENT_AGE_YEARS = new Range( 0, 100 );			// in years
 export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
-export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.5 );		// in meters
+export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
 export const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
 export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );
 export const AGENT_ADULTS_PER_APARTMENT = new Range( 1, 3 );
@@ -169,7 +169,7 @@ export const SUN = STATIC_SUN;
 //export const SUN = DYNAMIC_SUN;
 export const SUNRISE_MS = timeMs(6);
 export const SUNSET_MS = timeMs(18);
-export const STATIC_SUN_POSITION_MS = timeMs(8,30);
+export const STATIC_SUN_POSITION_MS = timeMs(9);
 console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
 console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
 
