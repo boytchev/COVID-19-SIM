@@ -94,14 +94,17 @@
 			return v.x.toFixed(n)+', '+v.y.toFixed(n)+', ';
 		}
 		
+		const HEAD_Y = 0.863;
+		const NECK_Y = 0.830;
+		
 		function topology(v)
 		{
 			// head
-			if( v.y>=0.863 )
+			if( v.y>=HEAD_Y )
 				return '1, ';
 				
 			// neck
-			if( v.y>=0.830 )
+			if( v.y>=NECK_Y )
 				return '2, ';
 				
 			// body

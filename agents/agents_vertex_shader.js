@@ -55,24 +55,27 @@ void main() {
 	//vVertexColor = aVertexColor;
 	vInfectionLevel = infectionLevel;
 	
+	
+	float HEAD_Y = 0.863;
+	
+	
+	// process head - keep it the same size independend on the model height
 
+	float HEAD_SCALE = 1.700/agentHeight;
+	float BODY_SCALE = (1.0-HEAD_SCALE)/HEAD_Y + HEAD_SCALE;
 
-float from = 0.863;
-float to = 1.0 - (1.0-from)*1.7/agentHeight;
-//to = from;
-
-if(aVertexTopology==1)
-{
-	transformed.x = transformed.x * (1.0-to)/(1.0-from);
-	transformed.z = transformed.z * (1.0-to)/(1.0-from);
-	transformed.y = 1.0-(1.0-transformed.y)*(1.0-to)/(1.0-from);
-}
-else
-{
-	transformed.x = transformed.x*to/from;
-	transformed.y = transformed.y*to/from;
-	transformed.z = transformed.z*to/from;
-}
+	if(aVertexTopology==1)
+	{
+		transformed *= HEAD_SCALE;
+		transformed.y += 1.0 - HEAD_SCALE;
+	}
+	else
+	{
+		transformed *= BODY_SCALE;
+	}
+	
+	
+	
 	
 
 /*
