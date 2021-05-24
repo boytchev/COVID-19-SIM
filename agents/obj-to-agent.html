@@ -95,7 +95,9 @@
 		}
 		
 		const HEAD_Y = 0.863;
-		const NECK_Y = 0.830;
+		const NECK_Y = 0.800;
+		const BODY_Y = 0.510;
+		const SHOULDER_X = 0.200;
 		
 		function topology(v)
 		{
@@ -107,8 +109,12 @@
 			if( v.y>=NECK_Y )
 				return '2, ';
 				
-			// body
-			return '3, ';
+			// belly
+			if( v.y>=BODY_Y && Math.abs(v.x)<=SHOULDER_X && v.z>=0)
+				return '3, ';
+			
+			// undefined
+			return '0, ';
 		}
 		
 		// generate vertex data

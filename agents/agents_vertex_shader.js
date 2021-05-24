@@ -36,6 +36,14 @@ varying vec3 vViewPosition;
 #include <logdepthbuf_pars_vertex>
 #include <clipping_planes_pars_vertex>
 
+#ifdef COVID19SYM
+	float mapLinear(float value, float minIn, float maxIn, float minOut, float maxOut)
+	{
+		float v = clamp(value,minIn,maxIn);
+		return (v-minIn)/(maxIn-minIn) * (maxOut-minOut) + minOut;
+	}
+#endif
+
 void main() {
 	#include <uv_vertex>
 	#include <uv2_vertex>
@@ -55,7 +63,47 @@ void main() {
 	//vVertexColor = aVertexColor;
 	vInfectionLevel = infectionLevel;
 	
+	float time = uTime + agentId*15.0;
+
+	// left hand
+	if( transformed.x>=0.10 && transformed.y>=0.6 || transformed.x>=0.15)
+	{
+		float a = 0.1*sin(mod(time*0.0642,6.28));
+		transformed.y -= 0.8;
+		mat3 matB = mat3(1,0,0,0,cos(a),sin(a),0,-sin(a),cos(a));
+		transformed *= matB;
+		vNormal *= matB;
+		transformed.y += 0.8;
+
+//		vInfectionLevel = 1.0;
+	}
 	
+	// right hand
+	if( transformed.x<=-0.10 && transformed.y>=0.6 || transformed.x<=-0.15)
+	{
+		float a = 0.1*sin(3.1415926+mod(time*0.0642,6.28));
+		transformed.y -= 0.8;
+		mat3 matB = mat3(1,0,0,0,cos(a),sin(a),0,-sin(a),cos(a));
+		transformed *= matB;
+		vNormal *= matB;
+		transformed.y += 0.8;
+
+//		vInfectionLevel = 1.0;
+	}
+	
+	
+	// belly
+	if( 0.43<=transformed.y && transformed.y<=0.7 &&
+	    -0.11<=transformed.x && transformed.x<=0.11 &&
+		transformed.z>0.0 
+		)
+		{
+			float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),4.0);
+			transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
+			transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
+//		vInfectionLevel = 1.0;
+		}
+		
 	float HEAD_Y = 0.863;
 	
 	
@@ -75,14 +123,18 @@ void main() {
 	}
 	
 	
-	// turning head left - right
+	// turning head left-right up-down
 	
-	float time = uTime + agentId*15.0;
 	if(aVertexTopology==1)
 	{
-		float a = 0.4*sin(mod(time*0.1,6.28));
-		transformed.xz *= mat2(cos(a),sin(a),-sin(a),cos(a));
-		vNormal.xz *= mat2(cos(a),sin(a),-sin(a),cos(a));
+		float a = 0.4*sin(mod(time*0.0542,6.28));
+		float b = 0.1*sin(mod(time*0.0712,6.28));
+		transformed.y -= HEAD_Y;
+		mat3 matA = mat3(cos(a),0,sin(a),0,1,0,-sin(a),0,cos(a));
+		mat3 matB = mat3(1,0,0,0,cos(b),sin(b),0,-sin(b),cos(b));
+		transformed *= matA*matB;
+		vNormal *= matA*matB;
+		transformed.y += HEAD_Y;
 	}
 
 /*

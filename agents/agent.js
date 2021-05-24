@@ -305,7 +305,7 @@ export class Child extends Agent
 		this.sysType = 'Child';
 		
 		this.height = THREE.Math.mapLinear( this.age, 0, 17, AGENT_HEIGHT_CHILD.min, AGENT_HEIGHT_CHILD.max );
-		this.height = this.height * THREE.Math.randFloat( 0.9, 1.1 );
+		this.height = this.height * THREE.Math.randFloat( 0.8, 1.3 );
 
 	} // Child.constructor
 } // Child

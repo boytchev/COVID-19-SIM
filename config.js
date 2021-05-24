@@ -4,18 +4,18 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 10; 				// in meters
+export const GROUND_SIZE = 40; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
 	
 // debug flags
 var R = 1+Math.floor(Math.random()*100000);
-R = 63655;
+//R = 63655;
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 10;
+export const DEBUG_AGENT_MAX_COUNT = 500;
 export const DEBUG_TIME_SPEED = timeMs(0,0,5)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
