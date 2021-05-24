@@ -75,8 +75,15 @@ void main() {
 	}
 	
 	
+	// turning head left - right
 	
-	
+	float time = uTime + agentId*15.0;
+	if(aVertexTopology==1)
+	{
+		float a = 0.4*sin(mod(time*0.1,6.28));
+		transformed.xz *= mat2(cos(a),sin(a),-sin(a),cos(a));
+		vNormal.xz *= mat2(cos(a),sin(a),-sin(a),cos(a));
+	}
 
 /*
 	float time = uTime + agentId/100.0;
