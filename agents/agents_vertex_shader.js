@@ -52,6 +52,15 @@ varying vec3 vViewPosition;
 					 0, -s,  c );
 	}
 	
+	mat3 rotY(float angle)
+	{
+		float s = sin(angle);
+		float c = cos(angle);
+		return mat3(  c,  0,  s,
+					  0,  1,  0,
+					 -s,  0,  c );
+	}
+	
 	mat3 rotZ(float angle)
 	{
 		float s = sin(angle);
@@ -84,13 +93,57 @@ void main() {
 	
 	float time = uTime + agentId*15.0;
 	float timeWalk = mod(time*0.371,2.0*PI); // time hand motion
-	float timeWalk2 = mod(time*0.371-0.8,2.0*PI); // time hand motion
+	float mirror = sign(transformed.x);
+	float swing = sin(timeWalk);
+	float mirroredSwing = mirror * swing;
+	
+	vec3 footTipPos = vec3(0.2,0,0);
+	vec3 footTipNeg = vec3(0.2,0,0);
+	
+	float legAngle = 0.3 + 0.1*sin(agentId*4.9238);
+	float legOffset = -0.75*legAngle;
+	
+	float kneeAngle = 1.2*legAngle;
+	float kneeOffset = 1.8*legAngle;
+	
+	float footAngle = 0.5*legAngle;
+	float footOffset = 1.5*legAngle;
+	float footTimeOffset = 1.4;
+	
+	float handAngle = 1.25*legAngle;
+	float handOffset = 0.5*legAngle;
+	
+	if(true)
+	{
+		// legs
+		float posAngle = -legAngle * (legOffset + sin(timeWalk));
+		float negAngle = -legAngle * (legOffset - sin(timeWalk));
+		
+		footTipPos.y += (0.5-0.3) * (1.0 - cos(posAngle));
+		footTipNeg.y += (0.5-0.3) * (1.0 - cos(negAngle));
+		
+		// knees
+		posAngle += -kneeAngle * (kneeOffset + sin(timeWalk));
+		negAngle += -kneeAngle * (kneeOffset - sin(timeWalk));
+		
+		footTipPos.y += (0.3-0.08) * (1.0 - cos(posAngle));
+		footTipNeg.y += (0.3-0.08) * (1.0 - cos(negAngle));
+		
+		// feet
+		posAngle += footAngle * (footOffset + sin(timeWalk));
+		negAngle += footAngle * (footOffset - sin(timeWalk));
+		
+		footTipPos.y += 0.10 * (sin(posAngle));
+		footTipNeg.y += 0.10 * (sin(negAngle));
+		
+	}
+
 	
 	// hands
 	if( abs(transformed.x)>=0.10 && transformed.y>=0.55 || abs(transformed.x)>=0.15)
 	{
 		// angle and matrix of swinging hands
-		float swingAngle = 0.5 * (0.2 + sign(transformed.x)*sin(timeWalk));
+		float swingAngle = handAngle * (handOffset + mirroredSwing);
 		mat3 matSwing = rotX(swingAngle);
 
 		// swing hands
@@ -100,6 +153,18 @@ void main() {
 		transformed.y += 0.8;
 	}
 	
+	
+	// shoulders
+	if( transformed.y>=0.75 && transformed.y<=0.85 && abs(transformed.x)<=10.15)
+	{
+		float swingAngle = -0.3*handAngle * (handOffset + swing);
+		mat3 matSwing = rotY(swingAngle);
+
+		// swing hands
+		transformed *= matSwing;
+		vNormal *= matSwing;
+	}
+
 	// belly - slim and fat people
 	if(  0.43<=transformed.y && transformed.y<=0.70 &&
 	    -0.11<=transformed.x && transformed.x<=0.11 &&
@@ -115,7 +180,7 @@ void main() {
 	if( transformed.y<=0.08 )
 	{
 		// angle and matrix of swinging hands
-		float swingAngle = -0.3 * (0.2 + sign(transformed.x) * sin(timeWalk));
+		float swingAngle = -footAngle * (footOffset + mirror*sin(timeWalk+footTimeOffset));
 		mat3 matSwing = rotX(swingAngle);
 
 		// swing hands
@@ -130,7 +195,7 @@ void main() {
 	if( transformed.y<=0.30 )
 	{
 		// angle and matrix of swinging hands
-		float swingAngle = -0.3 * (0.8 + sign(transformed.x)*sin(timeWalk));
+		float swingAngle = -0.1-kneeAngle * (kneeOffset + mirroredSwing);
 		mat3 matSwing = rotX(swingAngle);
 
 		// swing hands
@@ -145,9 +210,9 @@ void main() {
 	if( abs(transformed.x)>=0.01 && abs(transformed.x)<=0.17 && transformed.y<=0.47 )
 	{
 		// angle and matrix of swinging hands
-		float swingAngle = -0.4 * (-0.3+sign(transformed.x)*sin(timeWalk));
+		float swingAngle = -legAngle * (legOffset + mirroredSwing);
 		mat3 matSwing = rotX(swingAngle);
-		mat3 matClose = rotZ(sign(transformed.x)*0.16); // woman 0.16, man = 0.08
+		mat3 matClose = rotZ(mirror*0.16); // woman 0.16, man = 0.08
 		mat3 mat = matClose * matSwing;
 
 		// swing legs
@@ -161,7 +226,7 @@ void main() {
 	if( abs(transformed.x)<=0.17 && transformed.y>0.47 && transformed.y<=0.7 )
 	{
 		// angle and matrix of swinging hands
-		float swingAngle = -0.05 * (-0.3+sign(transformed.x)*sin(timeWalk));
+		float swingAngle = -0.05 * (-0.3 + mirroredSwing);
 		mat3 matSwing = rotX(swingAngle);
 
 		// swing hands
@@ -195,8 +260,8 @@ void main() {
 	
 	if(aVertexTopology==1)
 	{
-		float a = 0.4*sin(mod(time*0.0542,6.28));
-		float b = 0.1*sin(mod(time*0.0712,6.28));
+		float a = 0.6*sin(mod(time*0.0542,6.28));
+		float b = 0.2*sin(mod(time*0.0712,6.28));
 		transformed.y -= HEAD_Y;
 		mat3 matA = mat3(cos(a),0,sin(a),0,1,0,-sin(a),0,cos(a));
 		mat3 matB = mat3(1,0,0,0,cos(b),sin(b),0,-sin(b),cos(b));
@@ -204,6 +269,10 @@ void main() {
 		vNormal *= matA*matB;
 		transformed.y += HEAD_Y;
 	}
+	
+	//transformed.y -= min(footTipPos.y,footTipNeg.y);
+	transformed.y -= sin(timeWalk)>0.0 ? footTipPos.y : footTipNeg.y;
+	
 
 /*
 	float time = uTime + agentId/100.0;

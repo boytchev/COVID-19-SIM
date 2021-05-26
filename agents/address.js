@@ -107,7 +107,7 @@ export class Address
 		{
 			position = this.block.randomPos();
 			position.x = (Math.random()-0.5)/5;
-			position.z = poss; poss+=0.2+0.2*Math.random();
+			position.z = poss; poss+=0.2+0.3*Math.random();
 		}
 		
 		if( this.building )
