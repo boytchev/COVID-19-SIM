@@ -161,7 +161,7 @@ export const NO_SHADOWS = 0;
 export const TOP_SHADOWS = 1;
 export const FULL_SHADOWS = 2;
 
-export const AGENTS_CAST_SHADOWS = true;
+export const AGENTS_CAST_SHADOWS = !true;
 
 
 //export const SUN = NO_SUN;

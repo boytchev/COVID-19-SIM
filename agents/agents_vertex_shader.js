@@ -42,6 +42,25 @@ varying vec3 vViewPosition;
 		float v = clamp(value,minIn,maxIn);
 		return (v-minIn)/(maxIn-minIn) * (maxOut-minOut) + minOut;
 	}
+	
+	mat3 rotX(float angle)
+	{
+		float s = sin(angle);
+		float c = cos(angle);
+		return mat3( 1,  0,  0,
+					 0,  c,  s,
+					 0, -s,  c );
+	}
+	
+	mat3 rotZ(float angle)
+	{
+		float s = sin(angle);
+		float c = cos(angle);
+		return mat3(  c,  s,  0,
+					 -s,  c,  0,
+					  0,  0,  1 );
+	}
+	
 #endif
 
 void main() {
@@ -64,45 +83,94 @@ void main() {
 	vInfectionLevel = infectionLevel;
 	
 	float time = uTime + agentId*15.0;
-
-	// left hand
-	if( transformed.x>=0.10 && transformed.y>=0.6 || transformed.x>=0.15)
+	float timeWalk = mod(time*0.371,2.0*PI); // time hand motion
+	float timeWalk2 = mod(time*0.371-0.8,2.0*PI); // time hand motion
+	
+	// hands
+	if( abs(transformed.x)>=0.10 && transformed.y>=0.55 || abs(transformed.x)>=0.15)
 	{
-		float a = 0.1*sin(mod(time*0.0642,6.28));
-		transformed.y -= 0.8;
-		mat3 matB = mat3(1,0,0,0,cos(a),sin(a),0,-sin(a),cos(a));
-		transformed *= matB;
-		vNormal *= matB;
-		transformed.y += 0.8;
+		// angle and matrix of swinging hands
+		float swingAngle = 0.5 * (0.2 + sign(transformed.x)*sin(timeWalk));
+		mat3 matSwing = rotX(swingAngle);
 
-//		vInfectionLevel = 1.0;
+		// swing hands
+		transformed.y -= 0.8;
+		transformed *= matSwing;
+		vNormal *= matSwing;
+		transformed.y += 0.8;
 	}
 	
-	// right hand
-	if( transformed.x<=-0.10 && transformed.y>=0.6 || transformed.x<=-0.15)
-	{
-		float a = 0.1*sin(3.1415926+mod(time*0.0642,6.28));
-		transformed.y -= 0.8;
-		mat3 matB = mat3(1,0,0,0,cos(a),sin(a),0,-sin(a),cos(a));
-		transformed *= matB;
-		vNormal *= matB;
-		transformed.y += 0.8;
-
-//		vInfectionLevel = 1.0;
-	}
-	
-	
-	// belly
-	if( 0.43<=transformed.y && transformed.y<=0.7 &&
+	// belly - slim and fat people
+	if(  0.43<=transformed.y && transformed.y<=0.70 &&
 	    -0.11<=transformed.x && transformed.x<=0.11 &&
 		transformed.z>0.0 
 		)
-		{
-			float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),4.0);
-			transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
-			transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
-//		vInfectionLevel = 1.0;
-		}
+	{
+		float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),4.0);
+		transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
+		transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
+	}
+	
+	// feet
+	if( transformed.y<=0.08 )
+	{
+		// angle and matrix of swinging hands
+		float swingAngle = -0.3 * (0.8 + sign(transformed.x)*sin(timeWalk2));
+		mat3 matSwing = rotX(swingAngle);
+
+		// swing hands
+		transformed.y -= 0.08;
+		transformed *= matSwing;
+		vNormal *= matSwing;
+		transformed.y += 0.08;
+	}
+	
+	
+	// knees
+	if( transformed.y<=0.30 )
+	{
+		// angle and matrix of swinging hands
+		float swingAngle = -0.3 * (0.8 + sign(transformed.x)*sin(timeWalk2));
+		mat3 matSwing = rotX(swingAngle);
+
+		// swing hands
+		transformed.y -= 0.30;
+		transformed *= matSwing;
+		vNormal *= matSwing;
+		transformed.y += 0.30;
+	}
+	
+	
+	// legs
+	if( abs(transformed.x)>=0.01 && abs(transformed.x)<=0.17 && transformed.y<=0.47 )
+	{
+		// angle and matrix of swinging hands
+		float swingAngle = -0.4 * (-0.3+sign(transformed.x)*sin(timeWalk));
+		mat3 matSwing = rotX(swingAngle);
+		mat3 matClose = rotZ(sign(transformed.x)*0.16); // woman 0.16, man = 0.08
+		mat3 mat = matClose * matSwing;
+
+		// swing legs
+		transformed.y -= 0.5;
+		transformed *= mat;
+		vNormal *= mat;
+		transformed.y += 0.5;
+	}
+	
+	// waist
+	if( abs(transformed.x)<=0.17 && transformed.y>0.47 && transformed.y<=0.7 )
+	{
+		// angle and matrix of swinging hands
+		float swingAngle = -0.05 * (-0.3+sign(transformed.x)*sin(timeWalk));
+		mat3 matSwing = rotX(swingAngle);
+
+		// swing hands
+		transformed.y -= 0.7;
+		transformed *= matSwing;
+		vNormal *= matSwing;
+		transformed.y += 0.7;
+	}
+	
 		
 	float HEAD_Y = 0.863;
 	
