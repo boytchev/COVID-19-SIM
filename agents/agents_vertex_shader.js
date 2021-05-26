@@ -115,7 +115,7 @@ void main() {
 	if( transformed.y<=0.08 )
 	{
 		// angle and matrix of swinging hands
-		float swingAngle = -0.3 * (0.8 + sign(transformed.x)*sin(timeWalk2));
+		float swingAngle = -0.3 * (0.2 + sign(transformed.x) * sin(timeWalk));
 		mat3 matSwing = rotX(swingAngle);
 
 		// swing hands
@@ -130,7 +130,7 @@ void main() {
 	if( transformed.y<=0.30 )
 	{
 		// angle and matrix of swinging hands
-		float swingAngle = -0.3 * (0.8 + sign(transformed.x)*sin(timeWalk2));
+		float swingAngle = -0.3 * (0.8 + sign(transformed.x)*sin(timeWalk));
 		mat3 matSwing = rotX(swingAngle);
 
 		// swing hands
