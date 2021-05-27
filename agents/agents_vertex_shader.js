@@ -91,7 +91,7 @@ void main() {
 	//vVertexColor = aVertexColor;
 	vInfectionLevel = infectionLevel;
 	
-	float time = uTime + agentId*15.0;
+	float time = 0.9*uTime + agentId*15.0;
 	float timeWalk = mod(time*0.371,2.0*PI); // time hand motion
 	float mirror = sign(transformed.x);
 	float swing = sin(timeWalk);
@@ -100,11 +100,15 @@ void main() {
 	vec3 footTipPos = vec3(0.2,0,0);
 	vec3 footTipNeg = vec3(0.2,0,0);
 	
-	float legAngle = 0.3 + 0.1*sin(agentId*4.9238);
-	float legOffset = -0.75*legAngle;
+	// TODO: speed of walking affects the size of step
+	// which in turn affects the angle of leg motion baseAngle
 	
-	float kneeAngle = 1.2*legAngle;
-	float kneeOffset = 1.8*legAngle;
+	float baseAngle = 0.4 + 0.15*sin(agentId*4.9238);
+	
+	float legAngle = 1.0*baseAngle;
+	float legOffset = -0.25;
+	
+	float kneeAngle = 2.0*legAngle;
 	
 	float footAngle = 0.5*legAngle;
 	float footOffset = 1.5*legAngle;
@@ -123,8 +127,8 @@ void main() {
 		footTipNeg.y += (0.5-0.3) * (1.0 - cos(negAngle));
 		
 		// knees
-		posAngle += -kneeAngle * (kneeOffset + sin(timeWalk));
-		negAngle += -kneeAngle * (kneeOffset - sin(timeWalk));
+		posAngle += -kneeAngle * ( + sin(timeWalk));
+		negAngle += -kneeAngle * ( - sin(timeWalk));
 		
 		footTipPos.y += (0.3-0.08) * (1.0 - cos(posAngle));
 		footTipNeg.y += (0.3-0.08) * (1.0 - cos(negAngle));
@@ -138,33 +142,12 @@ void main() {
 		
 	}
 
-	
-	// hands
-	if( abs(transformed.x)>=0.10 && transformed.y>=0.55 || abs(transformed.x)>=0.15)
-	{
-		// angle and matrix of swinging hands
-		float swingAngle = handAngle * (handOffset + mirroredSwing);
-		mat3 matSwing = rotX(swingAngle);
-
-		// swing hands
-		transformed.y -= 0.8;
-		transformed *= matSwing;
-		vNormal *= matSwing;
-		transformed.y += 0.8;
-	}
+	#define HANDS 5
+	#define LEGS 6
+	#define KNEES 7
+	#define FEET 8
 	
 	
-	// shoulders
-	if( transformed.y>=0.75 && transformed.y<=0.85 && abs(transformed.x)<=10.15)
-	{
-		float swingAngle = -0.3*handAngle * (handOffset + swing);
-		mat3 matSwing = rotY(swingAngle);
-
-		// swing hands
-		transformed *= matSwing;
-		vNormal *= matSwing;
-	}
-
 	// belly - slim and fat people
 	if(  0.43<=transformed.y && transformed.y<=0.70 &&
 	    -0.11<=transformed.x && transformed.x<=0.11 &&
@@ -176,14 +159,38 @@ void main() {
 		transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
 	}
 	
-	// feet
-	if( transformed.y<=0.08 )
+	// hands
+	if( aVertexTopology==HANDS )
 	{
-		// angle and matrix of swinging hands
-		float swingAngle = -footAngle * (footOffset + mirror*sin(timeWalk+footTimeOffset));
+		float swingAngle = handAngle * (handOffset + mirroredSwing) * (1.0-transformed.y);
 		mat3 matSwing = rotX(swingAngle);
 
+		transformed.y -= 0.79;
+		transformed *= matSwing;
+		vNormal *= matSwing;
+		transformed.y += 0.79;
+	}
+
+	// shoulders
+	if( transformed.y>=0.75 && transformed.y<=0.85 && abs(transformed.x)<=10.15 && aVertexTopology!=HANDS)
+	{
+		float swingAngle = -0.2*handAngle * (handOffset + swing);
+		mat3 matSwing = rotY(swingAngle);
+
 		// swing hands
+		transformed *= matSwing;
+		vNormal *= matSwing;
+	}
+
+	if( aVertexTopology==FEET )
+	{
+		float sine = mirror*sin(timeWalk-0.1);
+		float k = 0.5-0.5*sine;
+		
+		float swingAngle = 0.1+legAngle * (legOffset + mirroredSwing) - legAngle*k*k*sine;
+		
+		mat3 matSwing = rotX(swingAngle);
+
 		transformed.y -= 0.08;
 		transformed *= matSwing;
 		vNormal *= matSwing;
@@ -191,14 +198,13 @@ void main() {
 	}
 	
 	
-	// knees
-	if( transformed.y<=0.30 )
+	if( aVertexTopology>=KNEES )
 	{
-		// angle and matrix of swinging hands
-		float swingAngle = -0.1-kneeAngle * (kneeOffset + mirroredSwing);
+		float sine = sin(timeWalk-PI/2.0);
+		float k = 0.5+mirror*0.5*sine;
+		float swingAngle = -kneeAngle * mirror * (k*k*sine);
 		mat3 matSwing = rotX(swingAngle);
 
-		// swing hands
 		transformed.y -= 0.30;
 		transformed *= matSwing;
 		vNormal *= matSwing;
@@ -207,7 +213,7 @@ void main() {
 	
 	
 	// legs
-	if( abs(transformed.x)>=0.01 && abs(transformed.x)<=0.17 && transformed.y<=0.47 )
+	if( aVertexTopology>=LEGS )
 	{
 		// angle and matrix of swinging hands
 		float swingAngle = -legAngle * (legOffset + mirroredSwing);
@@ -219,7 +225,7 @@ void main() {
 		transformed.y -= 0.5;
 		transformed *= mat;
 		vNormal *= mat;
-		transformed.y += 0.5;
+		transformed.y += 0.5 - 0.01*mirror*sin(timeWalk+PI/2.0);
 	}
 	
 	// waist
@@ -233,9 +239,8 @@ void main() {
 		transformed.y -= 0.7;
 		transformed *= matSwing;
 		vNormal *= matSwing;
-		transformed.y += 0.7;
+		transformed.y += 0.7 - 0.01*mirror*sin(timeWalk+PI/2.0);
 	}
-	
 		
 	float HEAD_Y = 0.863;
 	
@@ -270,8 +275,13 @@ void main() {
 		transformed.y += HEAD_Y;
 	}
 	
-	//transformed.y -= min(footTipPos.y,footTipNeg.y);
-	transformed.y -= sin(timeWalk)>0.0 ? footTipPos.y : footTipNeg.y;
+	// shoulders up-down
+	if( transformed.y>0.6 && transformed.y<=0.82 )
+	{
+		transformed.y += 0.005*mirror*sin(timeWalk+PI/2.0);
+	}
+
+	//transformed.y -= sin(timeWalk)>0.0 ? footTipPos.y : footTipNeg.y;
 	
 
 /*
