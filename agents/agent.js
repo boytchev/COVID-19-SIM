@@ -78,6 +78,7 @@ class Agent extends AgentBehaviour
 		this.home = home;
 		this.position = home.randomPos();
 		this.walkingSpeed = AGENT_WALKING_SPEED.randFloat( );	// in meters/second
+		this.walkingTime = 0;
 		
 		// add agent to block
 		this.position.block.agents.push( this );

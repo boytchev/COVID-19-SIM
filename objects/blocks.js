@@ -375,6 +375,7 @@ export class Blocks
 				color: blockType.color,
 				/*vertexColors: DEBUG_BLOCK_COLOR,*/
 				map: texture.map( 1/textureScale, 1/textureScale ),
+				//TODO:
 				depthTest: false,
 				transparent: DEBUG_BLOCKS_OPACITY<1,
 				opacity: DEBUG_BLOCKS_OPACITY,

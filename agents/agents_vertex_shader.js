@@ -70,6 +70,9 @@ varying vec3 vViewPosition;
 					  0,  0,  1 );
 	}
 	
+	#define apply(matrix,offset) transformed.y -= offset; transformed *= matrix; vNormal *= matrix; transformed.y += offset;
+	#define applyFoot(matrix,offset) foot.y -= offset; foot *= matrix; foot.y += offset;
+	
 #endif
 
 void main() {
@@ -91,219 +94,173 @@ void main() {
 	//vVertexColor = aVertexColor;
 	vInfectionLevel = infectionLevel;
 	
-	float time = 0.9*uTime + agentId*15.0;
-	float timeWalk = mod(time*0.371,2.0*PI); // time hand motion
-	float mirror = sign(transformed.x);
-	float swing = sin(timeWalk);
-	float mirroredSwing = mirror * swing;
-	
-	vec3 footTipPos = vec3(0.2,0,0);
-	vec3 footTipNeg = vec3(0.2,0,0);
-	
-	// TODO: speed of walking affects the size of step
-	// which in turn affects the angle of leg motion baseAngle
-	
-	float baseAngle = 0.4 + 0.15*sin(agentId*4.9238);
-	
-	float legAngle = 1.0*baseAngle;
-	float legOffset = -0.25;
-	
-	float kneeAngle = 2.0*legAngle;
-	
-	float footAngle = 0.5*legAngle;
-	float footOffset = 1.5*legAngle;
-	float footTimeOffset = 1.4;
-	
-	float handAngle = 1.25*legAngle;
-	float handOffset = 0.5*legAngle;
-	
-	if(true)
-	{
-		// legs
-		float posAngle = -legAngle * (legOffset + sin(timeWalk));
-		float negAngle = -legAngle * (legOffset - sin(timeWalk));
-		
-		footTipPos.y += (0.5-0.3) * (1.0 - cos(posAngle));
-		footTipNeg.y += (0.5-0.3) * (1.0 - cos(negAngle));
-		
-		// knees
-		posAngle += -kneeAngle * ( + sin(timeWalk));
-		negAngle += -kneeAngle * ( - sin(timeWalk));
-		
-		footTipPos.y += (0.3-0.08) * (1.0 - cos(posAngle));
-		footTipNeg.y += (0.3-0.08) * (1.0 - cos(negAngle));
-		
-		// feet
-		posAngle += footAngle * (footOffset + sin(timeWalk));
-		negAngle += footAngle * (footOffset - sin(timeWalk));
-		
-		footTipPos.y += 0.10 * (sin(posAngle));
-		footTipNeg.y += 0.10 * (sin(negAngle));
-		
-	}
+	float speed = 1.6+0.4*sin(agentId); // speed of walking
+	float baseAngle = 0.2*speed;
 
-	#define HANDS 5
-	#define LEGS 6
-	#define KNEES 7
-	#define FEET 8
+	float rawTime = speed*uTime + agentId*15.0;
+	float time = mod(rawTime, 2.0*PI); // time loop [0,2π]
+
+	float sine = sin(time);
+	float cosine = cos(time);
+	float mirror = sign(transformed.x); // left or right
 	
+
+	mat3 rot; // general purpose rotation matrix
+	
+
+	#define HEAD  1
+	#define HANDS 2
+	#define BELLY 3
+	#define LEGS  4
+	#define KNEES 5
+	#define FEET  6
 	
 	// belly - slim and fat people
-	if(  0.43<=transformed.y && transformed.y<=0.70 &&
-	    -0.11<=transformed.x && transformed.x<=0.11 &&
-		transformed.z>0.0 
-		)
+	if( aVertexTopology == BELLY )
 	{
-		float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),4.0);
+		float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),2.0);
 		transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
 		transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
+
+		float a = 0.25*baseAngle*sine*sign(0.5-transformed.y);
+		rot = rotY(a);
+		apply(rot,0.0);
+
+		transformed.y += - 0.005*mirror*cosine;
 	}
 	
-	// hands
-	if( aVertexTopology==HANDS )
+	// swing hands and move shoulder
+	if( aVertexTopology == HANDS )
 	{
-		float swingAngle = handAngle * (handOffset + mirroredSwing) * (1.0-transformed.y);
-		mat3 matSwing = rotX(swingAngle);
+		float a = 1.25*baseAngle * (0.5*baseAngle + mirror*sine) * (0.8-transformed.y),
+			  b = -0.25*baseAngle*sine;
+			  
+		rot = rotX(a)*rotY(b);
 
-		transformed.y -= 0.79;
-		transformed *= matSwing;
-		vNormal *= matSwing;
-		transformed.y += 0.79;
-	}
-
-	// shoulders
-	if( transformed.y>=0.75 && transformed.y<=0.85 && abs(transformed.x)<=10.15 && aVertexTopology!=HANDS)
-	{
-		float swingAngle = -0.2*handAngle * (handOffset + swing);
-		mat3 matSwing = rotY(swingAngle);
-
-		// swing hands
-		transformed *= matSwing;
-		vNormal *= matSwing;
-	}
-
-	if( aVertexTopology==FEET )
-	{
-		float sine = mirror*sin(timeWalk-0.1);
-		float k = 0.5-0.5*sine;
+		apply(rot,0.79);
 		
-		float swingAngle = 0.1+legAngle * (legOffset + mirroredSwing) - legAngle*k*k*sine;
-		
-		mat3 matSwing = rotX(swingAngle);
-
-		transformed.y -= 0.08;
-		transformed *= matSwing;
-		vNormal *= matSwing;
-		transformed.y += 0.08;
+		transformed.y += 0.007*baseAngle*mirror*cosine; // shoulder up-down
 	}
-	
-	
-	if( aVertexTopology>=KNEES )
+
+/*
+	// feet
+	if( aVertexTopology == FEET )
 	{
-		float sine = sin(timeWalk-PI/2.0);
-		float k = 0.5+mirror*0.5*sine;
-		float swingAngle = -kneeAngle * mirror * (k*k*sine);
-		mat3 matSwing = rotX(swingAngle);
+		float k = mirror*cosine,
+			  a = 0.5*baseAngle*k*k*(1.0-k);
+		
+		rot = rotX(a);
 
-		transformed.y -= 0.30;
-		transformed *= matSwing;
-		vNormal *= matSwing;
-		transformed.y += 0.30;
+		apply(rot,0.06);
 	}
-	
-	
+*/
+	// knees
+	if( aVertexTopology >= KNEES )
+	{
+		float k = mirror*cosine,
+			  a = 1.2*baseAngle*k*(1.0-k);
+		rot = rotX(a);
+
+		apply(rot,0.30);
+	}
+
 	// legs
-	if( aVertexTopology>=LEGS )
+	if( aVertexTopology >= LEGS ) // includes knees and feet
 	{
-		// angle and matrix of swinging hands
-		float swingAngle = -legAngle * (legOffset + mirroredSwing);
-		mat3 matSwing = rotX(swingAngle);
-		mat3 matClose = rotZ(mirror*0.16); // woman 0.16, man = 0.08
-		mat3 mat = matClose * matSwing;
-
-		// swing legs
-		transformed.y -= 0.5;
-		transformed *= mat;
-		vNormal *= mat;
-		transformed.y += 0.5 - 0.01*mirror*sin(timeWalk+PI/2.0);
-	}
-	
-	// waist
-	if( abs(transformed.x)<=0.17 && transformed.y>0.47 && transformed.y<=0.7 )
-	{
-		// angle and matrix of swinging hands
-		float swingAngle = -0.05 * (-0.3 + mirroredSwing);
-		mat3 matSwing = rotX(swingAngle);
-
-		// swing hands
-		transformed.y -= 0.7;
-		transformed *= matSwing;
-		vNormal *= matSwing;
-		transformed.y += 0.7 - 0.01*mirror*sin(timeWalk+PI/2.0);
-	}
+		float a = -baseAngle * (-0.25 + mirror*sine);
 		
-	float HEAD_Y = 0.863;
-	
-	
-	// process head - keep it the same size independend on the model height
+		rot = rotX(a) * rotZ(mirror*0.08); // woman 0.16, man = 0.08
 
-	float HEAD_SCALE = 1.700/agentHeight;
-	float BODY_SCALE = (1.0-HEAD_SCALE)/HEAD_Y + HEAD_SCALE;
+		apply(rot,0.5);
 
-	if(aVertexTopology==1)
+		transformed.y -= 0.02*mirror*cosine;
+	}
+
+	// rescale the head and the body (keeping the head
+	// constant size independent on the body height)
+	
+	float headScale = 1.7/agentHeight,
+		  bodyScale = headScale + (1.0-headScale)/0.863;
+
+	if( aVertexTopology == HEAD )
 	{
-		transformed *= HEAD_SCALE;
-		transformed.y += 1.0 - HEAD_SCALE;
+		// scale the head up and move it down
+		transformed *= headScale;
+		transformed.y += 1.0-headScale;
+
+		// turning head left-right up-down
+		float a = 0.6*sin(mod(0.12*rawTime,2.0*PI)),
+			  b = 0.2*sin(mod(0.17*rawTime,2.0*PI));
+			  
+		rot = rotY(a)*rotX(b);
+		
+		apply(rot,0.863);
 	}
 	else
 	{
-		transformed *= BODY_SCALE;
-	}
-	
-	
-	// turning head left-right up-down
-	
-	if(aVertexTopology==1)
-	{
-		float a = 0.6*sin(mod(time*0.0542,6.28));
-		float b = 0.2*sin(mod(time*0.0712,6.28));
-		transformed.y -= HEAD_Y;
-		mat3 matA = mat3(cos(a),0,sin(a),0,1,0,-sin(a),0,cos(a));
-		mat3 matB = mat3(1,0,0,0,cos(b),sin(b),0,-sin(b),cos(b));
-		transformed *= matA*matB;
-		vNormal *= matA*matB;
-		transformed.y += HEAD_Y;
-	}
-	
-	// shoulders up-down
-	if( transformed.y>0.6 && transformed.y<=0.82 )
-	{
-		transformed.y += 0.005*mirror*sin(timeWalk+PI/2.0);
+		// scale the body down
+		transformed *= bodyScale;
 	}
 
-	//transformed.y -= sin(timeWalk)>0.0 ? footTipPos.y : footTipNeg.y;
+	//transformed.y += 0.02-agentHeight*(0.01-0.01*sin(2.0*time));
+	//transformed.z += 0.2*baseAngle*speed*mod(uTime,100.0)*agentHeight;
+
+	float cycleA = round(0.5+0.5*sign(sin(time)));
+	float cycleB = round(0.5-0.5*sign(cos(time-0.2))); // left-right
+//vInfectionLevel = round(2.0*(0.5+0.5*sign(cos(time-0.4))) + (0.5+0.5*sign(sin(time))))/3.0;
+//vInfectionLevel = cycleB;
+	
+	vec3 posKnee,  negKnee;
+	vec3 posAnkle, negAnkle;
+	vec3 posToe,   negToe;
+	float a,k;
+	
+	#define UPPER_LEN bodyScale*(0.23)
+	#define LOWER_LEN bodyScale*(0.265)
+	#define FOOT_LEN bodyScale*(0.03)
+	
+	a = -baseAngle * (-0.25 + sine);
+	posKnee.y = UPPER_LEN*cos(a);
+	posKnee.z = UPPER_LEN*sin(a);
+	k = cosine;
+	a = a + 1.2*baseAngle*k*(1.0-k);
+	posAnkle.y = posKnee.y + LOWER_LEN*cos(a);
+	posAnkle.z = posKnee.z + LOWER_LEN*sin(a);
+	k = cosine;
+	a = a + /*0.5*baseAngle*k*k*(1.0-k) +*/ PI/2.0 - 0.1;
+	posToe.y = posAnkle.y + FOOT_LEN*cos(a);
+	posToe.z = posAnkle.z + FOOT_LEN*sin(a);
 	
 
-/*
-	float time = uTime + agentId/100.0;
-	if( transformed.y<0.5 )
-	{
-		float s = 2.0*abs( mod( time/1.0, 2.0 ) - 1.0 ) - 1.0;
-		
-		if( transformed.x>0.1 )
-		{
-			transformed.z += 0.2*s;
-		} else
-		if( transformed.x<-0.1 )
-		{
-			transformed.z -= 0.2*s;
-		} else
-		{
-			transformed.y = 0.3;
-		}
-	} // y<0.5
-*/	
-	//transformed.z += mod( time/5.0, 120.0 );
+	a = -baseAngle * (-0.25 - sine);
+	negKnee.y = UPPER_LEN*cos(a);
+	negKnee.z = UPPER_LEN*sin(a);
+	k = -cosine;
+	a = a + 1.2*baseAngle*k*(1.0-k);
+	negAnkle.y = negKnee.y + LOWER_LEN*cos(a);
+	negAnkle.z = negKnee.z + LOWER_LEN*sin(a);
+	k = -cosine;
+	a = a + /*0.5*baseAngle*k*k*(1.0-k)*/ + PI/2.0 - 0.1;
+	negToe.y = negAnkle.y + FOOT_LEN*cos(a);
+	negToe.z = negAnkle.z + FOOT_LEN*sin(a);
+
+//	if( aVertexTopology==HEAD )
+//	{
+//		transformed.y = 0.5-posAnkle.y;
+//		transformed.z = posAnkle.z;
+//	}
+	
+	float dY = (1.0-cycleB)*posAnkle.y + cycleB*negAnkle.y;
+	float dZ = (1.0-cycleB)*posAnkle.z + cycleB*negAnkle.z;
+	
+	dY = (1.0-cycleB)*posToe.y + cycleB*negToe.y;
+	dZ = (1.0-cycleB)*posToe.z + cycleB*negToe.z;
+	
+	dY = max(posToe.y,negToe.y);
+	
+	transformed.y -= 0.47-dY;
+//	transformed.z -= dZ;
+	
 #endif
 
 	#include <morphtarget_vertex>

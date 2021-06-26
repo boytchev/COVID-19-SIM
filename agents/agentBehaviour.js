@@ -34,6 +34,7 @@
 //		AGENT_WALKING_IN_OFFICE()
 //		AGENT_SLEEPING_AT_HOME()
 //		AGENT_WALKING_ROUTE()
+//		AGENT_WANDERING()
 //
 
 
@@ -139,7 +140,10 @@ export class AgentBehaviour
 		else
 			this.doing = this.AGENT_SLEEPING_AT_HOME;
 		
-//this.doing = this.AGENT_DOING_NOTHING; // todo
+
+// temporary set wandering mode
+this.gotoPosition = null;
+this.doing = this.AGENT_WANDERING; // todo
 				
 	} // AgentBehaviour.constructor
 
@@ -1028,6 +1032,20 @@ else
 		this.doing = this.AGENT_WALKING_IN_OFFICE;
 			
 	} // AgentBehaviour.AGENT_WORKING_IN_OFFICE
+	
+	
+	
+	AGENT_WANDERING()
+	{
+		if( this.noRoute )
+		{
+			this.addToRoute( this.position.block.randomPos() );
+			console.log('new target');
+		}
+		
+		this.walkRoute( this.AGENT_WANDERING );
+
+	} // AgentBehaviour.AGENT_WANDERING
 	
 	
 	

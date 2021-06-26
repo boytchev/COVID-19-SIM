@@ -94,42 +94,47 @@
 			return v.x.toFixed(n)+', '+v.y.toFixed(n)+', ';
 		}
 		
-		const HEAD_Y = 0.863;
 		const NECK_Y = 0.800;
 		const BODY_Y = 0.510;
 		const SHOULDER_X = 0.200;
 		
 		function topology(v)
 		{
+			var x = v.x,
+				y = v.y,
+				z = v.z,
+				abs = Math.abs;
+				
 			// head
-			if( v.y>=HEAD_Y )
+			if( y>=0.863 )
 				return '1, ';
 				
-			// hands
-			//if( Math.abs(v.x)>=0.10 && v.y>=0.50 || Math.abs(v.x)>=0.12)
-			if( (Math.abs(v.x)>=0.09 && v.y>=0.55) || (Math.abs(v.x)>=0.14 && v.y>=0.30) )
-				return '5, ';
-
-			// neck
-			if( v.y>=NECK_Y )
-				return '2, ';
+			// neck - ignored
+			if( y>=0.82 )
+				return '0, ';
 				
+			// hands and showlders
+			if( (abs(x)>=0.09 && y>=0.55) || (abs(x)>=0.14 && y>=0.30) || y>=0.7)
+				return '2, ';
+
 			// belly
-			if( v.y>=BODY_Y && Math.abs(v.x)<=SHOULDER_X && v.z>=0)
+			if( 0.43<=y && y<=0.70 &&
+	            abs(x)<=0.11 &&
+		        z>0.0 )
 				return '3, ';
-			
+
 			// feet
-			if( v.y<=0.08 )
-				return '8, ';
+			if( v.y<=0.06 )
+				return '6, ';
 
 			// knees
 			if( v.y<=0.30 )
-				return '7, ';
+				return '5, ';
 
 			// legs
 			if( Math.abs(v.x)>=0.01 && Math.abs(v.x)<=0.17 && v.y<=0.49 )
-				return '6, ';
-			
+				return '4, ';
+
 			// undefined
 			return '0, ';
 		}
