@@ -144,8 +144,8 @@ export class AgentBehaviour
 		
 
 // temporary set wandering mode
-this.gotoPosition = null;
-this.doing = this.AGENT_WANDERING; // todo
+//this.gotoPosition = null;
+//this.doing = this.AGENT_WANDERING; // todo
 				
 	} // AgentBehaviour.constructor
 
@@ -772,14 +772,22 @@ this.doing = this.AGENT_WANDERING; // todo
 	{
 //		console.log('current\t',this.position.x.toFixed(2),this.position.z.toFixed(2));
 			
-		var uTime = (dayTimeMs/400); // set to vertex shader
-		var speed = 1.6; // set inside vertex shader
-		var rawTime = speed*uTime + this.id*15.0; // set inside vertex shader
-		this.infectionLevel = THREE.Math.euclideanModulo(rawTime+2	,2*Math.PI)>Math.PI?100:0;
-				
 		var v = this.position.to( target ),
 			distance = v.distance( ), // distance to target
 			walkDistance = this.walkingSpeed * deltaTime; // distance to be walked
+			
+			walkDistance = (3.0+2.0*Math.sin(this.id))/1.4*THREE.Math.mapLinear(this.height,0.3,3,0.03,1.2) * deltaTime; // distance to be walked
+
+//var uTime = agents.images.material.uniforms.uTime.value;
+//var speed = 1.6; // set inside vertex shader
+//var rawTime = speed*uTime + this.id*15.0; // set inside vertex shader
+
+////var walkQuants=THREE.Math.euclideanModulo(rawTime+1.372532,2*Math.PI)>=Math.PI;
+////                                                    372 375
+//var walkQuants = Math.cos(rawTime-0.25)>0;
+//if( walkQuants == this.oldWalkQuants ) walkDistance = 0; else walkDistance = THREE.Math.mapLinear(this.height,0.3,3,0.03,1.2);
+//this.oldWalkQuants = walkQuants;
+				
 
 		// if target is ouside an elevator, then approach it,
 		// but enter only of door is open

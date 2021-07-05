@@ -360,7 +360,7 @@ export class Agents
 			new THREE.InstancedBufferAttribute(new Float32Array(this.agents.length), 1, false, 1));
 
 		var id = [];
-		for( var i=0; i<this.agents.length; i++ ) id.push( i );
+		for( var i=0; i<this.agents.length; i++ ) id.push( this.agents[i].id );
 		geometry.setAttribute(
 			'agentId',
 			new THREE.InstancedBufferAttribute(new Float32Array(id), 1, false, 1));

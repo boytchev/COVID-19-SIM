@@ -94,9 +94,9 @@ void main() {
 	//vVertexColor = aVertexColor;
 	vInfectionLevel = infectionLevel;
 	
-//TODO-TEMP	float speed = 1.6+0.4*sin(agentId); // speed of walking
-	float speed = 1.6; // speed of walking
-	float baseAngle = 0.2*speed;
+	float speed = 3.0+2.0*sin(agentId); // speed of walking
+	//float speed = 1.6; // speed of walking
+	float baseAngle = 0.2*1.6;//0.2*speed;
 
 	float rawTime = speed*uTime + agentId*15.0;
 //TODO-TEMP	float time = mod(rawTime, 2.0*PI); // time loop [0,2π]
@@ -211,7 +211,8 @@ void main() {
 	//transformed.z += 0.2*baseAngle*speed*mod(uTime,100.0)*agentHeight;
 
 	float cycleA = round(0.5+0.5*sign(sin(time)));
-	float cycleB = round(0.5-0.5*sign(cos(time-0.2))); // left-right
+	float cycleB = round(0.5-0.5*sign(cos(time-0.25))); // left-right
+		
 //vInfectionLevel = round(2.0*(0.5+0.5*sign(cos(time-0.4))) + (0.5+0.5*sign(sin(time))))/3.0;
 //vInfectionLevel = cycleB;
 	
@@ -256,10 +257,10 @@ void main() {
 	//dZ = (1.0-cycleB)*posToe.z + cycleB*negToe.z;
 	
 	//dY = max(posToe.y,negToe.y);
-	dY = max(posAnkle.y,negAnkle.y);
+	//dY = max(posAnkle.y,negAnkle.y);
 	
-	transformed.y -= 0.47-dY;
-	transformed.z -= dZ;
+	transformed.y -= 0.27-dY/2.0;
+//	transformed.z -= dZ;
 	
 #endif
 

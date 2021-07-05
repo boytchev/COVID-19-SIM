@@ -95,6 +95,8 @@ class Agent extends AgentBehaviour
 		this.generalImmuneStrength = IMMUNE_STRENGTH.randFloat();
 		this.currentImmuneStrength = this.generalImmuneStrength;
 		
+		this.oldWalkQuants = -1;
+		
 		if( DEBUG_SHOW_HOME_TO_WORK_ARROW )
 			drawArrow( this.home.center, this.work.center );
 

@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 20; 				// in meters
+export const GROUND_SIZE = 1000; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -15,21 +15,21 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 1;
-export const DEBUG_TIME_SPEED = timeMs(0,0,0.25)/1000;	// time ellapsed for 1 second
-export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
+export const DEBUG_AGENT_MAX_COUNT = 5000;
+export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
+export const DEBUG_BLOCK_WITH_ONLY_HOUSES = !false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
-export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
-export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
+export const DEBUG_BLOCK_WITH_ONLY_OFFICES = !false;
+export const DEBUG_BLOCK_WITH_ONLY_PARK = !false;
 export const DEBUG_BLOCK_WITH_ONLY_PLAZA = !false;
 export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.03;
 export const DEBUG_RENDERER_INFO = false;
-export const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
+export const DEBUG_BUILDINGS_OPACITY = 0/4;	// for buildings and trees
 export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 export const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
-export const DEBUG_NAVMESH_SHOW_MESHES = !false;
-export const DEBUG_NAVMESH_SHOW_FLOORS = !false;
+export const DEBUG_NAVMESH_SHOW_MESHES = false;
+export const DEBUG_NAVMESH_SHOW_FLOORS = false;
 export const DEBUG_NAVMESH_SHOW_LINES = false;
 export const DEBUG_NAVMESH_SHOW_ELEVATORS = false;
 export const DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION = false;
@@ -41,7 +41,7 @@ export const DEBUG_FOLLOW_AGENT_HEALTH = -1;	// -1 for not following any
 export const DEBUG_SHOW_DIRECTIONS = false;
 export const DEBUG_APARTMENT_ADD_FLOORS = false;
 export const DEBUG_SHOW_HOME_TO_WORK_ARROW = false;
-export const DEBUG_SHOW_ROUTES = !false;
+export const DEBUG_SHOW_ROUTES = false;
 export const DEBUG_DUMP_ROUTES = false;
 export const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 export const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
@@ -120,7 +120,7 @@ export const OFFICE_ROOM_COUNT = new Range( 2, 9 );
 // Apartment buildings
 export const APARTMENT_BUILDING_WIDTH = new Range( 8, 16 );	// in meters
 export const APARTMENT_BUILDING_DISTANCE = 24;				// in meters
-export const MAX_APARTMENT_BUILDING_FLOORS = 50;				// maximal number of floors in an apartment building
+export const MAX_APARTMENT_BUILDING_FLOORS = 20;				// maximal number of floors in an apartment building
 export const APARTMENT_ROOM_SIZE = 7;							// in meters (desired size)
 export const ELEVATOR_SIZE = new Size( 2, 2 );					// in meters
 
@@ -148,9 +148,9 @@ export const AGENT_AGE_YEARS = new Range( 0, 100 );			// in years
 //TODO-TEMP export const AGENT_WALKING_SPEED = new Range( 0.8, 2.0 );		// in meters/second
 //TODO-TEMP export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
 //TODO-TEMP export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
-export const AGENT_WALKING_SPEED = new Range( 0, 0 );		// in meters/second
+export const AGENT_WALKING_SPEED = new Range( 0.6, 0.6 );		// in meters/second
 export const AGENT_HEIGHT_CHILD = new Range( 1.7, 1.7 );		// in meters
-export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.7 );		// in meters
+export const AGENT_HEIGHT_ADULT = new Range( 0.4, 2.4 );		// in meters
 
 export const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
 export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );
@@ -185,13 +185,13 @@ export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 
 
 //export const SHADOWS = NO_SHADOWS;
-//export const SHADOWS = TOP_SHADOWS;
-export const SHADOWS = FULL_SHADOWS;
+export const SHADOWS = TOP_SHADOWS;
+//export const SHADOWS = FULL_SHADOWS;
 export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 
 
-export const START_TIME = timeMs(6);			// start time
+export const START_TIME = timeMs(6,10);			// start time
 
 
 
