@@ -38,6 +38,8 @@
 //
 
 
+import * as THREE from '../js/three.module.js';
+
 import {timeMs, Pos, Range, Zone, almostEqual, drawArrow} from '../core.js';
 import {agents} from '../main.js';
 import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../coreNav.js';
@@ -770,6 +772,11 @@ this.doing = this.AGENT_WANDERING; // todo
 	{
 //		console.log('current\t',this.position.x.toFixed(2),this.position.z.toFixed(2));
 			
+		var uTime = (dayTimeMs/400); // set to vertex shader
+		var speed = 1.6; // set inside vertex shader
+		var rawTime = speed*uTime + this.id*15.0; // set inside vertex shader
+		this.infectionLevel = THREE.Math.euclideanModulo(rawTime+2	,2*Math.PI)>Math.PI?100:0;
+				
 		var v = this.position.to( target ),
 			distance = v.distance( ), // distance to target
 			walkDistance = this.walkingSpeed * deltaTime; // distance to be walked

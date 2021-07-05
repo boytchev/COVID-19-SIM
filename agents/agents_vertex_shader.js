@@ -94,12 +94,17 @@ void main() {
 	//vVertexColor = aVertexColor;
 	vInfectionLevel = infectionLevel;
 	
-	float speed = 1.6+0.4*sin(agentId); // speed of walking
+//TODO-TEMP	float speed = 1.6+0.4*sin(agentId); // speed of walking
+	float speed = 1.6; // speed of walking
 	float baseAngle = 0.2*speed;
 
 	float rawTime = speed*uTime + agentId*15.0;
-	float time = mod(rawTime, 2.0*PI); // time loop [0,2π]
+//TODO-TEMP	float time = mod(rawTime, 2.0*PI); // time loop [0,2π]
 
+	//float mod2 = mod(rawTime,2.0)-1.0;
+	//float mod4 = floor(mod(rawTime,4.0)/2.0);
+	float time = mod(rawTime, 2.0*PI);
+	
 	float sine = sin(time);
 	float cosine = cos(time);
 	float mirror = sign(transformed.x); // left or right
@@ -217,7 +222,7 @@ void main() {
 	
 	#define UPPER_LEN bodyScale*(0.23)
 	#define LOWER_LEN bodyScale*(0.265)
-	#define FOOT_LEN bodyScale*(0.03)
+//	#define FOOT_LEN bodyScale*(0.03)
 	
 	a = -baseAngle * (-0.25 + sine);
 	posKnee.y = UPPER_LEN*cos(a);
@@ -226,10 +231,10 @@ void main() {
 	a = a + 1.2*baseAngle*k*(1.0-k);
 	posAnkle.y = posKnee.y + LOWER_LEN*cos(a);
 	posAnkle.z = posKnee.z + LOWER_LEN*sin(a);
-	k = cosine;
-	a = a + /*0.5*baseAngle*k*k*(1.0-k) +*/ PI/2.0 - 0.1;
-	posToe.y = posAnkle.y + FOOT_LEN*cos(a);
-	posToe.z = posAnkle.z + FOOT_LEN*sin(a);
+	//k = cosine;
+	//a = a + /*0.5*baseAngle*k*k*(1.0-k) +*/ PI/2.0 - 0.1;
+	//posToe.y = posAnkle.y + FOOT_LEN*cos(a);
+	//posToe.z = posAnkle.z + FOOT_LEN*sin(a);
 	
 
 	a = -baseAngle * (-0.25 - sine);
@@ -239,27 +244,22 @@ void main() {
 	a = a + 1.2*baseAngle*k*(1.0-k);
 	negAnkle.y = negKnee.y + LOWER_LEN*cos(a);
 	negAnkle.z = negKnee.z + LOWER_LEN*sin(a);
-	k = -cosine;
-	a = a + /*0.5*baseAngle*k*k*(1.0-k)*/ + PI/2.0 - 0.1;
-	negToe.y = negAnkle.y + FOOT_LEN*cos(a);
-	negToe.z = negAnkle.z + FOOT_LEN*sin(a);
+	//k = -cosine;
+	//a = a + /*0.5*baseAngle*k*k*(1.0-k)*/ + PI/2.0 - 0.1;
+	//negToe.y = negAnkle.y + FOOT_LEN*cos(a);
+	//negToe.z = negAnkle.z + FOOT_LEN*sin(a);
 
-//	if( aVertexTopology==HEAD )
-//	{
-//		transformed.y = 0.5-posAnkle.y;
-//		transformed.z = posAnkle.z;
-//	}
-	
 	float dY = (1.0-cycleB)*posAnkle.y + cycleB*negAnkle.y;
 	float dZ = (1.0-cycleB)*posAnkle.z + cycleB*negAnkle.z;
 	
-	dY = (1.0-cycleB)*posToe.y + cycleB*negToe.y;
-	dZ = (1.0-cycleB)*posToe.z + cycleB*negToe.z;
+	//dY = (1.0-cycleB)*posToe.y + cycleB*negToe.y;
+	//dZ = (1.0-cycleB)*posToe.z + cycleB*negToe.z;
 	
-	dY = max(posToe.y,negToe.y);
+	//dY = max(posToe.y,negToe.y);
+	dY = max(posAnkle.y,negAnkle.y);
 	
 	transformed.y -= 0.47-dY;
-//	transformed.z -= dZ;
+	transformed.z -= dZ;
 	
 #endif
 

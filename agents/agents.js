@@ -7,11 +7,11 @@
 //
 
 import * as THREE from '../js/three.module.js';
-import {scene, buildings, agents} from '../main.js';
+import {scene, camera, controls, buildings, agents} from '../main.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
-import {frame, dayTimeMs} from '../objects/nature.js';
-import {INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS} from '../config.js';
+import {frame, dayTimeMs, currentTimeMs} from '../objects/nature.js';
+import {INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED} from '../config.js';
 
 import vertexShader from './agents_vertex_shader.js';
 import fragmentShader from './agents_fragment_shader.js';

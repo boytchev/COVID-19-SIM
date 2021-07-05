@@ -15,8 +15,8 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 150;
-export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
+export const DEBUG_AGENT_MAX_COUNT = 1;
+export const DEBUG_TIME_SPEED = timeMs(0,0,0.25)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
@@ -143,10 +143,15 @@ export const SECONDS_IN_MINUTE = 60;
 
 // agents
 export const AGENT_MAX_COUNT = DEBUG_AGENT_MAX_COUNT;			// max number of virtual people
-export const AGENT_WALKING_SPEED = new Range( 0.8, 2.0 );		// in meters/second
 export const AGENT_AGE_YEARS = new Range( 0, 100 );			// in years
-export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
-export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
+
+//TODO-TEMP export const AGENT_WALKING_SPEED = new Range( 0.8, 2.0 );		// in meters/second
+//TODO-TEMP export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
+//TODO-TEMP export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
+export const AGENT_WALKING_SPEED = new Range( 0, 0 );		// in meters/second
+export const AGENT_HEIGHT_CHILD = new Range( 1.7, 1.7 );		// in meters
+export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.7 );		// in meters
+
 export const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
 export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );
 export const AGENT_ADULTS_PER_APARTMENT = new Range( 1, 3 );

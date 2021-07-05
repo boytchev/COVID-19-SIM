@@ -87,12 +87,14 @@ var nature = new Nature();			//console.log('nature\t\t',clock.getDelta());
 
 agents_elem.innerHTML = 'ppl='+agents.agents.length;
 
-if( DEBUG_FOLLOW_AGENT>=0 && DEBUG_FOLLOW_AGENT<this.agents.agents.length )
-{
-	var agent = this.agents.agents[DEBUG_FOLLOW_AGENT];
-	agent.mesh.material = agent.mesh.material.clone();
-	agent.mesh.material.color = new THREE.Color('cornflowerblue');
-}
+//if( DEBUG_FOLLOW_AGENT>=0 && DEBUG_FOLLOW_AGENT<agents.agents.length )
+//{
+//	var agent = agents.agents[DEBUG_FOLLOW_AGENT];
+//	agent.mesh.material = agent.mesh.material.clone();
+//	agent.mesh.material.color = new THREE.Color('cornflowerblue');
+//
+//  note:- commented because agents has no individual colour since they are instanced and color is immune level
+//}
 
 if( DEBUG_NAVMESH_SHOW_MESHES )
 {
