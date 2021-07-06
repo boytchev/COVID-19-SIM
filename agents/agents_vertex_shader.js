@@ -94,16 +94,15 @@ void main() {
 	//vVertexColor = aVertexColor;
 	vInfectionLevel = infectionLevel;
 	
-	float speed = 3.0+2.0*sin(agentId); // speed of walking
-	//float speed = 1.6; // speed of walking
+	float speed = 1.8+0.8*sin(agentId); // speed of walking
 	float baseAngle = 0.2*1.6;//0.2*speed;
 
 	float rawTime = speed*uTime + agentId*15.0;
 //TODO-TEMP	float time = mod(rawTime, 2.0*PI); // time loop [0,2π]
 
-	//float mod2 = mod(rawTime,2.0)-1.0;
-	//float mod4 = floor(mod(rawTime,4.0)/2.0);
-	float time = mod(rawTime, 2.0*PI);
+	float mod2 = mod(rawTime,2.0)-1.0;
+	float mod4 = floor(mod(rawTime,4.0)/2.0);
+	float time = asin(clamp(mod2/0.95,-0.99,0.99)) + PI*mod4;
 	
 	float sine = sin(time);
 	float cosine = cos(time);
@@ -147,18 +146,6 @@ void main() {
 		transformed.y += 0.007*baseAngle*mirror*cosine; // shoulder up-down
 	}
 
-/*
-	// feet
-	if( aVertexTopology == FEET )
-	{
-		float k = mirror*cosine,
-			  a = 0.5*baseAngle*k*k*(1.0-k);
-		
-		rot = rotX(a);
-
-		apply(rot,0.06);
-	}
-*/
 	// knees
 	if( aVertexTopology >= KNEES )
 	{
@@ -180,6 +167,11 @@ void main() {
 
 		transformed.y -= 0.02*mirror*cosine;
 	}
+	else
+	{
+	}
+	
+	//transformed.z += 0.3+0.3*sin(time+0.5);
 
 	// rescale the head and the body (keeping the head
 	// constant size independent on the body height)
@@ -206,7 +198,14 @@ void main() {
 		// scale the body down
 		transformed *= bodyScale;
 	}
-
+	
+	if( aVertexTopology <= LEGS )
+	{
+		// move body up-down (simulation)
+		transformed.y += 0.02*sin(time*2.0);
+	}
+	
+		
 	//transformed.y += 0.02-agentHeight*(0.01-0.01*sin(2.0*time));
 	//transformed.z += 0.2*baseAngle*speed*mod(uTime,100.0)*agentHeight;
 
@@ -223,7 +222,6 @@ void main() {
 	
 	#define UPPER_LEN bodyScale*(0.23)
 	#define LOWER_LEN bodyScale*(0.265)
-//	#define FOOT_LEN bodyScale*(0.03)
 	
 	a = -baseAngle * (-0.25 + sine);
 	posKnee.y = UPPER_LEN*cos(a);
@@ -232,10 +230,6 @@ void main() {
 	a = a + 1.2*baseAngle*k*(1.0-k);
 	posAnkle.y = posKnee.y + LOWER_LEN*cos(a);
 	posAnkle.z = posKnee.z + LOWER_LEN*sin(a);
-	//k = cosine;
-	//a = a + /*0.5*baseAngle*k*k*(1.0-k) +*/ PI/2.0 - 0.1;
-	//posToe.y = posAnkle.y + FOOT_LEN*cos(a);
-	//posToe.z = posAnkle.z + FOOT_LEN*sin(a);
 	
 
 	a = -baseAngle * (-0.25 - sine);
@@ -245,21 +239,15 @@ void main() {
 	a = a + 1.2*baseAngle*k*(1.0-k);
 	negAnkle.y = negKnee.y + LOWER_LEN*cos(a);
 	negAnkle.z = negKnee.z + LOWER_LEN*sin(a);
-	//k = -cosine;
-	//a = a + /*0.5*baseAngle*k*k*(1.0-k)*/ + PI/2.0 - 0.1;
-	//negToe.y = negAnkle.y + FOOT_LEN*cos(a);
-	//negToe.z = negAnkle.z + FOOT_LEN*sin(a);
 
 	float dY = (1.0-cycleB)*posAnkle.y + cycleB*negAnkle.y;
 	float dZ = (1.0-cycleB)*posAnkle.z + cycleB*negAnkle.z;
 	
-	//dY = (1.0-cycleB)*posToe.y + cycleB*negToe.y;
-	//dZ = (1.0-cycleB)*posToe.z + cycleB*negToe.z;
-	
 	//dY = max(posToe.y,negToe.y);
 	//dY = max(posAnkle.y,negAnkle.y);
 	
-	transformed.y -= 0.27-dY/2.0;
+//	transformed.y += 0.01*pow(sin(2.0*time),3.0);
+//	transformed.y -= 0.27-dY/1.0;
 //	transformed.z -= dZ;
 	
 #endif

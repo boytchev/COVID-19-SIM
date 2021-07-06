@@ -144,8 +144,8 @@ export class AgentBehaviour
 		
 
 // temporary set wandering mode
-//this.gotoPosition = null;
-//this.doing = this.AGENT_WANDERING; // todo
+this.gotoPosition = null;
+this.doing = this.AGENT_WANDERING; // todo
 				
 	} // AgentBehaviour.constructor
 
@@ -776,7 +776,7 @@ export class AgentBehaviour
 			distance = v.distance( ), // distance to target
 			walkDistance = this.walkingSpeed * deltaTime; // distance to be walked
 			
-			walkDistance = (3.0+2.0*Math.sin(this.id))/1.4*THREE.Math.mapLinear(this.height,0.3,3,0.03,1.2) * deltaTime; // distance to be walked
+			walkDistance = (1.8+0.8*Math.sin(this.id))*THREE.Math.mapLinear(this.height,0.35,2,0.03,0.82) * deltaTime; // distance to be walked
 
 //var uTime = agents.images.material.uniforms.uTime.value;
 //var speed = 1.6; // set inside vertex shader
