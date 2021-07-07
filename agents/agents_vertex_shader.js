@@ -16,11 +16,11 @@ varying vec3 vViewPosition;
 #ifdef COVID19SYM
 	uniform float uTime;
 	attribute int aVertexTopology;
-	//varying vec3 vVertexColor;
+	varying vec3 vVertexColor;
 	attribute float infectionLevel;
 	attribute float agentId;
 	attribute float agentHeight;
-	varying float vInfectionLevel;
+	//varying float vInfectionLevel;
 #endif
 
 #include <common>
@@ -71,7 +71,6 @@ varying vec3 vViewPosition;
 	}
 	
 	#define apply(matrix,offset) transformed.y -= offset; transformed *= matrix; vNormal *= matrix; transformed.y += offset;
-	#define applyFoot(matrix,offset) foot.y -= offset; foot *= matrix; foot.y += offset;
 	
 #endif
 
@@ -91,8 +90,8 @@ void main() {
 	#include <begin_vertex>
 
 #ifdef COVID19SYM
-	//vVertexColor = aVertexColor;
-	vInfectionLevel = infectionLevel;
+	vVertexColor = vec3( 1.0, 1.0-infectionLevel, 1.0-infectionLevel );
+	//vInfectionLevel = infectionLevel;
 	
 	float speed = 1.8+0.8*sin(agentId); // speed of walking
 	float baseAngle = 0.2*1.6;//0.2*speed;
@@ -171,8 +170,6 @@ void main() {
 	{
 	}
 	
-	//transformed.z += 0.3+0.3*sin(time+0.5);
-
 	// rescale the head and the body (keeping the head
 	// constant size independent on the body height)
 	
@@ -204,51 +201,11 @@ void main() {
 		// move body up-down (simulation)
 		transformed.y += 0.02*sin(time*2.0);
 	}
-	
-		
-	//transformed.y += 0.02-agentHeight*(0.01-0.01*sin(2.0*time));
-	//transformed.z += 0.2*baseAngle*speed*mod(uTime,100.0)*agentHeight;
 
-	float cycleA = round(0.5+0.5*sign(sin(time)));
-	float cycleB = round(0.5-0.5*sign(cos(time-0.25))); // left-right
-		
-//vInfectionLevel = round(2.0*(0.5+0.5*sign(cos(time-0.4))) + (0.5+0.5*sign(sin(time))))/3.0;
-//vInfectionLevel = cycleB;
-	
-	vec3 posKnee,  negKnee;
-	vec3 posAnkle, negAnkle;
-	vec3 posToe,   negToe;
-	float a,k;
-	
-	#define UPPER_LEN bodyScale*(0.23)
-	#define LOWER_LEN bodyScale*(0.265)
-	
-	a = -baseAngle * (-0.25 + sine);
-	posKnee.y = UPPER_LEN*cos(a);
-	posKnee.z = UPPER_LEN*sin(a);
-	k = cosine;
-	a = a + 1.2*baseAngle*k*(1.0-k);
-	posAnkle.y = posKnee.y + LOWER_LEN*cos(a);
-	posAnkle.z = posKnee.z + LOWER_LEN*sin(a);
-	
-
-	a = -baseAngle * (-0.25 - sine);
-	negKnee.y = UPPER_LEN*cos(a);
-	negKnee.z = UPPER_LEN*sin(a);
-	k = -cosine;
-	a = a + 1.2*baseAngle*k*(1.0-k);
-	negAnkle.y = negKnee.y + LOWER_LEN*cos(a);
-	negAnkle.z = negKnee.z + LOWER_LEN*sin(a);
-
-	float dY = (1.0-cycleB)*posAnkle.y + cycleB*negAnkle.y;
-	float dZ = (1.0-cycleB)*posAnkle.z + cycleB*negAnkle.z;
-	
-	//dY = max(posToe.y,negToe.y);
-	//dY = max(posAnkle.y,negAnkle.y);
-	
-//	transformed.y += 0.01*pow(sin(2.0*time),3.0);
-//	transformed.y -= 0.27-dY/1.0;
-//	transformed.z -= dZ;
+	float r = 0.5+0.5*sin(float(1.2*agentId)+1.76434*float(aVertexTopology));
+	float g = 0.5+0.5*cos(float(1.7*agentId)+2.16434*float(aVertexTopology));
+	float b = 0.5-0.5*sin(float(1.9*agentId)+1.134*float(aVertexTopology));
+	vVertexColor = vec3( r, g, b );
 	
 #endif
 

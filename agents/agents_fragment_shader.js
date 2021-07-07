@@ -15,9 +15,9 @@ uniform float shininess;
 uniform float opacity;
 
 #ifdef COVID19SYM
-	uniform float uTime;
-	//varying vec3 vVertexColor;
-	varying float vInfectionLevel;
+	//uniform float uTime;
+	varying vec3 vVertexColor;
+	//varying float vInfectionLevel;
 #endif
 
 #include <common>
@@ -52,10 +52,9 @@ void main() {
 vec4 diffuseColor = vec4( diffuse, opacity );
 
 #ifdef COVID19SYM
-	//float infectionLevel = vColor.r;
-	diffuseColor = vec4( 1.0, 1.0-vInfectionLevel, 1.0-vInfectionLevel, opacity );
+	//diffuseColor = vec4( 1.0, 1.0-vInfectionLevel, 1.0-vInfectionLevel, opacity );
 
-	//diffuseColor = vec4(vVertexColor,1.0);
+	diffuseColor = vec4(vVertexColor,1.0);
 #endif
 
 
