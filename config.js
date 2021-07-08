@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 300; 				// in meters
+export const GROUND_SIZE = 2000; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -15,23 +15,23 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 5000;
+export const DEBUG_AGENT_MAX_COUNT = 25000;
 export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
-export const DEBUG_BLOCK_WITH_ONLY_PLAZA = !false;
-export const DEBUG_AUTOROTATE = !false;
+export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
+export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.03;
 export const DEBUG_RENDERER_INFO = false;
-export const DEBUG_BUILDINGS_OPACITY = 0/4;	// for buildings and trees
+export const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
 export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 export const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
 export const DEBUG_NAVMESH_SHOW_MESHES = false;
-export const DEBUG_NAVMESH_SHOW_FLOORS = false;
+export const DEBUG_NAVMESH_SHOW_FLOORS = !false;
 export const DEBUG_NAVMESH_SHOW_LINES = false;
-export const DEBUG_NAVMESH_SHOW_ELEVATORS = false;
+export const DEBUG_NAVMESH_SHOW_ELEVATORS = !false;
 export const DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION = false;
 export const DEBUG_SHOW_VIRAL_SHEDDING = false;
 export const DEBUG_HIDE_ROOFS = false;
@@ -146,11 +146,11 @@ export const AGENT_MAX_COUNT = DEBUG_AGENT_MAX_COUNT;			// max number of virtual
 export const AGENT_AGE_YEARS = new Range( 0, 100 );			// in years
 
 //TODO-TEMP export const AGENT_WALKING_SPEED = new Range( 0.8, 2.0 );		// in meters/second
-//TODO-TEMP export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
-//TODO-TEMP export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
+export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
+export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
 export const AGENT_WALKING_SPEED = new Range( 0.6, 0.6 );		// in meters/second
-export const AGENT_HEIGHT_CHILD = new Range( 1.7, 1.7 );		// in meters
-export const AGENT_HEIGHT_ADULT = new Range( 0.8, 3 );		// in meters
+//export const AGENT_HEIGHT_CHILD = new Range( 1.7, 1.7 );		// in meters
+//export const AGENT_HEIGHT_ADULT = new Range( 0.8, 3 );		// in meters
 
 export const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
 export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );
@@ -197,15 +197,16 @@ export const START_TIME = timeMs(6,10);			// start time
 
 export const INFECTION_PATTERNS_COUNT = 10;
 //const INFECTION_TOTAL_MS = new Range( 14*HOURS_24_MS, 28*HOURS_24_MS ); // 14-28 days in ms
-export const INFECTION_TOTAL_MS = new Range( timeMs(0), timeMs(3) ); // 40 min - 10 hours
+export const INFECTION_TOTAL_MS = new Range( timeMs(0), timeMs(0,10,0) ); // 40 min - 10 hours
 //export const INFECTION_OVERHEAD_INDICATOR = false;
 export const INFECTION_COLOR_INDICATOR = !false;
+export const INFECTION_STEP = 20;
 export const INFECTION_DISTANCE = 1; // in meters
 export const INFECTION_STRENGTH = 0.5; // factor of how fast is the infection
 export const IMMUNE_STRENGTH = new Range( 100, 200 );
-export const IMMUNE_RECOVERY_FACTOR = 0.003; // recovery of immune per second
+export const IMMUNE_RECOVERY_FACTOR = 0.001; // recovery of immune per second
 export const IMMUNE_CURE_FACTOR = new Range( 1.0, 1.2 ); // increase of immunity after cure
-export const PERCENTAGE_INITIAL_INFECTED = 0.01; // 0.01=1%
+export const PERCENTAGE_INITIAL_INFECTED = 0.05; // 0.05=5%
 
 /*
 

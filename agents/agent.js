@@ -31,11 +31,11 @@ import * as THREE from '../js/three.module.js';
 import {AgentBehaviour} from './agentBehaviour.js';
 import {Agents} from './agents.js';
 import {WorkAddress} from './address.js';
-import {/*INFECTION_OVERHEAD_INDICATOR, */AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, /*DEBUG_BLOCK_COLOR, */INFECTION_STRENGTH, IMMUNE_CURE_FACTOR} from '../config.js';
+import {/*INFECTION_OVERHEAD_INDICATOR, */AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, /*DEBUG_BLOCK_COLOR, */INFECTION_STRENGTH, IMMUNE_CURE_FACTOR, INFECTION_STEP} from '../config.js';
 import {font} from '../font.js';
 import {scene, controls, agents} from '../main.js';
 import {Range, drawArrow} from '../core.js';
-import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs} from '../objects/nature.js';
+import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs, frame} from '../objects/nature.js';
 
 
 
@@ -142,19 +142,21 @@ class Agent extends AgentBehaviour
 			var otherAgents = this.position.block.agents;
 
 			// if there is infected agent, which is too close, then consider infection
-			for( var otherAgent of otherAgents )
+			for( var i = frame%INFECTION_STEP; i<otherAgents.length; i+=INFECTION_STEP )
 			{				
+				var otherAgent = otherAgents[i];
+				
 				// skip if the other agent is healthy
 				if( otherAgent.infectionPattern == undefined ) continue;
 				
 				// skip if the other agent is on a different floor
 				if( otherAgent.position.y != this.position.y ) continue;
 
-				// skip if the other agent is too close in X direction
+				// skip if the other agent is not too close in X direction
 				var distanceX = Math.abs( otherAgent.position.x - this.position.x );
 				if( distanceX > INFECTION_DISTANCE ) continue;
 
-				// skip if the other agent is too close in Z direction
+				// skip if the other agent is not too close in Z direction
 				var distanceZ = Math.abs( otherAgent.position.z - this.position.z );
 				if( distanceZ > INFECTION_DISTANCE ) continue;
 				
@@ -162,7 +164,7 @@ class Agent extends AgentBehaviour
 				var infectionStrength = INFECTION_STRENGTH * Math.cos( distanceX/INFECTION_DISTANCE * Math.PI/2 ) * Math.cos( distanceZ/INFECTION_DISTANCE * Math.PI/2 );
 				
 				// calculate how much infection [0,100] is transferred in the actual time slot
-				var infectionTransfer = infectionStrength * otherAgent.infectionLevel * deltaTime;
+				var infectionTransfer = infectionStrength * otherAgent.infectionLevel * deltaTime * INFECTION_STEP;
 				
 				this.currentImmuneStrength -= infectionTransfer;
 				if( this.currentImmuneStrength < 0 )
