@@ -223,12 +223,13 @@ export class AgentBehaviour
 		this.addToRoute( apartment.outsideZone.randomPos().setFloor(address.floor) ); 
 		
 		// go to the nearest elevator
-		var elevator = apartment.closestElevator;
-		this.addToRoute( elevator.zone.randomPos().setFloor(address.floor), elevator, Elevator.OUTSIDE ); 
+		var elevator = apartment.closestElevator,
+			elevatorPos = elevator.zone.randomPos();
+		this.addToRoute( elevatorPos.newFloor(address.floor), elevator, Elevator.OUTSIDE ); 
 	
 		// go to the ground floor if not there
 		if( address.floor )
-			this.addToRoute( elevator.zone, elevator, Elevator.INSIDE ); 
+			this.addToRoute( elevatorPos.newFloor(0), elevator, Elevator.INSIDE ); 
 
 		// pick a crossings (as mid-target) which is suitable
 		// for reaching the final location, if there are no crossing,
@@ -258,14 +259,15 @@ export class AgentBehaviour
 		var apartment = to.building.rooms[to.number];
 		
 		// find suitable elevator and door
-		var elevator = pickClosest( position, to.building.elevators, to.position );
+		var elevator = pickClosest( position, to.building.elevators, to.position ),
+			elevatorPos = elevator.zone.randomPos();
 		var door = pickClosest( position, to.building.doors, elevator.zone.center );
 		
 		// go to the door, then to elevator, then to floor
 		this.addToRoute( clipLineRoute( this.routePosition, door.outsideZone.randomPos(), to.block.buildings ) );
 		this.addToRoute( door.insideZone );
-		this.addToRoute( elevator.zone, elevator, Elevator.OUTSIDE ); 
-		this.addToRoute( elevator.zone.randomPos().setFloor(to.floor), elevator, Elevator.INSIDE ); 
+		this.addToRoute( elevatorPos, elevator, Elevator.OUTSIDE ); 
+		this.addToRoute( elevatorPos.newFloor(to.floor), elevator, Elevator.INSIDE ); 
 		
 		// go to the door and enter trough it
 		this.addToRoute( apartment.outsideZone.randomPos().setFloor(to.floor) ); 
@@ -421,9 +423,10 @@ export class AgentBehaviour
 								this.addToRoute( fromApartment.insideZone.randomPos().setFloor(from.floor) ); 
 								this.addToRoute( fromApartment.outsideZone.randomPos().setFloor(from.floor) ); 
 
-								var elevator = pickDirection( from.position, from.building.elevators, to.position );
-								this.addToRoute( elevator.zone.randomPos().setFloor(from.floor), elevator, Elevator.OUTSIDE );
-								this.addToRoute( elevator.zone.randomPos().setFloor(to.floor), elevator, Elevator.INSIDE );
+								var elevator = pickDirection( from.position, from.building.elevators, to.position ),
+									elevatorPos = elevator.zone.randomPos();
+								this.addToRoute( elevatorPos.newFloor(from.floor), elevator, Elevator.OUTSIDE );
+								this.addToRoute( elevatorPos.newFloor(to.floor), elevator, Elevator.INSIDE );
 								
 								this.addToRoute( toApartment.outsideZone.randomPos().setFloor(to.floor) ); 
 								this.addToRoute( toApartment.insideZone.randomPos().setFloor(to.floor) ); 
@@ -463,9 +466,10 @@ export class AgentBehaviour
 							this.addToRoute( fromOffice.insideZone.randomPos().setFloor(from.floor) ); 
 							this.addToRoute( fromOffice.outsideZone.randomPos().setFloor(from.floor) ); 
 
-							var elevator = pickDirection( this.routePosition, from.building.elevators, to.position );
-							this.addToRoute( clipLineRoute( this.routePosition, elevator.zone.randomPos().setFloor(from.floor), to.building.rooms, 1/2 ), elevator, Elevator.OUTSIDE );
-							this.addToRoute( elevator.zone.randomPos().setFloor(to.floor), elevator, Elevator.INSIDE );
+							var elevator = pickDirection( this.routePosition, from.building.elevators, to.position ),
+								elevatorPos = elevator.zone.randomPos();
+							this.addToRoute( clipLineRoute( this.routePosition, elevatorPos.newFloor(from.floor), to.building.rooms, 1/2 ), elevator, Elevator.OUTSIDE );
+							this.addToRoute( elevatorPos.newFloor(to.floor), elevator, Elevator.INSIDE );
 
 							this.addToRoute( clipLineRoute( this.routePosition, toOffice.outsideZone.randomPos().setFloor(to.floor), to.building.rooms, 1/2 ) );
 							this.addToRoute( toOffice.insideZone.randomPos().setFloor(to.floor) ); 
@@ -510,10 +514,11 @@ export class AgentBehaviour
 						// for reaching the final location
 						var crossing = pickDirection( this.routePosition, from.building.block.crossings, to.position );
 						var door = pickDirection( this.routePosition, from.building.doors, crossing.center );
-						var elevator = pickDirection( this.routePosition, from.building.elevators, door.insideZone.center );
+						var elevator = pickDirection( this.routePosition, from.building.elevators, door.insideZone.center ),
+							elevatorPos = elevator.zone.randomPos();
 						
-						this.addToRoute( clipLineRoute( this.routePosition, elevator.zone.randomPos().setFloor(from.floor), from.building.rooms, 1/2 ), elevator, Elevator.OUTSIDE );
-						this.addToRoute( elevator.zone.randomPos().setFloor(0), elevator, Elevator.INSIDE );
+						this.addToRoute( clipLineRoute( this.routePosition, elevatorPos.newFloor(from.floor), from.building.rooms, 1/2 ), elevator, Elevator.OUTSIDE );
+						this.addToRoute( elevatorPos.newFloor(0), elevator, Elevator.INSIDE );
 						this.addToRoute( door.insideZone );
 						this.addToRoute( door.outsideZone );
 						break;
@@ -657,12 +662,13 @@ export class AgentBehaviour
 //DEBUG_FLAG_1 = true;						
 						var door = pickDistance( this.routePosition, to.building.doors, to.position );
 //DEBUG_FLAG_1 = false;
-						var elevator = pickDistance( door.insideZone.center, to.building.elevators, toOffice.outsideZone.center );
+						var elevator = pickDistance( door.insideZone.center, to.building.elevators, toOffice.outsideZone.center ),
+							elevatorPos = elevator.zone.randomPos();
 						
 						this.addToRoute( clipLineRoute( this.routePosition, door.outsideZone.randomPos(), to.block.buildings ) );
 						this.addToRoute( door.insideZone );
-						this.addToRoute( elevator.zone.randomPos(), elevator, Elevator.OUTSIDE );
-						this.addToRoute( elevator.zone.randomPos().setFloor(to.floor), elevator, Elevator.INSIDE );
+						this.addToRoute( elevatorPos, elevator, Elevator.OUTSIDE );
+						this.addToRoute( elevatorPos.newFloor(to.floor), elevator, Elevator.INSIDE );
 
 						this.addToRoute( clipLineRoute( this.routePosition.setFloor(to.floor), toOffice.outsideZone.randomPos().setFloor(to.floor), to.building.rooms, 1/2 ) );
 						

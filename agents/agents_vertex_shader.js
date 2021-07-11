@@ -172,6 +172,18 @@ void main() {
 			transformed.y -= 0.02*mirror*cosine;
 		}
 	}
+	else
+	{
+		// swinging hand while standing
+		if( aVertexTopology == HANDS )
+		{
+			float a = 0.25*baseAngle*mirror*sin(0.2*rawTime);
+				  
+			rot = rotX(a);
+
+			apply(rot,0.79);
+		}
+	}
 	
 	// rescale the head and the body (keeping the head
 	// constant size independent on the body height)

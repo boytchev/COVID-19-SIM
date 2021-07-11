@@ -171,10 +171,16 @@ export class Pos
 	
 	
 	setFloor( floor )
-	{
+	{	// reuse the current position
 		this.y = floor * FLOOR_HEIGHT;
 		return this;
 	} // Pos.setFloor
+	
+	
+	newFloor( floor )
+	{	// create new position
+		return new Pos( this.x, this.z, this.block, floor * FLOOR_HEIGHT );
+	} // Pos.newFloor
 	
 	
 	add( b, k=1 )
