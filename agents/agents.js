@@ -213,6 +213,7 @@ export class Agents
 			this.images.instanceMatrix.needsUpdate = true;
 			//this.images.instanceColor.needsUpdate = true;
 			this.images.infectionLevel.needsUpdate = true;
+			this.images.motionType.needsUpdate = true;
 
 			if( DEBUG_AGENT_LOCATIONS )
 			{
@@ -359,6 +360,10 @@ export class Agents
 			'infectionLevel',
 			new THREE.InstancedBufferAttribute(new Float32Array(this.agents.length), 1, false, 1));
 
+		geometry.setAttribute(
+			'motionType',
+			new THREE.InstancedBufferAttribute(new Int32Array(this.agents.length), 1, false, 1));
+
 		var id = [];
 		for( var i=0; i<this.agents.length; i++ ) id.push( this.agents[i].id );
 		geometry.setAttribute(
@@ -388,6 +393,7 @@ export class Agents
 
 		//mesh.instanceColor = new THREE.InstancedBufferAttribute( new Float32Array(3*instances), 3, false, 1 );
 		mesh.infectionLevel = geometry.getAttribute( 'infectionLevel' );
+		mesh.motionType = geometry.getAttribute( 'motionType' );
 
 //console.log(geometry.getAttribute('agentId').array);
 

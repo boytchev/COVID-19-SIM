@@ -68,6 +68,8 @@ const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,1), timeMs(6,0,2) );	//
 const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,0), timeMs(6,2,0) );		// in milliseconds (06:00-08:00)
 
 
+const MOTION_TYPE_STAND = 0; // hardcoded in vertex shader
+const MOTION_TYPE_WALK = 1; // hardcoded in vertex shader
 
 class AgentDailySchedule
 {
@@ -778,16 +780,7 @@ export class AgentBehaviour
 			
 			walkDistance = (1.8+0.8*Math.sin(this.id))*THREE.Math.mapLinear(this.height,0.35,2,0.03,0.82) * deltaTime; // distance to be walked
 
-//var uTime = agents.images.material.uniforms.uTime.value;
-//var speed = 1.6; // set inside vertex shader
-//var rawTime = speed*uTime + this.id*15.0; // set inside vertex shader
-
-////var walkQuants=THREE.Math.euclideanModulo(rawTime+1.372532,2*Math.PI)>=Math.PI;
-////                                                    372 375
-//var walkQuants = Math.cos(rawTime-0.25)>0;
-//if( walkQuants == this.oldWalkQuants ) walkDistance = 0; else walkDistance = THREE.Math.mapLinear(this.height,0.3,3,0.03,1.2);
-//this.oldWalkQuants = walkQuants;
-				
+		agents.images.motionType.array[this.id] = MOTION_TYPE_WALK;
 
 		// if target is ouside an elevator, then approach it,
 		// but enter only of door is open
@@ -800,14 +793,20 @@ export class AgentBehaviour
 				if( distance > 1.0*Math.max(ELEVATOR_SIZE.x,ELEVATOR_SIZE.z) )
 					if( target.mark.isClosed( this.position.y ) )
 					{
+						agents.images.motionType.array[this.id] = MOTION_TYPE_STAND;
 						return false;
 					}
+				agents.images.motionType.array[this.id] = MOTION_TYPE_WALK;
 			}
+			
 			if( target.submark == Elevator.INSIDE )
 			{
+				agents.images.motionType.array[this.id] = MOTION_TYPE_STAND;
 				if( !this.alreadyElevating && !target.mark.isMoving( this.position.y ) )
+				{
 					return false;
-					
+				}
+				
 				this.alreadyElevating = true;
 				//this.debugColor( 2 );
 				walkDistance = target.mark.speed * deltaTime;
@@ -905,12 +904,14 @@ else
 
 
 		// if at crossing that is red-light, then wait
+		agents.images.motionType.array[this.id] = MOTION_TYPE_STAND;
 		if( this.gotoPosition[0].mark )
 			if( this.gotoPosition[0].mark instanceof Crossing )
 				if( this.gotoPosition[0].mark.denyCrossing() )
 				{
 					return;
 				}
+		agents.images.motionType.array[this.id] = MOTION_TYPE_WALK;
 		// otherwise remove the reached target
 		this.gotoPosition.shift();
 
@@ -1013,6 +1014,7 @@ else
 		if( this.timeToStayStillMs > 0 )
 		{
 			this.timeToStayStillMs -= 1000*deltaTime;
+			agents.images.motionType.array[this.id] = MOTION_TYPE_STAND;
 			return; // stay without moving
 		}
 		
@@ -1043,6 +1045,7 @@ else
 		if( this.timeToStayStillMs > 0 )
 		{
 			this.timeToStayStillMs -= 1000*deltaTime;
+			agents.images.motionType.array[this.id] = MOTION_TYPE_STAND;
 			return; // stay without moving
 		}
 

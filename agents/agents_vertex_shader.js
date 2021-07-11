@@ -20,6 +20,7 @@ varying vec3 vViewPosition;
 	attribute float infectionLevel;
 	attribute float agentId;
 	attribute float agentHeight;
+	attribute int motionType;
 	//varying float vInfectionLevel;
 #endif
 
@@ -37,6 +38,9 @@ varying vec3 vViewPosition;
 #include <clipping_planes_pars_vertex>
 
 #ifdef COVID19SYM
+	#define MOTION_TYPE_STAND 0
+	#define MOTION_TYPE_WALK 1
+
 	float mapLinear(float value, float minIn, float maxIn, float minOut, float maxOut)
 	{
 		float v = clamp(value,minIn,maxIn);
@@ -94,10 +98,9 @@ void main() {
 	//vInfectionLevel = infectionLevel;
 	
 	float speed = 1.8+0.8*sin(agentId); // speed of walking
-	float baseAngle = 0.2*1.6;//0.2*speed;
+	float baseAngle = 0.2*1.6;
 
 	float rawTime = speed*uTime + agentId*15.0;
-//TODO-TEMP	float time = mod(rawTime, 2.0*PI); // time loop [0,2π]
 
 	float mod2 = mod(rawTime,2.0)-1.0;
 	float mod4 = floor(mod(rawTime,4.0)/2.0);
@@ -118,56 +121,56 @@ void main() {
 	#define KNEES 5
 	#define FEET  6
 	
-	// belly - slim and fat people
-	if( aVertexTopology == BELLY )
+	if( motionType == MOTION_TYPE_WALK )
 	{
-		float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),2.0);
-		transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
-		transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
+		// belly - slim and fat people
+		if( aVertexTopology == BELLY )
+		{
+			float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),2.0);
+			transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
+			transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
 
-		float a = 0.25*baseAngle*sine*sign(0.5-transformed.y);
-		rot = rotY(a);
-		apply(rot,0.0);
+			float a = 0.25*baseAngle*sine*sign(0.5-transformed.y);
+			rot = rotY(a);
+			apply(rot,0.0);
 
-		transformed.y += - 0.005*mirror*cosine;
-	}
+			transformed.y += - 0.005*mirror*cosine;
+		}
 	
-	// swing hands and move shoulder
-	if( aVertexTopology == HANDS )
-	{
-		float a = 1.25*baseAngle * (0.5*baseAngle + mirror*sine) * (0.8-transformed.y),
-			  b = -0.25*baseAngle*sine;
-			  
-		rot = rotX(a)*rotY(b);
+		// swing hands and move shoulder
+		if( aVertexTopology == HANDS )
+		{
+			float a = 1.25*baseAngle * (0.5*baseAngle + mirror*sine) * (0.8-transformed.y),
+				  b = -0.25*baseAngle*sine;
+				  
+			rot = rotX(a)*rotY(b);
 
-		apply(rot,0.79);
-		
-		transformed.y += 0.007*baseAngle*mirror*cosine; // shoulder up-down
-	}
+			apply(rot,0.79);
+			
+			transformed.y += 0.007*baseAngle*mirror*cosine; // shoulder up-down
+		}
 
-	// knees
-	if( aVertexTopology >= KNEES )
-	{
-		float k = mirror*cosine,
-			  a = 1.2*baseAngle*k*(1.0-k);
-		rot = rotX(a);
+		// knees
+		if( aVertexTopology >= KNEES )
+		{
+			float k = mirror*cosine,
+				  a = 1.2*baseAngle*k*(1.0-k);
+			rot = rotX(a);
 
-		apply(rot,0.30);
-	}
+			apply(rot,0.30);
+		}
 
-	// legs
-	if( aVertexTopology >= LEGS ) // includes knees and feet
-	{
-		float a = -baseAngle * (-0.25 + mirror*sine);
-		
-		rot = rotX(a) * rotZ(mirror*0.08); // woman 0.16, man = 0.08
+		// legs
+		if( aVertexTopology >= LEGS ) // includes knees and feet
+		{
+			float a = -baseAngle * (-0.25 + mirror*sine);
+			
+			rot = rotX(a) * rotZ(mirror*0.08); // woman 0.16, man = 0.08
 
-		apply(rot,0.5);
+			apply(rot,0.5);
 
-		transformed.y -= 0.02*mirror*cosine;
-	}
-	else
-	{
+			transformed.y -= 0.02*mirror*cosine;
+		}
 	}
 	
 	// rescale the head and the body (keeping the head
@@ -196,12 +199,15 @@ void main() {
 		transformed *= bodyScale;
 	}
 	
-	if( aVertexTopology <= LEGS )
+	if( motionType == MOTION_TYPE_WALK )
 	{
-		// move body up-down (simulation)
-		transformed.y += 0.02*sin(time*2.0);
+		if( aVertexTopology <= LEGS )
+		{
+			// move body up-down (simulation)
+			transformed.y += 0.02*sin(time*2.0);
+		}
 	}
-
+	
 	float r = 0.5+0.5*sin(float(1.2*agentId)+1.76434*float(aVertexTopology));
 	float g = 0.5+0.5*cos(float(1.7*agentId)+2.16434*float(aVertexTopology));
 	float b = 0.5-0.5*sin(float(1.9*agentId)+1.134*float(aVertexTopology));
