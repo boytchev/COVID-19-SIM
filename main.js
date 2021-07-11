@@ -64,7 +64,7 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.enableDamping = true;
 	controls.dampingFactor = 0.25;
 	controls.rotateSpeed = 0.3;
-	controls.panSpeed = 0.35;
+	controls.panSpeed = 0.7;
 	controls.screenSpacePanning = false;
 	controls.target.set( 0, 0, 0 );
 	controls.autoRotate = DEBUG_AUTOROTATE;

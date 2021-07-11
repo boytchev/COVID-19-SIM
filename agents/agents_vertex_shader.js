@@ -174,6 +174,14 @@ void main() {
 	}
 	else
 	{
+		// belly - slim and fat people
+		if( aVertexTopology == BELLY )
+		{
+			float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),2.0);
+			transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
+			transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
+		}
+		
 		// swinging hand while standing
 		if( aVertexTopology == HANDS )
 		{
