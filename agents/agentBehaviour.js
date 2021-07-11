@@ -872,6 +872,20 @@ export class AgentBehaviour
 	
 	
 	
+	turnTowards( targetPosition )
+	{
+		var v = this.position.to( targetPosition ),
+			angle = Math.atan2( v.x, v.z ),
+			sin = this.height * Math.sin( angle ),
+			cos = this.height * Math.cos( angle );
+		agents.images.instanceMatrix.array[this.id*16+0] = cos;
+		agents.images.instanceMatrix.array[this.id*16+2] = -sin;
+		agents.images.instanceMatrix.array[this.id*16+8] = sin;
+		agents.images.instanceMatrix.array[this.id*16+10] = cos;
+//console.log('turn ',angle);				
+	}
+
+	
 	walkRoute( nextAction = this.AGENT_DOING_NOTHING )
 	{
 //console.log('walkRoute',this.position.x.toFixed(2),this.position.z.toFixed(2));
@@ -891,15 +905,7 @@ else
 		if( this.gotoPosition.length>1 )
 		{
 			// turn towards target
-			var v = this.position.to( this.gotoPosition[1] ),
-				angle = Math.atan2( v.x, v.z ),
-				sin = this.height * Math.sin( angle ),
-				cos = this.height * Math.cos( angle );
-			agents.images.instanceMatrix.array[this.id*16+0] = cos;
-			agents.images.instanceMatrix.array[this.id*16+2] = -sin;
-			agents.images.instanceMatrix.array[this.id*16+8] = sin;
-			agents.images.instanceMatrix.array[this.id*16+10] = cos;
-//console.log('turn ',angle);				
+			this.turnTowards( this.gotoPosition[1] );
 		}
 
 
@@ -1077,6 +1083,7 @@ else
 		if( this.noRoute )
 		{
 			this.addToRoute( this.home.randomPos(this.position) );
+			this.turnTowards( this.gotoPosition[0] );
 		}
 		
 		this.walkRoute( this.AGENT_STAYING_AT_HOME );
@@ -1090,6 +1097,7 @@ else
 		if( this.noRoute )
 		{
 			this.addToRoute( this.work.randomPos(this.position) );
+			this.turnTowards( this.gotoPosition[0] );
 		}
 		
 		this.walkRoute( this.AGENT_WORKING_IN_OFFICE );
