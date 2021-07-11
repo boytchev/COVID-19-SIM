@@ -880,15 +880,19 @@ export class AgentBehaviour
 	
 	turnTowards( targetPosition )
 	{
-		var v = this.position.to( targetPosition ),
-			angle = Math.atan2( v.x, v.z ),
+		var v = this.position.to( targetPosition );
+		
+		// if vector is almost 0, do not turn, but keep the current orientation
+		if( almostEqual(v.x,0) && almostEqual(v.z,0) ) return;
+		
+		var	angle = Math.atan2( v.x, v.z ),
 			sin = this.height * Math.sin( angle ),
 			cos = this.height * Math.cos( angle );
 		agents.images.instanceMatrix.array[this.id*16+0] = cos;
 		agents.images.instanceMatrix.array[this.id*16+2] = -sin;
 		agents.images.instanceMatrix.array[this.id*16+8] = sin;
 		agents.images.instanceMatrix.array[this.id*16+10] = cos;
-//console.log('turn ',angle);				
+//console.log('turn ',angle,v.x,v.z);
 	}
 
 	
