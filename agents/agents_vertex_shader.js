@@ -39,7 +39,8 @@ varying vec3 vViewPosition;
 
 #ifdef COVID19SYM
 	#define MOTION_TYPE_STAND 0
-	#define MOTION_TYPE_WALK 1
+	#define MOTION_TYPE_WALK  1
+	#define MOTION_TYPE_SLEEP 2
 
 	float mapLinear(float value, float minIn, float maxIn, float minOut, float maxOut)
 	{
@@ -121,15 +122,19 @@ void main() {
 	#define KNEES 5
 	#define FEET  6
 	
+	// belly - slim and fat people
+	if( aVertexTopology == BELLY )
+	{
+		float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),2.0);
+		transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
+		transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
+	}
+		
 	if( motionType == MOTION_TYPE_WALK )
 	{
-		// belly - slim and fat people
+		// belly swing
 		if( aVertexTopology == BELLY )
 		{
-			float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),2.0);
-			transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
-			transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
-
 			float a = 0.25*baseAngle*sine*sign(0.5-transformed.y);
 			rot = rotY(a);
 			apply(rot,0.0);
@@ -172,16 +177,30 @@ void main() {
 			transformed.y -= 0.02*mirror*cosine;
 		}
 	}
-	else
+	else if( motionType == MOTION_TYPE_SLEEP )
 	{
-		// belly - slim and fat people
+		// knees
+		if( aVertexTopology >= KNEES )
+		{
+			rot = rotX(-2.0);
+			apply(rot,0.3);
+		}
+
+		// legs
+		if( aVertexTopology >= LEGS )
+		{
+			rot = rotX(1.0);
+			apply(rot,0.50);
+		}
+
+		// belly breathing
 		if( aVertexTopology == BELLY )
 		{
-			float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),2.0);
-			transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
-			transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
+			transformed.z *= 1.0+0.2*sin(0.2*rawTime);
 		}
-		
+	}
+	else // catch section for all other motion types, including MOTION_TYPE_STAND
+	{
 		// swinging hand while standing
 		if( aVertexTopology == HANDS )
 		{
@@ -226,6 +245,12 @@ void main() {
 			// move body up-down (simulation)
 			transformed.y += 0.02*sin(time*2.0);
 		}
+	}
+	else if( motionType == MOTION_TYPE_SLEEP )
+	{
+		// lying the whole body
+		rot = rotX(PI/2.0);
+		apply(rot,0.0);
 	}
 	
 	float r = 0.5+0.5*sin(float(1.2*agentId)+1.76434*float(aVertexTopology));

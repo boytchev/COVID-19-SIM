@@ -206,25 +206,6 @@ class Agent extends AgentBehaviour
 		
 	} // Agent.update
 	
-/*
-
-	updateImage()
-	{
-		this.mesh.position.copy( this.position.vector() );
-		
-		if( this.doing == this.AGENT_SLEEPING_AT_HOME )
-			this.mesh.rotation.x = THREE.Math.lerp( this.mesh.rotation.x, Math.PI/2, 0.1 );
-		else
-			this.mesh.rotation.x = THREE.Math.lerp( this.mesh.rotation.x, 0, 0.1 );
-		
-		if( INFECTION_OVERHEAD_INDICATOR )
-		{
-			this.mesh.children[0].rotation.y = controls.getAzimuthalAngle();
-		}
-		
-	} // Agent.updateImage
-*/
-
 	
 	debugColor(n)
 	{

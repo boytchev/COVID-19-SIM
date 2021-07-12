@@ -69,7 +69,8 @@ const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,0), timeMs(6,2,0) );		//
 
 
 const MOTION_TYPE_STAND = 0; // hardcoded in vertex shader
-const MOTION_TYPE_WALK = 1; // hardcoded in vertex shader
+const MOTION_TYPE_WALK  = 1; // hardcoded in vertex shader
+const MOTION_TYPE_SLEEP = 2; // hardcoded in vertex shader
 
 class AgentDailySchedule
 {
@@ -140,10 +141,13 @@ export class AgentBehaviour
 		
 		// assume agent is at home
 		if( this.shouldBeAwake() )
+		{
 			this.doing = this.AGENT_STAYING_AT_HOME;
+		}
 		else
+		{
 			this.doing = this.AGENT_SLEEPING_AT_HOME;
-		
+		}
 
 // temporary set wandering mode
 //this.gotoPosition = null;
@@ -1120,9 +1124,12 @@ else
 	{
 		if( this.shouldBeAwake() )
 		{
+			agents.images.motionType.array[this.id] = MOTION_TYPE_STAND;
 			this.doing = this.AGENT_STAYING_AT_HOME;
 			return;
 		}
+		
+		agents.images.motionType.array[this.id] = MOTION_TYPE_SLEEP;
 		
 	} // AgentBehaviour.AGENT_SLEEPING_AT_HOME
 	
