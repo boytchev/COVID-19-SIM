@@ -150,8 +150,8 @@ export class AgentBehaviour
 		}
 
 // temporary set wandering mode
-//this.gotoPosition = null;
-//this.doing = this.AGENT_WANDERING; // todo
+this.gotoPosition = null;
+this.doing = this.AGENT_WANDERING; // todo
 				
 	} // AgentBehaviour.constructor
 
@@ -1083,6 +1083,7 @@ else
 		if( this.noRoute )
 		{
 			this.addToRoute( this.position.block.randomPos() );
+			this.turnTowards( this.gotoPosition[0] );
 			//console.log('new target');
 		}
 		

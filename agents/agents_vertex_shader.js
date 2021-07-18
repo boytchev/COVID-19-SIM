@@ -253,10 +253,11 @@ void main() {
 		apply(rot,0.0);
 	}
 	
-	float r = 0.5+0.5*sin(float(1.2*agentId)+1.76434*float(aVertexTopology));
-	float g = 0.5+0.5*cos(float(1.7*agentId)+2.16434*float(aVertexTopology));
-	float b = 0.5-0.5*sin(float(1.9*agentId)+1.134*float(aVertexTopology));
-	vVertexColor = vec3( r, g, b );
+	//float r = 0.5+0.5*sin(float(1.2*agentId)+1.76434*float(aVertexTopology));
+	//float g = 0.5+0.5*cos(float(1.7*agentId)+2.16434*float(aVertexTopology));
+	//float b = 0.5-0.5*sin(float(1.9*agentId)+1.134*float(aVertexTopology));
+	//vVertexColor = vec3( r, g, b );
+	vVertexColor = vec3( 1 );
 	
 #endif
 

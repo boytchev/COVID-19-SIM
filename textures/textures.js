@@ -12,6 +12,7 @@ import {HouseTexture, HouseBumpTexture} from './houseTexture.js';
 import {OfficeDoorTexture} from './officeDoorTexture.js';
 import {OfficeTexture, OfficeNormalTexture} from './officeTexture.js';
 import {SidewalkTexture} from './sidewalkTexture.js';
+import {AgentTexture} from './agentTexture.js';
 
 
 export class Textures
@@ -39,6 +40,8 @@ export class Textures
 		this.crossing = new CrossingTexture( 64*2, 2, DEBUG_ALL_WHITE?'lightgray':'#404040' );
 		
 		this.grass = new GrassTexture( 64 );
+		
+		this.agent = new AgentTexture( 256 );
 		
 		//this.crossing.debugShow( '3em', 1 );
 		//this.houseBump.debugShow( '256px' );

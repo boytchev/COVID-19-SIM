@@ -160,7 +160,7 @@
 		}
 		normalData = normalData.slice(0, -2); // remove last ", "
 		normalData += '];<br><br>';
-/*
+
 		// generate texture data
 		var textureData = 'var textureData = [';
 		for( var i=0; i<faces.length; i++ )
@@ -171,7 +171,7 @@
 		}
 		textureData = textureData.slice(0, -2); // remove last ", "
 		textureData += '];<br><br>';
-*/
+
 		// generate topology data
 		var topologyData = 'var topologyData = [';
 		for( var i=0; i<faces.length; i++ )
@@ -184,7 +184,7 @@
 		topologyData += '];<br><br>';
 		
 //		document.getElementById('code').innerHTML = vertexData + normalData + /*textureData +*/ topologyData;
-		document.getElementById('code').innerHTML = topologyData;
+		document.getElementById('code').innerHTML = textureData;
 	</script>
 </body>
 </html>
