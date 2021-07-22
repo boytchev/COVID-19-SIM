@@ -43,8 +43,9 @@ export class Textures
 		
 		this.agent = new AgentTexture( 256 );
 		
-		//this.crossing.debugShow( '3em', 1 );
+		this.office.debugShow( );
 		//this.houseBump.debugShow( '256px' );
+		//this.house.debugShow( '256px' );
 		
 	} // Textures
 	

@@ -59,7 +59,7 @@ export class Trees
 		// expand it to a unit sphere
 		var vec = new THREE.Vector3(),
 			pos = geometry.getAttribute( 'position' );
-			
+
 		for( var i=0; i<pos.count; i++ )
 		{
 			vec.x = pos.getX( i );

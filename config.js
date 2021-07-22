@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 50; 				// in meters
+export const GROUND_SIZE = 500; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -15,17 +15,17 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 1500;
+export const DEBUG_AGENT_MAX_COUNT = 25;
 export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
-export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
+export const DEBUG_BLOCK_WITH_ONLY_OFFICES = !false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
-export const DEBUG_BLOCK_WITH_ONLY_PLAZA = !false;
+export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.03;
 export const DEBUG_RENDERER_INFO = false;
-export const DEBUG_BUILDINGS_OPACITY = 0/4;	// for buildings and trees
+export const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
 export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 export const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
 export const DEBUG_NAVMESH_SHOW_MESHES = !false;
@@ -130,7 +130,7 @@ export const ELEVATOR_SPEED = new Range( 0.8, 2.4 );			// in meters/second
 // trees
 export const TREE_HEIGHT = new Range( 3, 4 );		// in meters
 export const TREE_COMPLEXITY = 4; // 12*n^2 triangles, 2=48, 3=108, 4=192, 5=300
-export const TREE_PARK_RATIO = 0.2; // percentage of trees in parks
+export const TREE_PARK_RATIO = 0.32; // percentage of trees in parks
 export const TREE_HOUSES_RATIO = 0.15; // percentage of trees in house blocks
 
 
@@ -147,10 +147,10 @@ export const AGENT_AGE_YEARS = new Range( 0, 100 );			// in years
 
 //TODO-TEMP export const AGENT_WALKING_SPEED = new Range( 0.8, 2.0 );		// in meters/second
 export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
-export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
+//export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
 export const AGENT_WALKING_SPEED = new Range( 0.6, 0.6 );		// in meters/second
 //export const AGENT_HEIGHT_CHILD = new Range( 1.7, 1.7 );		// in meters
-//export const AGENT_HEIGHT_ADULT = new Range( 0.8, 3 );		// in meters
+export const AGENT_HEIGHT_ADULT = new Range( 0.8, 2 );		// in meters
 
 export const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
 export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );
@@ -169,12 +169,12 @@ export const FULL_SHADOWS = 2;
 export const AGENTS_CAST_SHADOWS = !true;
 
 
-export const SUN = NO_SUN;
-//export const SUN = STATIC_SUN;
+//export const SUN = NO_SUN;
+export const SUN = STATIC_SUN;
 //export const SUN = DYNAMIC_SUN;
 export const SUNRISE_MS = timeMs(6);
 export const SUNSET_MS = timeMs(18);
-export const STATIC_SUN_POSITION_MS = timeMs(6,30,0);
+export const STATIC_SUN_POSITION_MS = timeMs(8,30,0);
 console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
 console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
 
@@ -185,8 +185,8 @@ export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 
 
 //export const SHADOWS = NO_SHADOWS;
-export const SHADOWS = TOP_SHADOWS;
-//export const SHADOWS = FULL_SHADOWS;
+//export const SHADOWS = TOP_SHADOWS;
+export const SHADOWS = FULL_SHADOWS;
 export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 
@@ -200,7 +200,7 @@ export const INFECTION_PATTERNS_COUNT = 10;
 export const INFECTION_TOTAL_MS = new Range( timeMs(0), timeMs(0,10,0) ); // 40 min - 10 hours
 //export const INFECTION_OVERHEAD_INDICATOR = false;
 export const INFECTION_COLOR_INDICATOR = !false;
-export const INFECTION_STEP = 20;
+export const INFECTION_STEP = 200;
 export const INFECTION_DISTANCE = 1; // in meters
 export const INFECTION_STRENGTH = 0.5; // factor of how fast is the infection
 export const IMMUNE_STRENGTH = new Range( 100, 200 );

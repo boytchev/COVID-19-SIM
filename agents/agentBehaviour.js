@@ -150,8 +150,8 @@ export class AgentBehaviour
 		}
 
 // temporary set wandering mode
-this.gotoPosition = null;
-this.doing = this.AGENT_WANDERING; // todo
+//this.gotoPosition = null;
+//this.doing = this.AGENT_WANDERING; // todo
 				
 	} // AgentBehaviour.constructor
 

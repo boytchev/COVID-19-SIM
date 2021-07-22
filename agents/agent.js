@@ -174,7 +174,6 @@ class Agent extends AgentBehaviour
 				}
 				
 			} // for j
-			
 		}
 		
 

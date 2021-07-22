@@ -30,7 +30,7 @@ export class OfficeTexture extends ProceduralTexture
 		super.draw();
 		
 		this.heightMargin = Math.round( 0.19*this.height );
-		this.widthWindow  = Math.round( this.width/3 );
+		//this.widthWindow  = Math.round( this.width/3 );
 
 		var ctx = this.ctx;
 
@@ -52,6 +52,7 @@ export class OfficeTexture extends ProceduralTexture
 			ctx.fillRect( ww, this.height - this.heightMargin, 1, this.heightMargin );
 		}
 		
+		ctx.clearRect( 5, this.heightMargin+5, this.width-10, this.height - 2*this.heightMargin-10 );
 	} // OfficeTexture.draw
 	
 } // OfficeTexture

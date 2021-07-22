@@ -358,9 +358,10 @@ export class OfficeBuildings
 				shader.fragmentShader.replace(
 				  '#include <map_fragment>',
 				  
-				  'vec4 texelColor = texture2D( map, vUv*vTextureScale+vTextureOffset );\n'+
+				  'vec2 texPos = vUv*vTextureScale+vTextureOffset;\n'+
+				  'vec4 texelColor = texture2D( map, texPos );\n'+
 				  'texelColor = mapTexelToLinear( texelColor );\n'+
-				  'diffuseColor *= texelColor;'
+				  'diffuseColor *= texelColor;\n'
 				);
 				
 			shader.fragmentShader =
@@ -370,6 +371,15 @@ export class OfficeBuildings
 				  'vec3 mapN = texture2D( normalMap, vUv*vTextureScale+vTextureOffset ).xyz * 2.0 - 1.0;\n'+
 				  'mapN.xy *= normalScale;\n'+
 				  'normal = perturbNormal2Arb( -vViewPosition, normal, mapN, faceDirection );\n'
+				);
+				
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+				  '#include <dithering_fragment>',
+
+					// make windows color
+				  '#include <dithering_fragment>\n'+
+				  'gl_FragColor=gl_FragColor*texelColor.a + (1.0-texelColor.a)* vec4(fract(floor(texPos.x)/2.0),fract(floor(texPos.y)/2.0),0,1);\n'
 				);
 				
 			//console.log(shader.vertexShader);

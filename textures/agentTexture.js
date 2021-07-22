@@ -21,7 +21,7 @@ export class AgentTexture extends ProceduralTexture
 			H = this.height;
 
 		// crimson dots
-		for (var i=0; i<=100; i++)
+		for (var i=0; i<=	0; i++)
 		{
 			var x = Math.random()*W,
 				y = Math.random()*H;
