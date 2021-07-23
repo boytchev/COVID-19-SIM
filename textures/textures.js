@@ -43,7 +43,7 @@ export class Textures
 		
 		this.agent = new AgentTexture( 256 );
 		
-		this.office.debugShow( );
+		//this.office.debugShow( );
 		//this.houseBump.debugShow( '256px' );
 		//this.house.debugShow( '256px' );
 		

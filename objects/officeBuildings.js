@@ -280,7 +280,6 @@ export class OfficeBuildings
 				 -1/2, 0, -1/2, 	-1, 0, 0, 	0, 0, 
 			 ];
 		
-
 		var vertexBuffer = new THREE.InterleavedBuffer( new Float32Array(data), 8);
 	
 		var positions = new THREE.InterleavedBufferAttribute( vertexBuffer, 3/*values*/, 0/*offset*/ );
@@ -322,13 +321,21 @@ export class OfficeBuildings
 			//console.log(shader.vertexShader);
 			//console.log(shader.fragmentShader);
 
+			material.userData.shader = shader;
+			
+			shader.uniforms.uTime = { value: 0.0 };
+			shader.uniforms.uElectricLight = { value: 0.0 };
+			
 			shader.vertexShader =
 				shader.vertexShader.replace(
 					'void main() {\n',
 					
 					'varying vec2 vTextureOffset;\n'+
 					'varying vec2 vTextureScale;\n'+
+					'attribute float officeId;\n'+
+					'varying float vOfficeId;\n'+
 					'void main() {\n'+
+					'	vOfficeId = officeId;\n'+
 					'	if (normal.y>0.5)\n'+
 					'	{\n'+
 					'		vTextureScale = vec2(0);\n'+
@@ -351,6 +358,11 @@ export class OfficeBuildings
 					
 					'varying vec2 vTextureScale;\n'+
 					'varying vec2 vTextureOffset;\n'+
+					'uniform float uTime;\n'+
+					'uniform float uElectricLight;\n'+
+					'varying float vOfficeId;\n'+
+					'float isWindow;\n'+
+					'float uDarkness = 0.0;\n'+
 					'void main() {\n'
 				);
 		
@@ -358,17 +370,21 @@ export class OfficeBuildings
 				shader.fragmentShader.replace(
 				  '#include <map_fragment>',
 				  
-				  'vec2 texPos = vUv*vTextureScale+vTextureOffset;\n'+
-				  'vec4 texelColor = texture2D( map, texPos );\n'+
-				  'texelColor = mapTexelToLinear( texelColor );\n'+
-				  'diffuseColor *= texelColor;\n'
+				  `
+					vec2 texPos = vUv*vTextureScale+vTextureOffset;
+					vec4 texelColor = texture2D( map, texPos );
+					texelColor = mapTexelToLinear( texelColor );
+					isWindow = 1.0-texelColor.r;
+					texelColor.r = 0.97;
+					diffuseColor *= texelColor;
+				  `
 				);
 				
 			shader.fragmentShader =
 				shader.fragmentShader.replace(
 				  '#include <normal_fragment_maps>',
 				  
-				  'vec3 mapN = texture2D( normalMap, vUv*vTextureScale+vTextureOffset ).xyz * 2.0 - 1.0;\n'+
+				  'vec3 mapN = texture2D( normalMap, texPos ).xyz * 2.0 - 1.0;\n'+
 				  'mapN.xy *= normalScale;\n'+
 				  'normal = perturbNormal2Arb( -vViewPosition, normal, mapN, faceDirection );\n'
 				);
@@ -378,8 +394,26 @@ export class OfficeBuildings
 				  '#include <dithering_fragment>',
 
 					// make windows color
-				  '#include <dithering_fragment>\n'+
-				  'gl_FragColor=gl_FragColor*texelColor.a + (1.0-texelColor.a)* vec4(fract(floor(texPos.x)/2.0),fract(floor(texPos.y)/2.0),0,1);\n'
+					// (x,y) - int coordinates of window
+				  `
+					#include <dithering_fragment>
+					
+					float x = floor(texPos.x);
+					float y = floor(texPos.y);
+					
+					float windowId = (fract(5.0*sin(x+y*y)+vOfficeId)+fract(7.0*sin(y+x*x+vOfficeId)*(x+1.0)))/2.0;
+					
+					float colorId = 0.3+0.4*fract(12.81*windowId);
+					
+					vec4 newColor = vec4(0.8-0.1*colorId-0.1*vOfficeId,0.9-0.2*colorId,1.0+0.2*colorId,1.0);
+					
+					/*float k = windowId < 0.9*(0.5+0.5*sin(uTime/10.0+vOfficeId)) ? 1.0 : 0.0;*/
+					float k = windowId < uElectricLight ? 1.0 : 0.0;
+					
+					isWindow *= k;
+					
+					gl_FragColor = gl_FragColor + isWindow*windowId*newColor;
+				  `
 				);
 				
 			//console.log(shader.vertexShader);
@@ -443,7 +477,12 @@ export class OfficeBuildings
 		var colorAttribute = new THREE.InstancedBufferAttribute( new Float32Array(colors), 3, false, 1 );
 		geometry.setAttribute( 'color', colorAttribute );
 		
-		
+		var id = [];
+		for( var i=0; i<instances; i++ ) id.push( Math.random() );
+		geometry.setAttribute(
+			'officeId',
+			new THREE.InstancedBufferAttribute(new Float32Array(id), 1, false, 1));
+
 		// create an office building matrix
 		var matrix = new THREE.Matrix4();
 		for( var i=0; i<instances; i++ )
@@ -469,17 +508,18 @@ export class OfficeBuildings
 					transparent: true,
 					opacity: 0,
 				}),
-				mesh = new THREE.InstancedMesh( geometry, material, instances );
+				shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
 			for( var i=0; i<instances; i++ )
 			{
 				matrix.makeScale( offices[i].size.x-0.2, offices[i].height-0.1, offices[i].size.z-0.2 );
 				matrix.setPosition( offices[i].center.x, -0.1, offices[i].center.z );
-				mesh.setMatrixAt( i, matrix );
+				shadowMesh.setMatrixAt( i, matrix );
 			}
-			mesh.castShadow = true;
-			scene.add( mesh );
+			shadowMesh.castShadow = true;
+			//scene.add( shadowMesh );
 		}
 		
+		return mesh;
 	} // OfficeBuildings.image
 	
 	

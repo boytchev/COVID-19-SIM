@@ -29,7 +29,7 @@ export class Buildings
 		var doors = []; // array of OfficeDoor
 		
 		OfficeBuildings.generate( this.offices, doors );
-		OfficeBuildings.image( this.offices );
+		this.officesMesh = OfficeBuildings.image( this.offices );
 		
 		//this.trees = []; // array of Tree
 		this.houses = []; // array of HouseBuilding

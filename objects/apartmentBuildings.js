@@ -549,7 +549,7 @@ export class ApartmentBuildings
 				mesh.setMatrixAt( i, matrix );
 			}
 			mesh.castShadow = true;
-			scene.add( mesh );
+			//scene.add( mesh );
 		}
 	} // ApartmentBuildings.image
 	

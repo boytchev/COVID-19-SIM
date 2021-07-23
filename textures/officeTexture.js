@@ -52,7 +52,10 @@ export class OfficeTexture extends ProceduralTexture
 			ctx.fillRect( ww, this.height - this.heightMargin, 1, this.heightMargin );
 		}
 		
-		ctx.clearRect( 5, this.heightMargin+5, this.width-10, this.height - 2*this.heightMargin-10 );
+		ctx.clearRect( 1, this.heightMargin+7, this.width-2, this.height - 2*this.heightMargin-14 );
+		ctx.fillStyle = 'rgb(0,255,255)';
+		ctx.fillRect( 1, this.heightMargin+7, this.width-2, this.height - 2*this.heightMargin-14 );
+		
 	} // OfficeTexture.draw
 	
 } // OfficeTexture

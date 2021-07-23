@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 500; 				// in meters
+export const GROUND_SIZE = 1750; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -16,14 +16,14 @@ console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
 export const DEBUG_AGENT_MAX_COUNT = 25;
-export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
+export const DEBUG_TIME_SPEED = timeMs(0,20,0)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
-export const DEBUG_BLOCK_WITH_ONLY_OFFICES = !false;
+export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
-export const DEBUG_AUTOROTATE = false;
-export const DEBUG_AUTOROTATE_SPEED = 0.03;
+export const DEBUG_AUTOROTATE = !false;
+export const DEBUG_AUTOROTATE_SPEED = 0.3;
 export const DEBUG_RENDERER_INFO = false;
 export const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
 export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
@@ -169,12 +169,15 @@ export const FULL_SHADOWS = 2;
 export const AGENTS_CAST_SHADOWS = !true;
 
 
+export const ELECTRIC_LIGHT_MORGING_OFFICE_MS = new Range( timeMs(4,0,0), timeMs(8,0,0) ); // time with electric lights on
+export const ELECTRIC_LIGHT_EVENING_OFFICE_MS = new Range( timeMs(16,0,0), timeMs(24,0,0) ); // time with electric lights on
+
 //export const SUN = NO_SUN;
-export const SUN = STATIC_SUN;
-//export const SUN = DYNAMIC_SUN;
+//export const SUN = STATIC_SUN;
+export const SUN = DYNAMIC_SUN;
 export const SUNRISE_MS = timeMs(6);
 export const SUNSET_MS = timeMs(18);
-export const STATIC_SUN_POSITION_MS = timeMs(8,30,0);
+export const STATIC_SUN_POSITION_MS = timeMs(4,10,0);
 console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
 console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
 
@@ -191,7 +194,7 @@ export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 
 
-export const START_TIME = timeMs(6,10);			// start time
+export const START_TIME = timeMs(5,10);			// start time
 
 
 
