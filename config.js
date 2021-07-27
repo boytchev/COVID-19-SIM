@@ -16,13 +16,13 @@ console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
 export const DEBUG_AGENT_MAX_COUNT = 25;
-export const DEBUG_TIME_SPEED = timeMs(0,20,0)/1000;	// time ellapsed for 1 second
+export const DEBUG_TIME_SPEED = timeMs(0,10,0)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
-export const DEBUG_AUTOROTATE = !false;
+export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.3;
 export const DEBUG_RENDERER_INFO = false;
 export const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
@@ -169,15 +169,20 @@ export const FULL_SHADOWS = 2;
 export const AGENTS_CAST_SHADOWS = !true;
 
 
-export const ELECTRIC_LIGHT_MORGING_OFFICE_MS = new Range( timeMs(4,0,0), timeMs(8,0,0) ); // time with electric lights on
-export const ELECTRIC_LIGHT_EVENING_OFFICE_MS = new Range( timeMs(16,0,0), timeMs(24,0,0) ); // time with electric lights on
+// time with lamps on
+export const LAMP_OFFICE_AM_MS = new Range(
+				new Range( timeMs(3), timeMs(5) ),
+				new Range( timeMs(6), timeMs(6,30) ) );
+export const LAMP_OFFICE_AM_INTENSITY_MS = new Range(
+				new Range( timeMs(0), timeMs(0) ),
+				new Range( timeMs(6), timeMs(6,30) ) );
 
 //export const SUN = NO_SUN;
 //export const SUN = STATIC_SUN;
 export const SUN = DYNAMIC_SUN;
 export const SUNRISE_MS = timeMs(6);
 export const SUNSET_MS = timeMs(18);
-export const STATIC_SUN_POSITION_MS = timeMs(4,10,0);
+export const STATIC_SUN_POSITION_MS = timeMs(6,0,0);
 console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
 console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
 
@@ -194,7 +199,7 @@ export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 
 
-export const START_TIME = timeMs(5,10);			// start time
+export const START_TIME = timeMs(2,10);			// start time
 
 
 

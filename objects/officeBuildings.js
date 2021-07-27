@@ -324,7 +324,8 @@ export class OfficeBuildings
 			material.userData.shader = shader;
 			
 			shader.uniforms.uTime = { value: 0.0 };
-			shader.uniforms.uElectricLight = { value: 0.0 };
+			shader.uniforms.uLamps = { value: 0.0 };
+			shader.uniforms.uLampsIntensity = { value: 0.0 };
 			
 			shader.vertexShader =
 				shader.vertexShader.replace(
@@ -356,14 +357,17 @@ export class OfficeBuildings
 				shader.fragmentShader.replace(
 					'void main() {\n',
 					
-					'varying vec2 vTextureScale;\n'+
-					'varying vec2 vTextureOffset;\n'+
-					'uniform float uTime;\n'+
-					'uniform float uElectricLight;\n'+
-					'varying float vOfficeId;\n'+
-					'float isWindow;\n'+
-					'float uDarkness = 0.0;\n'+
-					'void main() {\n'
+					`
+					  varying vec2 vTextureScale;
+					  varying vec2 vTextureOffset;
+					  uniform float uTime;
+					  uniform float uLamps;
+					  uniform float uLampsIntensity;
+					  varying float vOfficeId;
+					  float isWindow;
+					  float uDarkness = 0.0;
+					  void main() {\n
+					`
 				);
 		
 			shader.fragmentShader =
@@ -374,8 +378,11 @@ export class OfficeBuildings
 					vec2 texPos = vUv*vTextureScale+vTextureOffset;
 					vec4 texelColor = texture2D( map, texPos );
 					texelColor = mapTexelToLinear( texelColor );
-					isWindow = 1.0-texelColor.r;
-					texelColor.r = 0.97;
+					isWindow = 1.0-texelColor.a;
+					if( isWindow>0.0 )
+					{
+						texelColor = vec4(1.0);
+					}
 					diffuseColor *= texelColor;
 				  `
 				);
@@ -384,9 +391,11 @@ export class OfficeBuildings
 				shader.fragmentShader.replace(
 				  '#include <normal_fragment_maps>',
 				  
-				  'vec3 mapN = texture2D( normalMap, texPos ).xyz * 2.0 - 1.0;\n'+
-				  'mapN.xy *= normalScale;\n'+
-				  'normal = perturbNormal2Arb( -vViewPosition, normal, mapN, faceDirection );\n'
+				  `
+				    vec3 mapN = texture2D( normalMap, texPos ).xyz * 2.0 - 1.0;
+				    mapN.xy *= normalScale;
+				    normal = perturbNormal2Arb( -vViewPosition, normal, mapN, faceDirection );
+				  `
 				);
 				
 			shader.fragmentShader =
@@ -401,18 +410,17 @@ export class OfficeBuildings
 					float x = floor(texPos.x);
 					float y = floor(texPos.y);
 					
-					float windowId = (fract(5.0*sin(x+y*y)+vOfficeId)+fract(7.0*sin(y+x*x+vOfficeId)*(x+1.0)))/2.0;
+					float windowId = (fract(5.0*sin(x+y*y)+vOfficeId)+fract(7.0*sin(y+x*x+vOfficeId)*(x+1.0))+0.1*sin(uTime/3000.0+x+y+vOfficeId))/2.0;
 					
-					float colorId = 0.3+0.4*fract(12.81*windowId);
+					float colorId = fract(12.81*windowId)+vOfficeId-1.0;
 					
-					vec4 newColor = vec4(0.8-0.1*colorId-0.1*vOfficeId,0.9-0.2*colorId,1.0+0.2*colorId,1.0);
+					vec4 newColor = vec4(1.0-0.1*colorId, 1.0, 1.1+0.3*colorId, 1.0);
 					
-					/*float k = windowId < 0.9*(0.5+0.5*sin(uTime/10.0+vOfficeId)) ? 1.0 : 0.0;*/
-					float k = windowId < uElectricLight ? 1.0 : 0.0;
+					float k = windowId < uLamps ? 1.0 : 0.0;
 					
 					isWindow *= k;
 					
-					gl_FragColor = gl_FragColor + isWindow*windowId*newColor;
+					gl_FragColor += isWindow*(1.0-windowId)*newColor*uLampsIntensity;
 				  `
 				);
 				

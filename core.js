@@ -52,7 +52,7 @@
 //		mid()								→ float
 //		diff()								→ float
 //		inside( x, margin )					→ float
-//		cos( x, power )						→ float [0,1]
+//		smooth( x )							→ float [0,1]
 //
 // timeMs( hours, minutes, seconds )		→ ms
 // msToString( ms ) 						→ string
@@ -337,13 +337,33 @@ export class Range
 		return (this.min+margin <= x) && (x <= this.max-margin);
 	} // Range.inside
 	
-	
-	cos( x, power = 1 )
+	// min = range, max = range, result:
+	//  0 before min
+	//	0..1 inside min
+	//	1 between min and max
+	//  1..0 inside max
+	//	0 after max
+	smooth( x )
 	{
-		if( x <= this.min ) return 0;
-		if( x >= this.max ) return 0;
-		return Math.pow( 0.5+0.5*Math.cos(2*Math.PI*(x-this.mid())/this.diff()), power );
-	} // Range.cos
+		var on = this.min,
+			off = this.max;
+			
+		if( x <= on.min ) return 0;
+		
+		if( x <= on.max ) return THREE.Math.smoothstep( x, on.min, on.max );
+		
+		if( x <= off.min ) return 1;
+		
+		if( x <= off.max ) return 1-THREE.Math.smoothstep( x, off.min, off.max );
+		
+		return 0;
+		
+	} // Range.smoothIn
+	
+	smoothOut( x )
+	{
+		return 1 - THREE.Math.smoothstep( x, this.min, this.max );
+	} // Range.smoothOut
 	
 } // Range
 

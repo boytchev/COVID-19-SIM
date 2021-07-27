@@ -25,7 +25,7 @@ var currentTime_elem = document.getElementById('time'),
 
 import './font.js';
 
-import {DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, HOURS_12_MS, ELECTRIC_LIGHT_MORGING_OFFICE_MS, ELECTRIC_LIGHT_EVENING_OFFICE_MS} from './config.js';
+import {DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, HOURS_12_MS, LAMP_OFFICE_AM_MS, LAMP_OFFICE_AM_INTENSITY_MS} from './config.js';
 import {msToString, round} from './core.js';
 import {Nature, currentTimeMs, frame} from './objects/nature.js';
 
@@ -155,10 +155,11 @@ function animate()
 		{
 			shader.uniforms.uTime.value = dayTimeMs/400;
 
-			shader.uniforms.uElectricLight.value = 
-				dayTimeMs<HOURS_12_MS
-					? 0.2+0.5*ELECTRIC_LIGHT_MORGING_OFFICE_MS.cos(dayTimeMs,2)
-					: 0.2+0.8*ELECTRIC_LIGHT_EVENING_OFFICE_MS.cos(dayTimeMs,1);
+			var lights = LAMP_OFFICE_AM_MS.smooth( dayTimeMs ),
+				intensity = LAMP_OFFICE_AM_INTENSITY_MS.smooth( dayTimeMs );
+			
+			shader.uniforms.uLamps.value = THREE.Math.clamp( lights, 0.1, 0.7 );
+			shader.uniforms.uLampsIntensity.value = 0.05+intensity;
 		}
 	}
 
