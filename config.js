@@ -171,11 +171,17 @@ export const AGENTS_CAST_SHADOWS = !true;
 
 // time with lamps on
 export const LAMP_OFFICE_AM_MS = new Range(
-				new Range( timeMs(3), timeMs(5) ),
+				new Range( timeMs(5), timeMs(6) ),
 				new Range( timeMs(6), timeMs(6,30) ) );
 export const LAMP_OFFICE_AM_INTENSITY_MS = new Range(
-				new Range( timeMs(0), timeMs(0) ),
+				new Range( timeMs(5), timeMs(5,20) ),
 				new Range( timeMs(6), timeMs(6,30) ) );
+export const LAMP_OFFICE_PM_MS = new Range(
+				new Range( timeMs(17,30), timeMs(18,30) ),
+				new Range( timeMs(21), timeMs(23) ) );
+export const LAMP_OFFICE_PM_INTENSITY_MS = new Range(
+				new Range( timeMs(17,30), timeMs(18) ),
+				new Range( timeMs(22,30), timeMs(23) ) );
 
 //export const SUN = NO_SUN;
 //export const SUN = STATIC_SUN;
@@ -199,7 +205,7 @@ export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 
 
-export const START_TIME = timeMs(2,10);			// start time
+export const START_TIME = timeMs(15,10);			// start time
 
 
 
