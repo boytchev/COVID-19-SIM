@@ -9,11 +9,16 @@
 //			generateHousesImage()
 //
 
+import * as THREE from '../js/three.module.js';
 
 import {OfficeBuildings} from './officeBuildings.js';
 import {HouseBuildings} from './houseBuildings.js';
 import {ApartmentBuildings} from './apartmentBuildings.js';
 import {OfficeDoors} from './officeDoors.js';
+
+import {buildings} from '../main.js';
+import {HOURS_12_MS, LAMP_OFFICE_AM_MS, LAMP_OFFICE_AM_INTENSITY_MS,LAMP_OFFICE_PM_MS, LAMP_OFFICE_PM_INTENSITY_MS} from '../config.js';
+import {dayTimeMs} from '../objects/nature.js';
 
 export class Buildings
 {
@@ -58,6 +63,31 @@ export class Buildings
 	} // Buildings
 
 
+	update()
+	{
+		// ask office buildings to update lamps
+		var userData = buildings.officesMesh.material.userData;
+		if( userData )
+		{
+			var shader = buildings.officesMesh.material.userData.shader;
+			if( shader )
+			{
+				shader.uniforms.uTime.value = dayTimeMs/400;
+
+				var lights = dayTimeMs<HOURS_12_MS ?
+								LAMP_OFFICE_AM_MS.smooth( dayTimeMs ) :
+								LAMP_OFFICE_PM_MS.smooth( dayTimeMs );
+								
+				var intensity = dayTimeMs<HOURS_12_MS ?
+									LAMP_OFFICE_AM_INTENSITY_MS.smooth( dayTimeMs ) :
+									LAMP_OFFICE_PM_INTENSITY_MS.smooth( dayTimeMs );
+				
+				shader.uniforms.uLamps.value = THREE.Math.clamp( lights, 0.1, 0.7 );
+				shader.uniforms.uLampsIntensity.value = 0.05+intensity;
+			}
+		}			
+	} // Buildings.update()
+	
 	
 } // Buildings
 

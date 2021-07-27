@@ -1,7 +1,6 @@
 import * as THREE from './js/three.module.js';
 import * as dat from './js/dat.gui.module.js';
 import {OrbitControls} from './js/OrbitControls.js';
-import {dayTimeMs} from '../objects/nature.js';
 
 var container = document.getElementById( 'container' );
 
@@ -25,7 +24,7 @@ var currentTime_elem = document.getElementById('time'),
 
 import './font.js';
 
-import {DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, HOURS_12_MS, LAMP_OFFICE_AM_MS, LAMP_OFFICE_AM_INTENSITY_MS,LAMP_OFFICE_PM_MS, LAMP_OFFICE_PM_INTENSITY_MS} from './config.js';
+import {DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO} from './config.js';
 import {msToString, round} from './core.js';
 import {Nature, currentTimeMs, frame} from './objects/nature.js';
 
@@ -146,30 +145,10 @@ function animate()
 	// mesh.quaternion.copy(camera.quaternion);
 	//stats.update();
 
-	// ask the buildings to update windows lit by electricity
-	var userData = buildings.officesMesh.material.userData;
-	if( userData )
-	{
-		var shader = buildings.officesMesh.material.userData.shader;
-		if( shader )
-		{
-			shader.uniforms.uTime.value = dayTimeMs/400;
-
-			var lights = dayTimeMs<HOURS_12_MS ?
-							LAMP_OFFICE_AM_MS.smooth( dayTimeMs ) :
-							LAMP_OFFICE_PM_MS.smooth( dayTimeMs );
-							
-			var intensity = dayTimeMs<HOURS_12_MS ?
-								LAMP_OFFICE_AM_INTENSITY_MS.smooth( dayTimeMs ) :
-								LAMP_OFFICE_PM_INTENSITY_MS.smooth( dayTimeMs );
-			
-			shader.uniforms.uLamps.value = THREE.Math.clamp( lights, 0.1, 0.7 );
-			shader.uniforms.uLampsIntensity.value = 0.05+intensity;
-		}
-	}
-
+	buildings.update();
 	nature.update();
 	agents.update();
+	
 	if( VR )
 	{
 		// in VR
