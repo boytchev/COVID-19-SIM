@@ -331,25 +331,26 @@ export class OfficeBuildings
 				shader.vertexShader.replace(
 					'void main() {\n',
 					
-					'varying vec2 vTextureOffset;\n'+
-					'varying vec2 vTextureScale;\n'+
-					'attribute float officeId;\n'+
-					'varying float vOfficeId;\n'+
-					'void main() {\n'+
-					'	vOfficeId = officeId;\n'+
-					'	if (normal.y>0.5)\n'+
-					'	{\n'+
-					'		vTextureScale = vec2(0);\n'+
-					'		vTextureOffset = vec2(0.1);\n'+
-					'	}\n'+
-					'	else\n'+
-					'	{\n'+
-					'		vTextureScale.x = (abs(normal.x)<0.5) ? instanceMatrix[0][0] : instanceMatrix[2][2];\n'+
-					'		vTextureScale.y = instanceMatrix[1][1];\n'+
-					'		vTextureOffset.x = 0.0;\n'+
-					'		vTextureOffset.y = 0.0;\n'+
-					'	}\n'+
-					''
+					`
+					  varying vec2 vTextureOffset;
+					  varying vec2 vTextureScale;
+					  attribute float officeId;
+					  varying float vOfficeId;
+					  void main() {
+						vOfficeId = officeId;
+						if (normal.y>0.5)
+						{
+							vTextureScale = vec2(0);
+							vTextureOffset = vec2(0.1);
+						}
+						else
+						{
+							vTextureScale.x = (abs(normal.x)<0.5) ? instanceMatrix[0][0] : instanceMatrix[2][2];
+							vTextureScale.y = instanceMatrix[1][1];
+							vTextureOffset.x = 0.0;
+							vTextureOffset.y = 0.0;
+						}
+					`
 				);
 
 
@@ -377,11 +378,8 @@ export class OfficeBuildings
 					vec2 texPos = vUv*vTextureScale+vTextureOffset;
 					vec4 texelColor = texture2D( map, texPos );
 					texelColor = mapTexelToLinear( texelColor );
-					isWindow = 1.0-texelColor.a;
-					if( isWindow>0.0 )
-					{
-						texelColor = vec4(1.0);
-					}
+					isWindow = pow(texelColor.b,2.0);
+					texelColor = vec4(texelColor.r,texelColor.r,texelColor.r,1);
 					diffuseColor *= texelColor;
 				  `
 				);
@@ -478,7 +476,7 @@ export class OfficeBuildings
 		var colors = [];
 		for( var i=0; i<instances; i++)
 		{
-			var intensity = DEBUG_ALL_WHITE ? 1.2 : Math.pow( THREE.Math.randFloat(0,1), 1/8 );
+			var intensity = DEBUG_ALL_WHITE ? 1.2 : Math.pow( THREE.Math.randFloat(0,1), 1/4 );
 			colors.push( intensity, intensity, intensity );
 		}
 		var colorAttribute = new THREE.InstancedBufferAttribute( new Float32Array(colors), 3, false, 1 );

@@ -47,12 +47,15 @@ export class ApartmentTexture extends ProceduralTexture
 
 		var ctx = this.ctx;
 			
+		ctx.fillStyle = 'rgb(255,0,0)';
+		ctx.fillRect( 0, 0, this.width, this.height );
+
 		// window separator
 //		ctx.strokeStyle = DEBUG_ALL_WHITE?'rgba(0,0,0,0.1)':'rgba(0,0,0,0.8)';
 //		ctx.strokeRect( -1, 0, this.width+2, this.height+1 );
 
 		// dark background (dograma)
-		ctx.fillStyle = DEBUG_ALL_WHITE?'rgb(100,100,100,0.1)':'rgb(255,200,150)';
+		ctx.fillStyle = DEBUG_ALL_WHITE?'rgb(100,100,100,0.1)':'rgb(150,0,0)';
 		ctx.fillRect( 0, 0, this.width, this.height );
 		
 		// small tiles
@@ -62,11 +65,12 @@ export class ApartmentTexture extends ProceduralTexture
 		for (var i=0; i<this.height; i+=8)
 			ctx.fillRect( 0, i, this.width, 1 );
 
-		ctx.fillStyle = DEBUG_ALL_WHITE?'rgba(100,100,100,0.1)':'rgb(150,150,150)';
+		ctx.fillStyle = DEBUG_ALL_WHITE?'rgba(100,100,100,0.1)':'rgb(150,0,0)';
 		ctx.fillRect( this.widthMargin, this.heightMargin, this.width-2*this.widthMargin+1, this.height-2*this.heightMargin );
 
 		// transparent part of window
-		ctx.clearRect(
+		ctx.fillStyle = 'rgb(255,0,255)';
+		ctx.fillRect(
 			this.widthMargin+this.windowWidthGap, 
 			this.heightMargin+this.windowHeightGap,
 			this.width - 2*this.widthMargin - 2*this.windowWidthGap,
@@ -74,7 +78,14 @@ export class ApartmentTexture extends ProceduralTexture
 		);
 
 		// window separator
+		ctx.fillStyle = DEBUG_ALL_WHITE?'rgba(100,100,100,0.1)':'rgb(150,0,0)';
 		ctx.fillRect( this.width/2-this.windowWidthGap/2, this.heightMargin, this.windowWidthGap, this.height-2*this.heightMargin );
+		ctx.fillRect(
+			this.widthMargin, 
+			this.heightMargin+this.windowHeightGap+0.15*this.height,
+			this.width - 2*this.widthMargin,
+			this.windowWidthGap/10
+		);
 		
 
 	} // ApartmentTexture.draw

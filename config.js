@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 1570; 				// in meters
+export const GROUND_SIZE = 5000; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -16,7 +16,7 @@ console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
 export const DEBUG_AGENT_MAX_COUNT = 0;
-export const DEBUG_TIME_SPEED = timeMs(0,10,1)/1000;	// time ellapsed for 1 second
+export const DEBUG_TIME_SPEED = timeMs(0,1,1)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
@@ -120,7 +120,7 @@ export const OFFICE_ROOM_COUNT = new Range( 2, 9 );
 // Apartment buildings
 export const APARTMENT_BUILDING_WIDTH = new Range( 8, 16 );	// in meters
 export const APARTMENT_BUILDING_DISTANCE = 24;				// in meters
-export const MAX_APARTMENT_BUILDING_FLOORS = 20;				// maximal number of floors in an apartment building
+export const MAX_APARTMENT_BUILDING_FLOORS = 30;				// maximal number of floors in an apartment building
 export const APARTMENT_ROOM_SIZE = 7;							// in meters (desired size)
 export const ELEVATOR_SIZE = new Size( 2, 2 );					// in meters
 
@@ -174,8 +174,8 @@ export const LAMP_OFFICE_AM_MS = new Range(
 				new Range( timeMs(5,30), timeMs(6,10) ),
 				new Range( timeMs(6,10), timeMs(6,30) ) );
 export const LAMP_OFFICE_AM_INTENSITY_MS = new Range(
-				new Range( timeMs(5,30), timeMs(5,20) ),
-				new Range( timeMs(6), timeMs(6,30) ) );
+				new Range( timeMs(5,30), timeMs(5,50) ),
+				new Range( timeMs(5,50), timeMs(6,20) ) );
 export const LAMP_OFFICE_PM_MS = new Range(
 				new Range( timeMs(17), timeMs(17,30) ),
 				new Range( timeMs(18), timeMs(22) ) );
@@ -224,14 +224,14 @@ export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 		
 
 
-export const SHADOWS = NO_SHADOWS;
-//export const SHADOWS = TOP_SHADOWS;
+//export const SHADOWS = NO_SHADOWS;
+export const SHADOWS = TOP_SHADOWS;
 //export const SHADOWS = FULL_SHADOWS;
 export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 
 
-export const START_TIME = timeMs(3);			// start time
+export const START_TIME = timeMs(4,50);			// start time
 
 
 

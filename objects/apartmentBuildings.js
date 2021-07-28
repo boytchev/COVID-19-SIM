@@ -17,7 +17,7 @@ import {Elevator} from './elevators.js';
 import {Room} from './rooms.js';
 import {blocks, navmesh, textures, scene} from '../main.js';
 import {Zone, round, Pos, Size, LEFT, RIGHT, BOTTOM, TOP} from '../core.js';
-import {SIDEWALK_WIDTH, APARTMENT_BUILDING_DISTANCE, MAX_APARTMENT_BUILDING_FLOORS, DEBUG_HIDE_ROOFS, APARTMENT_BUILDING_WIDTH, FLOOR_HEIGHT, DEBUG_APARTMENT_ADD_FLOORS, OFFICE_DOOR_WIDTH, APARTMENT_DOOR_DISTANCE, APARTMENT_ROOM_SIZE, APARTMENT_TEXTURE_SCALE_U, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, SHADOWS, NO_SHADOWS} from '../config.js';
+import {DEBUG_ALL_WHITE, SIDEWALK_WIDTH, APARTMENT_BUILDING_DISTANCE, MAX_APARTMENT_BUILDING_FLOORS, DEBUG_HIDE_ROOFS, APARTMENT_BUILDING_WIDTH, FLOOR_HEIGHT, DEBUG_APARTMENT_ADD_FLOORS, OFFICE_DOOR_WIDTH, APARTMENT_DOOR_DISTANCE, APARTMENT_ROOM_SIZE, APARTMENT_TEXTURE_SCALE_U, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, SHADOWS, NO_SHADOWS} from '../config.js';
 
 
 export class ApartmentBuilding
@@ -288,6 +288,7 @@ export class ApartmentBuildings
 				side: DEBUG_HIDE_ROOFS?THREE.DoubleSide:THREE.FrontSide,
 				color: 'white',
 				flatShading: true,
+				vertexColors: true,
 				map: textures.apartment.map( 1/APARTMENT_TEXTURE_SCALE_U, 1/BUILDING_TEXTURE_SCALE ),
 				normalMap: textures.apartmentNormal.map( 1/APARTMENT_TEXTURE_SCALE_U, 1/BUILDING_TEXTURE_SCALE ),
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
@@ -360,12 +361,9 @@ export class ApartmentBuildings
 					vec2 texPos = vUv*vTextureScale+vTextureOffset;
 					vec4 texelColor = texture2D( map, texPos );
 				    texelColor = mapTexelToLinear( texelColor );
-					isWindow = 1.0-texelColor.a;
-					if( isWindow>0.0 )
-					{
-						texelColor = vec4(0.9,0.9,0.9,1.0);
-					}
-				    diffuseColor *= texelColor;
+					isWindow = pow(texelColor.b,2.0);
+					texelColor = vec4(texelColor.r,texelColor.r,texelColor.r,1);
+					diffuseColor *= texelColor;
 				  `
 				);
 		
@@ -567,6 +565,16 @@ export class ApartmentBuildings
 		var geometry  = ApartmentBuildings.geometry(),
 			material  = ApartmentBuildings.material(),
 			mesh = new THREE.InstancedMesh( geometry, material, instances );
+
+		// every office building has own grayish color
+		var colors = [];
+		for( var i=0; i<instances; i++)
+		{
+			var intensity = DEBUG_ALL_WHITE ? 1.2 : Math.pow( THREE.Math.randFloat(0,1), 1/4 );
+			colors.push( intensity, intensity, 0.9*intensity );
+		}
+		var colorAttribute = new THREE.InstancedBufferAttribute( new Float32Array(colors), 3, false, 1 );
+		geometry.setAttribute( 'color', colorAttribute );
 
 		var id = [];
 		for( var i=0; i<instances; i++ ) id.push( Math.random() );

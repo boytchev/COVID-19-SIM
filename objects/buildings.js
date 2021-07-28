@@ -82,8 +82,8 @@ export class Buildings
 									LAMP_OFFICE_AM_INTENSITY_MS.smooth( dayTimeMs ) :
 									LAMP_OFFICE_PM_INTENSITY_MS.smooth( dayTimeMs );
 				
-				shader.uniforms.uLamps.value = THREE.Math.clamp( lights, 0.1, 0.7 );
-				shader.uniforms.uLampsIntensity.value = 0.05+intensity;
+				shader.uniforms.uLamps.value = THREE.Math.clamp( lights, 0.1, 0.3 );
+				shader.uniforms.uLampsIntensity.value = intensity;
 			}
 		}			
 		
