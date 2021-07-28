@@ -40,19 +40,19 @@ export class ApartmentTexture extends ProceduralTexture
 		
 		super.draw();
 		
-		this.heightMargin = Math.round( 0.19*this.height );
+		this.heightMargin = Math.round( 0.185*this.height );
 		this.widthMargin  = Math.round( 0.07*this.width );
-		this.windowHeightGap = Math.round( 0.02*this.height );
-		this.windowWidthGap = Math.round( 0.02*this.width );
+		this.windowHeightGap = Math.round( 0.04*this.height );
+		this.windowWidthGap = Math.round( 0.04*this.width );
 
 		var ctx = this.ctx;
 			
 		// window separator
-		ctx.strokeStyle = DEBUG_ALL_WHITE?'rgba(0,0,0,0.1)':'rgba(0,0,0,0.8)';
-		ctx.strokeRect( -1, 0, this.width+2, this.height+1 );
+//		ctx.strokeStyle = DEBUG_ALL_WHITE?'rgba(0,0,0,0.1)':'rgba(0,0,0,0.8)';
+//		ctx.strokeRect( -1, 0, this.width+2, this.height+1 );
 
-		// dark background
-		ctx.fillStyle = DEBUG_ALL_WHITE?'rgb(100,100,100,0.1)':'rgb(200,150,100,0.4)';
+		// dark background (dograma)
+		ctx.fillStyle = DEBUG_ALL_WHITE?'rgb(100,100,100,0.1)':'rgb(255,200,150)';
 		ctx.fillRect( 0, 0, this.width, this.height );
 		
 		// small tiles
@@ -61,15 +61,22 @@ export class ApartmentTexture extends ProceduralTexture
 			ctx.fillRect( i, 0, 1, this.height );
 		for (var i=0; i<this.height; i+=8)
 			ctx.fillRect( 0, i, this.width, 1 );
+
+		ctx.fillStyle = DEBUG_ALL_WHITE?'rgba(100,100,100,0.1)':'rgb(150,150,150)';
+		ctx.fillRect( this.widthMargin, this.heightMargin, this.width-2*this.widthMargin+1, this.height-2*this.heightMargin );
+
+		// transparent part of window
+		ctx.clearRect(
+			this.widthMargin+this.windowWidthGap, 
+			this.heightMargin+this.windowHeightGap,
+			this.width - 2*this.widthMargin - 2*this.windowWidthGap,
+			this.height - 2*this.heightMargin - 2*this.windowHeightGap
+		);
+
+		// window separator
+		ctx.fillRect( this.width/2-this.windowWidthGap/2, this.heightMargin, this.windowWidthGap, this.height-2*this.heightMargin );
 		
-		// window
-		ctx.fillStyle = 'white';
-		ctx.fillRect(
-			this.widthMargin, 
-			this.heightMargin,
-			this.width - 2*this.widthMargin,
-			this.height - 2*this.heightMargin );
-		
+
 	} // ApartmentTexture.draw
 	
 } // ApartmentTexture
@@ -111,11 +118,11 @@ export class ApartmentNormalTexture extends ApartmentTexture
 			0.35 );
 			
 		// right wing
-		this.convexRectangle(
+		this.concaveRectangle(
 			this.width/2 + this.windowWidthGap/2,
-			this.heightMargin + this.windowHeightGap - 1,
+			this.heightMargin + this.windowHeightGap,
 			this.width - this.widthMargin - this.windowWidthGap,
-			this.height - this.heightMargin - this.windowHeightGap + 2,
+			this.height - this.heightMargin - this.windowHeightGap,
 			0.35 );
 
 	} // ApartmentNormalTexture.draw

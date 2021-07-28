@@ -365,7 +365,6 @@ export class OfficeBuildings
 					  uniform float uLampsIntensity;
 					  varying float vOfficeId;
 					  float isWindow;
-					  float uDarkness = 0.0;
 					  void main() {\n
 					`
 				);

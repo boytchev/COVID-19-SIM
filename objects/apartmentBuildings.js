@@ -287,6 +287,7 @@ export class ApartmentBuildings
 		var material = new THREE.MeshStandardMaterial({
 				side: DEBUG_HIDE_ROOFS?THREE.DoubleSide:THREE.FrontSide,
 				color: 'white',
+				flatShading: true,
 				map: textures.apartment.map( 1/APARTMENT_TEXTURE_SCALE_U, 1/BUILDING_TEXTURE_SCALE ),
 				normalMap: textures.apartmentNormal.map( 1/APARTMENT_TEXTURE_SCALE_U, 1/BUILDING_TEXTURE_SCALE ),
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
@@ -303,13 +304,22 @@ export class ApartmentBuildings
 			//console.log(shader.vertexShader);
 			//console.log(shader.fragmentShader);
 
+			material.userData.shader = shader;
+			
+			shader.uniforms.uTime = { value: 0.0 };
+			shader.uniforms.uLamps = { value: 0.0 };
+			shader.uniforms.uLampsIntensity = { value: 0.0 };
+
 			shader.vertexShader =
 				shader.vertexShader.replace(
 					'void main() {\n',
 					
 					'varying vec2 vTextureOffset;\n'+
 					'varying vec2 vTextureScale;\n'+
+					'attribute float apartmentId;\n'+
+					'varying float vApartmentId;\n'+
 					'void main() {\n'+
+					'	vApartmentId = apartmentId;\n'+
 					'	if (normal.y>0.5)\n'+
 					'	{\n'+
 					'		vTextureScale = vec2(0);\n'+
@@ -330,28 +340,73 @@ export class ApartmentBuildings
 				shader.fragmentShader.replace(
 					'void main() {\n',
 					
-					'varying vec2 vTextureScale;\n'+
-					'varying vec2 vTextureOffset;\n'+
-					'void main() {\n'
+					`
+					  varying vec2 vTextureScale;
+					  varying vec2 vTextureOffset;
+					  uniform float uTime;
+					  uniform float uLamps;
+					  uniform float uLampsIntensity;
+					  varying float vApartmentId;
+					  float isWindow;
+					  void main() {
+					`
 				);
-		
+
 			shader.fragmentShader =
 				shader.fragmentShader.replace(
 				  '#include <map_fragment>',
 				  
-				  'vec4 texelColor = texture2D( map, vUv*vTextureScale+vTextureOffset );\n'+
-				  'texelColor = mapTexelToLinear( texelColor );\n'+
-				  'diffuseColor *= texelColor;'
+				  `
+					vec2 texPos = vUv*vTextureScale+vTextureOffset;
+					vec4 texelColor = texture2D( map, texPos );
+				    texelColor = mapTexelToLinear( texelColor );
+					isWindow = 1.0-texelColor.a;
+					if( isWindow>0.0 )
+					{
+						texelColor = vec4(0.9,0.9,0.9,1.0);
+					}
+				    diffuseColor *= texelColor;
+				  `
 				);
-				
+		
 			shader.fragmentShader =
 				shader.fragmentShader.replace(
 				  '#include <normal_fragment_maps>',
 				  
-				  'vec3 mapN = texture2D( normalMap, vUv*vTextureScale+vTextureOffset ).xyz * 2.0 - 1.0;\n'+
-				  'mapN.xy *= normalScale;\n'+
-				  'normal = perturbNormal2Arb( -vViewPosition, normal, mapN, faceDirection );\n'
+				  `
+				    vec3 mapN = texture2D( normalMap, vUv*vTextureScale+vTextureOffset ).xyz * 2.0 - 1.0;
+				    mapN.xy *= normalScale;
+				    normal = perturbNormal2Arb( -vViewPosition, normal, mapN, faceDirection );
+				  `
 				);
+
+
+				
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+				  '#include <dithering_fragment>',
+
+					// make windows color
+					// (x,y) - int coordinates of window
+				  `
+					#include <dithering_fragment>
+					
+					float x = floor(texPos.x);
+					float y = floor(texPos.y);
+					
+					float windowId = (fract(5.0*sin(x+y*y)+vApartmentId)+fract(7.0*sin(y+x*x+vApartmentId)*(x+1.0))+0.1*sin(uTime/3000.0+x+y+vApartmentId))/2.0;
+					
+					float colorId = fract(12.81*windowId)+vApartmentId-1.0;
+					
+					vec4 newColor = vec4(1.0-0.2*colorId, 1.1-0.3*fract(1.0/colorId), 1.1+0.4*colorId, 1.0);
+					
+					float k = windowId < uLamps ? 1.0 : 0.0;
+					
+					isWindow *= k;
+					
+					gl_FragColor += isWindow*(1.0-windowId)*newColor*uLampsIntensity;
+				  `
+				);		
 				
 			//console.log(shader.vertexShader);
 		} // material.onBeforeCompile
@@ -512,7 +567,13 @@ export class ApartmentBuildings
 		var geometry  = ApartmentBuildings.geometry(),
 			material  = ApartmentBuildings.material(),
 			mesh = new THREE.InstancedMesh( geometry, material, instances );
-			
+
+		var id = [];
+		for( var i=0; i<instances; i++ ) id.push( Math.random() );
+		geometry.setAttribute(
+			'apartmentId',
+			new THREE.InstancedBufferAttribute(new Float32Array(id), 1, false, 1));
+		
 		// create an apartment building matrix
 		var matrix = new THREE.Matrix4();
 		for( var i=0; i<instances; i++ )
@@ -524,7 +585,7 @@ export class ApartmentBuildings
 		}
 
 		mesh.receiveShadow = true;
-		//mesh.castShadow = true;
+		mesh.castShadow = true;
 		//mesh.position.y = 0;
 
 		scene.add( mesh );
@@ -541,16 +602,18 @@ export class ApartmentBuildings
 					polygonOffsetUnits: -1,
 					polygonOffsetFactor: -1,
 				}),
-				mesh = new THREE.InstancedMesh( geometry, material, instances );
+				shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
 			for( var i=0; i<instances; i++ )
 			{
 				matrix.makeScale( apartments[i].size.x-0.2, apartments[i].height-0.1, apartments[i].size.z-0.2 );
 				matrix.setPosition( apartments[i].center.x, -0.1, apartments[i].center.z );
-				mesh.setMatrixAt( i, matrix );
+				shadowMesh.setMatrixAt( i, matrix );
 			}
-			mesh.castShadow = true;
-			//scene.add( mesh );
+			shadowMesh.castShadow = true;
+			//scene.add( shadowMesh );
 		}
+		
+		return mesh;
 	} // ApartmentBuildings.image
 	
 	

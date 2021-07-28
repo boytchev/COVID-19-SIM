@@ -4,22 +4,22 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 1750; 				// in meters
+export const GROUND_SIZE = 1130; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
 	
 // debug flags
 var R = 1+Math.floor(Math.random()*100000);
-//R = 17663;
+R = 21436;
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 25;
-export const DEBUG_TIME_SPEED = timeMs(0,10,0)/1000;	// time ellapsed for 1 second
+export const DEBUG_AGENT_MAX_COUNT = 0;
+export const DEBUG_TIME_SPEED = timeMs(0,1,1)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
-export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
-export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
+export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = !false;
+export const DEBUG_BLOCK_WITH_ONLY_OFFICES = !false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 export const DEBUG_AUTOROTATE = false;
@@ -130,7 +130,7 @@ export const ELEVATOR_SPEED = new Range( 0.8, 2.4 );			// in meters/second
 // trees
 export const TREE_HEIGHT = new Range( 3, 4 );		// in meters
 export const TREE_COMPLEXITY = 4; // 12*n^2 triangles, 2=48, 3=108, 4=192, 5=300
-export const TREE_PARK_RATIO = 0.32; // percentage of trees in parks
+export const TREE_PARK_RATIO = 0.2; // percentage of trees in parks
 export const TREE_HOUSES_RATIO = 0.15; // percentage of trees in house blocks
 
 
@@ -171,17 +171,30 @@ export const AGENTS_CAST_SHADOWS = !true;
 
 // time with lamps on
 export const LAMP_OFFICE_AM_MS = new Range(
-				new Range( timeMs(5), timeMs(6) ),
-				new Range( timeMs(6), timeMs(6,30) ) );
+				new Range( timeMs(5,30), timeMs(6,10) ),
+				new Range( timeMs(6,10), timeMs(6,30) ) );
 export const LAMP_OFFICE_AM_INTENSITY_MS = new Range(
-				new Range( timeMs(5), timeMs(5,20) ),
+				new Range( timeMs(5,30), timeMs(5,20) ),
 				new Range( timeMs(6), timeMs(6,30) ) );
 export const LAMP_OFFICE_PM_MS = new Range(
 				new Range( timeMs(17,30), timeMs(18,30) ),
 				new Range( timeMs(21), timeMs(23) ) );
 export const LAMP_OFFICE_PM_INTENSITY_MS = new Range(
 				new Range( timeMs(17,30), timeMs(18) ),
-				new Range( timeMs(22,30), timeMs(23) ) );
+				new Range( timeMs(22,0), timeMs(22,30) ) );
+
+export const LAMP_APARTMENT_AM_MS = new Range(
+				new Range( timeMs(4,30), timeMs(5,30) ),
+				new Range( timeMs(6,30), timeMs(7) ) );
+export const LAMP_APARTMENT_AM_INTENSITY_MS = new Range(
+				new Range( timeMs(4,30), timeMs(5) ),
+				new Range( timeMs(6,0), timeMs(6,15) ) );
+export const LAMP_APARTMENT_PM_MS = new Range(
+				new Range( timeMs(17,45), timeMs(18,30) ),
+				new Range( timeMs(21), timeMs(24) ) );
+export const LAMP_APARTMENT_PM_INTENSITY_MS = new Range(
+				new Range( timeMs(17,15), timeMs(18) ),
+				new Range( timeMs(22,30), timeMs(24) ) );
 
 //export const SUN = NO_SUN;
 //export const SUN = STATIC_SUN;
@@ -205,7 +218,7 @@ export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 
 
-export const START_TIME = timeMs(15,10);			// start time
+export const START_TIME = timeMs(5,45);			// start time
 
 
 
