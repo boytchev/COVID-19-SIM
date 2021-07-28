@@ -17,7 +17,7 @@ import {ApartmentBuildings} from './apartmentBuildings.js';
 import {OfficeDoors} from './officeDoors.js';
 
 import {buildings} from '../main.js';
-import {HOURS_12_MS, LAMP_OFFICE_AM_MS, LAMP_OFFICE_AM_INTENSITY_MS,LAMP_OFFICE_PM_MS, LAMP_OFFICE_PM_INTENSITY_MS, LAMP_APARTMENT_AM_MS, LAMP_APARTMENT_AM_INTENSITY_MS,LAMP_APARTMENT_PM_MS, LAMP_APARTMENT_PM_INTENSITY_MS} from '../config.js';
+import {HOURS_12_MS, LAMP_OFFICE_AM_MS, LAMP_OFFICE_AM_INTENSITY_MS,LAMP_OFFICE_PM_MS, LAMP_OFFICE_PM_INTENSITY_MS, LAMP_APARTMENT_AM_MS, LAMP_APARTMENT_AM_INTENSITY_MS,LAMP_APARTMENT_PM_MS, LAMP_APARTMENT_PM_INTENSITY_MS, LAMP_HOUSE_AM_MS, LAMP_HOUSE_AM_INTENSITY_MS,LAMP_HOUSE_PM_MS, LAMP_HOUSE_PM_INTENSITY_MS} from '../config.js';
 import {dayTimeMs} from '../objects/nature.js';
 
 export class Buildings
@@ -41,7 +41,7 @@ export class Buildings
 		var sidewalks = []; // array of HouseSidewalk
 		
 		HouseBuildings.generate( this.houses, sidewalks );
-		HouseBuildings.image( this.houses, sidewalks );
+		this.housesMesh = HouseBuildings.image( this.houses, sidewalks );
 
 		this.apartments = []; // array of ApartmentBuilding
 		
@@ -106,6 +106,28 @@ export class Buildings
 				
 				shader.uniforms.uLamps.value = THREE.Math.clamp( lights, 0.1, 0.7 );
 				shader.uniforms.uLampsIntensity.value = 0.05+intensity;
+			}
+		}			
+		
+		// ask houses to update lamps
+		var userData = buildings.housesMesh.material.userData;
+		if( userData )
+		{
+			var shader = userData.shader;
+			if( shader )
+			{
+				shader.uniforms.uTime.value = dayTimeMs/400;
+
+				var lights = dayTimeMs<HOURS_12_MS ?
+								LAMP_HOUSE_AM_MS.smooth( dayTimeMs ) :
+								LAMP_HOUSE_PM_MS.smooth( dayTimeMs );
+								
+				var intensity = dayTimeMs<HOURS_12_MS ?
+									LAMP_HOUSE_AM_INTENSITY_MS.smooth( dayTimeMs ) :
+									LAMP_HOUSE_PM_INTENSITY_MS.smooth( dayTimeMs );
+				
+				shader.uniforms.uLamps.value = THREE.Math.clamp( lights, 0, 0.5 );
+				shader.uniforms.uLampsIntensity.value = 0.01+intensity;
 			}
 		}			
 	} // Buildings.update()

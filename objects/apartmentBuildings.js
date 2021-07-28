@@ -614,6 +614,7 @@ export class ApartmentBuildings
 		}
 		
 		return mesh;
+		
 	} // ApartmentBuildings.image
 	
 	

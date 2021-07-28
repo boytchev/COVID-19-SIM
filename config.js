@@ -4,22 +4,22 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 1130; 				// in meters
+export const GROUND_SIZE = 1570; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
 	
 // debug flags
 var R = 1+Math.floor(Math.random()*100000);
-R = 21436;
+//R = 21436;
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
 export const DEBUG_AGENT_MAX_COUNT = 0;
-export const DEBUG_TIME_SPEED = timeMs(0,1,1)/1000;	// time ellapsed for 1 second
+export const DEBUG_TIME_SPEED = timeMs(0,10,1)/1000;	// time ellapsed for 1 second
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
-export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = !false;
-export const DEBUG_BLOCK_WITH_ONLY_OFFICES = !false;
+export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
+export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 export const DEBUG_AUTOROTATE = false;
@@ -177,11 +177,11 @@ export const LAMP_OFFICE_AM_INTENSITY_MS = new Range(
 				new Range( timeMs(5,30), timeMs(5,20) ),
 				new Range( timeMs(6), timeMs(6,30) ) );
 export const LAMP_OFFICE_PM_MS = new Range(
-				new Range( timeMs(17,30), timeMs(18,30) ),
-				new Range( timeMs(21), timeMs(23) ) );
+				new Range( timeMs(17), timeMs(17,30) ),
+				new Range( timeMs(18), timeMs(22) ) );
 export const LAMP_OFFICE_PM_INTENSITY_MS = new Range(
-				new Range( timeMs(17,30), timeMs(18) ),
-				new Range( timeMs(22,0), timeMs(22,30) ) );
+				new Range( timeMs(17), timeMs(18) ),
+				new Range( timeMs(21), timeMs(22) ) );
 
 export const LAMP_APARTMENT_AM_MS = new Range(
 				new Range( timeMs(4,30), timeMs(5,30) ),
@@ -193,6 +193,19 @@ export const LAMP_APARTMENT_PM_MS = new Range(
 				new Range( timeMs(17,45), timeMs(18,30) ),
 				new Range( timeMs(21), timeMs(24) ) );
 export const LAMP_APARTMENT_PM_INTENSITY_MS = new Range(
+				new Range( timeMs(17,15), timeMs(18) ),
+				new Range( timeMs(22,30), timeMs(24) ) );
+
+export const LAMP_HOUSE_AM_MS = new Range(
+				new Range( timeMs(4,30), timeMs(5,30) ),
+				new Range( timeMs(6,30), timeMs(7) ) );
+export const LAMP_HOUSE_AM_INTENSITY_MS = new Range(
+				new Range( timeMs(4,30), timeMs(5) ),
+				new Range( timeMs(6,0), timeMs(6,15) ) );
+export const LAMP_HOUSE_PM_MS = new Range(
+				new Range( timeMs(17,45), timeMs(18,30) ),
+				new Range( timeMs(21), timeMs(24) ) );
+export const LAMP_HOUSE_PM_INTENSITY_MS = new Range(
 				new Range( timeMs(17,15), timeMs(18) ),
 				new Range( timeMs(22,30), timeMs(24) ) );
 
@@ -211,14 +224,14 @@ export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 		
 
 
-//export const SHADOWS = NO_SHADOWS;
+export const SHADOWS = NO_SHADOWS;
 //export const SHADOWS = TOP_SHADOWS;
-export const SHADOWS = FULL_SHADOWS;
+//export const SHADOWS = FULL_SHADOWS;
 export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 
 
-export const START_TIME = timeMs(5,45);			// start time
+export const START_TIME = timeMs(3);			// start time
 
 
 

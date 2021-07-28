@@ -368,6 +368,12 @@ export class HouseBuildings
 			//console.log(shader.vertexShader);
 			//console.log(shader.fragmentShader);
 
+			material.userData.shader = shader;
+
+			shader.uniforms.uTime = { value: 0.0 };
+			shader.uniforms.uLamps = { value: 0.0 };
+			shader.uniforms.uLampsIntensity = { value: 0.0 };
+
 			shader.vertexShader =
 				shader.vertexShader.replace(
 					'#include <project_vertex>',
@@ -390,7 +396,10 @@ export class HouseBuildings
 					
 					'vec2 textureOffset = vec2(1.0);\n'+
 					'vec2 textureScale;\n'+
+					'attribute float houseId;\n'+
+					'varying float vHouseId;\n'+
 					'void main() {\n'+
+					'	vHouseId = houseId;\n'+
 					'	if (normal.y<0.1)\n'+
 					'	{\n'+ // texture of walls
 					'		textureScale.x = (abs(normal.x)<0.5) ? instanceMatrix[0][0]/10.0 : instanceMatrix[2][2]/10.0;\n'+
@@ -412,7 +421,61 @@ export class HouseBuildings
 					'vUv = vUv*textureScale+textureOffset;\n'+
 					''
 				);
-		
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+					'void main() {\n',
+					
+					`
+					  uniform float uTime;
+					  uniform float uLamps;
+					  uniform float uLampsIntensity;
+					  varying float vHouseId;
+					  float isWindow;
+					  void main() {
+					`
+				);
+
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+				  '#include <map_fragment>',
+				  
+				  `
+					vec4 texelColor = texture2D( map, vUv );
+				    texelColor = mapTexelToLinear( texelColor );
+					isWindow = 1.0-texelColor.a;
+					if( isWindow>0.0 )
+					{
+						texelColor = vec4(1);
+					}
+				    diffuseColor *= texelColor;
+				  `
+				);
+						
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+				  '#include <dithering_fragment>',
+
+					// make windows color
+					// (x,y) - int coordinates of window
+				  `
+					#include <dithering_fragment>
+					
+					float x = floor(5.0*vUv.x);
+					float y = floor(2.0*vUv.y);
+					
+					float windowId = (fract(5.0*cos(x+y*y)+vHouseId)+fract(7.0*sin(y+x*x+5.0*vHouseId)*(x+1.0))+0.02*sin(uTime*y/300.0+x+y+13.0*vHouseId))/2.0;
+					
+					float colorId = fract(12.81*windowId)+vHouseId-1.0;
+					
+					vec4 newColor = vec4(1.0-0.2*colorId, 1.1-0.3*fract(1.0/colorId), 1.1+0.4*colorId, 1.0);
+					
+					float k = windowId < uLamps ? 1.0 : 0.0;
+					
+					isWindow *= k;
+					
+					gl_FragColor += isWindow*(1.0-windowId)*newColor*uLampsIntensity;
+				  `
+				);				
 			//console.log(shader.vertexShader);
 		} // material.onBeforeCompile
 		
@@ -582,6 +645,11 @@ export class HouseBuildings
 		var colorAttribute = new THREE.InstancedBufferAttribute( new Float32Array(colors), 3, false, 1 );
 		geometry.setAttribute( 'color', colorAttribute );
 		
+		var id = [];
+		for( var i=0; i<instances; i++ ) id.push( Math.random() );
+		geometry.setAttribute(
+			'houseId',
+			new THREE.InstancedBufferAttribute(new Float32Array(id), 1, false, 1));
 		
 		// create a house building matrix
 		var matrix = new THREE.Matrix4();
@@ -615,7 +683,7 @@ export class HouseBuildings
 					transparent: true,
 					opacity: 0,
 				}),
-				mesh = new THREE.InstancedMesh( geometry, material, instances );
+				shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
 			for( var i=0, h=0; i<instances; i+=2, h++ )
 			{
 				var house = houses[h];
@@ -623,18 +691,20 @@ export class HouseBuildings
 				// wing A
 				matrix.makeScale( house.wingA.size.x-0.2, house.wingA.height-0.1, house.wingA.size.z-0.2 );
 				matrix.setPosition( house.wingA.center.x, -0.1, house.wingA.center.z );
-				mesh.setMatrixAt( i, matrix );
+				shadowMesh.setMatrixAt( i, matrix );
 				
 				// wing B
 				matrix.makeScale( house.wingB.size.x-0.2, house.wingB.height-0.1, house.wingB.size.z-0.2 );
 				matrix.setPosition( house.wingB.center.x, -0.1, house.wingB.center.z );
-				mesh.setMatrixAt( i+1, matrix );
+				shadowMesh.setMatrixAt( i+1, matrix );
 			}
-			mesh.castShadow = true;
-			scene.add( mesh );
+			shadowMesh.castShadow = true;
+			//scene.add( shadowMesh );
 		}
 		
 		HouseSidewalks.image( sidewalks );
+
+		return mesh;
 		
 	} // HouseBuildings.image
 

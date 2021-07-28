@@ -45,15 +45,16 @@ export class HouseTexture extends ProceduralTexture
 			ctx.strokeRect( Math.round(x-windowWidth/2)+0.5, Math.round(y-windowHeight/2)+0.5, Math.round(windowWidth), Math.round(windowHeight) );
 			
 			// window glass
-			ctx.fillStyle = DEBUG_ALL_WHITE?'rgba(255,255,255,0.95)':'rgba(180,210,255,0.5)';
-			ctx.fillRect( x-windowWidth/2+1, y-windowHeight/2+1, windowWidth-1, windowHeight-1 );
+			//ctx.fillStyle = DEBUG_ALL_WHITE?'rgba(255,255,255,0.95)':'rgba(180,210,255,0.5)';
+			//ctx.fillRect( x-windowWidth/2+1, y-windowHeight/2+1, windowWidth-1, windowHeight-1 );
+			ctx.clearRect( x-windowWidth/2+1, y-windowHeight/2+1, windowWidth-1, windowHeight-1 );
 			
 			// window base
 			ctx.fillStyle = 'rgba(0,0,0,0.2)';
 			ctx.fillRect( x-windowBaseWidth/2, y+windowHeight/2, windowBaseWidth, windowBaseHeight );
-			
+/*						
 			// left curtain
-			ctx.fillStyle = 'rgba(255,255,255,0.5)';
+			ctx.fillStyle = 'rgba(255,255,255,0.1)';
 			ctx.beginPath();
 			ctx.moveTo( x-windowWidth/2,               y-windowHeight/2 );
 			ctx.lineTo( x-windowWidth/2+windowWidth/3, y-windowHeight/2 );
@@ -69,6 +70,7 @@ export class HouseTexture extends ProceduralTexture
 			ctx.lineTo( x+windowWidth/2-windowWidth/8, y+windowHeight/2 );
 			ctx.lineTo( x+windowWidth/2,               y+windowHeight/2 );
 			ctx.fill();
+*/			
 		}
 		
 		ctx.fillStyle = DEBUG_ALL_WHITE?'white':'rgba(100,0,0,0.2)';
@@ -79,13 +81,7 @@ export class HouseTexture extends ProceduralTexture
 			if (i) window( 0.1*W+i*0.2*W, 0.65*H );
 			window( 0.1*W+i*0.2*W, 0.25*H );
 		}
-		
-		// for( var i=0; i<W; i++ )
-		// {
-			// ctx.fillStyle = 'rgba('+(160+40*Math.sin(60*i/W*2*Math.PI))+',40,50,0.3)';
-			// ctx.fillRect( i, 0.9*H, 1, 1*H );
-		// }
-		
+
 		
 		this.repeatU = THREE.RepeatWrapping;
 		this.repeatV = THREE.RepeatWrapping;
@@ -138,7 +134,6 @@ export class HouseBumpTexture extends ProceduralTexture
 		ctx.fillStyle = 'rgb(90,90,90)';
 		ctx.fillRect( 0.1*W-dw/2+dw/10, 0.6*H+dw/7, dw-2*dw/10, 0.3*H-dw/7 );
 
-		// windows
 		// windows
 		var windowWidth = 0.115*W;
 		var windowHeight = 0.2*H;
