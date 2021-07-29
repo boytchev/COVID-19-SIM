@@ -17,8 +17,8 @@ console.log('seed=',R);
 export var DEBUG_RANDOM_SEED = R;
 export const DEBUG_AGENT_MAX_COUNT = 0;
 
-export const DEBUG_TIME_SPEED = timeMs(0,4,1)/1000;	// time ellapsed for 1 second
-export const START_TIME = timeMs(15);			// start time
+export const DEBUG_TIME_SPEED = timeMs(0,14,1)/1000;	// time ellapsed for 1 second
+export const START_TIME = timeMs(16);			// start time
 
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
