@@ -229,7 +229,7 @@ export class HouseBuildings
 			HH1=H1+1; // hidden wall to U
 			
 		var RH=1.4, // roof height
-			RW=0.5; // roof extended X and Z coordinates
+			RW=0.6; // roof extended X and Z coordinates
 			
 		var RY=1; // vertical position of roof edge
 		
@@ -261,6 +261,15 @@ export class HouseBuildings
 				-RW,  RY, RW,		0, 1/2, 1,		 0,  R0,
 				 1/3, RH, 0,		0, 1/2, 1,		5/6, R1,
 				-1/3, RH, 0,		0, 1/2, 1,		1/6, R1,
+				
+				// Bottom of roof
+				-RW,  RY, -RW,		0, 0, 0, 		0, 0,
+				 RW,  RY,  RW,		0, 0, 0, 		0, 0,
+				-RW,  RY,  RW,		0, 0, 0, 		0, 0,
+
+				-RW,  RY, -RW,		0, 0, 0, 		0, 0,
+				 RW,  RY, -RW,		0, 0, 0, 		0, 0,
+				 RW,  RY,  RW,		0, 0, 0, 		0, 0,
 			);
 		}
 
@@ -442,11 +451,8 @@ export class HouseBuildings
 				  `
 					vec4 texelColor = texture2D( map, vUv );
 				    texelColor = mapTexelToLinear( texelColor );
-					isWindow = 1.0-texelColor.a;
-					if( isWindow>0.0 )
-					{
-						texelColor = vec4(1);
-					}
+					isWindow = pow(texelColor.b,2.0);
+					texelColor = vec4(texelColor.r,texelColor.g,texelColor.g,1);
 				    diffuseColor *= texelColor;
 				  `
 				);
@@ -636,9 +642,9 @@ export class HouseBuildings
 		{
 			if( (i%2)==0 )
 			{
-				colorR = DEBUG_ALL_WHITE?1:THREE.Math.randFloat(0.90,1.00);
-				colorG = DEBUG_ALL_WHITE?1:THREE.Math.randFloat(0.85,1.00);
-				colorB = DEBUG_ALL_WHITE?1:THREE.Math.randFloat(0.80,1.00);
+				colorR = DEBUG_ALL_WHITE?1:THREE.Math.randFloat(0.8,1.00);
+				colorG = DEBUG_ALL_WHITE?1:THREE.Math.randFloat(0.8,1.00);
+				colorB = DEBUG_ALL_WHITE?1:THREE.Math.randFloat(0.8,1.00);
 			}
 			colors.push( colorR, colorG, colorB );
 		}

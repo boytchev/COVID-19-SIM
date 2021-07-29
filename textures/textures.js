@@ -31,7 +31,7 @@ export class Textures
 		
 		this.officeDoor = new OfficeDoorTexture( 64*2, 64*2, DEBUG_ALL_WHITE?'white':'dimgray' );
 		
-		this.house = new HouseTexture( 64*4 );
+		this.house = new HouseTexture( 64*8 );
 		this.houseBump = new HouseBumpTexture( 64*4 );
 		
 		this.apartment = new ApartmentTexture( 64*2 );

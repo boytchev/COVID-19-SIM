@@ -21,9 +21,12 @@ export class HouseTexture extends ProceduralTexture
 		var ctx = this.ctx,
 			W = this.width,
 			H = this.height;
+			
+		ctx.fillStyle = 'rgb(255,255,0)';
+		ctx.fillRect( 0, 0, W, H );
 
 		// roof
-		ctx.fillStyle = DEBUG_ALL_WHITE?'white':'rgb(255,160,150)';
+		ctx.fillStyle = DEBUG_ALL_WHITE?'white':'rgb(255,160,0)';
 		ctx.fillRect( 0, 0.9*H, W, 0.1*H );
 
 		// door
@@ -45,16 +48,19 @@ export class HouseTexture extends ProceduralTexture
 			ctx.strokeRect( Math.round(x-windowWidth/2)+0.5, Math.round(y-windowHeight/2)+0.5, Math.round(windowWidth), Math.round(windowHeight) );
 			
 			// window glass
-			//ctx.fillStyle = DEBUG_ALL_WHITE?'rgba(255,255,255,0.95)':'rgba(180,210,255,0.5)';
-			//ctx.fillRect( x-windowWidth/2+1, y-windowHeight/2+1, windowWidth-1, windowHeight-1 );
-			ctx.clearRect( x-windowWidth/2+1, y-windowHeight/2+1, windowWidth-1, windowHeight-1 );
+			ctx.fillStyle = DEBUG_ALL_WHITE?'rgba(255,255,255,0.95)':'rgb(200,200,255)';
+			ctx.fillRect( x-windowWidth/2+1, y-windowHeight/2+1, windowWidth-1, windowHeight-1 );
 			
+			// window divider
+			ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+			ctx.strokeRect( x, y-windowHeight/2, 1, windowHeight );
+
 			// window base
 			ctx.fillStyle = 'rgba(0,0,0,0.2)';
 			ctx.fillRect( x-windowBaseWidth/2, y+windowHeight/2, windowBaseWidth, windowBaseHeight );
-/*						
+
 			// left curtain
-			ctx.fillStyle = 'rgba(255,255,255,0.1)';
+			ctx.fillStyle = 'rgba(255,255,128,0.5)';
 			ctx.beginPath();
 			ctx.moveTo( x-windowWidth/2,               y-windowHeight/2 );
 			ctx.lineTo( x-windowWidth/2+windowWidth/3, y-windowHeight/2 );
@@ -70,7 +76,6 @@ export class HouseTexture extends ProceduralTexture
 			ctx.lineTo( x+windowWidth/2-windowWidth/8, y+windowHeight/2 );
 			ctx.lineTo( x+windowWidth/2,               y+windowHeight/2 );
 			ctx.fill();
-*/			
 		}
 		
 		ctx.fillStyle = DEBUG_ALL_WHITE?'white':'rgba(100,0,0,0.2)';

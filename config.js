@@ -16,7 +16,10 @@ console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
 export const DEBUG_AGENT_MAX_COUNT = 0;
-export const DEBUG_TIME_SPEED = timeMs(0,1,1)/1000;	// time ellapsed for 1 second
+
+export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
+export const START_TIME = timeMs(20);			// start time
+
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
@@ -230,8 +233,6 @@ export const SHADOWS = TOP_SHADOWS;
 export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 
-
-export const START_TIME = timeMs(4,50);			// start time
 
 
 
