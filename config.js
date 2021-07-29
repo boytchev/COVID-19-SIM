@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 5000; 				// in meters
+export const GROUND_SIZE = 500; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -17,8 +17,8 @@ console.log('seed=',R);
 export var DEBUG_RANDOM_SEED = R;
 export const DEBUG_AGENT_MAX_COUNT = 0;
 
-export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
-export const START_TIME = timeMs(20);			// start time
+export const DEBUG_TIME_SPEED = timeMs(0,4,1)/1000;	// time ellapsed for 1 second
+export const START_TIME = timeMs(15);			// start time
 
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
@@ -52,7 +52,7 @@ export const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or 
 export const DEBUG_AGENT_HEALTH = false; // count infected agents
 export const DEBUG_SUN_POSITION_GUI = false;
 //export const DEBUG_BLOCK_COLOR = false;
-export const DEBUG_ALL_WHITE = false;
+export const DEBUG_ALL_WHITE = !false;
 export var DEBUG_FLAG_1 = false;
 
 
@@ -217,7 +217,7 @@ export const LAMP_HOUSE_PM_INTENSITY_MS = new Range(
 export const SUN = DYNAMIC_SUN;
 export const SUNRISE_MS = timeMs(6);
 export const SUNSET_MS = timeMs(18);
-export const STATIC_SUN_POSITION_MS = timeMs(6,0,0);
+export const STATIC_SUN_POSITION_MS = timeMs(16,0,0);
 console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
 console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
 
@@ -228,8 +228,8 @@ export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 
 
 //export const SHADOWS = NO_SHADOWS;
-export const SHADOWS = TOP_SHADOWS;
-//export const SHADOWS = FULL_SHADOWS;
+//export const SHADOWS = TOP_SHADOWS;
+export const SHADOWS = FULL_SHADOWS;
 export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 

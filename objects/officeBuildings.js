@@ -408,11 +408,15 @@ export class OfficeBuildings
 					float y = floor(texPos.y);
 					
 					float windowId = (fract(5.0*sin(x+y*y)+vOfficeId)+fract(7.0*sin(y+x*x+vOfficeId)*(x+1.0))+0.1*sin(uTime/3000.0+x+y+vOfficeId))/2.0;
-					
-					float colorId = fract(12.81*windowId)+vOfficeId-1.0;
-					
-					vec4 newColor = vec4(1.0-0.1*colorId, 1.0, 1.1+0.3*colorId, 1.0);
-					
+				  `	
+				    +(DEBUG_ALL_WHITE
+						? `	vec4 newColor = vec4(1);
+						  `
+						: `	float colorId = fract(12.81*windowId)+vOfficeId-1.0;
+							vec4 newColor = vec4(1.0-0.2*colorId, 1.1-0.3*fract(1.0/colorId), 1.1+0.4*colorId, 1.0);
+						  `	
+					)+	
+				  `
 					float k = windowId < uLamps ? 1.0 : 0.0;
 					
 					isWindow *= k;

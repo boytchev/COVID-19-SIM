@@ -315,25 +315,28 @@ export class ApartmentBuildings
 				shader.vertexShader.replace(
 					'void main() {\n',
 					
-					'varying vec2 vTextureOffset;\n'+
-					'varying vec2 vTextureScale;\n'+
-					'attribute float apartmentId;\n'+
-					'varying float vApartmentId;\n'+
-					'void main() {\n'+
-					'	vApartmentId = apartmentId;\n'+
-					'	if (normal.y>0.5)\n'+
-					'	{\n'+
-					'		vTextureScale = vec2(0);\n'+
-					'		vTextureOffset = vec2(0.1);\n'+
-					'	}\n'+
-					'	else\n'+
-					'	{\n'+
-					'		vTextureScale.x = (abs(normal.x)<0.5) ? instanceMatrix[0][0] : instanceMatrix[2][2];\n'+
-					'		vTextureScale.y = instanceMatrix[1][1];\n'+
-					'		vTextureOffset.x = 0.0;\n'+
-					'		vTextureOffset.y = 0.0;\n'+
-					'	}\n'+
-					''
+					`
+					  varying vec2 vTextureOffset;
+					  varying vec2 vTextureScale;
+					  
+					  attribute float apartmentId;
+					  varying float vApartmentId;
+					  
+					  void main() {
+					 	vApartmentId = apartmentId;
+						if (normal.y>0.5)
+						{
+							vTextureScale = vec2(0);
+							vTextureOffset = vec2(0.1);
+						}
+						else
+						{
+							vTextureScale.x = (abs(normal.x)<0.5) ? instanceMatrix[0][0] : instanceMatrix[2][2];
+							vTextureScale.y = instanceMatrix[1][1];
+							vTextureOffset.x = 0.0;
+							vTextureOffset.y = 0.0;
+						}
+					`
 				);
 
 
@@ -393,11 +396,15 @@ export class ApartmentBuildings
 					float y = floor(texPos.y);
 					
 					float windowId = (fract(5.0*sin(x+y*y)+vApartmentId)+fract(7.0*sin(y+x*x+vApartmentId)*(x+1.0))+0.1*sin(uTime/3000.0+x+y+vApartmentId))/2.0;
-					
-					float colorId = fract(12.81*windowId)+vApartmentId-1.0;
-					
-					vec4 newColor = vec4(1.0-0.2*colorId, 1.1-0.3*fract(1.0/colorId), 1.1+0.4*colorId, 1.0);
-					
+				  `	
+				    +(DEBUG_ALL_WHITE
+						? `	vec4 newColor = vec4(1);
+						  `
+						: `	float colorId = fract(12.81*windowId)+vApartmentId-1.0;
+							vec4 newColor = vec4(1.0-0.2*colorId, 1.1-0.3*fract(1.0/colorId), 1.1+0.4*colorId, 1.0);
+						  `	
+					)+	
+				  `
 					float k = windowId < uLamps ? 1.0 : 0.0;
 					
 					isWindow *= k;
@@ -570,8 +577,13 @@ export class ApartmentBuildings
 		var colors = [];
 		for( var i=0; i<instances; i++)
 		{
-			var intensity = DEBUG_ALL_WHITE ? 1.2 : Math.pow( THREE.Math.randFloat(0,1), 1/4 );
-			colors.push( intensity, intensity, 0.9*intensity );
+			if( DEBUG_ALL_WHITE )
+				colors.push( 1, 1, 1 )
+			else
+			{
+				var intensity = Math.pow( THREE.Math.randFloat(0,1), 1/4 );
+				colors.push( intensity, intensity, 0.9*intensity );
+			}
 		}
 		var colorAttribute = new THREE.InstancedBufferAttribute( new Float32Array(colors), 3, false, 1 );
 		geometry.setAttribute( 'color', colorAttribute );

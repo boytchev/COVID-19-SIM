@@ -229,7 +229,7 @@ export class HouseBuildings
 			HH1=H1+1; // hidden wall to U
 			
 		var RH=1.4, // roof height
-			RW=0.6; // roof extended X and Z coordinates
+			RW=0.5; // roof extended X and Z coordinates
 			
 		var RY=1; // vertical position of roof edge
 		
@@ -307,7 +307,7 @@ export class HouseBuildings
 			 -1/2, 0, -1/2, 	-1, 0, 0, 	HH0, W0,
 		);
 		
-		if( SHADOWS != NO_SHADOWS )
+		if( SHADOWS != NO_SHADOWS && false )
 		{
 			data.push(
 				 // Bottom (from Y-)
@@ -358,8 +358,8 @@ export class HouseBuildings
 	{
 		var material = new THREE.MeshPhongMaterial({
 				color: DEBUG_ALL_WHITE?'white':'cornsilk',
-				emissive: 'white',
-				emissiveIntensity: DEBUG_ALL_WHITE?0.2:0,
+				//emissive: 'white',
+				//emissiveIntensity: DEBUG_ALL_WHITE?0.2:0,
 				shininess: DEBUG_ALL_WHITE?0:1,
 				vertexColors: true,
 				flatShading: true,
@@ -470,11 +470,15 @@ export class HouseBuildings
 					float y = floor(2.0*vUv.y);
 					
 					float windowId = (fract(5.0*cos(x+y*y)+vHouseId)+fract(7.0*sin(y+x*x+5.0*vHouseId)*(x+1.0))+0.02*sin(uTime*y/300.0+x+y+13.0*vHouseId))/2.0;
-					
-					float colorId = fract(12.81*windowId)+vHouseId-1.0;
-					
-					vec4 newColor = vec4(1.0-0.2*colorId, 1.1-0.3*fract(1.0/colorId), 1.1+0.4*colorId, 1.0);
-					
+				  `	
+				    +(DEBUG_ALL_WHITE
+						? `	vec4 newColor = vec4(1);
+						  `
+						: `	float colorId = fract(12.81*windowId)+vHouseId-1.0;
+							vec4 newColor = vec4(1.0-0.2*colorId, 1.1-0.3*fract(1.0/colorId), 1.1+0.4*colorId, 1.0);
+						  `	
+					)+	
+				  `
 					float k = windowId < uLamps ? 1.0 : 0.0;
 					
 					isWindow *= k;

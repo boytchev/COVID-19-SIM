@@ -9,7 +9,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {OFFICE_DOOR_WIDTH, OFFICE_DOOR_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, FLOOR_HEIGHT} from '../config.js';
+import {DEBUG_ALL_WHITE, OFFICE_DOOR_WIDTH, OFFICE_DOOR_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, FLOOR_HEIGHT} from '../config.js';
 import {navmesh, textures, scene} from '../main.js';
 
 
@@ -149,8 +149,13 @@ export class OfficeDoors
 		var colors = [];
 		for( var i=0; i<instances; i++)
 		{
-			var intensity = Math.pow( THREE.Math.randFloat(0.5,1), 1/10 );
-			colors.push( intensity, intensity, intensity );
+			if( DEBUG_ALL_WHITE )
+				colors.push( 3/4, 3/4, 3/4 )
+			else
+			{
+				var intensity = Math.pow( THREE.Math.randFloat(0.5,1), 1/10 );
+				colors.push( intensity, intensity, intensity );
+			}
 		}
 		var colorAttribute = new THREE.InstancedBufferAttribute( new Float32Array(colors), 3, false, 1 );
 		geometry.setAttribute( 'color', colorAttribute );

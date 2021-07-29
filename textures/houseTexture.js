@@ -26,14 +26,14 @@ export class HouseTexture extends ProceduralTexture
 		ctx.fillRect( 0, 0, W, H );
 
 		// roof
-		ctx.fillStyle = DEBUG_ALL_WHITE?'white':'rgb(255,160,0)';
+		ctx.fillStyle = DEBUG_ALL_WHITE?'rgb(255,255,0)':'rgb(255,160,0)';
 		ctx.fillRect( 0, 0.9*H, W, 0.1*H );
 
 		// door
 		var dw = 0.09*W; // window width
-		ctx.fillStyle = DEBUG_ALL_WHITE?'white':'rgba(100,0,0,0.8)';
+		ctx.fillStyle = DEBUG_ALL_WHITE?'rgb(200,200,0)':'rgba(100,0,0,0.8)';
 		ctx.fillRect( 0.1*W-dw/2, 0.6*H, dw, 0.3*H );
-		ctx.fillStyle = 'rgba(255,255,255,0.3)';
+		ctx.fillStyle = DEBUG_ALL_WHITE?'rgb(200,200,0,0.3)':'rgba(255,255,0,0.3)';
 		ctx.fillRect( 0.1*W-dw/2+dw/10, 0.6*H+dw/7, dw-2*dw/10, 0.3*H-dw/7 );
 		
 		// windows
