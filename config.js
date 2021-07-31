@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 500; 				// in meters
+export const GROUND_SIZE = 5; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -15,16 +15,16 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 0;
+export const DEBUG_AGENT_MAX_COUNT = 1;
 
-export const DEBUG_TIME_SPEED = timeMs(0,14,1)/1000;	// time ellapsed for 1 second
+export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
 export const START_TIME = timeMs(16);			// start time
 
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
-export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
+export const DEBUG_BLOCK_WITH_ONLY_PLAZA = !false;
 export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.3;
 export const DEBUG_RENDERER_INFO = false;
@@ -50,9 +50,9 @@ export const DEBUG_ROUTES_PER_AGENT = 1; // default 1
 export const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
 export const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
 export const DEBUG_AGENT_HEALTH = false; // count infected agents
-export const DEBUG_SUN_POSITION_GUI = false;
+export const DEBUG_SUN_POSITION_GUI = !false;
 //export const DEBUG_BLOCK_COLOR = false;
-export const DEBUG_ALL_WHITE = !false;
+export const DEBUG_ALL_WHITE = false;
 export var DEBUG_FLAG_1 = false;
 
 
@@ -212,9 +212,9 @@ export const LAMP_HOUSE_PM_INTENSITY_MS = new Range(
 				new Range( timeMs(17,15), timeMs(18) ),
 				new Range( timeMs(22,30), timeMs(24) ) );
 
-//export const SUN = NO_SUN;
+export const SUN = NO_SUN;
 //export const SUN = STATIC_SUN;
-export const SUN = DYNAMIC_SUN;
+//export const SUN = DYNAMIC_SUN;
 export const SUNRISE_MS = timeMs(6);
 export const SUNSET_MS = timeMs(18);
 export const STATIC_SUN_POSITION_MS = timeMs(16,0,0);
@@ -227,9 +227,9 @@ export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 		
 
 
-//export const SHADOWS = NO_SHADOWS;
+export const SHADOWS = NO_SHADOWS;
 //export const SHADOWS = TOP_SHADOWS;
-export const SHADOWS = FULL_SHADOWS;
+//export const SHADOWS = FULL_SHADOWS;
 export const SHADOWS_MAP_SIZE = 1024*4*2;
 export const SHADOWS_MAX_COUNT = 3;
 

@@ -56,7 +56,7 @@
 			faces = [];
 			
 		// process data
-		for( var i=0; i<obj.length; i++ )
+		for( var i=0; i<obj.length; i++  )
 		{
 			if( obj[i]=='v' )
 			{
@@ -79,9 +79,9 @@
 					f2 = obj[i+2].split('/'),
 					f3 = obj[i+3].split('/');
 				
-				faces.push( {v1:f1[0], n1:f1[2], v2:f2[0], n2:f2[2], v3:f3[0], n3:f3[2]} );
+				faces.push( {v1:f1[0], t1:f1[1], n1:f1[2], v2:f2[0], t2:f2[1], n2:f2[2], v3:f3[0], t3:f3[1], n3:f3[2]} );
 				i += 3;
-			}
+			};
 		}
 		
 		function string(v,n=3)
@@ -89,7 +89,7 @@
 			return v.x.toFixed(n)+', '+v.y.toFixed(n)+', '+v.z.toFixed(n)+', ';
 		}
 		
-		function string2(v,n=3)
+		function texture(v,n=3)
 		{
 			return v.x.toFixed(n)+', '+v.y.toFixed(n)+', ';
 		}
@@ -165,9 +165,9 @@
 		var textureData = 'var textureData = [';
 		for( var i=0; i<faces.length; i++ )
 		{
-			textureData += string2( uvs[faces[i].v1] );
-			textureData += string2( uvs[faces[i].v2] );
-			textureData += string2( uvs[faces[i].v3] );
+			textureData += texture( uvs[faces[i].t1] );
+			textureData += texture( uvs[faces[i].t2] );
+			textureData += texture( uvs[faces[i].t3] );
 		}
 		textureData = textureData.slice(0, -2); // remove last ", "
 		textureData += '];<br><br>';
@@ -183,8 +183,8 @@
 		topologyData = topologyData.slice(0, -2); // remove last ", "
 		topologyData += '];<br><br>';
 		
-//		document.getElementById('code').innerHTML = vertexData + normalData + /*textureData +*/ topologyData;
-		document.getElementById('code').innerHTML = textureData;
+		document.getElementById('code').innerHTML = vertexData + normalData + textureData + topologyData;
+		//document.getElementById('code').innerHTML = textureData;
 	</script>
 </body>
 </html>
