@@ -80,14 +80,72 @@ export class AgentTexture extends ProceduralTexture
 		}
 		
 	} // AgentTexture.drawChessboard
+
+	
+	// a black-crimson texture
+	drawBlackCrimson()
+	{
+		function X( x ) {return x/N*W;}
+		function Y( y ) {return y/N*H;}
+		function fill( x1, y1, x2, y2 )
+		{
+			ctx.fillRect( X(x1), Y(y1), X(x2-x1), Y(y2-y1) );
+		}
+		function line( x1, y1, x2, y2 )
+		{
+			ctx.beginPath();
+			ctx.moveTo( X(x1), Y(y1) );
+			ctx.lineTo( X(x2), Y(y2) );
+			ctx.stroke();
+		}
+		
+		var ctx = this.ctx,
+			W = this.width,
+			H = this.height;
+
+		ctx.fillStyle = 'black';
+		ctx.fillRect( 0, 0, H, W );
+		
+		ctx.fillStyle = 'cornflowerblue';
+		fill( 4, 8, 6, 13 );
+		
+		ctx.fillStyle = 'crimson';
+		fill( 1, 6-0.2, 11, 6+0.2 );
+		fill( 1, 5.5-0.1, 11, 5.5+0.1 );
+		fill( 1, 6.5-0.1, 11, 6.5+0.1 );
+		
+		fill( 10, 14-0.2, 22, 14+0.2 );
+		fill( 10, 20, 22, 20.5 );
+		fill( 13-0.2, 1, 13+0.2, 27 );
+		fill( 19-0.2, 1, 19+0.2, 27 );
+		fill( 13, 11, 19, 1.4 );
+		fill( 13, 27, 19, 30 );
+		fill( 0, 30, 32, 31 );
+		fill( 1, 26, 9, 29 );
+		fill( 10, 27.5, 12, 29.5 );
+		fill( 23, 26, 31, 29 );
+		fill( 20, 27.5, 22, 29.5 );
+		fill( 1, 21.5, 9, 22 );
+		fill( 23, 21.5, 31, 22 );
+		fill( 5-0.2, 17, 5+0.2, 26 );
+		fill( 27-0.2, 17, 27+0.2, 26 );
+		
+		ctx.strokeStyle = 'crimson';
+		ctx.lineWidth = X(0.4);
+		line( 13, 14.5, 16, 17 );
+		line( 19, 14.5, 16, 17 );
+		line( 10, 9, 10, 17 );
+		line( 22, 9, 22, 17 );
+	} // AgentTexture.drawBlackCrimson
 	
 	
 	draw()
 	{
 		
 		super.draw();
-		this.drawCheckered();
-		this.drawChessboard();
+		//this.drawCheckered();
+		//this.drawChessboard();
+		this.drawBlackCrimson();
 		
 	} // AgentTexture.draw
 	
