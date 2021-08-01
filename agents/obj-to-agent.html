@@ -17,12 +17,12 @@
 <body>
 	<div id="code"></div>
 	<script type="module">
-		import objSource from './agents_model_obj.js';
-		
-		var obj = objSource;
+		var response = await fetch( './model/agent3d.obj' );
+		var obj = await response.text();
 			obj = obj.replace(/\n/g, " ");
 			obj = obj.split(' ');
-		
+
+
 		var minY = 0,
 			maxY = 0;
 			
@@ -36,7 +36,7 @@
 				i += 3;
 			}
 		}
-		console.log('minY='+minY,'maxY='+maxY);
+//		console.log('minY='+minY,'maxY='+maxY);
 		
 		function rescale( value )
 		{
