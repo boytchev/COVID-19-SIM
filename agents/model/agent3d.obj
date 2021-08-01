@@ -1,11 +1,3 @@
-// This work is based on "Low Poly Base Mesh-530 Tri"
-// (https://sketchfab.com/3d-models/low-poly-base-mesh-530-tri-138ca18c246a4b13b3e108bd88df95a2)
-// by assblasterplastered (https://sketchfab.com/assblasterplastered)
-// licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
-//
-// Texture coordinates remapped by Pavel Boytchev
-
-export default `
 # Blender v2.83.5 OBJ File: 'agent-texture-map.blend'
 # www.blender.org
 mtllib agent3d.mtl
@@ -1502,5 +1494,3 @@ f 85/181/85 163/182/163 34/395/34
 f 159/177/159 158/176/158 255/333/258
 f 115/399/271 210/401/212 16/18/16
 f 193/400/194 128/142/128 130/144/130
-
-`
