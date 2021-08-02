@@ -19,6 +19,9 @@ varying vec3 vViewPosition;
 	varying vec3 vVertexColor;
 	attribute float infectionLevel;
 	attribute float agentId;
+	attribute float randomId;
+	varying float vAgentId;
+	varying float vRandomId;
 	attribute float agentHeight;
 	attribute int motionType;
 	//varying float vInfectionLevel;
@@ -97,6 +100,8 @@ void main() {
 #ifdef COVID19SYM
 	vVertexColor = vec3( 1.0, 1.0-infectionLevel, 1.0-infectionLevel );
 	//vInfectionLevel = infectionLevel;
+	vAgentId = agentId;
+	vRandomId = randomId;
 	
 	float speed = 1.8+0.8*sin(agentId); // speed of walking
 	float baseAngle = 0.2*1.6;

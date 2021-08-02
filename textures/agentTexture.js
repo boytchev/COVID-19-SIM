@@ -139,13 +139,135 @@ export class AgentTexture extends ProceduralTexture
 	} // AgentTexture.drawBlackCrimson
 	
 	
+
+	
+	// a black-crimson texture
+	drawClothesTags()
+	{
+		function X( x ) {return Math.round(x/N*W);}
+		function Y( y ) {return Math.round(y/N*H);}
+		function fill( x1, y1, x2, y2 )
+		{
+			ctx.fillRect( X(x1), Y(y1), X(x2)-X(x1), Y(y2)-Y(y1) );
+		}
+		function line( x1, y1, x2, y2, width = 0.1 )
+		{
+			ctx.lineWidth = X(width);
+			ctx.beginPath();
+			ctx.moveTo( X(x1), Y(y1) );
+			ctx.lineTo( X(x2), Y(y2) );
+			ctx.stroke();
+		}
+		function path( x1, y1, width = 0.1 )
+		{
+			ctx.lineWidth = X(width);
+			ctx.beginPath();
+			ctx.moveTo( X(x1), Y(y1) );
+		}
+		function to( x1, y1 )
+		{
+			ctx.lineTo( X(x1), Y(y1) );
+		}
+		function end( x1, y1 )
+		{
+			ctx.lineTo( X(x1), Y(y1) );
+			ctx.stroke();
+		}
+		function colorIndex( n )
+		{
+			//var n = Math.round(2.55*n);
+			ctx.fillStyle = 'hsl(0,0%,'+Math.round(n)+'%)';
+			//ctx.fillStyle = 'rgb('+n+','+n+','+n+')';
+		}
+		
+		var ctx = this.ctx,
+			W = this.width,
+			H = this.height;
+
+		const e=0.25;
+		
+		ctx.fillStyle = 'white';
+		ctx.fillRect( 0, 0, H, W );
+		
+		// shoe rubber sole
+		ctx.fillStyle = colorIndex( 1 );
+		fill( 4-e, 30.7, 28+e, 31+e ); // sides both shoes
+		fill( 0.5-e, 30-e,  3.5+e, 31+e); // bottom right shoe
+		fill( 28.5-e, 30-e,  31.5+e, 31+e); // bottom left shoe
+
+		// shoe leather
+		ctx.fillStyle = colorIndex( 2 );
+		fill( 13-e, 28, 19+e, 30.7 ); // top and side both shoes
+		fill( 3.5-e, 30-e, 28+e, 30.7 ); // back of both shoes
+
+		// ankle (must be before shoe neckline to set proper epsilon area)
+		ctx.fillStyle = colorIndex( 4 );
+		fill( 10-e, 26.5, 22+e, 27+e );
+		
+		// shoe neckline
+		ctx.fillStyle = colorIndex( 3 );
+		fill( 13-e, 27, 19+e, 28 ); // front and side both shoes
+		ctx.moveTo( X(6-e), Y(30-e) ); // right shoe
+			ctx.lineTo( X(7), Y(30.25) );
+			ctx.lineTo( X(10), Y(30.30) );
+			ctx.lineTo( X(11+e), Y(30-e) );
+			ctx.lineTo( X(6-e), Y(30-e) );
+			ctx.fill();
+		ctx.moveTo( X(21-e), Y(30-e) ); // left shoe
+			ctx.lineTo( X(22), Y(30.30) );
+			ctx.lineTo( X(25), Y(30.25) );
+			ctx.lineTo( X(26+e), Y(30-e) );
+			ctx.fill();
+			
+		// above ankle
+		ctx.fillStyle = colorIndex( 5 );
+		fill( 10-e, 25, 22+e, 26.5 );
+		
+		// under knee
+		ctx.fillStyle = colorIndex( 6 );
+		fill( 10-e, 23, 22+e, 25 );
+		
+		// knee
+		ctx.fillStyle = colorIndex( 7 );
+		fill( 10-e, 19.5, 22+e, 23 );
+		
+		// above knee
+		ctx.fillStyle = colorIndex( 8 );
+		fill( 10-e, 18, 22+e, 19.5 );
+		
+		// pants
+		ctx.fillStyle = colorIndex( 9 );
+		fill( 10-e, 16, 22+e, 18 );
+		ctx.fillStyle = colorIndex( 11 );
+		fill( 10-e, 15, 22+e, 16 );
+		ctx.fillStyle = colorIndex( 12 );
+		fill( 10-e, 14, 22+e, 15 );
+				
+/*	
+		// panties
+		ctx.fillStyle = colorIndex( 10 );
+		ctx.moveTo( X(10-e), Y(15.5) ); 
+			ctx.lineTo( X(10-e), Y(17) );
+			ctx.lineTo( X(10.5), Y(17) );
+			ctx.lineTo( X(13), Y(16.0) );
+			ctx.lineTo( X(16), Y(17.2) );
+			ctx.lineTo( X(19), Y(16.0) );
+			ctx.lineTo( X(21.5), Y(17) );
+			ctx.lineTo( X(22+e), Y(17) );
+			ctx.lineTo( X(22+e), Y(15.5) );
+			ctx.fill();
+*/				
+	} // AgentTexture.drawClothesTags
+
+
 	draw()
 	{
 		
 		super.draw();
 		//this.drawCheckered();
 		//this.drawChessboard();
-		this.drawBlackCrimson();
+		//this.drawBlackCrimson();
+		this.drawClothesTags();
 		
 	} // AgentTexture.draw
 	

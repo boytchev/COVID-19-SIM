@@ -46,7 +46,7 @@ import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../
 import {dayTimeMs, deltaTime} from '../objects/nature.js';
 import {Crossing} from '../objects/crossings.js';
 import {Elevator} from '../objects/elevators.js';
-import {DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE} from '../config.js';
+import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE} from '../config.js';
 
 
 
@@ -149,10 +149,17 @@ export class AgentBehaviour
 			this.doing = this.AGENT_SLEEPING_AT_HOME;
 		}
 
-// temporary set wandering mode
-this.gotoPosition = null;
-this.doing = this.AGENT_WANDERING; // todo
-				
+		if( DEBUG_RANDOM_WANDERING )
+		{
+			this.gotoPosition = null;
+			this.doing = this.AGENT_WANDERING;
+		}
+		
+		if( DEBUG_FORM_A_LINE )
+		{
+			this.doing = this.AGENT_DOING_NOTHING;
+		}
+		
 	} // AgentBehaviour.constructor
 
 	
