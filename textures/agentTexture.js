@@ -148,7 +148,10 @@ export class AgentTexture extends ProceduralTexture
 		function Y( y ) {return Math.round(y/N*H);}
 		function fill( x1, y1, x2, y2 )
 		{
-			ctx.fillRect( X(x1), Y(y1), X(x2)-X(x1), Y(y2)-Y(y1) );
+			if( x1 === undefined )
+				ctx.fill();
+			else
+				ctx.fillRect( X(x1), Y(y1), X(x2)-X(x1), Y(y2)-Y(y1) );
 		}
 		function line( x1, y1, x2, y2, width = 0.1 )
 		{
@@ -168,9 +171,8 @@ export class AgentTexture extends ProceduralTexture
 		{
 			ctx.lineTo( X(x1), Y(y1) );
 		}
-		function end( x1, y1 )
+		function stroke( )
 		{
-			ctx.lineTo( X(x1), Y(y1) );
 			ctx.stroke();
 		}
 		function colorIndex( n )
@@ -207,17 +209,17 @@ export class AgentTexture extends ProceduralTexture
 		// shoe neckline
 		ctx.fillStyle = colorIndex( 3 );
 		fill( 13-e, 27, 19+e, 28 ); // front and side both shoes
-		ctx.moveTo( X(6-e), Y(30-e) ); // right shoe
-			ctx.lineTo( X(7), Y(30.25) );
-			ctx.lineTo( X(10), Y(30.30) );
-			ctx.lineTo( X(11+e), Y(30-e) );
-			ctx.lineTo( X(6-e), Y(30-e) );
-			ctx.fill();
-		ctx.moveTo( X(21-e), Y(30-e) ); // left shoe
-			ctx.lineTo( X(22), Y(30.30) );
-			ctx.lineTo( X(25), Y(30.25) );
-			ctx.lineTo( X(26+e), Y(30-e) );
-			ctx.fill();
+		path( 6-e, 30-e ); // right shoe
+			to( 7, 30.25 );
+			to( 10, 30.30 );
+			to( 11+e, 30-e );
+			to( 6-e, 30-e );
+			fill( );
+		path( 21-e, 30-e ); // left shoe
+			to( 22, 30.30 );
+			to( 25, 30.25 );
+			to( 26+e, 30-e );
+			fill( );
 			
 		// above ankle
 		ctx.fillStyle = colorIndex( 5 );
@@ -243,9 +245,10 @@ export class AgentTexture extends ProceduralTexture
 		ctx.fillStyle = colorIndex( 12 );
 		fill( 10-e, 14, 22+e, 15 );
 				
-/*	
+
 		// panties
 		ctx.fillStyle = colorIndex( 10 );
+		ctx.beginPath();
 		ctx.moveTo( X(10-e), Y(15.5) ); 
 			ctx.lineTo( X(10-e), Y(17) );
 			ctx.lineTo( X(10.5), Y(17) );
@@ -256,7 +259,7 @@ export class AgentTexture extends ProceduralTexture
 			ctx.lineTo( X(22+e), Y(17) );
 			ctx.lineTo( X(22+e), Y(15.5) );
 			ctx.fill();
-*/				
+				
 	} // AgentTexture.drawClothesTags
 
 

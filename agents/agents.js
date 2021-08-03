@@ -316,6 +316,7 @@ export class Agents
 		var uniforms = THREE.UniformsUtils.merge([
 			THREE.ShaderLib.phong.uniforms,
 			{ diffuse: { value: new THREE.Color(0,1,1) } },
+			{ shininess: { value: 0 } },
 			{ uTime: { value: 0 } },
 			{ map: { type: 't', value: texture } },
 		]);

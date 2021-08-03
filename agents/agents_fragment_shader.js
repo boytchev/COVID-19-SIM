@@ -4,6 +4,7 @@
 
 export default `
 
+
 #define COVID19SYM
 
 
@@ -13,74 +14,6 @@ uniform vec3 emissive;
 uniform vec3 specular;
 uniform float shininess;
 uniform float opacity;
-
-#ifdef COVID19SYM
-	uniform float uTime;
-	varying vec3 vVertexColor;
-	varying float vAgentId;
-	varying float vRandomId;
-	//varying float vInfectionLevel;
-#endif
-
-#ifdef COVID19SYM
-	vec4 colorShoeSole( )
-	{
-		return vec4(0,0,0,1);
-	}
-	vec4 colorShoeSkin( )
-	{
-		return vec4(
-			1.0*fract(2.7/vRandomId),
-			1.0*fract(3.3/vRandomId),
-			1.0*fract(1.1/vRandomId),
-			1.0
-		);
-	}
-	vec4 colorSock( )
-	{
-		return vec4(1.0,1.0,1.0,1);
-	}
-	vec4 colorHumanSkin( )
-	{
-		return vec4(1.0,0.8,0.8,1);
-	}
-	vec4 colorPants( )
-	{
-		return vec4(
-			1.0*fract(1.7/vRandomId),
-			1.0*fract(2.3/vRandomId),
-			1.0*fract(3.1/vRandomId+vAgentId),
-			1.0
-		);
-	}
-	vec4 colorPanties( )
-	{
-		return vec4(
-			1.0*fract(4.1/vRandomId),
-			1.0*fract(1.9/vRandomId),
-			1.0*fract(8.3/vRandomId),
-			1.0
-		);
-	}
-	
-	vec4 recodeColor( vec4 color )
-	{
-		int index = int(round(100.0*color.r));
-		
-		int shoeLevel = int(2.0 + 5.0*pow(fract(2.8/vAgentId),2.0)); // [2..7]
-		int sockLevel = int(2.0 + 5.0*pow(fract(1.0/vRandomId),0.5)); // [2..7]
-		int pantLevel = int(4.0 + 6.0*pow(fract(5.3/vRandomId),2.0)); // [4..10]
-		
-		if( index==1 ) color = colorShoeSole();
-		else if( index<=shoeLevel ) color = colorShoeSkin();
-		else if( index<=sockLevel ) color = colorSock();
-		else if( index<pantLevel ) color = colorHumanSkin();
-		else if( index<=12 ) color = colorPants();
-		else color = colorHumanSkin();
-		
-		return color;
-	}
-#endif
 
 #include <common>
 #include <packing>
@@ -107,6 +40,92 @@ uniform float opacity;
 #include <logdepthbuf_pars_fragment>
 #include <clipping_planes_pars_fragment>
 
+#ifdef COVID19SYM
+	uniform float uTime;
+	varying vec3 vVertexColor;
+	varying float vAgentId;
+	varying float vRandomId;
+	//varying float vInfectionLevel;
+#endif
+
+#ifdef COVID19SYM
+	vec4 colorShoeSole( )
+	{
+		return vec4(0,0,0,1);
+	}
+	vec4 colorShoeSkin( )
+	{
+		return vec4(
+			1.0*fract(2.7/vRandomId),
+			1.0*fract(3.3/vRandomId),
+			1.0*fract(1.1/vRandomId),
+			1.0
+		);
+	}
+	vec4 colorSock( )
+	{
+		float c = 1.0-pow(vRandomId,5.0);
+		return vec4(c,c,c,1);
+	}
+	vec4 colorHumanSkin( )
+	{
+		return vec4(1.0,0.8,0.8,1);
+	}
+	vec4 colorPants( )
+	{
+		float c = pow(fract(8.3/vRandomId),1.5);
+		//return vec4(c,c,c,1);
+
+		return vec4(
+			c*fract(1.7/vRandomId),
+			c*fract(2.3/vRandomId),
+			c*fract(3.1/vRandomId),
+			1.0
+		);
+	}
+	
+	vec4 recodeUndressedColor( vec4 color )
+	{
+		int index = int(round(100.0*color.r));
+		
+		int sockLevel = int(2.0 + 5.0*pow(fract(1.0/vRandomId),0.5)); // [2..7]
+		
+		if( index<=sockLevel ) color = colorSock();
+		else
+		if( index==9 ) color = colorSock();
+		else
+		if( index==10 ) color = colorSock();
+		else
+		color = colorHumanSkin();
+		
+		return color;
+	}
+
+	vec4 recodeColor( vec4 color )
+	{
+		int index = int(round(100.0*color.r));
+		
+		int shoeLevel = int(2.0 + 5.0*pow(fract(2.8/vAgentId),1.0)); // [2..7]
+		int sockLevel = int(2.0 + 5.0*pow(fract(1.0/vRandomId),0.5)); // [2..7]
+		int pantLevel = int(4.0 + 6.0*pow(fract(5.3/vRandomId),1.0)); // [4..10]
+		
+		if( index==1 ) color = colorShoeSole();
+		else
+		if( index<=shoeLevel ) color = colorShoeSkin();
+		else 
+		if( index<=sockLevel ) color = colorSock();
+		else
+		if( index<pantLevel ) color = colorHumanSkin();
+		else
+		if( index<=12 ) color = colorPants();
+		else
+		color = colorHumanSkin();
+		
+		return color;
+	}
+#endif
+
+
 void main() {
 	#include <clipping_planes_fragment>
 
@@ -132,7 +151,10 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 
 	texelColor = mapTexelToLinear( texelColor );
 	#ifdef COVID19SYM
-		texelColor = recodeColor( texelColor );
+		if( fract(3.0/vRandomId)<0.3 )
+			texelColor = recodeUndressedColor( texelColor );
+		else
+			texelColor = recodeColor( texelColor );
 	#endif		
 	diffuseColor *= texelColor;
 

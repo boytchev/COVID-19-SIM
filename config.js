@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 100; 				// in meters
+export const GROUND_SIZE = 20; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -15,7 +15,7 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 10000;
+export const DEBUG_AGENT_MAX_COUNT = 500;
 export const DEBUG_RANDOM_WANDERING = false;
 export const DEBUG_FORM_A_LINE = !false;
 
