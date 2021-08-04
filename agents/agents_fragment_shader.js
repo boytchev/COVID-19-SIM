@@ -96,7 +96,7 @@ uniform float opacity;
 		else
 		if( index==10 ) color = colorSock();
 		else
-		color = colorHumanSkin();
+		if( index<=90 ) color = colorHumanSkin();
 		
 		return color;
 	}
@@ -119,7 +119,7 @@ uniform float opacity;
 		else
 		if( index<=12 ) color = colorPants();
 		else
-		color = colorHumanSkin();
+		if( index<=90 ) color = colorHumanSkin();
 		
 		return color;
 	}
@@ -150,12 +150,14 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	vec4 texelColor = texture2D( map, vUv );
 
 	texelColor = mapTexelToLinear( texelColor );
-	#ifdef COVID19SYM
-		if( fract(3.0/vRandomId)<0.3 )
-			texelColor = recodeUndressedColor( texelColor );
-		else
-			texelColor = recodeColor( texelColor );
-	#endif		
+	#ifdef COVID19SYM_RECOLOR
+		#ifdef COVID19SYM
+			if( fract(3.0/vRandomId)<0.3 )
+				texelColor = recodeUndressedColor( texelColor );
+			else
+				texelColor = recodeColor( texelColor );
+		#endif
+	#endif
 	diffuseColor *= texelColor;
 
 #endif
