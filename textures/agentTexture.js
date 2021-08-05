@@ -346,7 +346,10 @@ export class AgentTexture extends ProceduralTexture
 		poly( [4.5-e, 14-e, 5, 15, 5.5+e, 14-e, 5, 13+3/4-e] ); // 42 
 		
 		colorIndex( 51 );
-		poly( [1-e, 5-e, 9, 5-e, 9, 5, 9.5, 6, 9, 7, 9, 7+e, 1-e, 7+e, 1-e, 5-e] ); // 51
+		poly( [4-e, 5-e, 9, 5-e, 9, 5, 9.5, 6, 9, 7, 9, 7+e, 4-e, 7+e, 4-e, 5-e] ); // 51
+
+		colorIndex( 54 );
+		fill( 1-e, 5-e, 4, 7+e ); // 54
 
 		colorIndex( 52 );
 		fill( 1-e, 8-e, 9+e, 13+e ); // 52 (must be before 43..53 w/o 51)
@@ -506,6 +509,7 @@ export class AgentTexture extends ProceduralTexture
 		line( [7.5, 13, 6.5, 12] ); // X10
 		line( [6+3/4, 11.5, 7.5, 11.5] ); // X11
 		line( [3+1/4, 11.5, 2.5, 11.5] ); // X12
+		line( [1, 5, 4, 5, 4, 7, 1, 7] ); // X13
 		
 		
 	} // AgentTexture.addBorders
