@@ -13,7 +13,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {blocks, scene} from '../main.js';
-import {TREE_HOUSES_RATIO, TREE_HEIGHT, TREE_PARK_RATIO, TREE_COMPLEXITY, DEBUG_BUILDINGS_OPACITY, DEBUG_ALL_WHITE} from '../config.js';
+import {CARTOON_STYLE, TREE_HOUSES_RATIO, TREE_HEIGHT, TREE_PARK_RATIO, TREE_COMPLEXITY, DEBUG_BUILDINGS_OPACITY, DEBUG_ALL_WHITE} from '../config.js';
 
 
 class Tree
@@ -109,6 +109,11 @@ export class Trees
 				depthWrite:  DEBUG_BUILDINGS_OPACITY>0.9,
 			});
 
+		if( CARTOON_STYLE )
+		{
+			material.specular = new THREE.Color( 10, 10, 10 );
+		}
+		
 		// inject GLSL code to fix the height of the roof
 		material.onBeforeCompile = shader => {
 			//console.log(shader.vertexShader);
@@ -118,36 +123,36 @@ export class Trees
 				shader.vertexShader.replace(
 					'#include <project_vertex>',
 
-					'vec4 mvPosition = vec4( transformed, 1.0 );\n'+
-					'vec3 limits = vec3(0.6, 0.75, 1.0);\n'+
+					`
+						vec4 mvPosition = vec4( transformed, 1.0 );
+						vec3 limits = vec3(0.6, 0.75, 1.0);
 
-					'if (mvPosition.y>=limits.y)\n'+
-					'{\n'+
-					'	vec2 v = vec2(12.9898,78.233); float w = 43758.5453123;\n'+
-					'	float rx = fract(cos(dot(vec2(instanceMatrix[2].yz+mvPosition.zy),v))*w)-0.5;\n'+
-					'	float ry = fract(sin(dot(vec2(instanceMatrix[1].zx-mvPosition.xz),v))*w)-0.5;\n'+
-					'	float rz = fract(cos(dot(vec2(instanceMatrix[3].xy+mvPosition.yx),v))*w)-0.5;\n'+
-					'	mvPosition.xyz = (mvPosition.xyz-vec3(0,limits.z,0))*(vec3(1)+0.6*vec3(0.8*rx,ry,0.8*rz))+vec3(0,limits.z,0);\n'+
-					'}\n'+
+						if (mvPosition.y>=limits.y)
+						{
+							vec2 v = vec2(12.9898,78.233); float w = 43758.5453123;
+							float rx = fract(cos(dot(vec2(instanceMatrix[2].yz+mvPosition.zy),v))*w)-0.5;
+							float ry = fract(sin(dot(vec2(instanceMatrix[1].zx-mvPosition.xz),v))*w)-0.5;
+							float rz = fract(cos(dot(vec2(instanceMatrix[3].xy+mvPosition.yx),v))*w)-0.5;
+							mvPosition.xyz = (mvPosition.xyz-vec3(0,limits.z,0))*(vec3(1)+0.6*vec3(0.8*rx,ry,0.8*rz))+vec3(0,limits.z,0);
+						}
 					
-					'if (mvPosition.y>limits.x)\n'+
-					'{\n'+
-					'	vec2 v = vec2(12.9898,78.233); float w = 43758.5453123;\n'+
-					'	float rx = fract(sin(dot(vec2(instanceMatrix[2].yz+mvPosition.zy),v))*w)-0.5;\n'+
-					'	float rz = fract(cos(dot(vec2(instanceMatrix[3].xy-mvPosition.yx),v))*w)-0.5;\n'+
-					'	mvPosition.xz = mvPosition.xz + 0.05*vec2(rx,rz);\n'+
+						if (mvPosition.y>limits.x)
+						{
+							vec2 v = vec2(12.9898,78.233); float w = 43758.5453123;
+							float rx = fract(sin(dot(vec2(instanceMatrix[2].yz+mvPosition.zy),v))*w)-0.5;
+							float rz = fract(cos(dot(vec2(instanceMatrix[3].xy-mvPosition.yx),v))*w)-0.5;
+							mvPosition.xz = mvPosition.xz + 0.05*vec2(rx,rz);
 
-					'	rx = fract(sin(dot(vec2(instanceMatrix[2].yz),v))*w)-0.5;\n'+
-					'	rz = fract(cos(dot(vec2(instanceMatrix[3].xy),v))*w)-0.5;\n'+
-					'	mvPosition.xz = mvPosition.xz + 0.25*vec2(rx,rz);\n'+
-					'}\n'+
+							rx = fract(sin(dot(vec2(instanceMatrix[2].yz),v))*w)-0.5;
+							rz = fract(cos(dot(vec2(instanceMatrix[3].xy),v))*w)-0.5;
+							mvPosition.xz = mvPosition.xz + 0.25*vec2(rx,rz);
+						}
 
-					'vColor.xyz = vec3(mvPosition.y,0,0);\n'+
-					'mvPosition = instanceMatrix * mvPosition;\n'+
-					'mvPosition = modelViewMatrix * mvPosition;\n'+
-					'gl_Position = projectionMatrix * mvPosition;\n'+
-
-					''
+						vColor.xyz = vec3(mvPosition.y,0,0);
+						mvPosition = instanceMatrix * mvPosition;
+						mvPosition = modelViewMatrix * mvPosition;
+						gl_Position = projectionMatrix * mvPosition;
+					`
 				);
 
 			shader.fragmentShader =
@@ -159,6 +164,18 @@ export class Trees
 					'float k = smoothstep(0.6, 0.7,vColor.x);\n'+
 					'diffuseColor.rgb *= green*k+brown*(1.0-k);\n'+
 					''
+				);
+
+			if( CARTOON_STYLE )
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+					'#include <dithering_fragment>',
+					
+					`
+						#include <dithering_fragment>
+						float bw = smoothstep(0.4, 0.5, gl_FragColor.g);
+						gl_FragColor = vec4(bw,bw,bw,1.0);
+					`
 				);
 
 			//console.log(shader.vertexShader);

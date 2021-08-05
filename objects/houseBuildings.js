@@ -35,7 +35,7 @@ import {HouseSidewalks, HouseSidewalk, HouseSidewalkPath} from './houseSidewalks
 import {blocks, navmesh, textures, scene} from '../main.js';
 import {round, Pos, Size, Zone} from '../core.js';
 import {pick} from '../coreNav.js';
-import {SIDEWALK_WIDTH, HOUSE_BOUNDING_RADIUS, FLOOR_HEIGHT, DEBUG_HIDE_ROOFS, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_BUILDINGS_OPACITY} from '../config.js';
+import {CARTOON_STYLE, SIDEWALK_WIDTH, HOUSE_BOUNDING_RADIUS, FLOOR_HEIGHT, DEBUG_HIDE_ROOFS, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_BUILDINGS_OPACITY} from '../config.js';
 
 
 class HouseDoor
@@ -372,6 +372,11 @@ export class HouseBuildings
 				depthWrite:  DEBUG_BUILDINGS_OPACITY>0.9,
 			});
 
+		if( CARTOON_STYLE )
+		{
+			material.specular = new THREE.Color( 10, 10, 10 );
+		}
+		
 		// inject GLSL code to fix the height of the roof
 		material.onBeforeCompile = shader => {
 			//console.log(shader.vertexShader);
@@ -484,7 +489,13 @@ export class HouseBuildings
 					isWindow *= k;
 					
 					gl_FragColor += isWindow*(1.0-windowId)*newColor*uLampsIntensity;
-				  `
+				  `	
+				    +(DEBUG_ALL_WHITE
+						? ``
+						: `	float bw = smoothstep(0.6, 0.7, gl_FragColor.g);
+							gl_FragColor = vec4(bw,bw,bw,1.0);
+						  `	
+					)
 				);				
 			//console.log(shader.vertexShader);
 		} // material.onBeforeCompile

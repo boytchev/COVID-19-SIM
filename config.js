@@ -22,10 +22,10 @@ export const DEBUG_FORM_A_LINE = false;
 export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
 export const START_TIME = timeMs(16);			// start time
 
-export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
+export const DEBUG_BLOCK_WITH_ONLY_HOUSES = !false;
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
-export const DEBUG_BLOCK_WITH_ONLY_PARK = !false;
+export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 export const DEBUG_BLOCK_WITH_ONLY_PLAZA = false;
 export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.5;
@@ -54,11 +54,11 @@ export const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or 
 export const DEBUG_AGENT_HEALTH = false; // count infected agents
 export const DEBUG_SUN_POSITION_GUI = false;
 //export const DEBUG_BLOCK_COLOR = false;
-export const DEBUG_ALL_WHITE = !false;
+export const DEBUG_ALL_WHITE = false;
 export var DEBUG_FLAG_1 = false;
 
 
-export const CARTOON_STYLE = false; // only of agents
+export const CARTOON_STYLE = !false; // only of agents
 
 
 // a block is not split if smaller than the treshold, but if
