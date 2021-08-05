@@ -11,7 +11,7 @@ import {scene, camera, controls, buildings, agents, textures} from '../main.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
 import {frame, dayTimeMs, currentTimeMs} from '../objects/nature.js';
-import {DEBUG_CARTOON, GROUND_SIZE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED} from '../config.js';
+import {CARTOON_STYLE, GROUND_SIZE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED} from '../config.js';
 
 import vertexShader from './agents_vertex_shader.js';
 import fragmentShader from './agents_fragment_shader.js';
@@ -316,9 +316,9 @@ export class Agents
 		var uniforms = THREE.UniformsUtils.merge([
 			THREE.ShaderLib.phong.uniforms,
 			{ diffuse: { value: new THREE.Color(0,1,1) } },
-			{ shininess: { value: DEBUG_CARTOON?-10:1 } },
-			{ emissive: { value: DEBUG_CARTOON?new THREE.Color(1,1,1):new THREE.Color(0,0,0) } },
-			{ emissiveIntensity: { value: DEBUG_CARTOON?-1:0 } },
+			{ shininess: { value: CARTOON_STYLE?-10:1 } },
+			{ emissive: { value: CARTOON_STYLE?new THREE.Color(1,1,1):new THREE.Color(0,0,0) } },
+			{ emissiveIntensity: { value: CARTOON_STYLE?-1:0 } },
 			{ uTime: { value: 0 } },
 			{ map: { type: 't', value: texture } },
 		]);
