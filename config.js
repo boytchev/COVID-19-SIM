@@ -17,7 +17,7 @@ console.log('seed=',R);
 export var DEBUG_RANDOM_SEED = R;
 export const DEBUG_AGENT_MAX_COUNT = 1500;
 export const DEBUG_RANDOM_WANDERING = !false;
-export const DEBUG_FORM_A_LINE = !false;
+export const DEBUG_FORM_A_LINE = false;
 
 export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
 export const START_TIME = timeMs(16);			// start time
