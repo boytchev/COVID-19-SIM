@@ -24,6 +24,7 @@ varying vec3 vViewPosition;
 	varying float vRandomId;
 	attribute float agentHeight;
 	attribute int motionType;
+	
 	//varying float vInfectionLevel;
 #endif
 

@@ -9,6 +9,16 @@ import * as THREE from '../js/three.module.js';
 import {ProceduralTexture} from './proceduralTexture.js';
 
 
+const AGENT_DRAW_MODE_CHECKERED  = 1; // color squares with dots in centers
+const AGENT_DRAW_MODE_CHESSBOARD = 2; // black and white squares
+const AGENT_DRAW_MODE_CRIMSON    = 3; // a black-crimson texture
+const AGENT_DRAW_MODE_BORDERS    = 4; // white character with border lines only
+const AGENT_DRAW_MODE_PATCHES    = 5; // black-gray-white patches
+export const AGENT_DRAW_MODE_CLOTHES    = 6; // shader-defined clothes
+
+//export const AGENT_DRAW_MODE = AGENT_DRAW_MODE_PATCHES;
+export const AGENT_DRAW_MODE = AGENT_DRAW_MODE_CLOTHES;
+
 // number of cells in U and V directions
 // this number is used to make the mapping
 // so it might be not good to change it
@@ -16,6 +26,16 @@ const N = 32;
 
 export class AgentTexture extends ProceduralTexture
 {
+	map( uCount=1, vCount=1 )
+	{
+		var texture = new THREE.CanvasTexture(this.canvas, THREE.UVMapping, this.repeatU, this.repeatV, THREE.NearestFilter, THREE.NearestFilter );
+			texture.anisotropy = 1; // do not want AF
+			texture.repeat.set( uCount, vCount );
+			
+		return texture;
+		
+	} // AgentTexture.map
+
 	// a texture of 32x32 color cells with black dots
 	drawCheckered()
 	{
@@ -143,8 +163,6 @@ export class AgentTexture extends ProceduralTexture
 	// a black-crimson texture
 	drawClothesTags()
 	{
-		//TODO TEMP this.recolor = true;
-		
 		function X( x ) {return Math.round(x/N*W);}
 		function Y( y ) {return Math.round(y/N*H);}
 		function fill( x1, y1, x2, y2 )
@@ -180,78 +198,85 @@ export class AgentTexture extends ProceduralTexture
 		{
 			ctx.fill();
 		}
-		var col = 0, dCol = 20;
+		
+		var patchColor = 0,
+			patchStep = 25;
+			
 		function colorIndex( n )
 		{
-			// TODO TEMP var n = Math.round(2.55*n);
-			// TODO TEMP ctx.fillStyle = 'hsl(0,0%,'+n+'%)';
+			if( AGENT_DRAW_MODE == AGENT_DRAW_MODE_CLOTHES )
+			{
+				ctx.fillStyle = 'hsl(0,0%,'+n+'%)';
+			}
 			
-			//ctx.fillStyle = 'rgb('+Math.round(255*Math.random())+','+Math.round(255*Math.random())+','+Math.round(255*Math.random())+')';
-			col += dCol;
-			ctx.fillStyle = 'rgb('+col+','+col+','+col+')';
-			if( col>230) dCol = -dCol;
+			if( AGENT_DRAW_MODE == AGENT_DRAW_MODE_PATCHES )
+			{
+				patchColor += patchStep;
+				ctx.fillStyle = 'rgb('+patchColor+','+patchColor+','+patchColor+')';
+				if( patchColor > 230 ) patchStep = -patchStep;
+			}
 		}
 		
 		var ctx = this.ctx,
 			W = this.width,
 			H = this.height;
 
-		const e=0.1;
+		const e=0.5;
 		
 		ctx.fillStyle = 'white';
 		ctx.fillRect( 0, 0, H, W );
 
-		colorIndex( 1 );
-		fill( 4-e, 30.7, 28+e, 31+e ); // 01
+/*01*/	colorIndex( 1 );
+		fill( 4-e, 30.7, 28+e, 31+e );
 		fill( 0, 30, 3.5+e, 32 );
 		fill( 28.5-e, 30, 32, 32 );
 		
-		colorIndex( 2 );
-		fill( 4-e, 30-e, 28+e, 30.7 ); // 02 (must be before 03)
+/*02*/	colorIndex( 2 );
+		fill( 4-e, 30-e, 28+e, 30.7 );
 		fill( 13-e, 28, 19+e, 30 );
 		
-		colorIndex( 4 );
-		fill( 10-e, 26.5, 22+e, 27+e ); // 04 (must be before 03)
-
-		colorIndex( 3 );
-		fill( 13-e, 27, 19+e, 28 ); // 03
+/*03*/	colorIndex( 3 );
+		fill( 13-e, 27, 19+e, 28 );
 		poly( [6-e, 30-e, 7, 30.25, 10, 30.30, 11+e, 30-e] );
 		poly( [21-e, 30-e, 22, 30.30, 25, 30.25, 26+e, 30-e] );
-
-		colorIndex( 5 );
-		fill( 10-e, 25, 22+e, 26.5 ); // 05
-
-		colorIndex( 6 );
-		fill( 10-e, 21.5, 22+e, 25 ); // 06 (must be before 07)
-
-		colorIndex( 7 );
-		poly( [10-e, 22, 13, 22+1/4, 16, 22, 19, 22+1/4, 22+e, 22, 22+e, 19.5, 10-e, 19.5] ); // 07
 		
-		colorIndex( 8 );
-		fill( 10-e, 18, 22+e, 19.5 ); // 08
+/*04*/	colorIndex( 4 );
+		poly( [10-e, 26.5, 10-e, 27+e, 13-e, 27+e, 13, 27, 19, 27, 19+e, 27+e, 22+e, 27+e, 22+e, 26.5] );
 
-		colorIndex( 9 );
-		fill( 10-e, 15.2, 22+e, 18 ); // 09 (must be before 10)
+/*05*/	colorIndex( 5 );
+		fill( 10-e, 25, 22+e, 26.5 );
+
+/*06*/	colorIndex( 6 );
+		fill( 10-e, 21.5, 22+e, 25 );
+
+/*07*/	colorIndex( 7 );
+		poly( [10-e, 22, 13, 22+1/4, 16, 22, 19, 22+1/4, 22+e, 22, 22+e, 19.5, 10-e, 19.5] );
 		
-		colorIndex( 10 );
-		path( 10-e, 15 ); // 10
+/*08*/	colorIndex( 8 );
+		fill( 10-e, 18, 22+e, 19.5 );
+
+/*09*/	colorIndex( 9 );
+		fill( 10-e, 15.2, 22+e, 18 );
+		
+/*10*/	colorIndex( 10 );
+		path( 10-e, 15 );
 			to( 10-e, 17 );
 			quadTo( 12, 17, 13, 15, 16, 17.1 );
 			quadTo( 19, 15, 21, 17, 22+e, 17);
 			to( 22+e, 15 );
 			end( );
 			
-		colorIndex( 11 );
-		fill( 10-e, 14+3/4, 22+e, 15 ); // 11
+/*11*/	colorIndex( 11 );
+		fill( 10-e, 14+3/4, 22+e, 15 );
 		
-		colorIndex( 12 );
-		fill( 10-e, 14, 22+e, 14+3/4 ); // 12
+/*12*/	colorIndex( 12 );
+		fill( 10-e, 14, 22+e, 14+3/4 );
 		
-		colorIndex( 13 );
-		fill( 10-e, 12.2, 22+e, 14 ); // 13 (must be before 14)
+/*13*/	colorIndex( 13 );
+		fill( 10-e, 12.2, 22+e, 14 );
 
-		colorIndex( 14 );
-		path( 10-e, 12+3/4 ); // 14 (must be before 15, 16, 17 & 18)
+/*14*/	colorIndex( 14 );
+		path( 10-e, 12+3/4 );
 			to( 10, 12+3/4 );
 			quadTo( 11, 12+1/4, 13, 12+3/4, 16, 12+1/4 );
 			quadTo( 19, 12+3/4, 21, 12+1/4, 22, 12+3/4 );
@@ -262,8 +287,46 @@ export class AgentTexture extends ProceduralTexture
 			to( 10-e, 11-e );
 			end( );
 			
-		colorIndex( 15 );
-		path( 14+1/4, 5-e ); // 15 (must be before 17 & 18)
+/*15*/	colorIndex( 15 );
+		path( 14, 5-e );
+			to( 14, 5 );
+			curveTo( 14-1/4, 12, 13, 12 ); 
+			curveTo( 12+1/4, 12, 12-1/4, 12 );
+			curveTo( 11, 12, 11, 11 );
+			to( 11, 11-e );
+			to( 13, 5-e );
+			end( );
+		path( 18, 5-e );
+			to( 18, 5 );
+			curveTo( 18+1/4, 12, 19, 12 ); 
+			curveTo( 19+3/4, 12, 20+1/4, 12 );
+			curveTo( 21, 12, 21, 11 );
+			to( 21, 11-e );
+			to( 19, 5-e );
+			end( );
+			
+/*16*/	colorIndex( 16 );
+		fill( 23-e, 16.5-e, 31+e, 18 );
+		fill( 1-e, 16.5-e, 9+e, 18 );
+
+/*17*/	colorIndex( 17 );
+		poly( [23-e, 17.5, 27, 18, 31+e, 17.5, 31+e, 23, 23-e, 23] );
+		poly( [1-e, 17.5, 5, 18, 9+e, 17.5, 9+e, 23, 1-e, 23] );
+
+/*18*/	colorIndex( 18 );
+		poly( [23-e, 19.5, 27, 20, 31+e, 19.5, 31+e, 25, 23-e, 25] );
+		poly( [1-e, 19.5, 5, 20, 9+e, 19.5, 9+e, 25, 1-e, 25] );
+		
+/*19*/	colorIndex( 19 );
+		fill( 23-e, 25, 31+e, 29+e );
+		fill( 20-e, 28-e, 22+e, 29+e );
+		fill( 1-e, 25, 9+e, 29+e );
+		fill( 10-e, 28-e, 12+e, 29+e );
+		
+		patchColor = 150;
+		
+/*20*/	colorIndex( 20 );
+		path( 14+1/4, 5-e );
 			to( 14, 10 );
 			curveTo( 16, 13+3/4, 18, 10 );
 			to( 18-1/4, 5 );
@@ -287,75 +350,43 @@ export class AgentTexture extends ProceduralTexture
 			curveTo( 21+1/4, 11+3/4, 22, 11+4/4 );
 			to( 22+e, 11+4/4 );
 			end( );
-			
-		colorIndex( 16 );
-		path( 14, 5-e ); // 16
-			to( 14, 5 );
-			curveTo( 14-1/4, 12, 13, 12 ); 
-			curveTo( 12+1/4, 12, 12-1/4, 12 );
-			curveTo( 11, 12, 11, 11 );
-			to( 11, 11-e );
-			to( 13, 5-e );
-			end( );
-		path( 18, 5-e );
-			to( 18, 5 );
-			curveTo( 18+1/4, 12, 19, 12 ); 
-			curveTo( 19+3/4, 12, 20+1/4, 12 );
-			curveTo( 21, 12, 21, 11 );
-			to( 21, 11-e );
-			to( 19, 5-e );
-			end( );
-			
-		colorIndex( 17 );
-		poly( [14+7/8, 8+7/8, 16, 12-1/8, 18-7/8, 8+7/8] ); // 17 (must be before 18)
 
-		colorIndex( 18 );
+/*21*/	colorIndex( 21 );
+		poly( [14+7/8, 8+7/8, 16, 11.5, 18-7/8, 8+7/8] );
+
+/*22*/	colorIndex( 22 );
 		path( 15, 8 );
 			quadTo( 14, 9+3/4, 18, 9+3/4, 17, 8 );
 			curveTo( 16, 7-2/4, 15, 8 );
 			end( );
-
-		colorIndex( 29 );
-		fill( 23-e, 16.5-e, 31+e, 18 ); // 29 (must be before 30)
-		fill( 1-e, 16.5-e, 9+e, 18 );
-
-		colorIndex( 30 );
-		poly( [23-e, 17.5, 27, 18, 31+e, 17.5, 31+e, 23, 23-e, 23] ); // 30 (must be before 31)
-		poly( [1-e, 17.5, 5, 18, 9+e, 17.5, 9+e, 23, 1-e, 23] );
-
-		colorIndex( 31 );
-		poly( [23-e, 19.5, 27, 20, 31+e, 19.5, 31+e, 25, 23-e, 25] ); // 31
-		poly( [1-e, 19.5, 5, 20, 9+e, 19.5, 9+e, 25, 1-e, 25] );
-		
-		colorIndex( 32 );
-		fill( 23-e, 25, 31+e, 29+e ); // 32
-		fill( 20-e, 27.5-e, 22+e, 29.5+e );
-		fill( 1-e, 25, 9+e, 29+e );
-		fill( 10-e, 27.5-e, 12+e, 29.5+e );
-		
-		col = 0, dCol = 15;
-
-		colorIndex( 40 );
-		fill( 9, 5-e, 11+e, 7+e ); // 40 (must be before 41, 42 & 51)
+		fill( 9, 5-e, 11+e, 7+e );
 		fill( 3-e, 13.5-e, 7+e, 16+e );
-		
+
+
+
+		return
+//------------------------------			
+
+		patchColor = 0;
+		patchStep = 15;
+
 		colorIndex( 41 );
 		poly( [4-e, 14-e, 5, 15, 6+e, 14-e] ); // 41 (must be before 42)
 		
 		colorIndex( 42 );
 		poly( [4.5-e, 14-e, 5, 15, 5.5+e, 14-e, 5, 13+3/4-e] ); // 42 
 		
-		colorIndex( 51 );
-		poly( [4-e, 5-e, 9, 5-e, 9, 5, 9.5, 6, 9, 7, 9, 7+e, 4-e, 7+e, 4-e, 5-e] ); // 51
+		colorIndex( 19/*51*/ );
+		poly( [4-e, 5-e, 9, 5-e, 9, 5, 9.5, 6, 9, 7, 9, 7+e, 4-e, 7+e, 4-e, 5-e] ); // 19/*51*/
 
-		colorIndex( 54 );
-		fill( 1-e, 5-e, 4, 7+e ); // 54
+		colorIndex( 20/*54*/ );
+		fill( 1-e, 5-e, 4, 7+e ); // 20/*54*/
 
-		colorIndex( 52 );
-		fill( 1-e, 8-e, 9+e, 13+e ); // 52 (must be before 43..53 w/o 51)
+		colorIndex( 30/*52*/ );
+		fill( 1-e, 8-e, 9+e, 13+e ); // 30/*52*/ (must be before 43..53 w/o 51)
 
-		colorIndex( 45 );
-		poly( [1-e, 13+e, 2.5, 11.5, 7.5, 11.5, 9+e, 13+e] );//45 (must be before 43 & 44)
+		colorIndex( 34/*45*/ );
+		poly( [1-e, 13+e, 2.5, 11.5, 7.5, 11.5, 9+e, 13+e] );//34/*45*/ (must be before 43 & 44)
 		
 		colorIndex( 44 );
 		poly( [2.5-e, 13+e, 3.5, 12, 6.5, 12, 7.5+e, 13+e] );//44 (must be before 43)
@@ -363,25 +394,23 @@ export class AgentTexture extends ProceduralTexture
 		colorIndex( 43 );
 		poly( [4.5, 13+e, 4.5, 13, 4+1/4, 12+1/4, 5+3/4, 12+1/4, 5.5, 13, 5.5, 13+e] ); //43
 
-		colorIndex( 49 );
-		poly( [4, 8-e, 4, 8, 2.5, 11.5, 7.5, 11.5, 6, 8, 6, 8-e] ); //49 (must be before 46, 47, 48 50, 53)
+		colorIndex( 31/*49*/ );
+		poly( [4, 8-e, 4, 8, 2.5, 11.5, 7.5, 11.5, 6, 8, 6, 8-e] ); //31/*49*/ (must be before 46, 47, 48 50, 53)
 
-		colorIndex( 50 );
-		fill( 4, 8-e, 6, 8+3/4 ); //50
+		colorIndex( 21/*50*/ );
+		fill( 4, 8-e, 6, 8+3/4 ); //21 /*50*/
 		
-		colorIndex( 47 );
-		poly( [4, 8+3/4, 2.5, 11.5, 7.5, 11.5, 6, 8+3/4] ); //47 (must be before 48)
+		colorIndex( 32/*47*/ );
+		poly( [4, 8+3/4, 2.5, 11.5, 7.5, 11.5, 6, 8+3/4] ); //32/*47*/ (must be before 48)
 		
-		colorIndex( 48 );
-		fill( 4, 8+3/4, 6, 9.5 ); //48
+		colorIndex( 22/*48*/ );
+		fill( 4, 8+3/4, 6, 9.5 ); //22 /*48*/
 		
-		colorIndex( 46 );
-		poly( [2.5, 11.5, 4, 9.5, 6, 9.5, 7, 11.5] ); //46 (must be before 53)
+		colorIndex( 33/*46*/ );
+		poly( [2.5, 11.5, 4, 9.5, 6, 9.5, 7, 11.5] ); //33/*46*/ (must be before 53)
 		
-		colorIndex( 53 );
-		poly( [4, 9.5, 3+1/4, 11.5, 3.5, 12, 4+1/4, 12+1/4, 5+3/4, 12+1/4, 6.5, 12, 6+3/4, 11.5, 6, 9.5] ); //53
-
-		
+		colorIndex( 23/*53*/ );
+		poly( [4, 9.5, 3+1/4, 11.5, 3.5, 12, 4+1/4, 12+1/4, 5+3/4, 12+1/4, 6.5, 12, 6+3/4, 11.5, 6, 9.5] ); //23 /*53*/
 
 	} // AgentTexture.drawClothesTags
 
@@ -482,7 +511,7 @@ export class AgentTexture extends ProceduralTexture
 		quad( 15, 8, 14, 9+3/4, 18, 9+3/4, 17, 7+4/4 ) // 15-18 & 17-18 D
 		curve( 15, 8, 16, 7-2/4, 17, 8 );
 		
-		line( [14+7/8, 8+7/8, 16, 12-1/8, 18-7/8, 8+7/8] ); // 15-17 E
+		line( [14+7/8, 8+7/8, 16, 11.5, 18-7/8, 8+7/8] ); // 15-17 E
 
 		line( [1, 25, 9, 25] ); // 31-32 H1
 		line( [23, 25, 31, 25] );
@@ -493,8 +522,8 @@ export class AgentTexture extends ProceduralTexture
 		line( [1, 17.5, 5, 18, 9, 17.5] ); // 29-30 H3
 		line( [23, 17.5, 27, 18, 31, 17.5] );
 		
-		line( [1, 17, 9, 17] ); // 16-29 H4
-		line( [23, 17, 31, 17] );
+		//line( [1, 17, 9, 17] ); // 16-29 H4
+		//line( [23, 17, 31, 17] );
 		
 		
 		line( [9, 5, 9.5, 6, 9, 7] ); // X1
@@ -510,6 +539,8 @@ export class AgentTexture extends ProceduralTexture
 		line( [6+3/4, 11.5, 7.5, 11.5] ); // X11
 		line( [3+1/4, 11.5, 2.5, 11.5] ); // X12
 		line( [1, 5, 4, 5, 4, 7, 1, 7] ); // X13
+		line( [9, 5, 5, 5] );
+		line( [9, 7, 5, 7] );
 		
 		
 	} // AgentTexture.addBorders
@@ -517,13 +548,32 @@ export class AgentTexture extends ProceduralTexture
 
 	draw()
 	{
-		this.recolor = false;
 		super.draw();
-		//this.drawCheckered();
-		//this.drawChessboard();
-		//this.drawBlackCrimson();
-		this.drawClothesTags();
-		this.addBorders();
+		switch( AGENT_DRAW_MODE )
+		{
+			case AGENT_DRAW_MODE_CHECKERED:
+					this.drawCheckered();
+					break;
+			case AGENT_DRAW_MODE_CHESSBOARD:
+					this.drawChessboard();
+					break;
+			case AGENT_DRAW_MODE_CRIMSON:
+					this.drawBlackCrimson();
+					break;
+			case AGENT_DRAW_MODE_BORDERS:
+					this.addBorders();
+					break;
+			case AGENT_DRAW_MODE_PATCHES:
+					this.drawClothesTags();
+					this.addBorders();
+					break;
+			case AGENT_DRAW_MODE_CLOTHES:
+					this.drawClothesTags();
+					break;
+		}
+
+		//this.drawClothesTags();
+		//this.addBorders();
 		
 	} // AgentTexture.draw
 	
