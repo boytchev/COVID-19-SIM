@@ -202,11 +202,12 @@ export class AgentTexture extends ProceduralTexture
 		var patchColor = 0,
 			patchStep = 25;
 			
-		function colorIndex( n )
+		function colorIndex( n1, n2=0, n3=0 )
 		{
 			if( AGENT_DRAW_MODE == AGENT_DRAW_MODE_CLOTHES )
 			{
-				ctx.fillStyle = 'hsl(0,0%,'+n+'%)';
+				//ctx.fillStyle = 'hsl(0,0%,'+n+'%)';
+				ctx.fillStyle = 'rgb('+Math.round(2.55*n1)+','+Math.round(2.55*n2)+','+Math.round(2.55*n3)+')';
 			}
 			
 			if( AGENT_DRAW_MODE == AGENT_DRAW_MODE_PATCHES )
@@ -275,7 +276,7 @@ export class AgentTexture extends ProceduralTexture
 /*13*/	colorIndex( 13 );
 		fill( 10-e, 12.2, 22+e, 14 );
 
-/*14*/	colorIndex( 14 );
+/*14*/	colorIndex( 14, 1 );
 		path( 10-e, 12+3/4 );
 			to( 10, 12+3/4 );
 			quadTo( 11, 12+1/4, 13, 12+3/4, 16, 12+1/4 );
@@ -325,7 +326,7 @@ export class AgentTexture extends ProceduralTexture
 		
 		patchColor = 150;
 		
-/*20*/	colorIndex( 20 );
+/*20*/	colorIndex( 20, 2 );
 		path( 14+1/4, 5-e );
 			to( 14, 10 );
 			curveTo( 16, 13+3/4, 18, 10 );
@@ -351,10 +352,10 @@ export class AgentTexture extends ProceduralTexture
 			to( 22+e, 11+4/4 );
 			end( );
 
-/*21*/	colorIndex( 21 );
+/*21*/	colorIndex( 21, 3 );
 		poly( [14+7/8, 8+7/8, 16, 11.5, 18-7/8, 8+7/8] );
 
-/*22*/	colorIndex( 22 );
+/*22*/	colorIndex( 22, 4 );
 		path( 15, 8 );
 			quadTo( 14, 9+3/4, 18, 9+3/4, 17, 8 );
 			curveTo( 16, 7-2/4, 15, 8 );
@@ -362,55 +363,50 @@ export class AgentTexture extends ProceduralTexture
 		fill( 9, 5-e, 11+e, 7+e );
 		fill( 3-e, 13.5-e, 7+e, 16+e );
 
-
-
-		return
-//------------------------------			
-
-		patchColor = 0;
-		patchStep = 15;
-
-		colorIndex( 41 );
-		poly( [4-e, 14-e, 5, 15, 6+e, 14-e] ); // 41 (must be before 42)
-		
-		colorIndex( 42 );
-		poly( [4.5-e, 14-e, 5, 15, 5.5+e, 14-e, 5, 13+3/4-e] ); // 42 
-		
-		colorIndex( 19/*51*/ );
+/*23*/	colorIndex( 23 );
 		poly( [4-e, 5-e, 9, 5-e, 9, 5, 9.5, 6, 9, 7, 9, 7+e, 4-e, 7+e, 4-e, 5-e] ); // 19/*51*/
 
-		colorIndex( 20/*54*/ );
-		fill( 1-e, 5-e, 4, 7+e ); // 20/*54*/
+/*24*/	colorIndex( 24 );
+		fill( 1-e, 5-e, 4, 7+e );
 
-		colorIndex( 30/*52*/ );
-		fill( 1-e, 8-e, 9+e, 13+e ); // 30/*52*/ (must be before 43..53 w/o 51)
+/*27*/	colorIndex( 27 );
+		fill( 1-e, 8-e, 9+e, 13+e );
 
-		colorIndex( 34/*45*/ );
-		poly( [1-e, 13+e, 2.5, 11.5, 7.5, 11.5, 9+e, 13+e] );//34/*45*/ (must be before 43 & 44)
-		
-		colorIndex( 44 );
-		poly( [2.5-e, 13+e, 3.5, 12, 6.5, 12, 7.5+e, 13+e] );//44 (must be before 43)
-		
-		colorIndex( 43 );
-		poly( [4.5, 13+e, 4.5, 13, 4+1/4, 12+1/4, 5+3/4, 12+1/4, 5.5, 13, 5.5, 13+e] ); //43
+/*28*/	colorIndex( 28 );
+		poly( [4, 8-e, 4, 8, 2.5, 11.5, 7.5, 11.5, 6, 8, 6, 8-e] );
 
-		colorIndex( 31/*49*/ );
-		poly( [4, 8-e, 4, 8, 2.5, 11.5, 7.5, 11.5, 6, 8, 6, 8-e] ); //31/*49*/ (must be before 46, 47, 48 50, 53)
+/*29*/	colorIndex( 29 );
+		poly( [4, 8+3/4, 2.5, 11.5, 7.5, 11.5, 6, 8+3/4] );
+		
+/*25*/	colorIndex( 25 );
+		fill( 4, 8-e, 6, 8+3/4 );
+		
+/*26*/	colorIndex( 26 );
+		fill( 4, 8+3/4, 6, 9.5 );
+		
+		patchColor = 100;
+		patchStep = 15;
 
-		colorIndex( 21/*50*/ );
-		fill( 4, 8-e, 6, 8+3/4 ); //21 /*50*/
+/*35*/	colorIndex( 35 );
+		poly( [4-e, 14-e, 5, 15, 6+e, 14-e] );
 		
-		colorIndex( 32/*47*/ );
-		poly( [4, 8+3/4, 2.5, 11.5, 7.5, 11.5, 6, 8+3/4] ); //32/*47*/ (must be before 48)
+/*34*/	colorIndex( 34 );
+		poly( [4.5-e, 14-e, 5, 15, 5.5+e, 14-e, 5, 13+3/4-e] );
 		
-		colorIndex( 22/*48*/ );
-		fill( 4, 8+3/4, 6, 9.5 ); //22 /*48*/
+/*33*/	colorIndex( 33 );
+		poly( [1-e, 13+e, 2.5, 11.5, 7.5, 11.5, 9+e, 13+e] );
 		
-		colorIndex( 33/*46*/ );
-		poly( [2.5, 11.5, 4, 9.5, 6, 9.5, 7, 11.5] ); //33/*46*/ (must be before 53)
+/*32*/	colorIndex( 32 );
+		poly( [2.5-e, 13+e, 3.5, 12, 6.5, 12, 7.5+e, 13+e] );
 		
-		colorIndex( 23/*53*/ );
-		poly( [4, 9.5, 3+1/4, 11.5, 3.5, 12, 4+1/4, 12+1/4, 5+3/4, 12+1/4, 6.5, 12, 6+3/4, 11.5, 6, 9.5] ); //23 /*53*/
+/*31*/	colorIndex( 31 );
+		poly( [4.5, 13+e, 4.5, 13, 4+1/4, 12+1/4, 5+3/4, 12+1/4, 5.5, 13, 5.5, 13+e] );
+
+/*30*/	colorIndex( 30 );
+		poly( [2.5, 11.5, 4, 9.5, 6, 9.5, 7, 11.5] );
+		
+/*100*/	colorIndex( 100 ); // face
+		poly( [4, 9.5, 3+1/4, 11.5, 3.5, 12, 4+1/4, 12+1/4, 5+3/4, 12+1/4, 6.5, 12, 6+3/4, 11.5, 6, 9.5] );
 
 	} // AgentTexture.drawClothesTags
 

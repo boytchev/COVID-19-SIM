@@ -139,13 +139,14 @@ uniform float opacity;
 	}
 	vec4 colorHair( )
 	{	
-		if( randBool(0.8) )
+		if( randBool(0.9) )
 		{	// black->brown
-			return vec4( 0.3*fract(1.92/vRandomId), 0.0, 0.0, 1.0 );
+			float c = fract(1.92/vRandomId)*fract(5.7/vRandomId);
+			return vec4( 0.4*c, 0.2*c, 0.0, 1.0 );
 		}
 		else
 		{	// gold->white
-			float c = 0.6*fract(7.0/vRandomId);
+			float c = 0.2+0.4*fract(7.0/vRandomId);
 			return vec4( 1.0, 1.0-0.5*c, 1.0-c, 1.0 );
 		}
 	}
@@ -186,6 +187,7 @@ uniform float opacity;
 	vec4 recodeColor( vec4 color )
 	{
 		int index = int(round(100.0*color.r));
+		int index2 = int(round(100.0*color.g));
 		
 		bool man = vRandomId<0.5;
 
@@ -211,16 +213,16 @@ uniform float opacity;
 			color = colorHumanSkin();
 		}
 		else
-		if( index<=22 ) // upper clothes -- shoes-to-belt
+		if( index<=22 ) // upper clothes -- belt-to-neck-and-sleeves
 		{
-			bool jacket = randBool(0.6);
+			bool jacket = randBool(0.5);
 			
-			if( index==19 ) color = colorHumanSkin(); // hands
+			if( index==19 && index2==0 ) color = colorHumanSkin(); // hands
 				else
 			if( jacket )
 			{
 				int jacketEnd = rand( 20.0, 22.0 );
-				if( index<=jacketEnd ) color = colorJacket();
+				if( index<=jacketEnd || (1<=index2 && index2<=2)) color = colorJacket();
 					else
 				if( index==21 ) color = colorShirt(); // shirt
 					else
@@ -232,7 +234,7 @@ uniform float opacity;
 				int shirtBeg = rand( 11.0, 13.0 );
 				int shirtEnd = rand( 15.0, 18.0 );
 				int shirtTop = rand( 19.0, 22.0 );
-				if( shirtBeg<=index && index<=shirtEnd ) color = colorShirt();
+				if( (shirtBeg<=index && index<=shirtEnd) || (1<=index2 && index2<=2) ) color = colorShirt();
 					else
 				if( 20<=index && index<=shirtTop ) color = colorShirt();
 					else
@@ -240,41 +242,50 @@ uniform float opacity;
 			}
 		}
 		else
-			color = colorHumanSkin();
+		{ // head
 	
-		return color;
-
-//-------------------------------------------
-/*		int shirtFrom = rand( 11.0, 13.0 );
-		int shirtTo   = rand( 14.0, 17.0 );
-		int sleeveFrom = 29;
-		int sleeveTo = shirtTo>=16 ? 31 : 0;
-		
-		if( index>=shirtFrom && index<=shirtTo ) color = colorShirt();
-			else
-		if( index>=sleeveFrom && index<=sleeveTo ) color = colorShirt();
-			else
-		color = colorHumanSkin();
-
-		// hair on head
-		if( index>= 19 )
-		{
 			if( man )
-			{
-				// todo
+			{	// man
+				if( index<=30 )
+				{	// hair
+					int hair = randBool(0.9) ? 1 : 0;
+					int hairTopEnd = hair*rand( 23.0, 26.0 );
+					int hairSideBeg = 27;
+					int hairSideEnd = hair*rand( 27.0, 30.0 );
+					if( index<=hairTopEnd ) color = colorHair();
+						else
+					if( hairSideBeg<=index && index<=hairSideEnd ) color = colorHair();
+						else
+					color = colorHumanSkin();
+				}
+				else
+				{   // beard
+					int beard = randBool(0.2) ? 1 : 0;
+					int beardTopEnd = beard*rand( 31.0, 33.0 );
+					int beardBottomBeg = 34;
+					int beardBottomEnd = beard*rand( 34.0, 35.0 );
+					if( index<=beardTopEnd ) color = colorHair();
+						else
+					if( beardBottomBeg<=index && index<=beardBottomEnd ) color = colorHair();
+						else
+					color = colorHumanSkin();
+				}
 			}
 			else
-			{
-				int topHairTo = rand( 20.0, 22.0 );
-				int sideHairTo = rand( 30.0, 34.0 );
-				
-				//if( index<=topHairTo ) color = colorHair();
-				//	else
-				//if( 30<=index && index<=sideHairTo ) color = colorHair();
+			{	// woman
+				int hairTopEnd = rand( 24.0, 26.0 );
+				int hairSideBeg = 27;
+				int hairSideEnd = rand( 27.0, 30.0 );
+				if( index<=hairTopEnd ) color = colorHair();
+					else
+				if( hairSideBeg<=index && index<=hairSideEnd ) color = colorHair();
+					else
+				color = colorHumanSkin();
 			}
+			
 		}
+		
 		return color;
-		*/
 	}
 #endif
 

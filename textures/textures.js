@@ -41,11 +41,11 @@ export class Textures
 		
 		this.grass = new GrassTexture( 64 );
 		
-		this.agent = new AgentTexture( 1024 );
+		this.agent = new AgentTexture( 1024/2 );
 		
 		//this.apartment.debugShow( );
 		//this.houseBump.debugShow( '256px' );
-		//this.agent.debugShow( '0px', 1/2 );
+		//this.agent.debugShow( '0px', 2 );
 		
 	} // Textures
 	
