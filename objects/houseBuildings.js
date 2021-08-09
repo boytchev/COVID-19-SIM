@@ -476,7 +476,7 @@ export class HouseBuildings
 					
 					float windowId = (fract(5.0*cos(x+y*y)+vHouseId)+fract(7.0*sin(y+x*x+5.0*vHouseId)*(x+1.0))+0.02*sin(uTime*y/300.0+x+y+13.0*vHouseId))/2.0;
 				  `	
-				    +(DEBUG_ALL_WHITE
+				    +(!CARTOON_STYLE
 						? `	vec4 newColor = vec4(1);
 						  `
 						: `	float colorId = fract(12.81*windowId)+vHouseId-1.0;
@@ -490,7 +490,7 @@ export class HouseBuildings
 					
 					gl_FragColor += isWindow*(1.0-windowId)*newColor*uLampsIntensity;
 				  `	
-				    +(DEBUG_ALL_WHITE
+				    +(!CARTOON_STYLE
 						? ``
 						: `	float bw = smoothstep(0.6, 0.7, gl_FragColor.g);
 							gl_FragColor = vec4(bw,bw,bw,1.0);
