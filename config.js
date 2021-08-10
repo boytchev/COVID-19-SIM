@@ -15,8 +15,8 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 200;
-export const DEBUG_RANDOM_WANDERING = false;
+export const DEBUG_AGENT_MAX_COUNT = 100;
+export const DEBUG_RANDOM_WANDERING = !false;
 export const DEBUG_FORM_A_LINE = !false;
 
 export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
@@ -157,7 +157,7 @@ export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
 //export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
 export const AGENT_WALKING_SPEED = new Range( 0.6, 0.6 );		// in meters/second
 //export const AGENT_HEIGHT_CHILD = new Range( 1.7, 1.7 );		// in meters
-export const AGENT_HEIGHT_ADULT = new Range( 1, 2 );		// in meters
+export const AGENT_HEIGHT_ADULT = new Range( 1.5, 2 );		// in meters
 
 export const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
 export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );
@@ -221,7 +221,7 @@ export const SUN = NO_SUN;
 //export const SUN = DYNAMIC_SUN;
 export const SUNRISE_MS = timeMs(6);
 export const SUNSET_MS = timeMs(18);
-export const STATIC_SUN_POSITION_MS = timeMs(16,0,0);
+export const STATIC_SUN_POSITION_MS = timeMs(17,0,0);
 console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
 console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
 

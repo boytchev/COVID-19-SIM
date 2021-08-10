@@ -49,154 +49,236 @@ uniform float opacity;
 #endif
 
 #ifdef COVID19SYM
+
+	bool man;
+
 	float seed = 1.234;
-	int rand(float a, float b)
+
+	float rand() // float random [0,1)
 	{
 		seed += 0.854;
-		return int(a + (b-a+0.999)*fract(seed/vRandomId));
+		return fract(seed/vRandomId);
 	}
+
+	float randPersistant(float value) // float random [0,1)
+	{
+		return fract(value/vRandomId);
+	}
+
+	int randInt(int a, int b) // int random [a, b]
+	{
+		return int(float(a) + (float(b-a)+0.999)*rand());
+	}
+
 	bool randBool(float probability)
 	{
-		seed += 0.754;
-		return fract(seed/vRandomId) < probability;
+		return rand() < probability;
 	}
 	
 	vec4 colorShoeSole( )
 	{
 		return vec4(0,0,0,1);
 	}
+	
 	vec4 colorShoeSkin( )
 	{
-		return vec4(
-			1.0*fract(2.7/vRandomId),
-			1.0*fract(3.3/vRandomId),
-			1.0*fract(1.1/vRandomId),
-			1.0
-		);
+		return vec4(rand(),rand(),rand(),1);
 	}
+	
+	vec4 colorShoeSkinFormal( )
+	{
+		return vec4(0,0,0,1);
+	}
+	
 	vec4 colorSock( )
 	{
 		float c = 1.0-pow(vRandomId,5.0);
 		return vec4(c,c,c,1);
 	}
+	
 	vec4 colorHumanSkin( )
 	{
 		vec4 color1 = vec4(0.1,0.05,0.05,1);
 		vec4 color2 = vec4(1.2,0.8,0.6,1);
 		vec4 color3 = vec4(1.0,0.95,0.90,1);
 		
-		float k1 = fract(3.7/vRandomId);
-		float k2 = fract(4.7/vRandomId);
-		float k3 = fract(5.7/vRandomId);
+		float k1 = randPersistant(3.2);
+		float k2 = randPersistant(1.9);
+		float k3 = randPersistant(7.6);
 		
 		return (2.0*k1*color1 + k2*color2 + 2.0*k3*color3)/(2.0*k1+k2+2.0*k3);
 	}
+	
 	vec4 colorPants( )
 	{
-		float c = pow(fract(11.3/vRandomId),2.5);
+		float c = pow(rand(),2.5);
 		
-		return vec4(
-			c*fract(5.7/vRandomId),
-			c*fract(2.3/vRandomId),
-			c*fract(3.8/vRandomId),
-			1.0
-		);
+		return vec4(c*rand(),c*rand(),c*rand(),1);
 	}
+	
+	vec4 colorPantsFormal( )
+	{
+		float r = 0.15*rand()*rand();
+		float g = r+0.05*rand();
+		float b = g+0.15*rand();
+		
+		return vec4(r,g,b,1);
+	}
+	
 	vec4 colorBelt( )
 	{
-		return vec4(
-			0.4*fract(0.7/vRandomId),
-			0.0,
-			0.0,
-			1.0
-		);
+		return vec4(0.4*rand(),0,0,1);
 	}
+
+	vec4 colorBeltFormal( )
+	{
+		return vec4(0,0,0,1);
+	}
+	
 	vec4 colorJacket( )
 	{
 		if( randBool(0.8) )
 		{	// grayscale jacket
-			float c = fract(2.23/vRandomId);
+			float c = rand();
 			return vec4(c,c,c,1);
 		}
 		else
 		{	// color jacket
-			return vec4(
-				1.0*fract(6.2/vRandomId),
-				1.0*fract(1.5/vRandomId),
-				1.0*fract(4.3/vRandomId),
-				1.0
-			);
+			return vec4(rand(),rand(),rand(),1);
 		}
 	}
+	
+	vec4 colorJacketFormal( )
+	{
+		float c = 1.0+0.3*(rand()+rand()-1.0);
+		
+		return c*colorPantsFormal();
+	}
+	
 	vec4 colorShirt( )
 	{
 		return vec4(
-			0.75+0.25*fract(5.2/vRandomId),
-			0.75+0.25*fract(2.5/vRandomId),
-			0.75+0.25*fract(3.3/vRandomId),
+			0.75+0.25*rand(),
+			0.75+0.25*rand(),
+			0.75+0.25*rand(),
 			1.0
 		);
 	}
+	
+	vec4 colorShirtFormal( )
+	{
+		float r = 0.8+0.2*rand();
+		
+		return vec4(r,0.5*r+0.5,1,1);
+	}
+	
 	vec4 colorHair( )
 	{	
 		if( randBool(0.9) )
 		{	// black->brown
-			float c = fract(1.92/vRandomId)*fract(5.7/vRandomId);
-			return vec4( 0.4*c, 0.2*c, 0.0, 1.0 );
+			float c = rand()*rand();
+			return vec4(0.4*c,0.2*c,0,1);
 		}
 		else
 		{	// gold->white
-			float c = 0.2+0.4*fract(7.0/vRandomId);
-			return vec4( 1.0, 1.0-0.5*c, 1.0-c, 1.0 );
+			float c = 0.2+0.4*rand();
+			return vec4(1,1.0-0.5*c,1.0-c,1);
 		}
 	}
 	
+	vec4 recodeHead( int index, int index2 )
+	{
+		vec4 color;
+		
+		if( man )
+		{	// man
+			if( index<=30 )
+			{	// hair
+				int hair = randBool(0.9)?1:0;
+				int hairTopEnd = hair*randInt(23,26);
+				int hairSideBeg = 27;
+				int hairSideEnd = hair*randInt(27,30);
+				if( index<=hairTopEnd ) color = colorHair();
+					else
+				if( hairSideBeg<=index && index<=hairSideEnd ) color = colorHair();
+					else
+				color = colorHumanSkin();
+			}
+			else
+			{   // beard
+				int beard = randBool(0.2)?1:0;
+				int beardTopEnd = beard*randInt(31,33);
+				int beardBottomBeg = 34;
+				int beardBottomEnd = beard*randInt(34,35);
+				if( index<=beardTopEnd ) color = colorHair();
+					else
+				if( beardBottomBeg<=index && index<=beardBottomEnd ) color = colorHair();
+					else
+				color = colorHumanSkin();
+			}
+		}
+		else
+		{	// woman
+			int hairTopEnd = randInt(24,26);
+			int hairSideBeg = 27;
+			int hairSideEnd = randInt(27,30);
+			if( index<=hairTopEnd ) color = colorHair();
+				else
+			if( hairSideBeg<=index && index<=hairSideEnd ) color = colorHair();
+				else
+			color = colorHumanSkin();
+		}
+			
+		return color;
+	}
 	
 	vec4 recodeUndressedColor( vec4 color )
 	{
 		int from;
 		int to;
 		int index = int(round(100.0*color.r));
-		
-		bool man = vRandomId<0.5;
+		int index2 = int(round(100.0*color.g));
 		
 		// socks
 		bool socks = randBool( 0.5 );
 		if( socks )
 		{
-			int sockLevel = rand( 2.0, man?6.0:8.0 ); // man:[2..6] woman:[2..8]
+			int sockLevel = randInt( 2, man?6:8 ); // man:[2..6] woman:[2..8]
 			if( index <= sockLevel ) return colorSock();
 		}
 		
 		// bottom
-		from = rand( 9.0, 10.0); // all:[9..10]
-		to   = rand(10.0, 12.0); // all:[10..12]
+		from = randInt(9,10); // all:[9..10]
+		to   = randInt(10,12); // all:[10..12]
 		if( from<=index && index<=to ) return colorSock();
 		
 		// top
 		if( !man )
 		{
-			from = rand( 13.0, 14.0); // woman:[13..14]
+			from = randInt(13,14); // woman:[13..14]
 			to   = 14; // woman:[14]
 			if( from<=index && index<=to ) return colorSock();
 		}
 
+		if( index>=23 )
+		{ // head
+			return recodeHead(index,index2);
+		}
+		
 		return colorHumanSkin();
 	}
 
-	vec4 recodeColor( vec4 color )
+	vec4 recodeInformalColor( vec4 color )
 	{
 		int index = int(round(100.0*color.r));
 		int index2 = int(round(100.0*color.g));
 		
-		bool man = vRandomId<0.5;
-
 		if( index<=11 ) // bottom clothes -- shoes-to-belt
 		{
-			int shoeEnd = rand( 2.0, man?6.0:7.0 ); // man:[2..6] woman:[2..7]
-			int sockEnd = rand( 3.0, man?6.0:8.0 ); // man:[3..6] woman:[3..8]
-			int pantBeg = rand( 4.0, 9.0 ); // all:[4..9]
-			int pantEnd = rand( 10.0, 12.0 ); // all:[10..12]
+			int shoeEnd = randInt(2,man?6:7); // man:[2..6] woman:[2..7]
+			int sockEnd = randInt(3,man?6:8); // man:[3..6] woman:[3..8]
+			int pantBeg = randInt(4,9); // all:[4..9]
+			int pantEnd = randInt(10,12); // all:[10..12]
 
 			if( index==1 ) color = colorShoeSole();
 				else
@@ -221,7 +303,7 @@ uniform float opacity;
 				else
 			if( jacket )
 			{
-				int jacketEnd = rand( 20.0, 22.0 );
+				int jacketEnd = randInt(20,22);
 				if( index<=jacketEnd || (1<=index2 && index2<=2)) color = colorJacket();
 					else
 				if( index==21 ) color = colorShirt(); // shirt
@@ -231,9 +313,9 @@ uniform float opacity;
 			else
 			{	// there is no jacket
 
-				int shirtBeg = rand( 11.0, 13.0 );
-				int shirtEnd = rand( 15.0, 18.0 );
-				int shirtTop = rand( 19.0, 22.0 );
+				int shirtBeg = randInt(11,13);
+				int shirtEnd = randInt(15,18);
+				int shirtTop = randInt(19,22);
 				if( (shirtBeg<=index && index<=shirtEnd) || (1<=index2 && index2<=2) ) color = colorShirt();
 					else
 				if( 20<=index && index<=shirtTop ) color = colorShirt();
@@ -243,46 +325,70 @@ uniform float opacity;
 		}
 		else
 		{ // head
-	
-			if( man )
-			{	// man
-				if( index<=30 )
-				{	// hair
-					int hair = randBool(0.9) ? 1 : 0;
-					int hairTopEnd = hair*rand( 23.0, 26.0 );
-					int hairSideBeg = 27;
-					int hairSideEnd = hair*rand( 27.0, 30.0 );
-					if( index<=hairTopEnd ) color = colorHair();
-						else
-					if( hairSideBeg<=index && index<=hairSideEnd ) color = colorHair();
-						else
-					color = colorHumanSkin();
-				}
+			color = recodeHead(index,index2);
+		}
+		
+		return color;
+	}
+
+	vec4 recodeFormalColor( vec4 color )
+	{
+		int index = int(round(100.0*color.r));
+		int index2 = int(round(100.0*color.g));
+		
+		if( index<=11 ) // bottom clothes -- shoes-to-belt
+		{
+			int shoeEnd = randInt(2,3); // all:[2..3]
+			int sockEnd = man?0:4;
+			int pantBeg = man?4:randInt(7,9); // man:[4] woman:all:[7..9]
+			int pantEnd = 10; // all:[10]
+
+			if( index==1 ) color = colorShoeSole();
 				else
-				{   // beard
-					int beard = randBool(0.2) ? 1 : 0;
-					int beardTopEnd = beard*rand( 31.0, 33.0 );
-					int beardBottomBeg = 34;
-					int beardBottomEnd = beard*rand( 34.0, 35.0 );
-					if( index<=beardTopEnd ) color = colorHair();
-						else
-					if( beardBottomBeg<=index && index<=beardBottomEnd ) color = colorHair();
-						else
-					color = colorHumanSkin();
-				}
-			}
-			else
-			{	// woman
-				int hairTopEnd = rand( 24.0, 26.0 );
-				int hairSideBeg = 27;
-				int hairSideEnd = rand( 27.0, 30.0 );
-				if( index<=hairTopEnd ) color = colorHair();
+			if( index<=shoeEnd ) color = colorShoeSkinFormal();
+				else
+			if( index<=sockEnd ) color = colorSock();
+				else
+			if( index<pantBeg ) color = colorHumanSkin();
+				else
+			if( index<=pantEnd ) color = colorPantsFormal();
+				else
+			if( index==11 ) color = colorBeltFormal();
+				else
+			color = colorHumanSkin();
+		}
+		else
+		if( index<=22 ) // upper clothes -- belt-to-neck-and-sleeves
+		{
+			bool jacket = randBool(0.75);
+			
+			if( index==19 && index2==0 ) color = colorHumanSkin(); // hands
+				else
+			if( jacket )
+			{
+				int jacketEnd = randInt(20,22);
+				if( index<=jacketEnd || (1<=index2 && index2<=2)) color = colorJacketFormal();
 					else
-				if( hairSideBeg<=index && index<=hairSideEnd ) color = colorHair();
+				if( index==21 ) color = colorShirtFormal(); // shirt
 					else
 				color = colorHumanSkin();
 			}
-			
+			else
+			{	// there is no jacket
+
+				int shirtBeg = 11;
+				int shirtEnd = randInt(16,18 );
+				int shirtTop = 21;
+				if( (shirtBeg<=index && index<=shirtEnd) || (1<=index2 && index2<=2) ) color = colorShirtFormal();
+					else
+				if( 20<=index && index<=shirtTop ) color = colorShirtFormal();
+					else
+				color = colorHumanSkin();
+			}
+		}
+		else
+		{ // head
+			color = recodeHead(index,index2);
 		}
 		
 		return color;
@@ -316,10 +422,10 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	texelColor = mapTexelToLinear( texelColor );
 	#ifdef COVID19SYM_RECOLOR
 		#ifdef COVID19SYM
-			if( fract(3.2/vRandomId)<-0.05 )
-				texelColor = recodeUndressedColor( texelColor );
-			else
-				texelColor = recodeColor( texelColor );
+			man = vRandomId<0.5;
+			texelColor = recodeUndressedColor( texelColor );
+			//texelColor = recodeInformalColor( texelColor );
+			//texelColor = recodeFormalColor( texelColor );
 		#endif
 	#endif
 	diffuseColor *= texelColor;
