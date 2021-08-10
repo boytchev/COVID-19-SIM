@@ -198,9 +198,9 @@ uniform float opacity;
 				int hairTopEnd = hair*randInt(23,26);
 				int hairSideBeg = 27;
 				int hairSideEnd = hair*randInt(27,30);
-				if( index<=hairTopEnd ) color = colorHair();
+				if( index<=hairTopEnd && index2==0 ) color = colorHair();
 					else
-				if( hairSideBeg<=index && index<=hairSideEnd ) color = colorHair();
+				if( hairSideBeg<=index && index<=hairSideEnd && index2==0 ) color = colorHair();
 					else
 				color = colorHumanSkin();
 			}
@@ -222,9 +222,9 @@ uniform float opacity;
 			int hairTopEnd = randInt(24,26);
 			int hairSideBeg = 27;
 			int hairSideEnd = randInt(27,30);
-			if( index<=hairTopEnd ) color = colorHair();
+			if( index<=hairTopEnd && index2==0 ) color = colorHair();
 				else
-			if( hairSideBeg<=index && index<=hairSideEnd ) color = colorHair();
+			if( hairSideBeg<=index && index<=hairSideEnd && index2==0 ) color = colorHair();
 				else
 			color = colorHumanSkin();
 		}
@@ -423,9 +423,9 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	#ifdef COVID19SYM_RECOLOR
 		#ifdef COVID19SYM
 			man = vRandomId<0.5;
-			texelColor = recodeUndressedColor( texelColor );
+			//texelColor = recodeUndressedColor( texelColor );
 			//texelColor = recodeInformalColor( texelColor );
-			//texelColor = recodeFormalColor( texelColor );
+			texelColor = recodeFormalColor( texelColor );
 		#endif
 	#endif
 	diffuseColor *= texelColor;

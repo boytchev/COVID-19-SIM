@@ -361,10 +361,10 @@ export class AgentTexture extends ProceduralTexture
 		patchColor = 100;
 		patchStep = 15;
 
-/*35*/	colorIndex( 35 );
+/*35*/	colorIndex( 35, 5 );
 		poly( [4, 14-e, 4, 14, 5, 15, 5, 14-e] );
 		
-/*34*/	colorIndex( 34 );
+/*34*/	colorIndex( 34, 6 );
 		poly( [4.5, 14-e, 4.5, 14, 5, 15, 5.5, 14, 5.5, 14-e, 5, 13+3/4-e] );
 		
 /*33*/	colorIndex( 33 );

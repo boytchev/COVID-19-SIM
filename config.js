@@ -15,7 +15,7 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 100;
+export const DEBUG_AGENT_MAX_COUNT = 10;
 export const DEBUG_RANDOM_WANDERING = !false;
 export const DEBUG_FORM_A_LINE = !false;
 
@@ -58,7 +58,7 @@ export const DEBUG_ALL_WHITE = false;
 export var DEBUG_FLAG_1 = false;
 
 
-export const CARTOON_STYLE = false; // only of agents
+export const CARTOON_STYLE = false; // only of agents, howses, trees
 
 
 // a block is not split if smaller than the treshold, but if
@@ -157,7 +157,7 @@ export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
 //export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
 export const AGENT_WALKING_SPEED = new Range( 0.6, 0.6 );		// in meters/second
 //export const AGENT_HEIGHT_CHILD = new Range( 1.7, 1.7 );		// in meters
-export const AGENT_HEIGHT_ADULT = new Range( 1, 2 );		// in meters
+export const AGENT_HEIGHT_ADULT = new Range( 1.4, 1.8 );		// in meters
 
 export const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
 export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );

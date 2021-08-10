@@ -134,14 +134,36 @@ void main() {
 	#define KNEES 5
 	#define FEET  6
 	
+	float fat = 1.1*pow(0.5+0.5*sin(1.234*agentId),2.0);
+	
 	// belly - slim and fat people
 	if( aVertexTopology == BELLY )
 	{
-		float k = 1.2*pow(0.5+0.5*sin(1.234*agentId),2.0);
-		transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*0.2, 1.0+k*0.5);
-		transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+k*2.0, 1.0+k*0.5);
+		transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+fat*0.1, 1.0+fat*0.4);
+		transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+fat*2.0, 1.0+fat*0.5);
 	}
 		
+	// masculite/feminine hip
+	#define HIP_CENTER 0.55
+	#define HIP_SPAN 0.3
+	if( !man )
+	if( (HIP_CENTER-HIP_SPAN)<transformed.y && transformed.y<(HIP_CENTER+HIP_SPAN) )
+	{	// HIP_CENTER-HIP_SPAN <- HIP_CENTER -> HIP_CENTER+HIP_SPAN
+		float y = PI*(transformed.y-HIP_CENTER)/HIP_SPAN;
+		transformed.x *= 1.0 + (0.1+0.05*fract(3.2/randomId))*clamp(0.5+0.5*cos(y)-0.3*fat,0.0,1.0);
+	}
+	
+	// masculite/feminine shoulders
+	#define SHOULDER_CENTER 0.85
+	#define SHOULDER_SPAN 0.1
+	if( aVertexTopology == HANDS )
+	if( (SHOULDER_CENTER-SHOULDER_SPAN)<transformed.y && transformed.y<(SHOULDER_CENTER+SHOULDER_SPAN) )
+	{	
+		float y = PI*(transformed.y-SHOULDER_CENTER)/SHOULDER_SPAN;
+		transformed.x *= 1.0 + (man?0.2:-0.1)*(0.5+0.5*cos(y));
+		transformed.y += 0.05*fract(5.8/randomId)*(0.5+0.5*cos(y));
+	}
+	
 	if( motionType == MOTION_TYPE_WALK )
 	{
 		// belly swing
@@ -218,7 +240,7 @@ void main() {
 		{
 			float a = 0.25*baseAngle*mirror*sin(0.2*rawTime);
 				  
-			rot = rotX(a);
+			rot = rotX(a)*rotZ((0.27-0.05*fat)*mirror);
 
 			apply(rot,0.79);
 		}
