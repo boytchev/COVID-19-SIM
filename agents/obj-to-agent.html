@@ -37,7 +37,8 @@
 			}
 		}
 //		console.log('minY='+minY,'maxY='+maxY);
-		
+console.log('rescale = (X-'+minY+')/'+(maxY-minY));
+
 		function rescale( value )
 		{
 			// maps [minY,maxY] to [0,1]
@@ -106,7 +107,7 @@
 				abs = Math.abs;
 				
 			// head
-			if( y>=0.863 )
+			if( (y>=0.86 && z>=0) || (y>=0.94 && z<=0) )
 				return '1, ';
 				
 			// neck - ignored
