@@ -99,14 +99,14 @@ uniform float opacity;
 	vec4 colorHumanSkin( )
 	{
 		vec4 color1 = vec4(0.1,0.05,0.05,1);
-		vec4 color2 = vec4(1.2,0.8,0.6,1);
+		vec4 color2 = vec4(1.0,0.75,0.6,1);
 		vec4 color3 = vec4(1.0,0.95,0.90,1);
 		
 		float k1 = randPersistant(3.2);
 		float k2 = randPersistant(1.9);
 		float k3 = randPersistant(7.6);
 		
-		return (2.0*k1*color1 + k2*color2 + 2.0*k3*color3)/(2.0*k1+k2+2.0*k3);
+		return (2.0*k1*color1 + 2.0*k2*color2 + 2.5*k3*color3)/(2.0*k1+2.0*k2+2.5*k3);
 	}
 	
 	vec4 colorPants( )

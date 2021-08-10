@@ -46,6 +46,8 @@ varying vec3 vViewPosition;
 	#define MOTION_TYPE_WALK  1
 	#define MOTION_TYPE_SLEEP 2
 
+	bool man;
+	
 	float mapLinear(float value, float minIn, float maxIn, float minOut, float maxOut)
 	{
 		float v = clamp(value,minIn,maxIn);
@@ -103,6 +105,8 @@ void main() {
 	//vInfectionLevel = infectionLevel;
 	vAgentId = agentId;
 	vRandomId = randomId;
+	
+	man = vRandomId<0.5;
 	
 	float speed = 1.8+0.8*sin(agentId); // speed of walking
 	float baseAngle = 0.2*1.6;
@@ -178,7 +182,7 @@ void main() {
 		{
 			float a = -baseAngle * (-0.25 + mirror*sine);
 			
-			rot = rotX(a) * rotZ(mirror*0.08); // woman 0.16, man = 0.08
+			rot = rotX(a) * rotZ(mirror*(man?0.08:0.18)); // woman 0.18, man = 0.08
 
 			apply(rot,0.5);
 
@@ -218,6 +222,23 @@ void main() {
 
 			apply(rot,0.79);
 		}
+
+		// feet must be horizontal
+		if( aVertexTopology >= FEET )
+		{
+			rot = rotZ(-mirror*(man?0.08:0.18)); // woman 0.18, man = 0.08
+
+			apply(rot,0.05);
+		}
+		
+		// closing legs depending on gender
+		if( aVertexTopology >= LEGS ) // includes knees and feet
+		{
+			rot = rotZ(mirror*(man?0.08:0.18)); // woman 0.18, man = 0.08
+
+			apply(rot,0.5);
+		}
+
 	}
 	
 	// rescale the head and the body (keeping the head

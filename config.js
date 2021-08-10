@@ -157,7 +157,7 @@ export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
 //export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
 export const AGENT_WALKING_SPEED = new Range( 0.6, 0.6 );		// in meters/second
 //export const AGENT_HEIGHT_CHILD = new Range( 1.7, 1.7 );		// in meters
-export const AGENT_HEIGHT_ADULT = new Range( 1.5, 2 );		// in meters
+export const AGENT_HEIGHT_ADULT = new Range( 1, 2 );		// in meters
 
 export const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
 export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );
