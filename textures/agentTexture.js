@@ -457,7 +457,9 @@ export class AgentTexture extends ProceduralTexture
 		line( [10, 14+3/4, 16, 14+3/4] ); 			// 11-12
 		line( [10, 14, 16, 14] ); 					// 12-13
 		
+//		ctx.strokeStyle = 'crimson';
 		quad( 10, 12+3/4, 11, 12+1/4, 13, 12+3/4, 16, 12+1/4 ); // 13-14 A
+//		ctx.strokeStyle = 'rgba(0,0,0,20%)';
 
 		
 		line( [14+1/4, 5, 14, 10] ); // 14-15 B

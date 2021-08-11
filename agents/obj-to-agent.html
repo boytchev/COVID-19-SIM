@@ -37,12 +37,18 @@
 			}
 		}
 //		console.log('minY='+minY,'maxY='+maxY);
-console.log('rescale = (X-'+minY+')/'+(maxY-minY));
+console.log('(X+'+(-minY)+')/'+(maxY-minY));
 
-		function rescale( value )
+		function rescaleY( value )
 		{
 			// maps [minY,maxY] to [0,1]
 			return ((parseFloat(value)-minY)/(maxY-minY) );
+		}
+		
+		function rescaleXZ( value )
+		{
+			// maps [minY,maxY] to [0,1]
+			return parseFloat(value)/(maxY-minY);
 		}
 		
 		function parse( value )
@@ -61,7 +67,7 @@ console.log('rescale = (X-'+minY+')/'+(maxY-minY));
 		{
 			if( obj[i]=='v' )
 			{
-				vertices.push( {x:rescale(obj[i+1]), y:rescale(obj[i+2]), z:rescale(obj[i+3])} );
+				vertices.push( {x:rescaleXZ(obj[i+1]), y:rescaleY(obj[i+2]), z:rescaleXZ(obj[i+3])} );
 				i += 3;
 			}
 			else if( obj[i]=='vt' )
@@ -114,6 +120,12 @@ console.log('rescale = (X-'+minY+')/'+(maxY-minY));
 			if( y>=0.82 )
 				return '0, ';
 				
+			// nips
+			if( 0.67<y && y<0.77 && abs(x)<0.055 && z>0 )
+			{
+				return '3, ';
+			}
+
 			// hands and showlders
 			if( (abs(x)>=0.09 && y>=0.55) || (abs(x)>=0.14 && y>=0.30) || y>=0.7)
 				return '2, ';
@@ -122,19 +134,19 @@ console.log('rescale = (X-'+minY+')/'+(maxY-minY));
 			if( 0.43<=y && y<=0.70 &&
 	            abs(x)<=0.11 &&
 		        z>0.0 )
-				return '3, ';
+				return '4, ';
 
 			// feet
 			if( v.y<=0.06 )
-				return '6, ';
+				return '9, ';
 
 			// knees
 			if( v.y<=0.30 )
-				return '5, ';
+				return '8, ';
 
 			// legs
 			if( Math.abs(v.x)>=0.01 && Math.abs(v.x)<=0.17 && v.y<=0.49 )
-				return '4, ';
+				return '7, ';
 
 			// undefined
 			return '0, ';

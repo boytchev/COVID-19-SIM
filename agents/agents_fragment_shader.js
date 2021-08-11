@@ -423,9 +423,9 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	#ifdef COVID19SYM_RECOLOR
 		#ifdef COVID19SYM
 			man = vRandomId<0.5;
-			//texelColor = recodeUndressedColor( texelColor );
+			texelColor = recodeUndressedColor( texelColor );
 			//texelColor = recodeInformalColor( texelColor );
-			texelColor = recodeFormalColor( texelColor );
+			//texelColor = recodeFormalColor( texelColor );
 		#endif
 	#endif
 	diffuseColor *= texelColor;

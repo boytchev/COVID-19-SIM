@@ -94,19 +94,42 @@ void main() {
 	#include <skinbase_vertex>
 	#include <skinnormal_vertex>
 	#include <defaultnormal_vertex>
+	
+#ifdef COVID19SYM
+	//UNDEFINED   0
+	#define HEAD  1
+	#define HANDS 2
+	#define NIPS  3
+	#define BELLY 4
+	//UNUSED      5
+	//UNUSED      6
+	#define LEGS  7
+	#define KNEES 8
+	#define FEET  9
+	
+	vVertexColor = vec3( 1.0, 1.0-infectionLevel, 1.0-infectionLevel );
+	//vInfectionLevel = infectionLevel;
+	vAgentId = agentId;
+	vRandomId = randomId;
+	man = vRandomId<0.5;
+
+	// flatten the 3D effect
+	transformedNormal = mix(vec3(1),transformedNormal,0.6);
+	if( !man )
+	if( aVertexTopology == NIPS )
+	{
+		transformedNormal.z *= 1.0+1.0*sin(40.0*abs(position.x));
+	}
+#endif
 
 #ifndef FLAT_SHADED
 	vNormal = normalize( transformedNormal );
 #endif
 	#include <begin_vertex>
 
+
 #ifdef COVID19SYM
-	vVertexColor = vec3( 1.0, 1.0-infectionLevel, 1.0-infectionLevel );
-	//vInfectionLevel = infectionLevel;
-	vAgentId = agentId;
-	vRandomId = randomId;
 	
-	man = vRandomId<0.5;
 	
 	float speed = 1.8+0.8*sin(agentId); // speed of walking
 	float baseAngle = 0.2*1.6;
@@ -126,18 +149,10 @@ void main() {
 	
 
 	
-
-	#define HEAD  1
-	#define HANDS 2
-	#define BELLY 3
-	#define LEGS  4
-	#define KNEES 5
-	#define FEET  6
-	
 	float fat = 1.1*pow(0.5+0.5*sin(1.234*agentId),2.0);
 	
 	// belly - slim and fat people
-	if( aVertexTopology == BELLY )
+	if( aVertexTopology == BELLY || aVertexTopology == NIPS )
 	{
 		transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+fat*0.1, 1.0+fat*0.4);
 		transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+fat*2.0, 1.0+fat*0.5);
@@ -147,10 +162,18 @@ void main() {
 	#define HIP_CENTER 0.55
 	#define HIP_SPAN 0.3
 	if( !man )
-	if( (HIP_CENTER-HIP_SPAN)<transformed.y && transformed.y<(HIP_CENTER+HIP_SPAN) )
-	{	// HIP_CENTER-HIP_SPAN <- HIP_CENTER -> HIP_CENTER+HIP_SPAN
-		float y = PI*(transformed.y-HIP_CENTER)/HIP_SPAN;
-		transformed.x *= 1.0 + (0.1+0.05*fract(3.2/randomId))*clamp(0.5+0.5*cos(y)-0.3*fat,0.0,1.0);
+	{
+		if( (HIP_CENTER-HIP_SPAN)<transformed.y && transformed.y<(HIP_CENTER+HIP_SPAN) )
+		{	// HIP_CENTER-HIP_SPAN <- HIP_CENTER -> HIP_CENTER+HIP_SPAN
+			float y = PI*(transformed.y-HIP_CENTER)/HIP_SPAN;
+			transformed.x *= 1.0 + (0.1+0.05*fract(3.2/randomId))*clamp(0.5+0.5*cos(y)-0.3*fat,0.0,1.0);
+		}
+		
+		if( aVertexTopology == NIPS )
+		{
+			transformed.z *= 1.0 + (transformed.y>0.7?0.25:0.1)*(1.0-cos(PI/0.05*transformed.x))*mapLinear( transformed.y, 0.71, 0.76, 1.2, 0.3); //forward
+			transformed.x *= mapLinear( transformed.y, 0.69, 0.76, 1.3, 1.1); //sideway
+		}
 	}
 	
 	// masculite/feminine shoulders
@@ -160,7 +183,7 @@ void main() {
 	if( (SHOULDER_CENTER-SHOULDER_SPAN)<transformed.y && transformed.y<(SHOULDER_CENTER+SHOULDER_SPAN) )
 	{	
 		float y = PI*(transformed.y-SHOULDER_CENTER)/SHOULDER_SPAN;
-		transformed.x *= 1.0 + (man?0.2:-0.1)*(0.5+0.5*cos(y));
+		transformed.x *= 1.0 + (man?0.15:-0.1)*(0.5+0.5*cos(y));
 		transformed.y += 0.05*fract(5.8/randomId)*(0.5+0.5*cos(y));
 	}
 	
@@ -181,8 +204,8 @@ void main() {
 		{
 			float a = 1.25*baseAngle * (0.5*baseAngle + mirror*sine) * (0.8-transformed.y),
 				  b = -0.25*baseAngle*sine;
-				  
-			rot = rotX(a)*rotY(b);
+
+			rot = rotX(a)*rotZ((0.27-0.05*fat)*mirror)*rotY(b);
 
 			apply(rot,0.79);
 			

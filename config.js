@@ -15,7 +15,7 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 10;
+export const DEBUG_AGENT_MAX_COUNT = 100;
 export const DEBUG_RANDOM_WANDERING = !false;
 export const DEBUG_FORM_A_LINE = !false;
 
