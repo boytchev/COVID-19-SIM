@@ -174,14 +174,14 @@ uniform float opacity;
 	
 	vec4 colorHair( )
 	{	
-		if( randBool(0.9) )
+		if( randPersistant(2.2)<0.9 )
 		{	// black->brown
-			float c = rand()*rand();
+			float c = randPersistant(4.7)*randPersistant(5.6);
 			return vec4(0.4*c,0.2*c,0,1);
 		}
 		else
 		{	// gold->white
-			float c = 0.2+0.4*rand();
+			float c = 0.2+0.4*randPersistant(3.9);
 			return vec4(1,1.0-0.5*c,1.0-c,1);
 		}
 	}
@@ -219,7 +219,7 @@ uniform float opacity;
 		}
 		else
 		{	// woman
-			int hairTopEnd = randInt(24,26);
+			int hairTopEnd = randInt(25,26);
 			int hairSideBeg = 27;
 			int hairSideEnd = randInt(27,30);
 			if( index<=hairTopEnd && index2==0 ) color = colorHair();
@@ -423,9 +423,11 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	#ifdef COVID19SYM_RECOLOR
 		#ifdef COVID19SYM
 			man = vRandomId<0.5;
-			texelColor = recodeUndressedColor( texelColor );
+			//texelColor = recodeUndressedColor( texelColor );
 			//texelColor = recodeInformalColor( texelColor );
-			//texelColor = recodeFormalColor( texelColor );
+			texelColor = recodeFormalColor( texelColor );
+			//float k = clamp(0.5+1.6*sin(uTime/1.0),0.0,1.0);
+			//texelColor = mix(recodeUndressedColor( texelColor ),recodeFormalColor( texelColor ), k );
 		#endif
 	#endif
 	diffuseColor *= texelColor;

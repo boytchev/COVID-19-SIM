@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 10; 				// in meters
+export const GROUND_SIZE = 70; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -15,7 +15,7 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 100;
+export const DEBUG_AGENT_MAX_COUNT = 5000;
 export const DEBUG_RANDOM_WANDERING = !false;
 export const DEBUG_FORM_A_LINE = !false;
 
@@ -27,10 +27,10 @@ export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 export const DEBUG_BLOCK_WITH_ONLY_PLAZA = !false;
-export const DEBUG_AUTOROTATE = false;
-export const DEBUG_AUTOROTATE_SPEED = 0.5;
+export const DEBUG_AUTOROTATE = !false;
+export const DEBUG_AUTOROTATE_SPEED = 0.3;
 export const DEBUG_RENDERER_INFO = false;
-export const DEBUG_BUILDINGS_OPACITY = 0/4;	// for buildings and trees
+export const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
 export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 export const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
 export const DEBUG_NAVMESH_SHOW_MESHES = !false;

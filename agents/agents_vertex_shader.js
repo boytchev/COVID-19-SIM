@@ -101,8 +101,8 @@ void main() {
 	#define HANDS 2
 	#define NIPS  3
 	#define BELLY 4
-	//UNUSED      5
-	//UNUSED      6
+	#define HAIR  5
+	//UNUSED      6 ??
 	#define LEGS  7
 	#define KNEES 8
 	#define FEET  9
@@ -174,6 +174,11 @@ void main() {
 			transformed.z *= 1.0 + (transformed.y>0.7?0.25:0.1)*(1.0-cos(PI/0.05*transformed.x))*mapLinear( transformed.y, 0.71, 0.76, 1.2, 0.3); //forward
 			transformed.x *= mapLinear( transformed.y, 0.69, 0.76, 1.3, 1.1); //sideway
 		}
+
+		if( aVertexTopology == HANDS && transformed.z<0.0 )
+		{
+			transformed.z *= mapLinear( transformed.y, 0.6, 0.8, 1.0, 0.5); //sideway
+		}
 	}
 	
 	// masculite/feminine shoulders
@@ -185,6 +190,16 @@ void main() {
 		float y = PI*(transformed.y-SHOULDER_CENTER)/SHOULDER_SPAN;
 		transformed.x *= 1.0 + (man?0.15:-0.1)*(0.5+0.5*cos(y));
 		transformed.y += 0.05*fract(5.8/randomId)*(0.5+0.5*cos(y));
+	}
+	
+	// long hair
+	#define MAX_HAIR 0.25
+	float hairLength = (man?0.1:1.0)*MAX_HAIR*fract(15.1/randomId);
+	if( aVertexTopology == HAIR )
+	{
+		transformed.z = mapLinear(hairLength,0.0,MAX_HAIR, transformed.z, -0.06);
+		transformed.x *= mapLinear(hairLength,0.0,MAX_HAIR, 1.0, 2.5);
+		transformed.y -= hairLength;
 	}
 	
 	if( motionType == MOTION_TYPE_WALK )
@@ -292,15 +307,22 @@ void main() {
 	float headScale = 1.7/agentHeight,
 		  bodyScale = headScale + (1.0-headScale)/0.863;
 
-	if( aVertexTopology == HEAD )
+	if( aVertexTopology == HEAD || aVertexTopology == HAIR )
 	{
 		// scale the head up and move it down
 		transformed *= headScale;
 		transformed.y += 1.0-headScale;
 
 		// turning head left-right up-down
-		float a = 0.6*sin(mod(0.12*rawTime,2.0*PI)),
-			  b = 0.2*sin(mod(0.17*rawTime,2.0*PI));
+		float hair = 0.0;
+		if( aVertexTopology == HAIR )
+		{
+			// this makes the bottom edge of long hair
+			// to not move together with the hash
+			hair = mapLinear(hairLength,0.0,MAX_HAIR, 0.5, 0.0);
+		}
+		float a = 0.6*hair*sin(mod(0.12*rawTime,2.0*PI)),
+			  b = 0.2*hair*sin(mod(0.17*rawTime,2.0*PI));
 			  
 		rot = rotY(a)*rotX(b);
 		

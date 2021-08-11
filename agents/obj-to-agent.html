@@ -112,6 +112,10 @@ console.log('(X+'+(-minY)+')/'+(maxY-minY));
 				z = v.z,
 				abs = Math.abs;
 				
+			// back hair
+			if( y>0.92 && y<0.94 && z<0 )
+				return '5, ';
+				
 			// head
 			if( (y>=0.86 && z>=0) || (y>=0.94 && z<=0) )
 				return '1, ';
