@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Converter from PLY to internal agent format</title>
+	<meta charset="utf-8">
+
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+	<meta name="description" content="COVID-19 Simulator">
+	<meta name="keywords" content="COVID-19, Coronavirus, SARS-CoV-2, Coronavirus disease 2019, Simulator">
+	<meta name="author" content="Pavel Boytchev">
+	<meta name="version" content="1.1">
+	<meta name="date" content="2021.08.12">
+</head>
+
+<body>
+	<div id="code"></div>
+	<script type="module">
+		var response = await fetch( './model/agent3d.ply' );
+		var obj = await response.text();
+			obj = obj.replace('element vertex', 'element_vertex');
+			obj = obj.replace('element face', 'element_face');
+			obj = obj.replace(/\n/g, ' ');
+			obj = obj.split(' ');
+		
+		var verticesCount, facesCount;
+
+		var idx;
+		for( idx=0; obj[idx]!='end_header'; idx++ )
+		{
+			if( obj[idx] == 'element_vertex' ) verticesCount = parseInt( obj[idx+1] );
+			if( obj[idx] == 'element_face' ) facesCount = parseInt( obj[idx+1] );
+		}
+		idx++;
+
+		// calculate vertical span, because it must be normalized to [0,1]
+		var minY = 0,
+			maxY = 0;
+			
+		for( var i=idx; i<idx+12*verticesCount; i+=12 )
+		{
+			var y = parseFloat( obj[i+2] );
+			maxY = Math.max( y, maxY );
+			minY = Math.min( y, minY );
+		}
+		console.log('minY='+minY,'maxY='+maxY);
+		console.log('(X+'+(-minY)+')/'+(maxY-minY));
+
+
+		function rescaleY( value )
+		{
+			// maps [minY,maxY] to [0,1]
+			return ((parseFloat(value)-minY)/(maxY-minY) );
+		}
+		
+		function rescaleXZ( value )
+		{
+			// maps [minY,maxY] to [0,1]
+			return parseFloat(value)/(maxY-minY);
+		}
+
+
+		var vertices = [],
+			normals = [],
+			uvs = [],
+			colors = [];
+
+		// process data
+		for( var i=idx; i<idx+12*verticesCount; i+=12 )
+		{
+			vertices.push( {x:rescaleXZ(obj[i+0]), y:rescaleY(obj[i+2]), z:-rescaleXZ(obj[i+1])} );
+			normals.push( {x:parseFloat(obj[i+3]), y:parseFloat(obj[i+4]), z:parseFloat(obj[i+5])} );
+			uvs.push( {x:parseFloat(obj[i+6]), y:parseFloat(obj[i+7])} );
+			colors.push( {r:parseInt(obj[i+8]), g:parseInt(obj[i+9]), b:parseInt(obj[i+10])} );
+			//[i+11] is alpha and is ignored
+		}
+
+		function string(v,n=3)
+		{
+			return v.x.toFixed(n)+', '+v.y.toFixed(n)+', '+v.z.toFixed(n)+', ';
+		}
+		
+		function texture(v,n=3)
+		{
+			return v.x.toFixed(n)+', '+v.y.toFixed(n)+', ';
+		}
+		
+		function topology(v)
+		{
+			var codes = [	'---', 	// 0:UNDEFINED in vertex shader
+							'220',	// 1:HEAD in vertex shader
+							'200',	// 2:HANDS in vertex shader
+							'020',	// 3:NIPS in vertex shader
+							'111',	// 4:BELLY in vertex shader
+							'000',	// 5:HAIR in vertex shader
+							'---',	// 6:UNUSED in vertex shader
+							'002',	// 7:LEGS in vertex shader
+							'202',	// 8:KNEES in vertex shader
+							'022',	// 9:FEET in vertex shader
+						],
+				rgb = ''+Math.floor(v.r/100)+Math.floor(v.g/100)+Math.floor(v.b/100);
+				
+			return Math.max(codes.indexOf(rgb),0)+', ';
+		}
+
+		// generate data
+		var vertexData = 'var vertexData = [',
+			normalData = 'var normalData = [',
+			textureData = 'var textureData = [',
+			topologyData = 'var topologyData = [';
+			
+		for( var i=idx+12*verticesCount; i<idx+12*verticesCount+4*facesCount; i+=4 )
+		{
+			var f1 = parseInt(obj[i+1]),
+				f2 = parseInt(obj[i+2]),
+				f3 = parseInt(obj[i+3]);
+			
+			vertexData += string( vertices[f1] );
+			vertexData += string( vertices[f2] );
+			vertexData += string( vertices[f3] );
+
+			normalData += string( normals[f1] );
+			normalData += string( normals[f2] );
+			normalData += string( normals[f3] );
+
+			textureData += texture( uvs[f1] );
+			textureData += texture( uvs[f2] );
+			textureData += texture( uvs[f3] );
+
+			topologyData += topology( colors[f1] );
+			topologyData += topology( colors[f2] );
+			topologyData += topology( colors[f3] );
+		}
+
+		// remove last ", "
+		vertexData = vertexData.slice(0, -2)+'];<br><br>'; 
+		normalData = normalData.slice(0, -2)+'];<br><br>';
+		textureData = textureData.slice(0, -2)+'];<br><br>';
+		topologyData = topologyData.slice(0, -2)+'];<br><br>';
+
+		document.getElementById('code').innerHTML = vertexData + normalData + textureData + topologyData;
+
+	</script>
+</body>
+</html>

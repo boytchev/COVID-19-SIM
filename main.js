@@ -53,8 +53,8 @@ export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.
 	camera.position.set( 10*GROUND_SIZE, 3*GROUND_SIZE, 10*GROUND_SIZE );
 	camera.position.set( -GROUND_SIZE/6, GROUND_SIZE/15, -GROUND_SIZE/5 );
 	//camera.position.set( 0.01+0*GROUND_SIZE/0.8, GROUND_SIZE*2, 0 );
-	//camera.position.set( GROUND_SIZE/2, GROUND_SIZE/10, GROUND_SIZE/3 );
-	camera.position.set( -2.5, 2.5, 2.5 );
+	camera.position.set( GROUND_SIZE/2, GROUND_SIZE/10, GROUND_SIZE/3 );
+	camera.position.set( 15, 5, 0 );
 			
 export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.maxPolarAngle = Math.PI * 0.495;

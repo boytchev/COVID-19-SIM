@@ -49,6 +49,7 @@ uniform float opacity;
 #endif
 
 #ifdef COVID19SYM
+#ifdef COVID19SYM_RECOLOR
 
 	bool man;
 
@@ -393,7 +394,8 @@ uniform float opacity;
 		
 		return color;
 	}
-#endif
+#endif //COVID19SYM_RECOLOR
+#endif //COVID19SYM
 
 
 void main() {
@@ -423,9 +425,10 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	#ifdef COVID19SYM_RECOLOR
 		#ifdef COVID19SYM
 			man = vRandomId<0.5;
-			//texelColor = recodeUndressedColor( texelColor );
+			texelColor = recodeUndressedColor( texelColor );
 			//texelColor = recodeInformalColor( texelColor );
-			texelColor = recodeFormalColor( texelColor );
+			//texelColor = recodeFormalColor( texelColor );
+			
 			//float k = clamp(0.5+1.6*sin(uTime/1.0),0.0,1.0);
 			//texelColor = mix(recodeUndressedColor( texelColor ),recodeFormalColor( texelColor ), k );
 		#endif

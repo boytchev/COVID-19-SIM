@@ -1006,11 +1006,11 @@ else
 	
 	AGENT_DOING_NOTHING()
 	{
-		if( Math.random()<0.0015 && dayTimeMs>timeMs(6,20,20))
-		{
-			this.gotoPosition = null;
-			this.doing = this.AGENT_WANDERING;
-		}
+		//if( Math.random()<0.0015 && dayTimeMs>timeMs(6,20,20))
+		//{
+		//	this.gotoPosition = null;
+		//	this.doing = this.AGENT_WANDERING;
+		//}
 		
 		return;
 		

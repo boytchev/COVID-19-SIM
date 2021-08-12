@@ -4,7 +4,7 @@ import {timeMs, Size, Range} from './core.js';
 
 export const VR = false;
 
-export const GROUND_SIZE = 70; 				// in meters
+export const GROUND_SIZE = 15; 				// in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -15,11 +15,11 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 5000;
+export const DEBUG_AGENT_MAX_COUNT = 250;
 export const DEBUG_RANDOM_WANDERING = !false;
-export const DEBUG_FORM_A_LINE = !false;
+export const DEBUG_FORM_A_LINE = false;
 
-export const DEBUG_TIME_SPEED = timeMs(0,0,1)/1000;	// time ellapsed for 1 second
+export const DEBUG_TIME_SPEED = timeMs(0,0,5)/1000;	// time ellapsed for 1 second
 export const START_TIME = timeMs(6,20);			// start time
 
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
@@ -27,10 +27,10 @@ export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 export const DEBUG_BLOCK_WITH_ONLY_PLAZA = !false;
-export const DEBUG_AUTOROTATE = !false;
+export const DEBUG_AUTOROTATE = false;
 export const DEBUG_AUTOROTATE_SPEED = 0.3;
 export const DEBUG_RENDERER_INFO = false;
-export const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
+export const DEBUG_BUILDINGS_OPACITY = 0/4;	// for buildings and trees
 export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 export const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
 export const DEBUG_NAVMESH_SHOW_MESHES = !false;
@@ -54,7 +54,7 @@ export const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or 
 export const DEBUG_AGENT_HEALTH = false; // count infected agents
 export const DEBUG_SUN_POSITION_GUI = false;
 //export const DEBUG_BLOCK_COLOR = false;
-export const DEBUG_ALL_WHITE = false;
+export const DEBUG_ALL_WHITE = !false;
 export var DEBUG_FLAG_1 = false;
 
 
@@ -252,6 +252,21 @@ export const IMMUNE_STRENGTH = new Range( 100, 200 );
 export const IMMUNE_RECOVERY_FACTOR = 0.001; // recovery of immune per second
 export const IMMUNE_CURE_FACTOR = new Range( 1.0, 1.2 ); // increase of immunity after cure
 export const PERCENTAGE_INITIAL_INFECTED = 0.05; // 0.05=5%
+
+
+
+
+export const AGENT_DRAW_MODE_WHITE  	= 0; // white color without texture
+export const AGENT_DRAW_MODE_CHECKERED  = 1; // color squares with dots in centers
+export const AGENT_DRAW_MODE_CHESSBOARD = 2; // black and white squares
+export const AGENT_DRAW_MODE_CRIMSON    = 3; // a black-crimson texture
+export const AGENT_DRAW_MODE_BORDERS    = 4; // white character with border lines only
+export const AGENT_DRAW_MODE_PATCHES    = 5; // black-gray-white patches
+export const AGENT_DRAW_MODE_RANDOM     = 6; // random color patches
+export const AGENT_DRAW_MODE_CLOTHES	= 7; // shader-defined clothes
+
+export const AGENT_DRAW_MODE = AGENT_DRAW_MODE_BORDERS;
+
 
 /*
 

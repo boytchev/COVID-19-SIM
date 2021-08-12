@@ -352,9 +352,33 @@ void main() {
 	//float r = 0.5+0.5*sin(float(1.2*agentId)+1.76434*float(aVertexTopology));
 	//float g = 0.5+0.5*cos(float(1.7*agentId)+2.16434*float(aVertexTopology));
 	//float b = 0.5-0.5*sin(float(1.9*agentId)+1.134*float(aVertexTopology));
-	//vVertexColor = vec3( r, g, b );
-	vVertexColor = vec3( 1 );
-	
+	/*
+	if( aVertexTopology == HAIR )
+		vVertexColor = vec3(0,0,0);
+	else
+	if( aVertexTopology == HEAD )
+		vVertexColor = vec3(1,1,0);
+	else
+	if( aVertexTopology == HANDS )
+		vVertexColor = vec3(1,0,0);
+	else
+	if( aVertexTopology == LEGS )
+		vVertexColor = vec3(0,0,1);
+	else
+	if( aVertexTopology == KNEES )
+		vVertexColor = vec3(1,0,1);
+	else
+	if( aVertexTopology == FEET )
+		vVertexColor = vec3(0,1,1);
+	else
+	if( aVertexTopology == NIPS )
+		vVertexColor = vec3(0,1,0);
+	else
+	if( aVertexTopology == BELLY )
+		vVertexColor = vec3(0.5,0.5,0.5);
+	else
+		vVertexColor = vec3(1,1,1);
+	*/
 #endif
 
 	#include <morphtarget_vertex>

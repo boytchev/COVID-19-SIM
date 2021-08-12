@@ -7,18 +7,9 @@
 
 import * as THREE from '../js/three.module.js';
 import {ProceduralTexture} from './proceduralTexture.js';
+import {AGENT_DRAW_MODE_CHECKERED, AGENT_DRAW_MODE_CHESSBOARD, AGENT_DRAW_MODE_CRIMSON, AGENT_DRAW_MODE_BORDERS, AGENT_DRAW_MODE_PATCHES, AGENT_DRAW_MODE_RANDOM, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE} from '../config.js';
 
 
-const AGENT_DRAW_MODE_CHECKERED  = 1; // color squares with dots in centers
-const AGENT_DRAW_MODE_CHESSBOARD = 2; // black and white squares
-const AGENT_DRAW_MODE_CRIMSON    = 3; // a black-crimson texture
-const AGENT_DRAW_MODE_BORDERS    = 4; // white character with border lines only
-const AGENT_DRAW_MODE_PATCHES    = 5; // black-gray-white patches
-const AGENT_DRAW_MODE_RANDOM     = 6; // random color patches
-export const AGENT_DRAW_MODE_CLOTHES = 7; // shader-defined clothes
-
-//export const AGENT_DRAW_MODE = AGENT_DRAW_MODE_PATCHES;
-export const AGENT_DRAW_MODE = AGENT_DRAW_MODE_CLOTHES;
 
 // number of cells in U and V directions
 // this number is used to make the mapping
