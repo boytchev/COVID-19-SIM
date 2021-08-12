@@ -1,0 +1,63 @@
+body {
+	background-color: white;
+	font-family: 'Roboto', sans-serif;
+}
+
+.page {
+	max-width: 40em;
+	margin: auto;
+}
+
+.block {
+	margin-top: 1em;
+	padding: 0.25em 0;
+	background-image: url(textures/dot.svg);
+	background-repeat: repeat-x;
+	position: relative;
+}
+
+.block .name {
+	display: inline-block;
+	background: white;
+	padding: 0 0.5em 0 0em;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+
+.block .name:after {
+	content: ':';
+}
+
+.block .name[debug]:after {
+	font-weight: 300;
+	font-size: 0.6em;
+	content: ' (DEBUG):';
+}
+
+.block input {
+	font-weight: bold;
+	position: relative;
+	top: -0.4em;
+	float: right;
+	border: none;
+	#border-bottom: solid 0.2em black;
+	background: none;
+	text-align: right;
+	font-size: 1.2em;
+}
+
+.block input[type="checkbox"] {
+	position: relative;
+	top: -0.3em;
+	right: -0.15em;
+	width: 1em;
+	height: 1.1em;
+}
+
+.block .subinfo {
+	display: block;
+	font-size: 90%;
+	font-weight: 300;
+	padding-left: 1.2em;
+	color: DimGray;
+}

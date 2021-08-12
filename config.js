@@ -2,9 +2,13 @@
 
 import {timeMs, Size, Range} from './core.js';
 
+
+const urlParams = new URLSearchParams( window.location.search );
+console.log( urlParams.get('gs') );
+
 export const VR = false;
 
-export const GROUND_SIZE = 15; 				// in meters
+export const GROUND_SIZE = urlParams.get('gs') || 500; // in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
 export const EARTH_SIZE = 50000;
 
@@ -15,9 +19,9 @@ var R = 1+Math.floor(Math.random()*100000);
 console.log('seed=',R);
 
 export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = 250;
+export const DEBUG_AGENT_MAX_COUNT = urlParams.get('amc') || 250;
 export const DEBUG_RANDOM_WANDERING = !false;
-export const DEBUG_FORM_A_LINE = false;
+export const DEBUG_FORM_A_LINE = !false;
 
 export const DEBUG_TIME_SPEED = timeMs(0,0,5)/1000;	// time ellapsed for 1 second
 export const START_TIME = timeMs(6,20);			// start time
@@ -249,7 +253,7 @@ export const INFECTION_STEP = 200;
 export const INFECTION_DISTANCE = 1; // in meters
 export const INFECTION_STRENGTH = 0.5; // factor of how fast is the infection
 export const IMMUNE_STRENGTH = new Range( 100, 200 );
-export const IMMUNE_RECOVERY_FACTOR = 0.001; // recovery of immune per second
+export const IMMUNE_RECOVERY_FACTOR = 0.0005; // recovery of immune per second
 export const IMMUNE_CURE_FACTOR = new Range( 1.0, 1.2 ); // increase of immunity after cure
 export const PERCENTAGE_INITIAL_INFECTED = 0.05; // 0.05=5%
 
