@@ -11,7 +11,7 @@ body {
 .block {
 	margin-top: 1em;
 	padding: 0.25em 0;
-	background-image: url(textures/dot.svg);
+	background-image: url(icons/dot.svg);
 	background-repeat: repeat-x;
 	position: relative;
 }
@@ -24,14 +24,20 @@ body {
 	text-transform: uppercase;
 }
 
-.block .name:after {
-	content: ':';
+.block .name.debug:after {
+	font-weight: 300;
+	content: ' (DEBUG)';
 }
 
-.block .name[debug]:after {
+.block .name.fav:after {
+	font-weight: normal;
+	color: crimson;
+	content: ' \2764';
+}
+
+.block .name.debug.fav:after {
 	font-weight: 300;
-	font-size: 0.6em;
-	content: ' (DEBUG):';
+	content: ' (DEBUG) \2764';
 }
 
 .block input {
@@ -49,11 +55,11 @@ body {
 .block input[type="checkbox"] {
 	position: relative;
 	top: -0.3em;
-	right: -0.15em;
+	right: 0.5em;
 	width: 1em;
 	height: 1.1em;
 }
-
+ 
 .block .subinfo {
 	display: block;
 	font-size: 90%;
@@ -61,3 +67,11 @@ body {
 	padding-left: 1.2em;
 	color: DimGray;
 }
+
+.ref {
+	font-weight: normal;
+	color: Black;
+	text-transform: uppercase;
+}
+
+

@@ -10,7 +10,7 @@ export const VR = false;
 
 export const GROUND_SIZE = urlParams.get('gs') || 500; // in meters
 export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
-export const EARTH_SIZE = 50000;
+export const EARTH_SIZE = urlParams.get('es') || 50000;
 
 	
 // debug flags
@@ -18,8 +18,8 @@ var R = 1+Math.floor(Math.random()*100000);
 //R = 21436;
 console.log('seed=',R);
 
-export var DEBUG_RANDOM_SEED = R;
-export const DEBUG_AGENT_MAX_COUNT = urlParams.get('amc') || 250;
+export var DEBUG_RANDOM_SEED = urlParams.get('drs') || R;
+export const DEBUG_AGENT_MAX_COUNT = urlParams.get('damc') || 250;
 export const DEBUG_RANDOM_WANDERING = !false;
 export const DEBUG_FORM_A_LINE = !false;
 

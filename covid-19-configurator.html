@@ -18,75 +18,56 @@
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
 
 	<link rel="stylesheet" href="covid-19-configurator.css">
+
+	<script src="covid-19-configurator.js"></script> 
 	
 </head>
 
 <body>
 <div class="page">
-<h2>COVID-19 Configurator</h2>
-	
-	<div class="block">
-		<div class="name">Ground size</div>
-		<input type="number" name="gs" min="10" max="10000" value="500" step="10">
-		<div class="subinfo">The active area of the simulation in meters.
-			Buildings and people will be bound to a square of this size.
-			Range from 1 to 10000 meters (10km), default is 500 meters.
-		</div>
-	</div>
-	
-	<div class="block">
-		<div class="name">Earth size</div>
-		<input type="number" name="es" min="1000" max="100000" value="50000" step="1000">
-		<div class="subinfo">The area surrounding the simulation area.
-			Its edge makes the horizon. Range from 1000 to 100000 meters (100km),
-			default is 50000 meters (50km).
-		</div>
-	</div>
-	
-	<div class="block">
-		<div class="name">Agent count</div>
-		<input type="number" name="dmac" min="0" max="50000" value="100">
-		<div class="subinfo">The maximal number of people in the simulation.
-			Their number might be smaller if the amount of houses and
-			apartment buildings are not sufficient for all of them.
-			Range from 0 to 50000, default is 100 people.
-		</div>
-	</div>
-	
-	<div class="block">
-		<div class="name" debug>Line formation</div>
-		<input type="checkbox" name="dfal" value="false">
-		<div class="subinfo">If set, the people are positioned in lines
-			and columns. If not set, the people are positioned in
-			buildings. Default is not set.
-		</div>
-	</div>
-	
-	
-	<div class="block">
-		<div class="name" debug>Auto rotate</div>
-		<input type="checkbox" name="dar" value="false">
-		<div class="subinfo">If set, the scnese rotates continuously.
-			The user can still use the mouse to rotate manually. If not
-			set, the scene does not move by itself. Default is not set.
-		</div>
-	</div>
-	
-	<div class="block">
-		<div class="name">Auto rotate speed</div>
-		<input type="number" name="dars" min="0" max="1" value="0.3" step="0.1">
-		<div class="subinfo">The speed of automatic rotation measure in
-			radians per second. The value is effective only if "Auto rotate"
-			is set, otherwise it has no effect. Range from 0.0 to 1.0,
-			default is 0.3 rad/s.
-		</div>
-	</div>
+<h2>COVID-19 Configurator
+	<label for="cars">Filter:</label>
+	<select name="filter" id="filter" value="fav">
+	  <option value="all">All</option>
+	  <option value="fav">Favourites</option>
+	</select>
+</h2>
+	<div id="blocks">
 
-
-	<script type="module">
-		import './main.js';
-	</script>
+	</div> <!--id="blocks"-->
 
 </div> <!--page-->	
+
+
+	<script>
+		addNumeric(
+			'gs', 'Ground size', {min:10, max:10000, value:500, step:10, default:100, favourite:true},
+			'The active area of the simulation in meters. Buildings and people will be bound to a square of this size.' );
+
+		addNumeric(
+			'es', 'Earth size', {min:1000, max:100000, value:50000, step:1000, default:50000},
+			'The area surrounding the simulation area. Its edge makes the horizon.' );
+
+		addNumeric(
+			'damc', 'Agent count', {min:0, max:50000, value:100, step:100, default:100, favourite:true},
+			'The maximal number of people in the simulation. Their number might be smaller if the amount of houses and apartments are not sufficient for all of them.' );
+
+		addBoolean(
+			'dfal', 'RANDOM WANDERING', {value:false, default:false, debug:true},
+			'If checked, the people are walking in random directions and they do not follow any routine. If not checked, the people follow their daily routine.' );
+
+		addBoolean(
+			'drw', 'Line formation', {value:false, default:false, debug:true},
+			'If checked, the people are positioned in lines and columns. If not checked, the people are positioned in buildings.' );
+
+		addBoolean(
+			'dar', 'Auto rotate', {value:false, default:false, debug:true},
+			'If checked, the scnese rotates continuously with speed defined by <span class="ref">Auto rotate speed</span>. The user can still use the mouse to rotate manually. If not checked, the scene does not move by itself.' );
+
+		addNumeric(
+			'dars', 'Auto rotate speed', {min:0, max:1, value:0.3, step:0.1, default:0.3, debug:true},
+			'The speed of automatic rotation measure in radians per second. The value is effective only if <span class="ref">Auto rotate</span> is checked, otherwise it has no effect.' );
+	</script>
+	
 </body>
 </html>
