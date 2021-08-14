@@ -4,13 +4,44 @@ import {timeMs, Size, Range} from './core.js';
 
 
 const urlParams = new URLSearchParams( window.location.search );
-console.log( urlParams.get('gs') );
+const LOCAL_STORAGE_PARAMS = 'covid-19-params'; // same name used in covid-19-configurator.js
+const storedParams = new URLSearchParams( localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
+
+console.log('URL',window.location.search);
+console.log('STO',localStorage.getItem( LOCAL_STORAGE_PARAMS ));
+
+// get a parameter
+function param( id, defaultValue )
+{
+	var value;
+
+	// first look for the parameter in the URL
+	// if not there, then check in local storage
+	// eventually, return the default value
+	
+	if( urlParams.has(id) )
+		value = urlParams.get( id )
+	else
+	if( storedParams.has(id) )
+		value = storedParams.get( id )
+	else
+		value = defaultValue;
+		
+	if( value=='true' ) value = true;
+	if( value=='false' ) value = false;
+	if( !isNaN(parseFloat(value)) ) value = parseFloat(value);	
+	
+	//console.log(id,'=',value);
+	
+	return value;
+}
 
 export const VR = false;
 
-export const GROUND_SIZE = urlParams.get('gs') || 500; // in meters
-export const GROUND_EDGE = GROUND_SIZE/2; 		// in meters
-export const EARTH_SIZE = urlParams.get('es') || 50000;
+export const GROUND_SIZE = param('gs', 500);	// in meters
+export const GROUND_EDGE = GROUND_SIZE/2;
+
+export const EARTH_SIZE = param('es', 50000);	// in meters
 
 	
 // debug flags
@@ -18,10 +49,10 @@ var R = 1+Math.floor(Math.random()*100000);
 //R = 21436;
 console.log('seed=',R);
 
-export var DEBUG_RANDOM_SEED = urlParams.get('drs') || R;
-export const DEBUG_AGENT_MAX_COUNT = urlParams.get('damc') || 250;
-export const DEBUG_RANDOM_WANDERING = !false;
-export const DEBUG_FORM_A_LINE = !false;
+export var DEBUG_RANDOM_SEED = param('drs', R);
+export const DEBUG_AGENT_MAX_COUNT = param('damc', 250);
+export const DEBUG_RANDOM_WANDERING = param('drw',false);
+export const DEBUG_FORM_A_LINE = param('dfal',false);
 
 export const DEBUG_TIME_SPEED = timeMs(0,0,5)/1000;	// time ellapsed for 1 second
 export const START_TIME = timeMs(6,20);			// start time
@@ -31,8 +62,8 @@ export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
 export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
 export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
 export const DEBUG_BLOCK_WITH_ONLY_PLAZA = !false;
-export const DEBUG_AUTOROTATE = false;
-export const DEBUG_AUTOROTATE_SPEED = 0.3;
+export const DEBUG_AUTOROTATE = param('dar', false);
+export const DEBUG_AUTOROTATE_SPEED = param('dars', 0.3);
 export const DEBUG_RENDERER_INFO = false;
 export const DEBUG_BUILDINGS_OPACITY = 0/4;	// for buildings and trees
 export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks

@@ -84,7 +84,7 @@ var crossings = new Crossings();	//console.log('crossings\t',clock.getDelta());
 export var agents = new Agents();			//console.log('agents\t\t',clock.getDelta());
 var nature = new Nature();			//console.log('nature\t\t',clock.getDelta());
 
-agents_elem.innerHTML = 'ppl='+agents.agents.length;
+agents_elem.innerHTML = agents.agents.length;
 
 //if( DEBUG_FOLLOW_AGENT>=0 && DEBUG_FOLLOW_AGENT<agents.agents.length )
 //{
@@ -126,7 +126,7 @@ function oncePerSecond()
 	currentTime_elem.innerHTML = msToString( currentTimeMs );
 	
 	if( oncePerSecond_frames )
-		currentFps_elem.innerHTML = 'fps='+round(1000*DEBUG_TIME_SPEED*(frame-oncePerSecond_frames)/(currentTimeMs-oncePerSecond_timeMs),1);
+		currentFps_elem.innerHTML = /*'<b>fps</b>='+*/  '='+round(1000*DEBUG_TIME_SPEED*(frame-oncePerSecond_frames)/(currentTimeMs-oncePerSecond_timeMs),1);
 	
 	oncePerSecond_timeMs = currentTimeMs;
 	oncePerSecond_frames = frame;

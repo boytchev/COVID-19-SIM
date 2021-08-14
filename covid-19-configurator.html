@@ -26,12 +26,20 @@
 <body>
 <div class="page">
 <h2>COVID-19 Configurator
-	<label for="cars">Filter:</label>
-	<select name="filter" id="filter" value="fav">
-	  <option value="all">All</option>
-	  <option value="fav">Favourites</option>
-	</select>
+	<div class="info">Click on the name of a parameter to add or remove it from
+	the list of your favourite parameters. DEBUG parameters are used to introduce
+	specific situation or behaviour. The information from this page is
+	stored only locally &ndash; it is not transmitted anywhere.
+	[ <a href="#reset" onclick="resetConfigurator()">Reset</a> ]</div>
 </h2>
+	
+	
+	Show:
+	<label class="filters"><input type="radio" name="show" value="fav" id="show-fav" checked onchange="toggleFilter()"><span>My</span></label>
+    <label class="filters"><input type="radio" name="show" value="all" id="show-all" onchange="toggleFilter()"><span>All</span></label>
+	<hr>
+	<a href="covid-19-simulator.html" onclick="prepareValues()">Start simulation</a>
+	<hr>
 	<div id="blocks">
 
 	</div> <!--id="blocks"-->
@@ -41,7 +49,7 @@
 
 	<script>
 		addNumeric(
-			'gs', 'Ground size', {min:10, max:10000, value:500, step:10, default:100, favourite:true},
+			'gs', 'Ground size', {min:10, max:10000, value:500, step:10, default:100, fav:true},
 			'The active area of the simulation in meters. Buildings and people will be bound to a square of this size.' );
 
 		addNumeric(
@@ -49,15 +57,15 @@
 			'The area surrounding the simulation area. Its edge makes the horizon.' );
 
 		addNumeric(
-			'damc', 'Agent count', {min:0, max:50000, value:100, step:100, default:100, favourite:true},
+			'damc', 'Agent count', {min:0, max:50000, value:100, step:100, default:100, fav:true},
 			'The maximal number of people in the simulation. Their number might be smaller if the amount of houses and apartments are not sufficient for all of them.' );
 
 		addBoolean(
-			'dfal', 'RANDOM WANDERING', {value:false, default:false, debug:true},
+			'drw', 'RANDOM WANDERING', {value:false, default:false, debug:true},
 			'If checked, the people are walking in random directions and they do not follow any routine. If not checked, the people follow their daily routine.' );
 
 		addBoolean(
-			'drw', 'Line formation', {value:false, default:false, debug:true},
+			'dfal', 'Line formation', {value:false, default:false, debug:true},
 			'If checked, the people are positioned in lines and columns. If not checked, the people are positioned in buildings.' );
 
 		addBoolean(
@@ -67,6 +75,8 @@
 		addNumeric(
 			'dars', 'Auto rotate speed', {min:0, max:1, value:0.3, step:0.1, default:0.3, debug:true},
 			'The speed of automatic rotation measure in radians per second. The value is effective only if <span class="ref">Auto rotate</span> is checked, otherwise it has no effect.' );
+			
+		toggleFilter();
 	</script>
 	
 </body>

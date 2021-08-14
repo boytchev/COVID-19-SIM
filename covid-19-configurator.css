@@ -16,21 +16,32 @@ body {
 	position: relative;
 }
 
+.block:hover {
+	outline: dotted 1px gray;
+	outline-offset: 0.25em;
+}
+
 .block .name {
 	display: inline-block;
 	background: white;
 	padding: 0 0.5em 0 0em;
 	font-weight: bold;
 	text-transform: uppercase;
+	cursor: pointer;
 }
 
-.block .name.debug:after {
+.block .name:hover {
+	color: Crimson;
+}
+
+.block .name .debug {
 	font-weight: 300;
 	content: ' (DEBUG)';
 }
 
 .block .name.fav:after {
 	font-weight: normal;
+	font-size: 90%;
 	color: crimson;
 	content: ' \2764';
 }
@@ -60,11 +71,18 @@ body {
 	height: 1.1em;
 }
  
-.block .subinfo {
+.block .info {
 	display: block;
 	font-size: 90%;
 	font-weight: 300;
 	padding-left: 1.2em;
+	color: DimGray;
+}
+
+h2 .info {
+	display: block;
+	font-size: 0.6em;
+	font-weight: 300;
 	color: DimGray;
 }
 
@@ -74,4 +92,16 @@ body {
 	text-transform: uppercase;
 }
 
+.filters {
+	font-weight: 300;
+	color: Gray;
+}
 
+.filters input {
+	#display: none;
+}
+
+.filters input:checked ~ span {
+	font-weight: bold;
+	color: Black;
+}
