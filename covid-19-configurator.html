@@ -30,13 +30,16 @@
 	the list of your favourite parameters. DEBUG parameters are used to introduce
 	specific situation or behaviour. The information from this page is
 	stored only locally &ndash; it is not transmitted anywhere.
-	[ <a href="#reset" onclick="resetConfigurator()">Reset</a> ]</div>
+	<button onclick="resetConfigurator()">Reset</button>
+	<button onclick="debugConfigurator()">Debug</button>
+	</div>
 </h2>
 	
 	
 	Show:
-	<label class="filters"><input type="radio" name="show" value="fav" id="show-fav" checked onchange="toggleFilter()"><span>My</span></label>
-    <label class="filters"><input type="radio" name="show" value="all" id="show-all" onchange="toggleFilter()"><span>All</span></label>
+	<label class="filters"><input type="radio" name="show" id="show-fav" checked onchange="toggleFilter()"><span>My</span></label>
+    <label class="filters"><input type="radio" name="show" id="show-all" onchange="toggleFilter()"><span>All</span></label>
+    <label class="filters"><input type="radio" name="show" id="show-main" onchange="toggleFilter()"><span>Main</span></label>
 	<hr>
 	<a href="covid-19-simulator.html" onclick="prepareValues()">Start simulation</a>
 	<hr>
@@ -49,33 +52,71 @@
 
 	<script>
 		addNumeric(
-			'gs', 'Ground size', {min:10, max:10000, value:500, step:10, default:100, fav:true},
+			'gs', 'Ground size', 500, {min:10, max:10000, step:10, fav:true},
 			'The active area of the simulation in meters. Buildings and people will be bound to a square of this size.' );
 
 		addNumeric(
-			'es', 'Earth size', {min:1000, max:100000, value:50000, step:1000, default:50000},
+			'es', 'Earth size', 50000, {min:1000, max:100000, step:1000},
 			'The area surrounding the simulation area. Its edge makes the horizon.' );
 
 		addNumeric(
-			'damc', 'Agent count', {min:0, max:50000, value:100, step:100, default:100, fav:true},
+			'rs', 'Random layout', 0, {min:0, max:100000, step:1, debug:true},
+			'The number that determines the layout of streets and buildings. If 0, the simulator will pick an arbitrary layout. It not 0, the simulator will use that spacific layout if the other configuration parameters are the same.' );
+
+		addNumeric(
+			'damc', 'Agent count', 100, {min:0, max:50000, step:100, fav:true},
 			'The maximal number of people in the simulation. Their number might be smaller if the amount of houses and apartments are not sufficient for all of them.' );
 
 		addBoolean(
-			'drw', 'RANDOM WANDERING', {value:false, default:false, debug:true},
+			'drw', 'RANDOM WANDERING', false, {debug:true},
 			'If checked, the people are walking in random directions and they do not follow any routine. If not checked, the people follow their daily routine.' );
 
 		addBoolean(
-			'dfal', 'Line formation', {value:false, default:false, debug:true},
+			'dfal', 'Line formation', false, {debug:true},
 			'If checked, the people are positioned in lines and columns. If not checked, the people are positioned in buildings.' );
 
+		addTime(
+			'dts', 'Time speed', timeMs(0,0,1), {min:timeMs(0,0,1), max:timeMs(1,0,0), step:timeMs(0,0,1),debug:true},
+			'How much virtual time passes for 1 second of real time. For example, 00:00:01 is for realtime simulation, 00:00:05 is for simulation 5 times faster.' );
+
+		addTime(
+			'st', 'Start time', timeMs(6,20), {min:timeMs(0,0,0), max:timeMs(23,59,59), step:timeMs(0,10,0),debug:true},
+			'The virtual time at which the simulation starts.' );
+
 		addBoolean(
-			'dar', 'Auto rotate', {value:false, default:false, debug:true},
-			'If checked, the scnese rotates continuously with speed defined by <span class="ref">Auto rotate speed</span>. The user can still use the mouse to rotate manually. If not checked, the scene does not move by itself.' );
+			'dbwoh', 'Blocks with houses', false, {debug:true},
+			'If checked, generate blocks with houses. However, all <span class="ref">Blocks with ...</span> parameters are altogether not checked, then blocks with houses are generated.' );
+
+		addBoolean(
+			'dbwoa', 'Blocks with apartments', false, {debug:true},
+			'If checked, generate blocks with apartments. However, all <span class="ref">Blocks with ...</span> parameters are altogether not checked, then blocks with apartments are generated.' );
+
+		addBoolean(
+			'dbwoo', 'Blocks with offices', false, {debug:true},
+			'If checked, generate blocks with offices. However, all <span class="ref">Blocks with ...</span> parameters are altogether not checked, then blocks with offices are generated.' );
+
+		addBoolean(
+			'dbwop', 'Blocks with parks', false, {debug:true},
+			'If checked, generate blocks with parks. However, all <span class="ref">Blocks with ...</span> parameters are altogether not checked, then blocks with parks are generated.' );
+
+		addBoolean(
+			'dbwoz', 'Blocks with plazas', false, {debug:true},
+			'If checked, generate blocks with plazas. However, all <span class="ref">Blocks with ...</span> parameters are altogether not checked, then blocks with plazas are generated.' );
+
+		addBoolean(
+			'dar', 'Auto rotate', false, {debug:true},
+			'If checked, the scene rotates continuously with speed defined by <span class="ref">Auto rotate speed</span>. The user can still use the mouse to rotate manually. If not checked, the scene does not move by itself.' );
 
 		addNumeric(
-			'dars', 'Auto rotate speed', {min:0, max:1, value:0.3, step:0.1, default:0.3, debug:true},
+			'dars', 'Auto rotate speed', 0.3, {min:0, max:1, step:0.1, debug:true},
 			'The speed of automatic rotation measure in radians per second. The value is effective only if <span class="ref">Auto rotate</span> is checked, otherwise it has no effect.' );
+
+		addBoolean(
+			'dri', 'Renderer info', false, {debug:true},
+			'If checked, shows renderer info (once per 10000 frames) in the JS console &ndash; number of geometries, textures, calls, lines, points and triangles.' );
 			
+		var filter = localStorage.getItem( LOCAL_STORAGE_FILTER ) || 'show-fav';
+		document.getElementById( filter ).checked = true;
 		toggleFilter();
 	</script>
 	

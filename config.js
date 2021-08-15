@@ -45,27 +45,28 @@ export const EARTH_SIZE = param('es', 50000);	// in meters
 
 	
 // debug flags
-var R = 1+Math.floor(Math.random()*100000);
+//var R = 1+Math.floor(Math.random()*100000);
 //R = 21436;
-console.log('seed=',R);
 
-export var DEBUG_RANDOM_SEED = param('drs', R);
+export var DEBUG_RANDOM_SEED = param('rs', 0) || (1+Math.floor(Math.random()*100000));
+console.log('seed=',DEBUG_RANDOM_SEED);
+
 export const DEBUG_AGENT_MAX_COUNT = param('damc', 250);
 export const DEBUG_RANDOM_WANDERING = param('drw',false);
 export const DEBUG_FORM_A_LINE = param('dfal',false);
 
-export const DEBUG_TIME_SPEED = timeMs(0,0,5)/1000;	// time ellapsed for 1 second
-export const START_TIME = timeMs(6,20);			// start time
+export const DEBUG_TIME_SPEED = param('dts',timeMs(0,0,5))/1000;	// time ellapsed for 1 second
+export const START_TIME = param('st',timeMs(6,20));			// start time
 
-export const DEBUG_BLOCK_WITH_ONLY_HOUSES = false;
-export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = false;
-export const DEBUG_BLOCK_WITH_ONLY_OFFICES = false;
-export const DEBUG_BLOCK_WITH_ONLY_PARK = false;
-export const DEBUG_BLOCK_WITH_ONLY_PLAZA = !false;
+export const DEBUG_BLOCK_WITH_ONLY_HOUSES = param('dbwoh',false);
+export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = param('dbwoa',false);
+export const DEBUG_BLOCK_WITH_ONLY_OFFICES = param('dbwoo',false);
+export const DEBUG_BLOCK_WITH_ONLY_PARK = param('dbwop',false);
+export const DEBUG_BLOCK_WITH_ONLY_PLAZA = param('dbwoz',false);
 export const DEBUG_AUTOROTATE = param('dar', false);
 export const DEBUG_AUTOROTATE_SPEED = param('dars', 0.3);
-export const DEBUG_RENDERER_INFO = false;
-export const DEBUG_BUILDINGS_OPACITY = 0/4;	// for buildings and trees
+export const DEBUG_RENDERER_INFO = param('dri',false);
+export const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
 export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
 export const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
 export const DEBUG_NAVMESH_SHOW_MESHES = !false;
@@ -89,7 +90,7 @@ export const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or 
 export const DEBUG_AGENT_HEALTH = false; // count infected agents
 export const DEBUG_SUN_POSITION_GUI = false;
 //export const DEBUG_BLOCK_COLOR = false;
-export const DEBUG_ALL_WHITE = !false;
+export const DEBUG_ALL_WHITE = false;
 export var DEBUG_FLAG_1 = false;
 
 
@@ -300,7 +301,7 @@ export const AGENT_DRAW_MODE_PATCHES    = 5; // black-gray-white patches
 export const AGENT_DRAW_MODE_RANDOM     = 6; // random color patches
 export const AGENT_DRAW_MODE_CLOTHES	= 7; // shader-defined clothes
 
-export const AGENT_DRAW_MODE = AGENT_DRAW_MODE_BORDERS;
+export const AGENT_DRAW_MODE = AGENT_DRAW_MODE_CLOTHES;
 
 
 /*
