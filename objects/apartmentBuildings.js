@@ -48,7 +48,7 @@ export class ApartmentBuilding
 		if( DEBUG_APARTMENT_ADD_FLOORS )
 		{
 			var floorMaterial = new THREE.MeshLambertMaterial({color:'white', transparent: true, opacity: 0.8});
-			var floorGeometry = new THREE.BoxBufferGeometry(size.x,0.1,size.z);
+			var floorGeometry = new THREE.BoxBufferGeometry(size.x-0.1,0.1,size.z-0.1);
 			for( var floor = 1; floor<floors; floor++ )
 			{
 				var mesh = new THREE.Mesh( floorGeometry, floorMaterial );
@@ -134,7 +134,7 @@ export class ApartmentBuilding
 				}
 			}
 		}
-		
+
 		// for each room store the closest elevator and door
 		for( var i=0; i<this.rooms.length; i++ )
 		{
@@ -171,7 +171,7 @@ export class ApartmentBuilding
 			doorWidth = doorWings * OFFICE_DOOR_WIDTH;
 			
 		// decide doors
-		var n = round( wallSize/APARTMENT_DOOR_DISTANCE, 1 );
+		var n = Math.max( 1, round( wallSize/APARTMENT_DOOR_DISTANCE, 1 ) );
 
 		// equal distributions of doors
 		var distance = wallSize/(n+1);

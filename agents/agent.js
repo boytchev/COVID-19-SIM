@@ -34,7 +34,7 @@ import {WorkAddress} from './address.js';
 import {/*INFECTION_OVERHEAD_INDICATOR, */AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, /*DEBUG_BLOCK_COLOR, */INFECTION_STRENGTH, IMMUNE_CURE_FACTOR, INFECTION_STEP} from '../config.js';
 import {font} from '../font.js';
 import {scene, controls, agents} from '../main.js';
-import {Range, drawArrow} from '../core.js';
+import {Range, drawArrow, msToString} from '../core.js';
 import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs, frame} from '../objects/nature.js';
 
 
@@ -191,14 +191,7 @@ class Agent extends AgentBehaviour
 				console.log(msToString(dayTimeMs),this.doing.name);
 			}
 		}
-		
-		if( DEBUG_FOLLOW_AGENT_HEALTH==this.id )
-		{
-			if( this.infectionPattern==undefined )
-				console.log('agent №'+this.id,'is healthy',(100*this.currentImmuneStrength/this.generalImmuneStrength).toFixed(1)+'%');
-			else
-				console.log('agent №'+this.id,'is infected',this.infectionLevel.toFixed(1)+'%');
-		}
+
 		
 		// do what the agen has to do
 		this.doing();

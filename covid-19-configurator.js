@@ -47,7 +47,8 @@ function msToString( ms )
 const
 	NUMERIC = 1,
 	BOOLEAN = 2,
-	TEMPORAL = 3;
+	TEMPORAL = 3,
+	PERCENTAGE = 4;
 
 // get a parameter
 function param( id, defaultValue )
@@ -74,7 +75,7 @@ function param( id, defaultValue )
 	if( value=='false' ) value = false;
 	if( !isNaN(parseFloat(value)) ) value = parseFloat(value);	
 	
-	console.log(id,'=',value);
+//	console.log(id,'=',value);
 	
 	return value;
 }
@@ -100,11 +101,10 @@ function addNumeric( id, name, defaultValue, options, info='', tags='' )
 		options.fav = predefinedFavs.indexOf(id)>=0;
 	
 	// construct the html
-	
 	var html =`
 		<div id="block-${id}" class="block">
 			<div id="name-${id}" class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">${name} ${options.debug?'<span class="debug">(debug)</span>':''}</div>
-			<input id="${id}" class="value" type="number" name="${id}" min="${options.min}" max="${options.max}" value="${options.value}" step="${options.step}">
+			<div class="right">${options.unit?'<span class="unit" style="left:'+(options.offset||6.8)+'em;">'+options.unit+'</span>':''}<input id="${id}" class="value" type="number" name="${id}" min="${options.min}" max="${options.max}" value="${options.value}" step="${options.step}"></div>
 			<div class="info">${info} Range is from ${options.min} to ${options.max}. Default value is ${defaultValue}.</div>
 		</div>`;
 
@@ -119,6 +119,56 @@ function addNumeric( id, name, defaultValue, options, info='', tags='' )
 	
 	data[id] = {
 		type:	NUMERIC,
+		block:	document.getElementById('block-'+id),
+		name:	document.getElementById('name-'+id),
+		value:	document.getElementById(id),
+		defaultValue: defaultValue,
+		options: options,
+	}
+	
+}
+
+
+function addPercentage( id, name, defaultValue, options, info='', tags='' )
+{
+	// check id
+	
+	if( ids.indexOf(id) > -1 )
+		throw `error: Element with id="${id}" is already decalred.`;
+
+	ids.push( id );
+	
+	// set default values for missing options
+
+	options.min = options.min||0;
+	options.max = options.max||100;
+	options.step = options.step||1;
+	options.value = param( id, defaultValue );
+	options.tags = tags.split( ',' );
+	
+	if( predefinedFavs )
+		options.fav = predefinedFavs.indexOf(id)>=0;
+	
+	// construct the html
+	
+	var html =`
+		<div id="block-${id}" class="block">
+			<div id="name-${id}" class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">${name} ${options.debug?'<span class="debug">(debug)</span>':''}</div>
+			<div class="right"><span class="unit" style="left:3.5em;">%</span><input id="${id}" class="value" type="number" name="${id}" min="${100*options.min}" max="${100*options.max}" value="${100*options.value}" step="${100*options.step}" style="width: 3em;"></div>
+			<div class="info">${info} Range is from ${100*options.min}% to ${100*options.max}%. Default value is ${100*defaultValue}%.</div>
+		</div>`;
+
+	// create a new dom element
+	
+	var block = document.createElement('div');
+		block.innerHTML = html;
+	
+	// insert in dom 
+	
+	document.getElementById("blocks").appendChild( block );
+	
+	data[id] = {
+		type:	PERCENTAGE,
 		block:	document.getElementById('block-'+id),
 		name:	document.getElementById('name-'+id),
 		value:	document.getElementById(id),
@@ -151,7 +201,7 @@ function addBoolean( id, name, defaultValue, options, info='', tags='' )
 	var html =`
 		<div id="block-${id}" class="block">
 			<div id="name-${id}" class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">${name} ${options.debug?'<span class="debug">(debug)</span>':''}</div>
-			<input id="${id}" class="value" type="checkbox" name="${id}" value="${options.value}" ${options.value?'checked':''}>
+			<div class="right"><input id="${id}" class="value" type="checkbox" name="${id}" value="${options.value}" ${options.value?'checked':''}></div>
 			<div class="info">${info} Default state is ${defaultValue?'checked':'not checked'}.</div>
 		</div>`;
 
@@ -266,6 +316,9 @@ function prepareValues()
 				var arr = (data[id].value.value+':00:00').split(':');
 				str += 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]));
 				break;
+			case PERCENTAGE:
+				str += data[id].value.value/100;
+				break;
 		}
 	}
 
@@ -290,7 +343,7 @@ function addTime( id, name, defaultValue, options, info='', tags='' )
 	options.step = options.step||1;
 	options.value = msToString(param( id, defaultValue ));
 	options.tags = tags.split( ',' );
-console.log('reading',param( id, defaultValue ),'as', options.value);
+//console.log('reading',param( id, defaultValue ),'as', options.value);
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
 	
@@ -299,7 +352,7 @@ console.log('reading',param( id, defaultValue ),'as', options.value);
 	var html =`
 		<div id="block-${id}" class="block">
 			<div id="name-${id}" class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">${name} ${options.debug?'<span class="debug">(debug)</span>':''}</div>
-			<input id="${id}" class="value" type="time" name="${id}" min="${options.min}" max="${options.max}" value="${options.value}" step="${options.step}">
+			<div class="right"><input id="${id}" class="value" type="time" name="${id}" min="${options.min}" max="${options.max}" value="${options.value}" step="${options.step}"></div>
 			<div class="info">${info} Range is from ${options.min} to ${options.max}. Default value is ${msToString(defaultValue)}.</div>
 		</div>`;
 

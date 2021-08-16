@@ -344,6 +344,8 @@ export class Nature
 		
 		document.body.appendChild( canvas );
 		canvas.style = "position:fixed; top:50px; left:50px; z-index:120000; border:solid 1px black;";
+		
+		canvas.onclick = function() { canvas.style.display = 'none'; }
 	} // Agents.debugShowViralShedding
 	
 } // Nature

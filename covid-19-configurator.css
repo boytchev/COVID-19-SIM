@@ -6,6 +6,7 @@ body {
 .page {
 	max-width: 40em;
 	margin: auto;
+	padding: 0 3em;
 }
 
 .block {
@@ -55,7 +56,6 @@ body {
 	font-weight: bold;
 	position: relative;
 	top: -0.4em;
-	float: right;
 	border: none;
 	#border-bottom: solid 0.2em black;
 	background: none;
@@ -79,6 +79,18 @@ body {
 	color: DimGray;
 }
 
+.block .unit {
+	position: relative;
+	top: -0.5em;
+	font-weight: 300;
+	color: DimGray;
+}
+
+.block .right {
+	display: block;
+	float: right;
+}
+
 h2 .info {
 	display: block;
 	font-size: 0.6em;
@@ -86,9 +98,10 @@ h2 .info {
 	color: DimGray;
 }
 
-.ref {
+.block em {
+	font-style: normal; 
 	font-weight: normal;
-	color: Black;
+	/*color: Black;*/
 	text-transform: uppercase;
 }
 

@@ -8,14 +8,21 @@
 
 import * as THREE from '../js/three.module.js';
 import {scene, camera, controls, buildings, agents, textures} from '../main.js';
-import {timeMs} from '../core.js';
+import {timeMs, Pos} from '../core.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
 import {frame, dayTimeMs, currentTimeMs} from '../objects/nature.js';
-import {CARTOON_STYLE, GROUND_SIZE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED, AGENT_DRAW_MODE, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE_WHITE} from '../config.js';
+import {CARTOON_STYLE, GROUND_SIZE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED, AGENT_DRAW_MODE, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE_WHITE, AGENT_AGE_YEARS} from '../config.js';
 
 import vertexShader from './agents_vertex_shader.js';
 import fragmentShader from './agents_fragment_shader.js';
+
+
+export var agentsAtHome = 0;
+export var agentsAtWork = 0;
+export var agentsOutside = 0;
+export var agentsOther = 0;
+export var agentsInfected = 0;
 
 
 export class Agents
@@ -147,18 +154,18 @@ export class Agents
 			//	camera.position.y *= factor;
 			//	camera.position.z *= factor;
 			//}
-	
+			
 			if( DEBUG_AGENT_LOCATIONS )
 			{
-				var agentsAtHome = 0,
-					agentsAtWork = 0,
-					agentsOutside = 0,
-					agentsOther = 0;
+				agentsAtHome = 0;
+				agentsAtWork = 0;
+				agentsOutside = 0;
+				agentsOther = 0;
 			}
-
+		
 			if( DEBUG_AGENT_HEALTH )
 			{
-				var agentsInfected = 0;
+				agentsInfected = 0;
 			}
 			
 			// update positions and images of agents
@@ -236,16 +243,6 @@ export class Agents
 			this.images.infectionLevel.needsUpdate = true;
 			this.images.motionType.needsUpdate = true;
 
-			if( DEBUG_AGENT_LOCATIONS )
-			{
-				console.log( 'home',agentsAtHome,'\tcommute',agentsOutside,'\twork',agentsAtWork);
-			}
-			
-			if( DEBUG_AGENT_HEALTH )
-			{
-				console.log( 'infected',agentsInfected,'of',agents.agents.length);
-			}
-			
 //			console.log(this.agents[0].position.block==null,this.agents[0].doing);
 		}
 	} // Agents.update
@@ -292,8 +289,11 @@ export class Agents
 		
 		document.body.appendChild( canvas );
 		canvas.style = "position:fixed; top:50px; left:50px; z-index:120000; border:solid 1px black;";
-		console.log( 'agents=',this.agents.length );
-		console.log(dY);
+		//console.log( 'agents=',this.agents.length );
+		//console.log(dY);
+		
+		canvas.onclick = function() { canvas.style.display = 'none'; }
+		
 	} // Agents.debugShowAgeDistribution
 
 

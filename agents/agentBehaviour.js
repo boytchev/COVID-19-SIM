@@ -46,7 +46,7 @@ import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../
 import {dayTimeMs, deltaTime} from '../objects/nature.js';
 import {Crossing} from '../objects/crossings.js';
 import {Elevator} from '../objects/elevators.js';
-import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE} from '../config.js';
+import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE, FLOOR_HEIGHT} from '../config.js';
 
 
 
@@ -670,9 +670,7 @@ export class AgentBehaviour
 						// 2.5.3 todo
 
 						var toOffice = to.building.rooms[to.number];
-//DEBUG_FLAG_1 = true;						
 						var door = pickDistance( this.routePosition, to.building.doors, to.position );
-//DEBUG_FLAG_1 = false;
 						var elevator = pickDistance( door.insideZone.center, to.building.elevators, toOffice.outsideZone.center ),
 							elevatorPos = elevator.zone.randomPos();
 						

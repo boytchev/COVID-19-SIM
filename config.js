@@ -66,42 +66,39 @@ export const DEBUG_BLOCK_WITH_ONLY_PLAZA = param('dbwoz',false);
 export const DEBUG_AUTOROTATE = param('dar', false);
 export const DEBUG_AUTOROTATE_SPEED = param('dars', 0.3);
 export const DEBUG_RENDERER_INFO = param('dri',false);
-export const DEBUG_BUILDINGS_OPACITY = 4/4;	// for buildings and trees
-export const DEBUG_BLOCKS_OPACITY = 4/4;		// for blocks
-export const DEBUG_NAVMESH_OPACITY = 0/4;		// for navmesh blocks
-export const DEBUG_NAVMESH_SHOW_MESHES = !false;
-export const DEBUG_NAVMESH_SHOW_FLOORS = !false;
-export const DEBUG_NAVMESH_SHOW_LINES = false;
-export const DEBUG_NAVMESH_SHOW_ELEVATORS = !false;
-export const DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION = false;
-export const DEBUG_SHOW_VIRAL_SHEDDING = false;
-export const DEBUG_HIDE_ROOFS = false;
-export const DEBUG_CENTER_VIEW_ON_AGENTS = false;
-export const DEBUG_FOLLOW_AGENT = -1;	// -1 for not following any
-export const DEBUG_FOLLOW_AGENT_HEALTH = -1;	// -1 for not following any
-export const DEBUG_SHOW_DIRECTIONS = false;
-export const DEBUG_APARTMENT_ADD_FLOORS = false;
-export const DEBUG_SHOW_HOME_TO_WORK_ARROW = false;
-export const DEBUG_SHOW_ROUTES = false;
-export const DEBUG_DUMP_ROUTES = false;
-export const DEBUG_ROUTES_PER_AGENT = 1; // default 1
-export const DEBUG_AGENT_ACTIONS = -1; // agent id or -1 for no debug
-export const DEBUG_AGENT_LOCATIONS = false; // count agents at home, at work or outside
-export const DEBUG_AGENT_HEALTH = false; // count infected agents
-export const DEBUG_SUN_POSITION_GUI = false;
+export const DEBUG_BUILDINGS_OPACITY = param('dbuo',4/4);	// for buildings and trees
+export const DEBUG_BLOCKS_OPACITY = param('dblo',4/4);		// for blocks
+export const DEBUG_NAVMESH_OPACITY = param('dnmo',0/4);		// for navmesh blocks
+export const DEBUG_NAVMESH_SHOW_MESHES = (DEBUG_NAVMESH_OPACITY > 0);
+export const DEBUG_NAVMESH_SHOW_FLOORS = param('dnmsf',false);
+export const DEBUG_NAVMESH_SHOW_LINES = param('dnmsl',false);
+export const DEBUG_NAVMESH_SHOW_ELEVATORS = param('dnmse',false);
+export const DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION = param('dsaad',false);
+export const DEBUG_SHOW_VIRAL_SHEDDING = param('dsvs',false);
+export const DEBUG_HIDE_ROOFS = param('dhr',false);
+export const DEBUG_CENTER_VIEW_ON_AGENTS = param('dcvoa',false);
+export const DEBUG_FOLLOW_AGENT = param('dfa',-1);	// -1 for not following any
+export const DEBUG_FOLLOW_AGENT_HEALTH = param('dfah',-1);	// -1 for not following any
+export const DEBUG_SHOW_DIRECTIONS = param('dsd',false);
+export const DEBUG_APARTMENT_ADD_FLOORS = param('daaf',false);
+export const DEBUG_SHOW_HOME_TO_WORK_ARROW = param('dshtwa',false);
+export const DEBUG_SHOW_ROUTES = param('dsr',false);
+export const DEBUG_DUMP_ROUTES = param('ddr',false);
+export const DEBUG_ROUTES_PER_AGENT = param('drpa',1); // default 1
+export const DEBUG_AGENT_ACTIONS = param('daa',-1); // agent id or -1 for no debug
+export const DEBUG_AGENT_LOCATIONS = param('dal',false); // count agents at home, at work or outside
+export const DEBUG_AGENT_HEALTH = param('dah',false); // count infected agents
+export const DEBUG_SUN_POSITION_GUI = param('dspg',false);
 //export const DEBUG_BLOCK_COLOR = false;
-export const DEBUG_ALL_WHITE = false;
-export var DEBUG_FLAG_1 = false;
-
-
-export const CARTOON_STYLE = false; // only of agents, howses, trees
+export const DEBUG_ALL_WHITE = param('daw',false);
+export const CARTOON_STYLE = param('cs',false); // only of agents, howses, trees
 
 
 // a block is not split if smaller than the treshold, but if
 // it is split, the split is not in the margins 
 
-export const BLOCK_SPLIT_TRESHOLD = 110; 		// in meters
-export const BLOCK_MARGIN = 30; 				// in meters
+export const BLOCK_SPLIT_TRESHOLD = param('bst',110); 		// in meters
+export const BLOCK_MARGIN = param('bm',30); 				// in meters
 
 
 
