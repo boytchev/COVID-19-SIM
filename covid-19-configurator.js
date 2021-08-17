@@ -241,7 +241,7 @@ function toggleFav( id )
 	
 	var favs = [];
 	for( var id in data)
-		if( data[id].options.fav )
+		if( data[id].options?.fav )
 			favs.push( id );
 
 	localStorage.setItem( LOCAL_STORAGE_FAVS, favs.join(' ') );
@@ -317,6 +317,8 @@ function prepareValues()
 				str += data[id].value.checked?'true':'false';
 				break;
 			case TEMPORAL:
+			console.log(id);
+			console.log(data[id]);
 				var arr = (data[id].value.value+':00:00').split(':');
 				str += 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]));
 				break;
@@ -412,7 +414,7 @@ function addHeader( level, name, logo='', info='', tags='' )
 	document.getElementById("blocks").appendChild( block );
 
 	data[id] = {
-		type:	TEMPORAL,
+		type:	HEADER,
 		block:	document.getElementById('block-'+id),
 		tags: tags,
 	}

@@ -87,6 +87,7 @@ export class OfficeDoors
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
 				opacity:     DEBUG_BUILDINGS_OPACITY,
 				depthWrite:  DEBUG_BUILDINGS_OPACITY>0.9,
+				side: THREE.DoubleSide, // makes doors visible from inside
 			});
 
 		// inject GLSL code to rescale textures vertically

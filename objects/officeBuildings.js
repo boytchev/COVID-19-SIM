@@ -135,9 +135,14 @@ export class OfficeBuilding
 		if( this.floors>25 ) doorWings = 2*THREE.Math.randInt(3,4);
 		if( this.floors>40 ) doorWings = 2*THREE.Math.randInt(4,4);
 
+		if( doorWings * OFFICE_DOOR_WIDTH >= wallSize )
+		{
+			doorWings = Math.floor( (wallSize-4) / OFFICE_DOOR_WIDTH );
+		}
+
 		return doorWings;
 		
-	} // OfficeBuilding.doorWidth
+	} // OfficeBuilding.doorWings
 
 
 

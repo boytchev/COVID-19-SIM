@@ -323,7 +323,7 @@ export class Blocks
 	} // splitIntoBlocks
 	
 
-	constructBlockImages( blockType, texture=textures.grid, textureScale=GROUND_TEXTURE_SCALE )
+	constructBlockImages( blockType, texture, textureScale )
 	{
 
 		var vertices = [];

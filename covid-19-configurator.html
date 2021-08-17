@@ -327,7 +327,13 @@
 			'dri', 'Renderer info', false, {debug:true},
 			'If checked, shows renderer info (once per 10000 frames) in the JS console &ndash; number of geometries, textures, calls, lines, points and triangles.' );
 
+		addNumeric(
+			'sww', 'Sidewalk width', 3, {min:1, max:10, step:1, unit:'m', offset:4.8},
+			'The width of the sidewalk in meters. Sidewalks are area around each block where people can walk. It is also the width of pedestrian crossings.' );			
 			
+		addNumeric(
+			'odw', 'Office entrance width', 2, {min:2, max:8, step:2, unit:'m'},
+			'The width factor of office entrances (section of doors) in meters. If the width is 2 meters, then the entrance could be 2 meters, 4 meters, 6 meters wide.' );
 			
 
 

@@ -133,9 +133,8 @@ export const MAX_FLOORS = param('mf',120);					// maximal number of floors in a 
 export const HOUSE_BOUNDING_RADIUS = param('hbr',5);		// in meters, house bounding circle radius
 
 
-// texture scaling factor (for ground and buildings)
+// texture scaling factor (for ground and buildings) -- these are not user-configurable
 
-export const GROUND_TEXTURE_SCALE = 10.0;				// 1 tile = 10x10 meters (i.e. minor grid is 1x1m)
 export const BUILDING_TEXTURE_SCALE = FLOOR_HEIGHT;	// 1 tile = 2.5x2.5 meters
 export const APARTMENT_TEXTURE_SCALE_U = 2;			// 1 tile = 2x2.5 meters
 export const OFFICE_TEXTURE_SCALE_U = 1;				// 1 tile = 1x2.5 meters
@@ -144,8 +143,8 @@ export const SIDEWALK_TEXTURE_SCALE = 0.25;			// 1 tile = 25x25 cm
 export const GRASS_TEXTURE_SCALE = 5;				// 1 tile = 50x50 cm
 export const CROSSING_TEXTURE_SCALE = 1.0;
 
-export const SIDEWALK_WIDTH = 3;		// in meters
-export const OFFICE_DOOR_WIDTH = 2;	// in meters
+export const SIDEWALK_WIDTH = param('sww',3);		// in meters
+export const OFFICE_DOOR_WIDTH = param('odw',2);	// in meters
 export const HOUSE_DOOR_WIDTH = 2;		// in meters
 export const OFFICE_DOOR_DISTANCE = 10;// in meters, suggested distance between doors
 export const APARTMENT_DOOR_DISTANCE = 20;// in meters, suggested distance between doors
