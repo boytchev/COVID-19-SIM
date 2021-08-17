@@ -40,12 +40,16 @@
 	<label class="filters"><input type="radio" name="show" id="show-fav" checked onchange="toggleFilter()"><span>My</span></label>
     <label class="filters"><input type="radio" name="show" id="show-all" onchange="toggleFilter()"><span>All</span></label>
     <label class="filters"><input type="radio" name="show" id="show-main" onchange="toggleFilter()"><span>Main</span></label>
-	<hr>
-	<a href="covid-19-simulator.html" onclick="prepareValues()">Start simulation</a>
-	<hr>
-	<div id="blocks">
 
+	<div class="start-block">
+		<a class="start" href="covid-19-simulator.html" onclick="prepareValues()">Start simulation</a>
+	</div>
+	<div id="blocks">
 	</div> <!--id="blocks"-->
+	<div class="start-block end">
+		<a class="start" href="covid-19-simulator.html" onclick="prepareValues()">Start simulation</a>
+	</div>
+	<br>
 
 </div> <!--page-->	
 
@@ -212,13 +216,20 @@
 			'If checked, people, houses and trees are drawn in cartoon style &ndash white with heavy contrast shading.' );
 			
 		addNumeric(
-			'bst', 'Block split treshold', 110, {min:100, max:500, step:10, unit:'m'},
+			'bst', 'Block split treshold', 110, {min:50, max:500, step:10, unit:'m'},
 			'This parameter is used when the city layout is generated. If a block is larger than this value, then it is considered for splitting into smaller blocks.' );
 
 		addNumeric(
-			'bm', 'Block split margin', 30, {min:30, max:100, step:10, unit:'m'},
-			'If a block is split into smaller blocks, they must be larger than this number. If it is not possible, then the block is split in the middle.' );
+			'bm', 'Block split margin', 30, {min:10, max:100, step:10, unit:'m'},
+			'If a block is split into smaller blocks, they must be larger than this number. <em>Block split margin</em> should not exceed <em>Block split treshold/3</em>, if it exeeds it, then <em>Block split treshold/3</em> will be used. If the value is too small, it may prevent the formation of sloped streets in the city.' );
 
+		addPercentage(
+			'bpp', 'Park probability', 0.05, {min:0, max:1, step:0.01},
+			'Probabiliy of a block to be generated as a park. Larger values make more green open areas in the city. Too small residential blocks will be turned into parks independent on this parameter.' );
+
+		addPercentage(
+			'bzp', 'Plaza probability', 0.03, {min:0, max:1, step:0.01},
+			'Probabiliy of a block to be generated as a plaza. Larger values make more open areas in the city. This probability is tested after <em>Park probability</em>.' );
 
 
 

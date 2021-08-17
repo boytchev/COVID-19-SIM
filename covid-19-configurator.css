@@ -17,10 +17,10 @@ body {
 	position: relative;
 }
 
-.block:hover {
+/*.block:hover {
 	outline: dotted 1px gray;
 	outline-offset: 0.25em;
-}
+}*/
 
 .block .name {
 	display: inline-block;
@@ -117,4 +117,27 @@ h2 .info {
 .filters input:checked ~ span {
 	font-weight: bold;
 	color: Black;
+}
+
+.start-block {
+	text-align: center;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 0;
+	background: White;
+	padding: 1em;
+	border-top: dotted lightgray 1px;
+	border-bottom: dotted lightgray 1px;
+	z-index: 10;
+}
+
+.start-block.end {
+	bottom: 0;
+}
+
+.start {
+	background: CornflowerBlue;
+	color: White;
+	padding: 0.25em 1em;
+	text-decoration: none;
 }

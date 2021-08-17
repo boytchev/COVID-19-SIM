@@ -98,17 +98,17 @@ export const CARTOON_STYLE = param('cs',false); // only of agents, howses, trees
 // it is split, the split is not in the margins 
 
 export const BLOCK_SPLIT_TRESHOLD = param('bst',110); 		// in meters
-export const BLOCK_MARGIN = param('bm',30); 				// in meters
+export const BLOCK_MARGIN = Math.min(param('bm',30),Math.round(BLOCK_SPLIT_TRESHOLD/3)); 				// in meters
 
 
 
 // types of blocks and their probabilities
 
-export const BLOCK_PARK = {name:'parks', probability:0.05, color:(DEBUG_ALL_WHITE?'white':'darkseagreen'), renderOrder:-80};
-export const BLOCK_PLAZA = {name:'plazas', probability:0.03, color:'white', renderOrder:-90};
-export const BLOCK_OFFICE = {name:'offices', probability:1.00, color:'white', renderOrder:-90};
-export const BLOCK_APARTMENTS = {name:'apartments', probability:1.00, color:'white', renderOrder:-90};
-export const BLOCK_HOUSES = {name:'houses', probability:1.00, color:'white', renderOrder:-90};
+export const BLOCK_PARK = {name:'parks', probability:param('bpp',0.05), color:(DEBUG_ALL_WHITE?'white':'darkseagreen'), renderOrder:-80};
+export const BLOCK_PLAZA = {name:'plazas', probability:param('bzp',0.03), color:'white', renderOrder:-90};
+export const BLOCK_OFFICE = {name:'offices', /*probability:1.00,*/ color:'white', renderOrder:-90};
+export const BLOCK_APARTMENTS = {name:'apartments', /*probability:1.00,*/ color:'white', renderOrder:-90};
+export const BLOCK_HOUSES = {name:'houses', /*probability:1.00,*/ color:'white', renderOrder:-90};
 export const OFFICE_VS_RESIDENTIAL = 0.05;		// -1=only houses; 0=mixed; 1=only offices
 
 

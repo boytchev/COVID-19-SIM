@@ -245,7 +245,7 @@ export class Blocks
 	
 		var addVerticalStreet = dX*(0.7+Math.random()) > dZ*(0.7+Math.random()),
 			addHorizontalStreet = !addVerticalStreet;
-		
+
 		var n,m,cn,cm,qm,qn,qa,qd,newStreetWidths;
 		if( addVerticalStreet && (dX >= tresholdFactor*BLOCK_SPLIT_TRESHOLD) )
 		{	// split left-right

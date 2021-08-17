@@ -581,27 +581,30 @@ export class HouseBuildings
 					addHouse( a.midPointTo(b,i/(n-1)), facing );
 			}
 
-			
 			var houseZone = block.zone.shrink( SIDEWALK_WIDTH + HOUSE_BOUNDING_RADIUS + 3 );
 						
+			// skip this block if it is too small
+			if( houseZone.dX() < HOUSE_BOUNDING_RADIUS 
+				|| houseZone.dZ() < HOUSE_BOUNDING_RADIUS ) continue;
+
 			var a = houseZone.a,
 				b = houseZone.b,
 				c = houseZone.c,
 				d = houseZone.d;
 			
-			// skip this block if it is too small
-			if( a.distanceTo(b) < 2*HOUSE_BOUNDING_RADIUS 
-				|| b.distanceTo(c) < 2*HOUSE_BOUNDING_RADIUS 
-				|| c.distanceTo(d) < 2*HOUSE_BOUNDING_RADIUS 
-				|| d.distanceTo(a) < 2*HOUSE_BOUNDING_RADIUS ) continue;
-			
-			if(	(a.distanceTo(b) < 2.5*HOUSE_BOUNDING_RADIUS) ||
-				(c.distanceTo(d) < 2.5*HOUSE_BOUNDING_RADIUS) )
+/*			// skip this block if it is too small
+			if( a.distanceTo(b) < HOUSE_BOUNDING_RADIUS 
+				|| b.distanceTo(c) < HOUSE_BOUNDING_RADIUS 
+				|| c.distanceTo(d) < HOUSE_BOUNDING_RADIUS 
+				|| d.distanceTo(a) < HOUSE_BOUNDING_RADIUS ) continue;
+*/			
+			if(	(a.distanceTo(b) < 2*HOUSE_BOUNDING_RADIUS) ||
+				(c.distanceTo(d) < 2*HOUSE_BOUNDING_RADIUS) )
 			{ // vertical line of houses
 				a = a.midPointTo( b ); 
 				d = d.midPointTo( c ); 
 				
-				if(	a.distanceTo(d) < 2.5*HOUSE_BOUNDING_RADIUS )
+				if(	a.distanceTo(d) < 2*HOUSE_BOUNDING_RADIUS )
 					addHouse( a.midPointTo(d), [0,1,2,3] );
 				else
 				{
@@ -612,13 +615,13 @@ export class HouseBuildings
 				}
 			}
 			else
-			if(	(a.distanceTo(d) < 2.5*HOUSE_BOUNDING_RADIUS) ||
-				(b.distanceTo(c) < 2.5*HOUSE_BOUNDING_RADIUS) )
+			if(	(a.distanceTo(d) < 2*HOUSE_BOUNDING_RADIUS) ||
+				(b.distanceTo(c) < 2*HOUSE_BOUNDING_RADIUS) )
 			{ // horizontal line of houses
 				a = a.midPointTo( d ); 
 				b = b.midPointTo( c ); 
 				
-				if(	a.distanceTo(b) < 3*HOUSE_BOUNDING_RADIUS )
+				if(	a.distanceTo(b) < 2*HOUSE_BOUNDING_RADIUS )
 					addHouse( a.midPointTo(b), [0,1,2,3] );
 				else
 				{
