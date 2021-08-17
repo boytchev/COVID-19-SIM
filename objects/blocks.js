@@ -165,12 +165,12 @@ export class Blocks
 
 	
 	
-	// random street position at 20k //10k+5
+	// random street position at 20*k
 	streetRandom( range )
 	{
 		var pos;
-		
-		if( BLOCK_MARGIN > range.diff()/2 )
+
+		if( BLOCK_MARGIN < range.diff()/2 )
 			pos = THREE.Math.randFloat( range.min+BLOCK_MARGIN, range.max-BLOCK_MARGIN );
 		else
 			pos = (range.min+range.max)/2;

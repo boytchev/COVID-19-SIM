@@ -154,8 +154,8 @@ function addPercentage( id, name, defaultValue, options, info='', tags='' )
 	var html =`
 		<div id="block-${id}" class="block">
 			<div id="name-${id}" class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">${name} ${options.debug?'<span class="debug">(debug)</span>':''}</div>
-			<div class="right"><span class="unit" style="left:3.5em;">%</span><input id="${id}" class="value" type="number" name="${id}" min="${100*options.min}" max="${100*options.max}" value="${100*options.value}" step="${100*options.step}" style="width: 3em;"></div>
-			<div class="info">${info} Range is from ${100*options.min}% to ${100*options.max}%. Default value is ${100*defaultValue}%.</div>
+			<div class="right"><span class="unit" style="left:3.5em;">%</span><input id="${id}" class="value" type="number" name="${id}" min="${Math.round(100*options.min)}" max="${Math.round(100*options.max)}" value="${Math.round(100*options.value)}" step="${Math.round(100*options.step)}" style="width: 3em;"></div>
+			<div class="info">${info} Range is from ${Math.round(100*options.min)}% to ${Math.round(100*options.max)}%. Default value is ${Math.round(100*defaultValue)}%.</div>
 		</div>`;
 
 	// create a new dom element

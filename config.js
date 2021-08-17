@@ -109,28 +109,28 @@ export const BLOCK_PLAZA = {name:'plazas', probability:param('bzp',0.03), color:
 export const BLOCK_OFFICE = {name:'offices', /*probability:1.00,*/ color:'white', renderOrder:-90};
 export const BLOCK_APARTMENTS = {name:'apartments', /*probability:1.00,*/ color:'white', renderOrder:-90};
 export const BLOCK_HOUSES = {name:'houses', /*probability:1.00,*/ color:'white', renderOrder:-90};
-export const OFFICE_VS_RESIDENTIAL = 0.05;		// -1=only houses; 0=mixed; 1=only offices
+export const OFFICE_VS_RESIDENTIAL = param('ovr',0.05);		// -1=only houses; 0=mixed; 1=only offices
 
 
 
 // widths of streets, if block is larger then the treshold,
 // it is split by an avenue, otherwise - by a street
 
-export const STREET_WIDTH = 6; 				// in meters
-export const AVENUE_WIDTH = 18; 				// in meters
-export const AVENUE_TRESHOLD = 1000; 			// in meters
+export const STREET_WIDTH = param('sw',6); 				// in meters
+export const AVENUE_WIDTH = param('aw',18); 				// in meters
+export const AVENUE_TRESHOLD = param('at',1000); 			// in meters
 
 
 
 // urban and suburb areas, suburb generation is activated
 // for block size smaller that a treshold
 
-export const SUBURB_TRESHOLD = GROUND_SIZE/6;	// in meters
-export const URBAN_RURAL = Math.pow(0.3,2);	// 0.0=megapolis 0.3=city 0.5=town 0.7=small town 1.0=vilages
-export const SKYSCRAPERS = 0.2;				// -1.0=minimal number +1.0 almost all is skyscrapers
-export const FLOOR_HEIGHT = 2.5;				// in meters
-export const MAX_FLOORS = 120;					// maximal number of floors in a building
-export const HOUSE_BOUNDING_RADIUS = 5;		// in meters, house bounding circle radius
+export const SUBURB_TRESHOLD = param('sut',0.16)*GROUND_SIZE;	// in meters
+export const URBAN_RURAL = Math.pow(param('urru',0.3),2);	// 0.0=megapolis 0.3=city 0.5=town 0.7=small town 1.0=vilages
+export const SKYSCRAPERS = param('sks',0.2);				// -1.0=minimal number +1.0 almost all is skyscrapers
+export const FLOOR_HEIGHT = param('fh',2.5);				// in meters
+export const MAX_FLOORS = param('mf',120);					// maximal number of floors in a building
+export const HOUSE_BOUNDING_RADIUS = param('hbr',5);		// in meters, house bounding circle radius
 
 
 // texture scaling factor (for ground and buildings)
