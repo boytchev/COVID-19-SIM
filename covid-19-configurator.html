@@ -335,6 +335,18 @@
 			'odw', 'Office entrance width', 2, {min:2, max:8, step:2, unit:'m'},
 			'The width factor of office entrances (section of doors) in meters. If the width is 2 meters, then the entrance could be 2 meters, 4 meters, 6 meters wide.' );
 			
+		addNumeric(
+			'odd', 'Office entrances distance', 10, {min:2, max:20, step:2, unit:'m'},
+			'The distance between two entrances on one side of an office building. This distance is only suggestion, is some circumstances it might be ignored.' );
+			
+		addNumeric(
+			'add', 'Appartment building entrances span', 20, {min:10, max:40, step:2, unit:'m'},
+			'The distance allocated for one entrance. If a wall is long 60 meters, it will have 3 entrances.' );
+
+		addNumeric(
+			'cmc', 'Minimal crossing distance', 15, {min:5, max:20, step:1, unit:'m'},
+			'The minimal distance in meters between two pedestrian crossing in the same direction. If the Manhattan distance between two crossings is smaller than this value, one of the crossing will not be generated. The distance must consider <em>Street width</em> as this width indicates the theretical closeness of crossings.' );
+			
 
 
 

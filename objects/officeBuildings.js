@@ -45,7 +45,7 @@ export class OfficeBuilding
 		this.doors = [];
 		this.rooms = [];
 		this.elevators = [];
-		
+
 		// decide doors on Z sides
 		var door,
 			doorWings = this.doorWings( size.z ),
@@ -160,15 +160,21 @@ export class OfficeBuilding
 			if( n==1 ) break;
 		}
 
-		// there is middle door if n=1 or n=3
-		if( n!=2 )
-			positions.push( 0 );
-		
-		// there are side doors if n>1
-		if( n>1 )
+		switch (n)
 		{
-			var pos = THREE.Math.randFloat( 1.5*doorWidth, wallSize/2-doorWidth );				
-			positions.push( pos, -pos );
+			case 1:
+					positions.push( 0 );
+					break;
+			case 2:
+					var pos = THREE.Math.randFloat( 0.5*doorWidth+1, wallSize/2-doorWidth );	
+					positions.push( pos, -pos );
+					break;
+			case 3:
+					var pos = THREE.Math.randFloat( 1.5*doorWidth, wallSize/2-doorWidth );	
+					positions.push( pos, 0, -pos );
+					break;
+			default:
+					throw 'Invalid n='+n;
 		}
 		
 		return positions;

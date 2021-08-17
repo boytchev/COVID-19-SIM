@@ -145,10 +145,9 @@ export const CROSSING_TEXTURE_SCALE = 1.0;
 
 export const SIDEWALK_WIDTH = param('sww',3);		// in meters
 export const OFFICE_DOOR_WIDTH = param('odw',2);	// in meters
-export const HOUSE_DOOR_WIDTH = 2;		// in meters
-export const OFFICE_DOOR_DISTANCE = 10;// in meters, suggested distance between doors
-export const APARTMENT_DOOR_DISTANCE = 20;// in meters, suggested distance between doors
-export const CROSSING_MINIMAL_CLOSENESS = 15; // in meters, do not allow crossings thus close
+export const OFFICE_DOOR_DISTANCE = param('odd',10);// in meters, suggested distance between doors
+export const APARTMENT_DOOR_DISTANCE = param('add',20);// in meters, suggested distance between doors
+export const CROSSING_MINIMAL_CLOSENESS = param('cmc',15); // in meters, do not allow crossings thus close
 
 export const OFFICE_ROOM_SIZE = new Range( 5, 10 );	// in meters (desired size)
 export const OFFICE_CORRIDOR_WIDTH = 1;				// in meters
