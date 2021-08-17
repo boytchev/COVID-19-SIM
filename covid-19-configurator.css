@@ -4,17 +4,53 @@ body {
 }
 
 .page {
-	max-width: 40em;
+	max-width: 50em;
 	margin: auto;
-	padding: 0 3em;
+	padding: 0 5em;
 }
 
 .block {
 	margin-top: 1em;
-	padding: 0.25em 0;
+	padding: 0.25em 0 0.25em 0em;
 	background-image: url(icons/dot.svg);
 	background-repeat: repeat-x;
 	position: relative;
+}
+
+.header {
+	/*text-align: center;*/
+}
+
+h2.caption {
+	display: inline-block;
+	margin-top: 3em;
+	margin-bottom: 0;
+	padding: 0;
+	text-transform: uppercase;
+	#border-left: 0.25em black solid;
+	color: Black;
+}
+
+h2.caption ~ .info{
+	display: block;
+	font-size: 100%;
+	font-weight: normal;
+	padding-left: 0em;
+	#color: DimGray;
+}
+
+h2.caption .logo {
+	position: relative;
+	top: 0.1em;
+	height: 1em;
+}
+
+h3.caption {
+	display: inline-block;
+	text-transform: uppercase;
+	margin-bottom: 0;
+	padding: 0;
+	color: Black;
 }
 
 /*.block:hover {
@@ -26,9 +62,10 @@ body {
 	display: inline-block;
 	background: white;
 	padding: 0 0.5em 0 0em;
-	font-weight: bold;
+	font-weight: normal;
 	text-transform: uppercase;
 	cursor: pointer;
+	color: RoyalBlue;
 }
 
 .block .name:hover {
@@ -101,7 +138,7 @@ h2 .info {
 .block em {
 	font-style: normal; 
 	font-weight: normal;
-	/*color: Black;*/
+	color: DimGray;
 	text-transform: uppercase;
 }
 

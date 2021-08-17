@@ -49,6 +49,7 @@ const
 	BOOLEAN = 2,
 	TEMPORAL = 3,
 	PERCENTAGE = 4;
+	HEADER = 5;
 
 // get a parameter
 function param( id, defaultValue )
@@ -124,6 +125,7 @@ function addNumeric( id, name, defaultValue, options, info='', tags='' )
 		value:	document.getElementById(id),
 		defaultValue: defaultValue,
 		options: options,
+		tags: tags,
 	}
 	
 }
@@ -174,6 +176,7 @@ function addPercentage( id, name, defaultValue, options, info='', tags='' )
 		value:	document.getElementById(id),
 		defaultValue: defaultValue,
 		options: options,
+		tags: tags,
 	}
 	
 }
@@ -221,6 +224,7 @@ function addBoolean( id, name, defaultValue, options, info='', tags='' )
 		value:	document.getElementById(id),
 		defaultValue: defaultValue,
 		options: options,
+		tags: tags,
 	}
 }
 
@@ -281,12 +285,12 @@ function toggleFilter( )
 	{
 		case 'show-fav':
 			for( var id in data )
-				data[id].block.style.display = data[id].options.fav ? 'block' : 'none';
+				data[id].block.style.display = data[id].options?.fav ? 'block' : 'none';
 			break;
 			
 		case 'show-main':
 			for( var id in data )
-				data[id].block.style.display = data[id].options.debug ? 'none' : 'block';
+				data[id].block.style.display = data[id].options?.debug ? 'none' : 'block';
 			break;
 			
 		case 'show-all':
@@ -318,6 +322,8 @@ function prepareValues()
 				break;
 			case PERCENTAGE:
 				str += data[id].value.value/100;
+				break;
+			case HEADER:
 				break;
 		}
 	}
@@ -372,6 +378,45 @@ function addTime( id, name, defaultValue, options, info='', tags='' )
 		value:	document.getElementById(id),
 		defaultValue: defaultValue,
 		options: options,
+		tags: tags,
 	}
 	
 }
+
+var ID = 1;
+
+function addHeader( level, name, logo='', info='', tags='' )
+{
+	// construct the html
+	var tag = 'h'+Math.round(level+1),
+		id = 'id'+(ID++);
+	
+	if( logo )
+	{
+		logo = '<img class="logo" src="icons/'+logo+'.svg"> ';
+	}
+	
+	var html =`
+		<div id="block-${id}" class="header">
+			<${tag} class="caption">${logo}${name}</${tag}>
+			<div class="info">${info}</div>
+		</div>`;
+
+	// create a new dom element
+	
+	var block = document.createElement('div');
+		block.innerHTML = html;
+	
+	// insert in dom 
+	
+	document.getElementById("blocks").appendChild( block );
+
+	data[id] = {
+		type:	TEMPORAL,
+		block:	document.getElementById('block-'+id),
+		tags: tags,
+	}
+	
+}
+
+
