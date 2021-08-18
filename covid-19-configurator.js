@@ -77,7 +77,7 @@ function param( id, defaultValue )
 	if( value=='false' ) value = false;
 	if( !isNaN(parseFloat(value)) ) value = parseFloat(value);	
 	
-//	console.log(id,'=',value);
+	//console.log(id,'=',value);
 	
 	return value;
 }
@@ -368,44 +368,48 @@ function toggleFilter( )
 	}
 }
 
-function prepareValues( onlyMOdified )
+function prepareValues( onlyModified )
 {
 	var str = '';
 
 	for( var id in data )
 	{
-		var cmd = '';
-		
+		var cmd = null;
+
 		switch( data[id].type )
 		{
 			case NUMERIC:
-				if( !onlyMOdified || data[id].value.value != data[id].value.defaultValue )
+				if( (!onlyModified) || (data[id].value.value != data[id].value.defaultValue) )
 					cmd = data[id].value.value;
 				break;
 			case BOOLEAN:
-				if( !onlyMOdified || data[id].value.checked != (data[id].value.defaultValue=='true') )
+				if( (!onlyModified) || (data[id].value.checked != (data[id].value.defaultValue=='true')) )
 					cmd = data[id].value.checked?'true':'false';
 				break;
 			case TEMPORAL:
-				if( !onlyMOdified || data[id].value.value != data[id].value.defaultValue )
+				if( (!onlyModified) || (data[id].value.value != data[id].value.defaultValue) )
 				{
 					var arr = (data[id].value.value+':00:00').split(':');
 					cmd = 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]));
 				}
 				break;
 			case PERCENTAGE:
-				if( data[id].value.value != data[id].value.defaultValue )
+				if( (!onlyModified) || (data[id].value.value != data[id].value.defaultValue) )
+				{
 					cmd = data[id].value.value/100;
+				}
 				break;
 			case HEADER:
 				break;
 			case NUMERIC_RANGE:
-				if( !onlyMOdified || data[id].valueMin.value != data[id].defaultValueMin || data[id].valueMax.value != data[id].defaultValueMax )
+				if( (!onlyModified) || (data[id].valueMin.value != data[id].defaultValueMin) || (data[id].valueMax.value != data[id].defaultValueMax) )
 					cmd = data[id].valueMin.value+'~'+data[id].valueMax.value;
 				break;
+			default:
+				throw 'Invalid configuration parameter type "'+id+'"';
 		}
 		
-		if( cmd ) str += (str?'&':'?') + id + '=' + cmd;
+		if( cmd !== null ) str += (str?'&':'?') + id + '=' + cmd;
 	}
 
 	localStorage.setItem( LOCAL_STORAGE_PARAMS, str );

@@ -424,6 +424,7 @@ export class ApartmentBuildings
 	
 	static generate( apartments, doors )
 	{
+		
 		// create a set of apartment buildings
 		for( var i=0; i<blocks.apartments.length; i++ )
 		{				
