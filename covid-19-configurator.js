@@ -250,6 +250,7 @@ function addBoolean( id, name, defaultValue, options, info='', tags='' )
 	// set default values for missing options
 	
 	options.value = param( id, defaultValue );
+	options.defaultValue = defaultValue;
 	options.tags = tags.split( ',' );
 	
 	if( predefinedFavs )
@@ -329,11 +330,17 @@ function resetConfigurator()
 
 function debugConfigurator()
 {
-	prepareValues();
+	prepareValues( false );
 	console.log( 'fav:', localStorage.getItem( LOCAL_STORAGE_FAVS ) );
 	console.log( 'params:', localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
 	console.log( 'filter:', localStorage.getItem( LOCAL_STORAGE_FILTER ) );
 
+}
+
+function shareConfigurator()
+{
+	prepareValues( true );
+	console.log( window.location.protocol + '//' + window.location.host + '/covid-19-simulator.html'+localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
 }
 
 function toggleFilter( )
@@ -361,35 +368,44 @@ function toggleFilter( )
 	}
 }
 
-function prepareValues()
+function prepareValues( onlyMOdified )
 {
 	var str = '';
 
 	for( var id in data )
 	{
-		str += (str?'&':'?') + id + '=';
+		var cmd = '';
 		
 		switch( data[id].type )
 		{
 			case NUMERIC:
-				str += data[id].value.value;
+				if( !onlyMOdified || data[id].value.value != data[id].value.defaultValue )
+					cmd = data[id].value.value;
 				break;
 			case BOOLEAN:
-				str += data[id].value.checked?'true':'false';
+				if( !onlyMOdified || data[id].value.checked != (data[id].value.defaultValue=='true') )
+					cmd = data[id].value.checked?'true':'false';
 				break;
 			case TEMPORAL:
-				var arr = (data[id].value.value+':00:00').split(':');
-				str += 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]));
+				if( !onlyMOdified || data[id].value.value != data[id].value.defaultValue )
+				{
+					var arr = (data[id].value.value+':00:00').split(':');
+					cmd = 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]));
+				}
 				break;
 			case PERCENTAGE:
-				str += data[id].value.value/100;
+				if( data[id].value.value != data[id].value.defaultValue )
+					cmd = data[id].value.value/100;
 				break;
 			case HEADER:
 				break;
 			case NUMERIC_RANGE:
-				str += data[id].valueMin.value+'~'+data[id].valueMax.value;
+				if( !onlyMOdified || data[id].valueMin.value != data[id].defaultValueMin || data[id].valueMax.value != data[id].defaultValueMax )
+					cmd = data[id].valueMin.value+'~'+data[id].valueMax.value;
 				break;
 		}
+		
+		if( cmd ) str += (str?'&':'?') + id + '=' + cmd;
 	}
 
 	localStorage.setItem( LOCAL_STORAGE_PARAMS, str );

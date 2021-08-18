@@ -189,3 +189,15 @@ tr {
 td {
 	/*border: solid 1px red;*/
 }
+
+.syslink { /* buttons that must look like links */
+	background: none;
+	border: none;
+	cursor: point;
+	color: CornflowerBlue;
+}
+
+.syslink:hover {
+	background: CornflowerBlue;
+	color: White;
+}
