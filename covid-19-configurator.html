@@ -25,18 +25,20 @@
 
 <body>
 <div class="page">
-<h2>COVID-19 Configurator
-	<div class="info">The COVID-19 simulation is controlled by <span id="param_count"></span> parameters. Click on the name of a parameter to add or remove it from
-	the list of your favourite parameters. The information from this page is
-	stored only to your computer &ndash; it is not transmitted anywhere.
+<h2>COVID-19 Configurator (under development)
+	<div class="info">The COVID-19 simulation is controlled by <span id="param_count"></span> parameters (they are more than 100, but the rest are still not implemented in the configurator). Click on the name of a parameter to add or remove it from
+	the list of your favourite parameters. The data from this page is
+	stored only in your browser &ndash; it is not transmitted anywhere.<br><br>A few links that I often used during development (do not use them):
 	[<button class="syslink" onclick="resetConfigurator()">Reset</button>|<button class="syslink" onclick="debugConfigurator()">Debug</button>|<button class="syslink" onclick="shareConfigurator()">Share</button>]
 	</div>
 </h2>
 	
 	
+	<div class="start-block">
 	Show:
 	<label class="filters"><input type="radio" name="show" id="show-fav" checked onchange="toggleFilter()"><span>My</span></label>
     <label class="filters"><input type="radio" name="show" id="show-all" onchange="toggleFilter()"><span>All</span></label>
+	</div>
 
 	<div class="start-block">
 		<a class="start" href="covid-19-simulator.html" onclick="prepareValues()">Start simulation</a>
@@ -205,7 +207,7 @@
 			2, 'General' );
 
 		addNumeric(
-			'damc', 'Agent count', 100, {min:0, max:50000, step:100, fav:true},
+			'damc', 'People count', 100, {min:0, max:50000, step:100, fav:true},
 			'The maximal number of people in the simulation. Their number might be smaller if the amount of houses and apartments are not sufficient for all of them.' );
 
 		addHeader(

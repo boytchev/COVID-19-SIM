@@ -325,7 +325,7 @@ function resetConfigurator()
 	
 	// reload page
 	
-	//location.reload();
+	location.reload();
 }
 
 function debugConfigurator()
