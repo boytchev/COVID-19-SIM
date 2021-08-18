@@ -349,6 +349,18 @@
 			'ors', 'Office room size', 5, 10, {min:3, max:20, step:1, unit:'m'},
 			'The desired range for an office room size. The actual size is calculated from the building size.' );
 			
+		addNumeric(
+			'ocw', 'Office corridor width', 1, {min:1, max:5, step:1, unit:'m'},
+			'The width of corridors in office building. Wider corridors may reduce the amount of rooms.' );
+			
+		addNumeric(
+			'oesw', 'Office elevator shaft width', 2, {min:1, max:10, step:1, unit:'m'},
+			'The width of shaft of office elevators. When people use elevators, they are grouped withing a square of this size. Currently this width is not visualized, unless <em>Navmesh elevators</em> is checked.' );
+			
+		addNumericRange(
+			'orc', 'Office room count', 2, 9, {min:2, max:15, step:1},
+			'The desired number of office rooms. The actual number depends on this value, as well of building size and <em>Office room size</em>.' );
+			
 
 			
 

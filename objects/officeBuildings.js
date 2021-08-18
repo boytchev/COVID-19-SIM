@@ -23,7 +23,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {textures, blocks, scene, navmesh} from '../main.js';
-import {MAX_FLOORS, SIDEWALK_WIDTH, OFFICE_TEXTURE_SCALE_U, FLOOR_HEIGHT, OFFICE_DOOR_WIDTH, OFFICE_DOOR_DISTANCE, OFFICE_ROOM_SIZE, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, OFFICE_CORRIDOR_WIDTH, OFFICE_ROOM_COUNT, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE} from '../config.js';
+import {MAX_FLOORS, SIDEWALK_WIDTH, OFFICE_TEXTURE_SCALE_U, FLOOR_HEIGHT, OFFICE_DOOR_WIDTH, OFFICE_DOOR_DISTANCE, OFFICE_ROOM_SIZE, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, OFFICE_CORRIDOR_WIDTH, OFFICE_ROOM_COUNT, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_HIDE_ROOFS} from '../config.js';
 import {Size, round, TOP, RIGHT, LEFT, BOTTOM, Pos} from '../core.js';
 
 
@@ -241,7 +241,10 @@ export class OfficeBuildings
 
 		// x,y,z, nx,ny,nz, u,v
 		
-		var data = [
+		var data = [];
+		if( !DEBUG_HIDE_ROOFS )
+		{
+			data.push(
 				// Top (from Y+)
 				 -1/2, 1, -1/2,		0, 1, 0,	0, 0,
 				 -1/2, 1,  1/2,		0, 1, 0,	0, 1,
@@ -257,7 +260,10 @@ export class OfficeBuildings
 				 -1/2, 1, 1/2,		0, 1, 0,	0, 1,
 				1/2, 1, 1/2,		0, 1, 0,	0, 0,
 					0, 1,    0,		0, 1, 0,	1, 1/2,
+				);
+		}
 				  
+			data.push(
 				 // Front (from Z+) 
 				 -1/2, 1,  1/2,		0, 0, 1,	0, 1,
 				 -1/2, 0,  1/2,		0, 0, 1, 	0, 0,
@@ -289,7 +295,7 @@ export class OfficeBuildings
 				 -1/2, 1,  1/2,		-1, 0, 0,	1, 1,
 				 -1/2, 1, -1/2,		-1, 0, 0, 	0, 1,
 				 -1/2, 0, -1/2, 	-1, 0, 0, 	0, 0, 
-			 ];
+			 );
 		
 		var vertexBuffer = new THREE.InterleavedBuffer( new Float32Array(data), 8);
 	
@@ -312,7 +318,7 @@ export class OfficeBuildings
 	{
 
 		var material = new THREE.MeshStandardMaterial({
-				//side: THREE.FrontSide,
+				side: DEBUG_HIDE_ROOFS?THREE.DoubleSide:THREE.FrontSide,
 				color: 'white',
 				flatShading: true,
 				vertexColors: true,

@@ -174,9 +174,9 @@ export const APARTMENT_DOOR_DISTANCE = param('add',20);// in meters, suggested d
 export const CROSSING_MINIMAL_CLOSENESS = param('cmc',15); // in meters, do not allow crossings thus close
 
 export const OFFICE_ROOM_SIZE = param2( 'ors',new Range( 5, 10 ));	// in meters (desired size)
-export const OFFICE_CORRIDOR_WIDTH = 1;				// in meters
-export const OFFICE_ELEVATOR_SHAFT_WIDTH = 2;				// in meters
-export const OFFICE_ROOM_COUNT = new Range( 2, 9 );
+export const OFFICE_CORRIDOR_WIDTH = param('ocw',1);				// in meters
+export const OFFICE_ELEVATOR_SHAFT_WIDTH = param('oesw',2);				// in meters
+export const OFFICE_ROOM_COUNT = param2( 'orc', new Range( 2, 9 ) );
 
 
 // Apartment buildings
