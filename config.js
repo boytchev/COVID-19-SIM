@@ -75,11 +75,11 @@ export const EARTH_SIZE = param('es', 50000);	// in meters
 export var DEBUG_RANDOM_SEED = param('rs', 0) || (1+Math.floor(Math.random()*100000));
 console.log('seed=',DEBUG_RANDOM_SEED);
 
-export const DEBUG_AGENT_MAX_COUNT = param('damc', 250);
+export const DEBUG_AGENT_MAX_COUNT = param('damc', 100);
 export const DEBUG_RANDOM_WANDERING = param('drw',false);
 export const DEBUG_FORM_A_LINE = param('dfal',false);
 
-export const DEBUG_TIME_SPEED = param('dts',timeMs(0,0,5))/1000;	// time ellapsed for 1 second
+export const DEBUG_TIME_SPEED = param('dts',timeMs(0,0,1))/1000;	// time ellapsed for 1 second
 export const START_TIME = param('st',timeMs(6,20));			// start time
 
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = param('dbwoh',false);
