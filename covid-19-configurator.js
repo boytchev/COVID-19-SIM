@@ -48,8 +48,9 @@ const
 	NUMERIC = 1,
 	BOOLEAN = 2,
 	TEMPORAL = 3,
-	PERCENTAGE = 4;
-	HEADER = 5;
+	PERCENTAGE = 4,
+	HEADER = 5,
+	NUMERIC_RANGE = 6;
 
 // get a parameter
 function param( id, defaultValue )
@@ -81,6 +82,25 @@ function param( id, defaultValue )
 	return value;
 }
 	
+function param2( id, defaultValueMin, defaultValueMax )
+{
+	var value;
+
+	if( urlParams.has(id) )
+	{
+		value = urlParams.get( id ).split('~');
+		return [parseFloat(value[0]), parseFloat(value[1])];
+	}
+	else
+	if( storedParams.has(id) )
+	{
+		value = storedParams.get( id ).split('~');
+		return [parseFloat(value[0]), parseFloat(value[1])];
+	}
+
+	return [defaultValueMin,defaultValueMax];
+}
+	
 function addNumeric( id, name, defaultValue, options, info='', tags='' )
 {
 	// check id
@@ -95,19 +115,42 @@ function addNumeric( id, name, defaultValue, options, info='', tags='' )
 	options.min = options.min||0;
 	options.max = options.max||100;
 	options.step = options.step||1;
-	options.value = param( id, defaultValue );
+	options.value = param( id, defaultValue ) || 0;
 	options.tags = tags.split( ',' );
+	options.unit = options.unit||'';
 	
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
 	
 	// construct the html
 	var html =`
-		<div id="block-${id}" class="block">
-			<div id="name-${id}" class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">${name} ${options.debug?'<span class="debug">(debug)</span>':''}</div>
-			<div class="right">${options.unit?'<span class="unit" style="left:'+(options.offset||6.8)+'em;">'+options.unit+'</span>':''}<input id="${id}" class="value" type="number" name="${id}" min="${options.min}" max="${options.max}" value="${options.value}" step="${options.step}"></div>
-			<div class="info">${info} Range is from ${options.min} to ${options.max}. Default value is ${defaultValue}.</div>
-		</div>`;
+		<table id="block-${id}" class="block">
+			<tr>
+				<td id="name-${id}"
+					width="1"
+					class="name ${options.fav?'fav':''}"
+					onclick="toggleFav('${id}')">
+					${name} 
+				</td>
+				<td class="valuerow">
+					<input id="${id}"
+						class="value"
+						type="number"
+						name="${id}"
+						min="${options.min}"
+						max="${options.max}"
+						value="${options.value}"
+						step="${options.step}">
+				</td>
+				<td class="unit" width="1">${options.unit}</td>
+			</tr>
+			<tr class="info"><td colspan="3">
+				${info} Range is from ${options.min} to ${options.max}. Default value is ${defaultValue}.
+			</td></tr>
+		</table>`;
+
+			
+
 
 	// create a new dom element
 	
@@ -150,16 +193,29 @@ function addPercentage( id, name, defaultValue, options, info='', tags='' )
 	
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
+
+	function p( x ) { return Math.round(100*x); }
 	
 	// construct the html
-	
+		
 	var html =`
-		<div id="block-${id}" class="block">
-			<div id="name-${id}" class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">${name} ${options.debug?'<span class="debug">(debug)</span>':''}</div>
-			<div class="right"><span class="unit" style="left:3.5em;">%</span><input id="${id}" class="value" type="number" name="${id}" min="${Math.round(100*options.min)}" max="${Math.round(100*options.max)}" value="${Math.round(100*options.value)}" step="${Math.round(100*options.step)}" style="width: 3em;"></div>
-			<div class="info">${info} Range is from ${Math.round(100*options.min)}% to ${Math.round(100*options.max)}%. Default value is ${Math.round(100*defaultValue)}%.</div>
-		</div>`;
-
+		<table id="block-${id}" class="block">
+			<tr>
+				<td id="name-${id}"
+					width="1%"
+					class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">
+					${name} 
+				</td>
+				<td class="valuerow">
+					<input id="${id}" class="value" type="number" name="${id}" min="${p(options.min)}" max="${p(options.max)}" value="${p(options.value)}" step="${p(options.step)}">
+				</td>
+				<td class="unit" width="1%">%</td>
+			</tr>
+			<tr class="info"><td colspan="3">
+				${info} Range is from ${p(options.min)}% to ${p(options.max)}%. Default value is ${p(defaultValue)}%.
+			</td></tr>
+		</table>`;
+		
 	// create a new dom element
 	
 	var block = document.createElement('div');
@@ -202,11 +258,21 @@ function addBoolean( id, name, defaultValue, options, info='', tags='' )
 	// construct the html
 	
 	var html =`
-		<div id="block-${id}" class="block">
-			<div id="name-${id}" class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">${name} ${options.debug?'<span class="debug">(debug)</span>':''}</div>
-			<div class="right"><input id="${id}" class="value" type="checkbox" name="${id}" value="${options.value}" ${options.value?'checked':''}></div>
-			<div class="info">${info} Default state is ${defaultValue?'checked':'not checked'}.</div>
-		</div>`;
+		<table id="block-${id}" class="block">
+			<tr>
+				<td id="name-${id}"
+					width="1%"
+					class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">
+					${name} 
+				</td>
+				<td class="valuerow">
+					<input id="${id}" class="value" type="checkbox" name="${id}" value="${options.value}" ${options.value?'checked':''}>
+				</td>
+			</tr>
+			<tr class="info"><td colspan="2">
+				${info} Default state is ${defaultValue?'checked':'not checked'}.
+			</td></tr>
+		</table>`;
 
 	// create a new dom element
 	
@@ -288,11 +354,6 @@ function toggleFilter( )
 				data[id].block.style.display = data[id].options?.fav ? 'block' : 'none';
 			break;
 			
-		case 'show-main':
-			for( var id in data )
-				data[id].block.style.display = data[id].options?.debug ? 'none' : 'block';
-			break;
-			
 		case 'show-all':
 		default:
 			for( var id in data )
@@ -317,8 +378,6 @@ function prepareValues()
 				str += data[id].value.checked?'true':'false';
 				break;
 			case TEMPORAL:
-			console.log(id);
-			console.log(data[id]);
 				var arr = (data[id].value.value+':00:00').split(':');
 				str += 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]));
 				break;
@@ -326,6 +385,9 @@ function prepareValues()
 				str += data[id].value.value/100;
 				break;
 			case HEADER:
+				break;
+			case NUMERIC_RANGE:
+				str += data[id].valueMin.value+'~'+data[id].valueMax.value;
 				break;
 		}
 	}
@@ -358,11 +420,21 @@ function addTime( id, name, defaultValue, options, info='', tags='' )
 	// construct the html
 	
 	var html =`
-		<div id="block-${id}" class="block">
-			<div id="name-${id}" class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">${name} ${options.debug?'<span class="debug">(debug)</span>':''}</div>
-			<div class="right"><input id="${id}" class="value" type="time" name="${id}" min="${options.min}" max="${options.max}" value="${options.value}" step="${options.step}"></div>
-			<div class="info">${info} Range is from ${options.min} to ${options.max}. Default value is ${msToString(defaultValue)}.</div>
-		</div>`;
+		<table id="block-${id}" class="block">
+			<tr>
+				<td id="name-${id}"
+					width="1%"
+					class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">
+					${name} 
+				</td>
+				<td class="valuerow">
+					<input id="${id}" class="value" type="time" name="${id}" value="${options.value}" ${options.value?'checked':''}>
+				</td>
+			</tr>
+			<tr class="info"><td colspan="2">
+				${info} Range is from ${options.min} to ${options.max}. Default value is ${msToString(defaultValue)}.
+			</td></tr>
+		</table>`;
 
 	// create a new dom element
 	
@@ -422,3 +494,91 @@ function addHeader( level, name, logo='', info='', tags='' )
 }
 
 
+function addNumericRange( id, name, defaultValueMin, defaultValueMax, options, info='', tags='' )
+{
+	// check id
+	
+	if( ids.indexOf(id) > -1 )
+		throw `error: Element with id="${id}" is already decalred.`;
+
+	ids.push( id );
+	
+	// set default values for missing options
+
+	options.min = options.min||0;
+	options.max = options.max||100;
+	options.step = options.step||1;
+	options.valueMin = param2( id, defaultValueMin, defaultValueMax )[0] || 0;
+	options.valueMax = param2( id, defaultValueMin, defaultValueMax )[1] || 100;
+	options.tags = tags.split( ',' );
+	options.unit = options.unit||'';
+	
+	if( predefinedFavs )
+		options.fav = predefinedFavs.indexOf(id)>=0;
+	
+	// construct the html
+	var html =`
+		<table id="block-${id}" class="block">
+			<tr>
+				<td id="name-${id}"
+					width="1"
+					class="name ${options.fav?'fav':''}"
+					onclick="toggleFav('${id}')">
+					${name}
+				</td>
+				<td class="valuerow">
+					<input id="${id}-min"
+						class="value"
+						type="number"
+						name="${id}"
+						min="${options.min}"
+						max="${options.max}"
+						value="${options.valueMin}"
+						step="${options.step}">
+				</td>
+				<td class="unit" width="1">${options.unit}</td>
+			</tr>
+			<tr>
+				<td class="name" style="text-align: right;">TO</td>
+				<td class="valuerow">
+					<input id="${id}-max"
+						class="value"
+						type="number"
+						name="${id}"
+						min="${options.min}"
+						max="${options.max}"
+						value="${options.valueMax}"
+						step="${options.step}">
+				</td>
+				<td class="unit" width="1">${options.unit}</td>
+			</tr>
+			<tr class="info"><td colspan="3">
+				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${defaultValueMin} to ${defaultValueMax}.
+			</td></tr>
+		</table>`;
+
+			
+
+
+	// create a new dom element
+	
+	var block = document.createElement('div');
+		block.innerHTML = html;
+	
+	// insert in dom 
+	
+	document.getElementById("blocks").appendChild( block );
+	
+	data[id] = {
+		type:	NUMERIC_RANGE,
+		block:	document.getElementById('block-'+id),
+		name:	document.getElementById('name-'+id),
+		valueMin:	document.getElementById(id+'-min'),
+		valueMax:	document.getElementById(id+'-max'),
+		defaultValueMin: defaultValueMin,
+		defaultValueMax: defaultValueMax,
+		options: options,
+		tags: tags,
+	}
+	
+}

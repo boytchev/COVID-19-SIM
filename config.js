@@ -30,8 +30,32 @@ function param( id, defaultValue )
 	if( value=='true' ) value = true;
 	if( value=='false' ) value = false;
 	if( !isNaN(parseFloat(value)) ) value = parseFloat(value);	
-	
 	//console.log(id,'=',value);
+	
+	return value;
+}
+
+function param2( id, defaultValue )
+{
+	var value;
+
+	// first look for the parameter in the URL
+	// if not there, then check in local storage
+	// eventually, return the default value
+	
+	if( urlParams.has(id) )
+	{
+		value = urlParams.get( id ).split( '~' );
+		value = new Range( parseFloat(value[0]), parseFloat(value[1]) );
+	}
+	else
+	if( storedParams.has(id) )
+	{
+		value = storedParams.get( id ).split( '~' );
+		value = new Range( parseFloat(value[0]), parseFloat(value[1]) );
+	}
+	else
+		value = defaultValue;
 	
 	return value;
 }
@@ -149,7 +173,7 @@ export const OFFICE_DOOR_DISTANCE = param('odd',10);// in meters, suggested dist
 export const APARTMENT_DOOR_DISTANCE = param('add',20);// in meters, suggested distance between doors
 export const CROSSING_MINIMAL_CLOSENESS = param('cmc',15); // in meters, do not allow crossings thus close
 
-export const OFFICE_ROOM_SIZE = new Range( 5, 10 );	// in meters (desired size)
+export const OFFICE_ROOM_SIZE = param2( 'ors',new Range( 5, 10 ));	// in meters (desired size)
 export const OFFICE_CORRIDOR_WIDTH = 1;				// in meters
 export const OFFICE_ELEVATOR_SHAFT_WIDTH = 2;				// in meters
 export const OFFICE_ROOM_COUNT = new Range( 2, 9 );

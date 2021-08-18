@@ -4,7 +4,7 @@ body {
 }
 
 .page {
-	max-width: 50em;
+	max-width: 40em;
 	margin: auto;
 	padding: 0 5em;
 }
@@ -12,9 +12,9 @@ body {
 .block {
 	margin-top: 1em;
 	padding: 0.25em 0 0.25em 0em;
-	background-image: url(icons/dot.svg);
-	background-repeat: repeat-x;
-	position: relative;
+	#background-image: url(icons/dot.svg);
+	#background-repeat: repeat-x;
+	#position: relative;
 }
 
 .header {
@@ -59,22 +59,16 @@ h3.caption {
 }*/
 
 .block .name {
-	display: inline-block;
-	background: white;
 	padding: 0 0.5em 0 0em;
 	font-weight: normal;
 	text-transform: uppercase;
 	cursor: pointer;
 	color: RoyalBlue;
+	white-space: nowrap;
 }
 
 .block .name:hover {
 	color: Crimson;
-}
-
-.block .name .debug {
-	font-weight: 300;
-	content: ' (DEBUG)';
 }
 
 .block .name.fav:after {
@@ -84,17 +78,17 @@ h3.caption {
 	content: ' \2764';
 }
 
-.block .name.debug.fav:after {
-	font-weight: 300;
-	content: ' (DEBUG) \2764';
+.block .valuerow {
+	text-align: right;
+	background-image: url(icons/dot.svg);
+	background-repeat: repeat-x;
 }
 
 .block input {
 	font-weight: bold;
 	position: relative;
-	top: -0.4em;
+	top: -0.1em;
 	border: none;
-	#border-bottom: solid 0.2em black;
 	background: none;
 	text-align: right;
 	font-size: 1.2em;
@@ -102,14 +96,22 @@ h3.caption {
 
 .block input[type="checkbox"] {
 	position: relative;
-	top: -0.3em;
 	right: 0.5em;
-	width: 1em;
-	height: 1.1em;
+	width: 0.8em;
+	height: 0.8em;
+}
+ 
+.block input[type="checkbox"]:checked:before {
+	position: relative;
+	top: -0.3em;
+	left: -2.2em;
+	font-size: 80%;
+	content: 'YES';
 }
  
 .block .info {
-	display: block;
+	position: relative;
+	top: -0.3em;
 	font-size: 90%;
 	font-weight: 300;
 	padding-left: 1.2em;
@@ -117,15 +119,11 @@ h3.caption {
 }
 
 .block .unit {
+	display: table-cell;
 	position: relative;
-	top: -0.5em;
+	top: -0.1em;
 	font-weight: 300;
 	color: DimGray;
-}
-
-.block .right {
-	display: block;
-	float: right;
 }
 
 h2 .info {
@@ -177,4 +175,17 @@ h2 .info {
 	color: White;
 	padding: 0.25em 1em;
 	text-decoration: none;
+}
+
+table {
+	border-collapse: collapse;
+	padding: 0;
+	margin: 0;
+}
+
+tr {
+	}
+	
+td {
+	/*border: solid 1px red;*/
 }
