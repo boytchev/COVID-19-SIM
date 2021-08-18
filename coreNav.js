@@ -1,10 +1,10 @@
 
 
 
-import * as THREE from '../js/three.module.js';
-import {GROUND_SIZE, DEBUG_NAVMESH_SHOW_LINES} from '../config.js';
-import {Zone, Pos, almostEqual, TOP, RIGHT, LEFT, BOTTOM} from '../core.js';
-import {navmesh} from '../main.js';
+import * as THREE from './js/three.module.js';
+import {GROUND_SIZE, DEBUG_NAVMESH_SHOW_LINES} from './config.js';
+import {Zone, Pos, almostEqual, TOP, RIGHT, LEFT, BOTTOM} from './core.js';
+import {navmesh} from './main.js';
 import {OfficeDoor} from './objects/officeDoors.js';
 import {Room} from './objects/rooms.js';
 import {Elevator} from './objects/elevators.js';
