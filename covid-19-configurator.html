@@ -366,6 +366,14 @@
 			'abw', 'Apartment building width', 8, 16, {min:4, max:30, step:2, unit: 'm'},
 			'The range for the length (in meters) of the smaller wall of an apartment building. The length of the longer wall is restricted by the block size.' );
 			
+		addNumeric(
+			'abd', 'Apartment building distance', 24, {min:16, max:40, step:2, unit: 'm'},
+			'The desired distance between centers of apartment buildings. This value my be ignored if it is too small (i.e. at least <em>Apartment building width+8</em> meters) and the buildings are too big.' );
+			
+		addNumeric(
+			'mabf', 'Max additional apartment building floors', 30, {min:0, max:120, step:2},
+			'Every apartment building has two default floors. This value indicates the miximal number of additional floors. The actual height also depends on a random number and on the calculated building height for the block.' );
+			
 
 			
 

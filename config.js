@@ -181,9 +181,8 @@ export const OFFICE_ROOM_COUNT = param2( 'orc', new Range( 2, 9 ) );
 
 // Apartment buildings
 export const APARTMENT_BUILDING_WIDTH = param2('abw', new Range( 8, 16 ) );	// in meters
-export const APARTMENT_BUILDING_DISTANCE = Math.max( 24, round(APARTMENT_BUILDING_WIDTH.max+8),2);				// in meters
-
-export const MAX_APARTMENT_BUILDING_FLOORS = 30;				// maximal number of floors in an apartment building
+export const APARTMENT_BUILDING_DISTANCE = Math.max( param('abd',24), round(APARTMENT_BUILDING_WIDTH.max+8),2);				// in meters
+export const MAX_APARTMENT_BUILDING_FLOORS = param('mabf',30);				// maximal number of floors in an apartment building
 export const APARTMENT_ROOM_SIZE = 7;							// in meters (desired size)
 export const ELEVATOR_SIZE = new Size( 2, 2 );					// in meters
 
