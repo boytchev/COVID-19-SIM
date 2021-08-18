@@ -340,7 +340,7 @@ function debugConfigurator()
 function shareConfigurator()
 {
 	prepareValues( true );
-	console.log( window.location.protocol + '//' + window.location.host + '/covid-19-simulator.html'+localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
+	console.log( window.location.protocol + '//' + window.location.host + '/COVID-19-SIM/covid-19-simulator.html'+localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
 }
 
 function toggleFilter( )
