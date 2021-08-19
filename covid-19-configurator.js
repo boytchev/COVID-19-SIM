@@ -322,17 +322,22 @@ function resetConfigurator()
 
 function debugConfigurator()
 {
-	prepareValues( false );
-	console.log( 'fav:', localStorage.getItem( LOCAL_STORAGE_FAVS ) );
-	console.log( 'params:', localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
-	console.log( 'filter:', localStorage.getItem( LOCAL_STORAGE_FILTER ) );
+	console.log( 'Full parameters:', prepareValues( false ) );
+	console.log( 'Modified parameters:', prepareValues( true ) );
+	console.log( 'Favourites:', localStorage.getItem( LOCAL_STORAGE_FAVS ) );
+	console.log( 'Filter:', localStorage.getItem( LOCAL_STORAGE_FILTER ) );
 
 }
 
 function shareConfigurator()
 {
 	prepareValues( true );
-	console.log( window.location.protocol + '//' + window.location.host + '/COVID-19-SIM/covid-19-simulator.html'+localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
+	
+	var url = window.location.href,
+		path = url.substring(0, url.lastIndexOf('/')),
+		sharedURL = path + '/covid-19-simulator.html'+localStorage.getItem( LOCAL_STORAGE_PARAMS );
+	
+	prompt( 'Generating shareable URL is experimental feature. Grab the URL from below:', sharedURL );
 }
 
 function toggleFilter( )
@@ -371,22 +376,23 @@ function prepareValues( onlyModified )
 		switch( data[id].type )
 		{
 			case NUMERIC:
-				if( (!onlyModified) || (data[id].value.value != data[id].value.defaultValue) )
+				if( (!onlyModified) || (data[id].value.value != data[id].defaultValue) )
 					cmd = data[id].value.value;
 				break;
 			case BOOLEAN:
-				if( (!onlyModified) || (data[id].value.checked != (data[id].value.defaultValue=='true')) )
+				if( (!onlyModified) || (data[id].value.checked != (data[id].defaultValue=='true')) )
 					cmd = data[id].value.checked?'true':'false';
 				break;
 			case TEMPORAL:
-				if( (!onlyModified) || (data[id].value.value != data[id].value.defaultValue) )
+				var arr = (data[id].value.value+':00:00').split(':'),
+					value = 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]))
+				if( (!onlyModified) || (value != data[id].defaultValue) )
 				{
-					var arr = (data[id].value.value+':00:00').split(':');
-					cmd = 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]));
+					cmd = value;
 				}
 				break;
 			case PERCENTAGE:
-				if( (!onlyModified) || (data[id].value.value != data[id].value.defaultValue) )
+				if( (!onlyModified) || (data[id].value.value != Math.round(100*data[id].defaultValue)) )
 				{
 					cmd = data[id].value.value/100;
 				}
@@ -407,6 +413,7 @@ function prepareValues( onlyModified )
 	localStorage.setItem( LOCAL_STORAGE_PARAMS, str );
 
 //	console.log(str);
+	return str;
 }
 
 function addTime( id, name, defaultValue, options, info='', tags='' )

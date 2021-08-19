@@ -175,6 +175,7 @@ h2 .info {
 	color: White;
 	padding: 0.25em 1em;
 	text-decoration: none;
+	/*text-transform: uppercase;*/
 }
 
 table {
