@@ -67,7 +67,7 @@ function param( id, defaultValue )
 //console.log(defaultValue);
 
 	if( configParams.has(id) )
-		value = urlParams.get( id )
+		value = configParams.get( id )
 	else
 		value = defaultValue;
 		
@@ -84,15 +84,9 @@ function param2( id, defaultValueMin, defaultValueMax )
 {
 	var value;
 
-	if( urlParams.has(id) )
+	if( configParams.has(id) )
 	{
-		value = urlParams.get( id ).split('~');
-		return [parseFloat(value[0]), parseFloat(value[1])];
-	}
-	else
-	if( storedParams.has(id) )
-	{
-		value = storedParams.get( id ).split('~');
+		value = configParams.get( id ).split('~');
 		return [parseFloat(value[0]), parseFloat(value[1])];
 	}
 
