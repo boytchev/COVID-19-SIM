@@ -43,15 +43,9 @@ function param2( id, defaultValue )
 	// if not there, then check in local storage
 	// eventually, return the default value
 	
-	if( urlParams.has(id) )
+	if( configParams.has(id) )
 	{
-		value = urlParams.get( id ).split( '~' );
-		value = new Range( parseFloat(value[0]), parseFloat(value[1]) );
-	}
-	else
-	if( storedParams.has(id) )
-	{
-		value = storedParams.get( id ).split( '~' );
+		value = configParams.get( id ).split( '~' );
 		value = new Range( parseFloat(value[0]), parseFloat(value[1]) );
 	}
 	else
