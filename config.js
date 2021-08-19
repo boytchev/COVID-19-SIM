@@ -3,9 +3,12 @@
 import {timeMs, Size, Range, round} from './core.js';
 
 
-const urlParams = new URLSearchParams( window.location.search );
 const LOCAL_STORAGE_PARAMS = 'covid-19-params'; // same name used in covid-19-configurator.js
-const storedParams = new URLSearchParams( localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
+
+const configParams = new URLSearchParams(
+		window.location.search ||
+		localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
+
 
 console.log('URL',window.location.search);
 console.log('STO',localStorage.getItem( LOCAL_STORAGE_PARAMS ));
@@ -19,11 +22,8 @@ function param( id, defaultValue )
 	// if not there, then check in local storage
 	// eventually, return the default value
 	
-	if( urlParams.has(id) )
-		value = urlParams.get( id )
-	else
-	if( storedParams.has(id) )
-		value = storedParams.get( id )
+	if( configParams.has(id) )
+		value = configParams.get( id )
 	else
 		value = defaultValue;
 		

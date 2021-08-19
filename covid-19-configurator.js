@@ -5,11 +5,12 @@ const LOCAL_STORAGE_FAVS = 'covid-19-favs';
 const LOCAL_STORAGE_PARAMS = 'covid-19-params'; // same name used in config.js
 const LOCAL_STORAGE_FILTER = 'covid-19-filter';
 
-const storedParams = new URLSearchParams( localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
-const urlParams = new URLSearchParams( window.location.search );
+const configParams = new URLSearchParams(
+		window.location.search ||
+		localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
 
-console.log('URL',window.location.search);
-console.log('STO',localStorage.getItem( LOCAL_STORAGE_PARAMS ));
+//console.log('URL',window.location.search);
+//console.log('STO',localStorage.getItem( LOCAL_STORAGE_PARAMS ));
 
 
 var ids = [],
@@ -65,11 +66,8 @@ function param( id, defaultValue )
 //console.log(storedParams.has(id),storedParams.get( id ));
 //console.log(defaultValue);
 
-	if( urlParams.has(id) )
+	if( configParams.has(id) )
 		value = urlParams.get( id )
-	else
-	if( storedParams.has(id) )
-		value = storedParams.get( id )
 	else
 		value = defaultValue;
 		
