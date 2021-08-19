@@ -24,7 +24,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {DEBUG_NAVMESH_SHOW_LINES, DEBUG_NAVMESH_SHOW_MESHES, DEBUG_NAVMESH_SHOW_FLOORS, SIDEWALK_WIDTH, DEBUG_NAVMESH_OPACITY, DEBUG_NAVMESH_SHOW_ELEVATORS, OFFICE_ELEVATOR_SHAFT_WIDTH, FLOOR_HEIGHT} from '../config.js';
+import {DEBUG_NAVMESH_SHOW_LINES, DEBUG_NAVMESH_SHOW_MESHES, DEBUG_NAVMESH_SHOW_FLOORS, SIDEWALK_WIDTH, DEBUG_NAVMESH_OPACITY, DEBUG_NAVMESH_SHOW_ELEVATORS, ELEVATOR_SIZE, FLOOR_HEIGHT} from '../config.js';
 import {scene, buildings, navmesh} from '../main.js';
 import {Zone, Size, Pos, TOP, RIGHT, LEFT, BOTTOM} from '../core.js';
 import {sortRing} from '../coreNav.js';
@@ -539,7 +539,7 @@ export class NavMesh
 				opacity: DEBUG_NAVMESH_OPACITY
 			});
 	
-		var geometry = new THREE.BoxBufferGeometry( OFFICE_ELEVATOR_SHAFT_WIDTH, 1, OFFICE_ELEVATOR_SHAFT_WIDTH );
+		var geometry = new THREE.BoxBufferGeometry( ELEVATOR_SIZE, 1, ELEVATOR_SIZE );
 			
 		for( var j=0; j<buildings.offices.length; j++ )
 		for( var i=0; i<buildings.offices[j].elevators.length; i++ )

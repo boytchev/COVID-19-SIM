@@ -58,12 +58,14 @@ export class Agents
 			
 			// create adults
 			var n = AGENT_ADULTS_PER_HOUSE.randInt();
+			if( AGENT_AGE_YEARS.max<18 ) n = 0;
 			for( var j=0; j<n; j++ )
 				if( this.agents.length<AGENT_MAX_COUNT )
 					this.agents.push( new Adult(agentHome) );
 				
 			// create children
 			var n = AGENT_CHILDREN_PER_HOUSE.randInt();
+			if( AGENT_AGE_YEARS.min>17 ) n = 0;
 			for( var j=0; j<n; j++ )
 				if( this.agents.length<AGENT_MAX_COUNT )
 					this.agents.push( new Child(agentHome) );
@@ -81,12 +83,14 @@ export class Agents
 			
 			// create adults
 			var n = AGENT_ADULTS_PER_APARTMENT.randInt();
+			if( AGENT_AGE_YEARS.max<18 ) n = 0;
 			for( var j=0; j<n; j++ )
 				if( this.agents.length<AGENT_MAX_COUNT )
 					this.agents.push( new Adult(agentHome) );
 			
 			// create children
 			var n = AGENT_CHILDREN_PER_APARTMENT.randInt();
+			if( AGENT_AGE_YEARS.min>17 ) n = 0;
 			for( var j=0; j<n; j++ )
 				if( this.agents.length<AGENT_MAX_COUNT )
 					this.agents.push( new Child(agentHome) );
@@ -101,7 +105,11 @@ export class Agents
 			for( var i=0; i<AGENT_MAX_COUNT; i++ )
 			{
 				var agentHome = new BlockAddress( );
-				this.agents.push( new Adult(agentHome) );
+				var age = AGENT_AGE_YEARS.random()
+				if( age>17 )
+					this.agents.push( new Adult(agentHome) );
+				else
+					this.agents.push( new Child(agentHome) );
 			}
 		}
 		
@@ -251,6 +259,8 @@ export class Agents
 	
 	debugShowAgeDistribution()
 	{
+		if( this.agents.length<1 ) return;
+		
 		var years = [];
 		for( var i=0; i<this.agents.length; i++ )
 		{
@@ -269,22 +279,47 @@ export class Agents
 		var ctx = canvas.getContext( '2d' );
 			ctx.fillStyle = 'white';
 			ctx.fillRect( 0, 0, W, H );	
+			ctx.font = '12px sans-serif';
 		
 
-		var dX = (W-40)/AGENT_AGE_YEARS.max,
+		var dX = (W-60)/(AGENT_AGE_YEARS.max-AGENT_AGE_YEARS.min+1),
 			dY = years.reduce(function(a, b) {return Math.max(a, b)});
 			
+		ctx.fillStyle = 'black';
+		ctx.textAlign = 'right';
+		ctx.fillText('Age:', 40, H-5 );
+		ctx.fillText('People:', 50, 20 );
+	
+		// dY is max number of people in an age -- use this to draw
+		// horizontal grid lines
+		var step = Math.pow(10,Math.floor(Math.log10(dY)));
+		if( dY/step < 3 ) step = step/10;
+		var y = 0;
+		while( y<dY )
+		{
+			ctx.fillText( y, 35, H-25-y/dY*(H-60) );
+			ctx.fillRect( 30, H-20-y/dY*(H-60), W-50, 1 );
+			y += step;
+		}
+		
+		ctx.textAlign = 'center';
+		
 		for( var i=AGENT_AGE_YEARS.min; i<=AGENT_AGE_YEARS.max; i++ )
 		{
-			var columnHeight = (years[i]||0)/dY*(H-40);
+			var columnHeight = (years[i]||0)/dY*(H-60);
 			ctx.fillStyle = 'cornflowerblue';
-			ctx.fillRect( 20+dX*i, H-20-columnHeight, dX, columnHeight );	
+			ctx.fillRect( 40+dX*(i-AGENT_AGE_YEARS.min)+1, H-20-columnHeight, dX-2, columnHeight );	
 			
-			var pplCount = dY*(0.5+0.5*Math.cos(i/30-0.3));
+			var pplCount = 0.85*dY*(0.5+0.5*Math.cos(i/30-0.3));
 			columnHeight = pplCount/dY*(H-40);
 			ctx.fillStyle = 'crimson';
-			ctx.fillRect( 20+dX*i+dX/4, H-20-columnHeight, dX/2, columnHeight );	
+			ctx.fillRect( 40+dX*(i-AGENT_AGE_YEARS.min)+dX/3, H-20-columnHeight, dX/3, columnHeight );	
 			
+			if( dX>20 || i%5==0)
+			{
+				ctx.fillStyle = 'black';
+				ctx.fillText(i, 40+dX*(i-AGENT_AGE_YEARS.min)+dX/2, H-5 );
+			}
 		}
 		
 		document.body.appendChild( canvas );

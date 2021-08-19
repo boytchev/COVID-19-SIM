@@ -357,10 +357,6 @@
 			'ocw', 'Office corridor width', 1, {min:1, max:5, step:1, unit:'m'},
 			'The width of corridors in office building. Wider corridors may reduce the amount of rooms.' );
 			
-		addNumeric(
-			'oesw', 'Office elevator shaft width', 2, {min:1, max:10, step:1, unit:'m'},
-			'The width of shaft of office elevators. When people use elevators, they are grouped withing a square of this size. Currently this width is not visualized, unless <em>Navmesh elevators</em> is checked.' );
-			
 		addNumericRange(
 			'orc', 'Office room count', 2, 9, {min:2, max:15, step:1},
 			'The desired number of office rooms. The actual number depends on this value, as well of building size and <em>Office room size</em>. Larger count results in smaller rooms and vice versa.' );
@@ -377,8 +373,54 @@
 			'mabf', 'Max additional apartment building floors', 30, {min:0, max:120, step:2},
 			'Every apartment building has two default floors. This value indicates the miximal number of additional floors. The actual height also depends on a random number and on the calculated building height for the block.' );
 			
-
+		addNumeric(
+			'ars', 'Apartment room size', 7, {min:3, max:20, step:1},
+			'The desired size of an apartment room in meters. The actual size may vary depending on the building size.' );
 			
+		addNumeric(
+			'elsz', 'Elevator size', 2, {min:1, max:4, step:1, unit:'m'},
+			'The size of elevators. Elevators shafts are square with side length equal to this value. When people use elevators they group outside them at some distance.' );
+			
+		addNumericRange(
+			'elsp', 'Elevator speed', 0.8, 2.4, {min:0.5, max:4, step:0.5, unit: 'm/s'},
+			'Speed of elevators in meters per second. This speed defines how fast people go to a different floor in apartment and office buildings.' );
+			
+		addNumericRange(
+			'th', 'Tree height', 3, 4, {min:2, max:8, step:0.5, unit: 'm'},
+			'Height of trees in meters. Actual height is randomly picked from this range. It applies to all trees &ndash; in parks and around houses.' );
+			
+		addNumeric(
+			'tc', 'Tree complexity', 4, {min:2, max:8, step:1},
+			'The complexity factor for trees. For value <em>n</em> the tree contains <em>2(n+1)<sup>2</sup></em> polygons (i.e. 150 polygons for complexity 4).' );
+
+		addPercentage(
+			'tpr', 'Tree park ratio', 0.2, {min:0, max:1, step:0.05},
+			'The ratio of generated trees in parks in respect to the maximal number of trees for parks of this size.' );
+
+		addPercentage(
+			'thr', 'Tree house ratio', 0.15, {min:0, max:1, step:0.05},
+			'The ratio of generated trees in house blocks in respect to the maximal number of trees for blocks of this size.' );
+
+		addNumericRange(
+			'aay', 'Person age', 0, 100, {min:0, max:100, step:10, unit: 'years'},
+			'The age of each person is picked from this range depending on the age distribution curve, shown by <em>Age diagram</em>. Note that the actual number of adults and children are controlled by <em>Adults per house</em>, <em>Adults per apartment</em>, <em>Children per house</em> and <em>Children per apartment</em>.' );
+
+		addNumericRange(
+			'ahc', 'Child height', 0.5, 1.7, {min:0.4, max:2, step:0.1, unit: 'm'},
+			'The proposed height of a child, the first value is the height of a newborn, the second &ndash; of a 17 years old. The actual height is picked randomly within the &plusmn;15% variance of the values.' );
+
+		addNumericRange(
+			'aha', 'Adult height', 1.8, 1.4, {min:1.0, max:2.5, step:0.1, unit: 'm'},
+			'The proposed height of an adult, the first value is the height of a 18 year old, the second &ndash; of a 100 years old. The actual height is picked randomly within the &plusmn;10% variance of the values.' );
+
+
+
+
+
+
+
+
+
 
 
 

@@ -34,7 +34,7 @@ import {WorkAddress} from './address.js';
 import {/*INFECTION_OVERHEAD_INDICATOR, */AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, /*DEBUG_BLOCK_COLOR, */INFECTION_STRENGTH, IMMUNE_CURE_FACTOR, INFECTION_STEP} from '../config.js';
 import {font} from '../font.js';
 import {scene, controls, agents} from '../main.js';
-import {Range, drawArrow, msToString} from '../core.js';
+import {round, Range, drawArrow, msToString} from '../core.js';
 import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs, frame} from '../objects/nature.js';
 
 
@@ -73,7 +73,7 @@ class Agent extends AgentBehaviour
 		
 		// set age and height
 		this.age = this.getRandomAge( );
-	
+		
 		// other things
 		this.home = home;
 		this.position = home.randomPos();
@@ -207,6 +207,57 @@ class Agent extends AgentBehaviour
 	
 	getRandomAge( )
 	{
+//		console.log('--> get random age for',this.isAdult?'adult':'child');
+		
+//		var minIndex = ,
+//			maxIndex = AGENT_AGE_YEARS.max;
+			
+		var minIndex, maxIndex;
+		
+		if( this.isAdult )
+		{
+			minIndex = Math.max( 18, AGENT_AGE_YEARS.min );
+			maxIndex = Math.max( 18, AGENT_AGE_YEARS.max );
+		}
+		else
+		{
+			minIndex = Math.min( 17, AGENT_AGE_YEARS.min );
+			maxIndex = Math.min( 17, AGENT_AGE_YEARS.max );
+		}
+		
+		var index = maxIndex,
+			step = round( (maxIndex-minIndex+1)/1.2, 1 ),
+			probe = THREE.Math.randFloat(Agent.census[minIndex-1],Agent.census[maxIndex]);
+	
+		var lowIndex = minIndex;
+		while( lowIndex<index )
+		{
+			var mid = Math.floor((lowIndex+index)/2);
+			if( Agent.census[mid] < probe )
+				lowIndex = mid+1;
+			else
+				index = mid;
+		}
+		
+/*	
+		step = 1;
+	
+		while( index>minIndex )
+		{
+			if( Agent.census[index-step] < probe ) break;
+			index -= step;
+		}
+*/		
+		
+
+//console.log('age ->',index);
+		return index;
+		
+	} // Agent.getRandomAge
+
+	_getRandomAge( )
+	{
+		console.log('get random age for',this.isAdult?'adult':'child');
 		var index = this.isAdult ? AGENT_AGE_YEARS.max : 17,
 			step = this.isAdult ? 64 : 16,			
 			probe = this.isAdult ? Agent.adultsCensus[AGENT_AGE_YEARS.max]*Math.random() : Agent.childrenCensus[17]*Math.random(),
@@ -219,6 +270,7 @@ class Agent extends AgentBehaviour
 			step >>= 1;
 		}
 
+//console.log('age ->',index);
 		return index;
 		
 	} // Agent.getRandomAge
@@ -230,21 +282,17 @@ class Agent extends AgentBehaviour
 		// generate an array uof age distribution, used to
 		// pick randomly an age of an agent
 		
-		Agent.childrenCensus = [];
-		Agent.adultsCensus = [];
-			
-		Agent.childrenCensus[-1] = 0;
-		Agent.adultsCensus[17] = 0;
+		Agent.census = [];
+		Agent.census[-1] = 0;
 
-		for( var age = AGENT_AGE_YEARS.min; age <= AGENT_AGE_YEARS.max; age++ )
+		for( var age = 0; age <= AGENT_AGE_YEARS.max; age++ )
 		{
 			var count = 0.5 + 0.5*Math.cos(age/30-0.3);
-			
-			if( age<18 )
-				Agent.childrenCensus[age] = Agent.childrenCensus[age-1] + count;
-			else
-				Agent.adultsCensus[age] = Agent.adultsCensus[age-1] + count;
+			Agent.census[age] = Agent.census[age-1] + count;
 		}
+		
+		//console.log('Agent.census');
+		//console.log(Agent.census);
 	} // Agent.generateAgeDistributionArrays
 	
 	
@@ -283,7 +331,7 @@ export class Child extends Agent
 		this.sysType = 'Child';
 		
 		this.height = THREE.Math.mapLinear( this.age, 0, 17, AGENT_HEIGHT_CHILD.min, AGENT_HEIGHT_CHILD.max );
-		//TODO-TEMP this.height = this.height * THREE.Math.randFloat( 0.8, 1.3 );
+		this.height = this.height * THREE.Math.randFloat( 0.85, 1.15 );
 
 	} // Child.constructor
 } // Child
@@ -300,7 +348,7 @@ export class Adult extends Agent
 		this.sysType = 'Adult';
 
 		this.height = THREE.Math.mapLinear( this.age, 18, 100, AGENT_HEIGHT_ADULT.min, AGENT_HEIGHT_ADULT.max );
-		//TODO-TEMP this.height = this.height * THREE.Math.randFloat( 0.9, 1.1 );
+		this.height = this.height * THREE.Math.randFloat( 0.9, 1.1 );
 		
 	} // Adult.constructor
 } // Adult

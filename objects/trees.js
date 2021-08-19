@@ -55,10 +55,11 @@ export class Trees
 	{
 		// start with a cube
 		var geometry = new THREE.BoxBufferGeometry( 1, 1, 1, TREE_COMPLEXITY, TREE_COMPLEXITY, TREE_COMPLEXITY );
-		
 		// expand it to a unit sphere
 		var vec = new THREE.Vector3(),
 			pos = geometry.getAttribute( 'position' );
+
+console.log('tree',pos.count);
 
 		for( var i=0; i<pos.count; i++ )
 		{

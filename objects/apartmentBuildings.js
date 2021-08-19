@@ -83,7 +83,7 @@ export class ApartmentBuilding
 				var length = positions[i+1]-positions[i]-4,
 					mid = (positions[i+1]+positions[i])/2;
 					
-				var roomCount = round( length / APARTMENT_ROOM_SIZE, 1 ),
+				var roomCount = Math.max( 1, round( length / APARTMENT_ROOM_SIZE, 1 )),
 					roomSize = length/roomCount;
 
 				for( var j=0; j<roomCount; j++ )
@@ -121,7 +121,7 @@ export class ApartmentBuilding
 				var length = positions[i+1]-positions[i]-4,
 					mid = (positions[i+1]+positions[i])/2;
 				
-				var roomCount = round( length / APARTMENT_ROOM_SIZE, 1 ),
+				var roomCount = Math.max( 1, round( length / APARTMENT_ROOM_SIZE, 1 ) ),
 					roomSize = length/roomCount;
 
 				for( var j=0; j<roomCount; j++ )

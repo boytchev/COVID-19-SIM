@@ -169,7 +169,6 @@ export const CROSSING_MINIMAL_CLOSENESS = param('cmc',15); // in meters, do not 
 
 export const OFFICE_ROOM_SIZE = param2( 'ors',new Range( 5, 10 ));	// in meters (desired size)
 export const OFFICE_CORRIDOR_WIDTH = param('ocw',1);				// in meters
-export const OFFICE_ELEVATOR_SHAFT_WIDTH = param('oesw',2);				// in meters
 export const OFFICE_ROOM_COUNT = param2( 'orc', new Range( 2, 9 ) );
 
 
@@ -177,17 +176,17 @@ export const OFFICE_ROOM_COUNT = param2( 'orc', new Range( 2, 9 ) );
 export const APARTMENT_BUILDING_WIDTH = param2('abw', new Range( 8, 16 ) );	// in meters
 export const APARTMENT_BUILDING_DISTANCE = Math.max( param('abd',24), round(APARTMENT_BUILDING_WIDTH.max+8),2);				// in meters
 export const MAX_APARTMENT_BUILDING_FLOORS = param('mabf',30);				// maximal number of floors in an apartment building
-export const APARTMENT_ROOM_SIZE = 7;							// in meters (desired size)
-export const ELEVATOR_SIZE = new Size( 2, 2 );					// in meters
+export const APARTMENT_ROOM_SIZE = param('ars',7);							// in meters (desired size)
+export const ELEVATOR_SIZE = param('elsz',2);					// in meters
 
-export const ELEVATOR_SPEED = new Range( 0.8, 2.4 );			// in meters/second
+export const ELEVATOR_SPEED = param2('elsp',new Range( 0.8, 2.4 ) );			// in meters/second
 
 
 // trees
-export const TREE_HEIGHT = new Range( 3, 4 );		// in meters
-export const TREE_COMPLEXITY = 4; // 12*n^2 triangles, 2=48, 3=108, 4=192, 5=300
-export const TREE_PARK_RATIO = 0.2; // percentage of trees in parks
-export const TREE_HOUSES_RATIO = 0.15; // percentage of trees in house blocks
+export const TREE_HEIGHT = param2('th',new Range( 3, 4 ));		// in meters
+export const TREE_COMPLEXITY = param('tc',4); // 12*n^2 triangles, 2=54, 3=96, 4=150, 5=216
+export const TREE_PARK_RATIO = param('tpr',0.2); // percentage of trees in parks
+export const TREE_HOUSES_RATIO = param('thr',0.15); // percentage of trees in house blocks
 
 
 export const HOURS_4_MS = timeMs( 4 );
@@ -199,19 +198,18 @@ export const SECONDS_IN_MINUTE = 60;
 
 // agents
 export const AGENT_MAX_COUNT = DEBUG_AGENT_MAX_COUNT;			// max number of virtual people
-export const AGENT_AGE_YEARS = new Range( 0, 100 );			// in years
+export const AGENT_AGE_YEARS = param2('aay',new Range( 0, 100 ));			// in years
 
 //TODO-TEMP export const AGENT_WALKING_SPEED = new Range( 0.8, 2.0 );		// in meters/second
-export const AGENT_HEIGHT_CHILD = new Range( 0.5, 1.7 );		// in meters
-//export const AGENT_HEIGHT_ADULT = new Range( 1.7, 1.4 );		// in meters
-export const AGENT_WALKING_SPEED = new Range( 0.6, 0.6 );		// in meters/second
-//export const AGENT_HEIGHT_CHILD = new Range( 1.7, 1.7 );		// in meters
-export const AGENT_HEIGHT_ADULT = new Range( 1.4, 1.8 );		// in meters
+export const AGENT_HEIGHT_CHILD = param2('ahc',new Range( 0.5, 1.7 ));		// in meters
+export const AGENT_HEIGHT_ADULT = param2('aha',new Range( 1.8, 1.4 ));		// in meters
 
 export const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
-export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 2 );
+export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 3 );
 export const AGENT_ADULTS_PER_APARTMENT = new Range( 1, 3 );
-export const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 1 );
+export const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 2 );
+
+export const AGENT_WALKING_SPEED = new Range( 0.6, 0.6 );		// in meters/second
 
 // nature
 export const NO_SUN = 0;

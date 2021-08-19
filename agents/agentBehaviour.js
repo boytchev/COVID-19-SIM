@@ -804,8 +804,8 @@ export class AgentBehaviour
 			if( target.submark == Elevator.OUTSIDE )
 			{
 				this.alreadyElevating = false;
-				if( distance < 1.5*Math.max(ELEVATOR_SIZE.x,ELEVATOR_SIZE.z) )
-				if( distance > 1.0*Math.max(ELEVATOR_SIZE.x,ELEVATOR_SIZE.z) )
+				if( distance < 1.5*ELEVATOR_SIZE )
+				if( distance > 1.0*ELEVATOR_SIZE )
 					if( target.mark.isClosed( this.position.y ) )
 					{
 						agents.images.motionType.array[this.id] = MOTION_TYPE_STAND;
