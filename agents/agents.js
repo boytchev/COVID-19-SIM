@@ -98,14 +98,13 @@ export class Agents
 			if( this.agents.length>=AGENT_MAX_COUNT ) break;
 		}
 					
-					
 		// if no agents are created, but there is request to create, create 100 in a random block
 		if( this.agents.length==0 && AGENT_MAX_COUNT )
 		{
 			for( var i=0; i<AGENT_MAX_COUNT; i++ )
 			{
 				var agentHome = new BlockAddress( );
-				var age = AGENT_AGE_YEARS.random()
+				var age = AGENT_AGE_YEARS.randInt()
 				if( age>17 )
 					this.agents.push( new Adult(agentHome) );
 				else
