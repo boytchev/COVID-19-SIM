@@ -52,6 +52,7 @@ uniform float opacity;
 #ifdef COVID19SYM_RECOLOR
 
 	bool man;
+	bool resetColor;
 
 	float seed = 1.234;
 
@@ -166,6 +167,16 @@ uniform float opacity;
 		);
 	}
 	
+	vec4 colorMask( )
+	{
+		return vec4(
+			0.90+0.10*rand(),
+			0.90+0.10*rand(),
+			1.0,
+			1.0
+		);
+	}
+	
 	vec4 colorShirtFormal( )
 	{
 		float r = 0.8+0.2*rand();
@@ -230,6 +241,13 @@ uniform float opacity;
 			color = colorHumanSkin();
 		}
 			
+		//if( index==31 || index==32 || index==99 )
+		if( index2==7 )
+		{
+			color = colorMask();
+			resetColor = true;
+		}
+		
 		return color;
 	}
 	
@@ -425,12 +443,16 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	#ifdef COVID19SYM_RECOLOR
 		#ifdef COVID19SYM
 			man = vRandomId<0.5;
+			resetColor = false;
+			
 			//texelColor = recodeUndressedColor( texelColor );
-			//texelColor = recodeInformalColor( texelColor );
-			texelColor = recodeFormalColor( texelColor );
+			texelColor = recodeInformalColor( texelColor );
+			//texelColor = recodeFormalColor( texelColor );
 			
 			//float k = clamp(0.5+1.6*sin(uTime/1.0),0.0,1.0);
 			//texelColor = mix(recodeUndressedColor( texelColor ),recodeFormalColor( texelColor ), k );
+			
+			if( resetColor ) diffuseColor = vec4(1);
 		#endif
 	#endif
 	diffuseColor *= texelColor;

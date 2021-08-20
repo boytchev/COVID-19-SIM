@@ -361,17 +361,21 @@ export class AgentTexture extends ProceduralTexture
 /*33*/	colorIndex( 33 );
 		poly( [5+e, 11.5, 2.5, 11.5, 1, 13, 1-e, 13+e, 5+e, 13+e] );
 
-/*32*/	colorIndex( 32 );
+/*32*/	colorIndex( 32, 7 );
 		poly( [2.5, 13+e, 2.5, 13, 3.5, 12, 5+e, 12, 5+e, 13+e] );
 				
-/*31*/	colorIndex( 31 );
+/*31*/	colorIndex( 31, 7 );
 		poly( [4.5, 13+e, 4.5, 13, 4+1/4, 12+1/4, 5+e, 12+1/4, 5+e, 13+e] );
 
 /*30*/	colorIndex( 30 );
 		poly( [2.5, 11.5, 4, 9.5, 3+1/4, 11.5] );
 		
+/*99*/	colorIndex( 99, 7 ); // mask
+		poly( [5+e, 11, 3+3/4, 11, 3.5, 12, 4+1/4, 12+1/4, 5+e, 12+1/4] );
+
 /*100*/	colorIndex( 100 ); // face
-		poly( [4, 9.5, 3+1/4, 11.5, 3.5, 12, 4+1/4, 12+1/4, 5+e, 12+1/4, 5+e, 9.5] );
+		poly( [4, 9.5, 3+1/4, 11.5, 3.5, 12, 3+3/4, 11, 5+e, 11, 5+e, 9.5] );
+
 
 	} // AgentTexture.drawClothesTags
 
@@ -487,6 +491,7 @@ export class AgentTexture extends ProceduralTexture
 		line( [2.5, 13, 3.5, 12] ); // X7
 		line( [4.5, 13, 4+1/4, 12+1/4] ); // X8
 		line( [3+1/4, 11.5, 2.5, 11.5] ); // X9
+		line( [3+2/4, 12, 3+3/4, 11, 5, 11] ); // X10
 		
 		
 	} // AgentTexture.addBorders
