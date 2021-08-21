@@ -87,9 +87,11 @@ function param2( id, defaultValueMin, defaultValueMax )
 	if( configParams.has(id) )
 	{
 		value = configParams.get( id ).split('~');
+//console.log('a',id,	[parseFloat(value[0]), parseFloat(value[1])]);
 		return [parseFloat(value[0]), parseFloat(value[1])];
 	}
 
+//console.log('a',id,	[defaultValueMin,defaultValueMax]);
 	return [defaultValueMin,defaultValueMax];
 }
 	
@@ -527,8 +529,8 @@ function addNumericRange( id, name, defaultValueMin, defaultValueMax, options, i
 	options.min = options.min||0;
 	options.max = options.max||100;
 	options.step = options.step||1;
-	options.valueMin = param2( id, defaultValueMin, defaultValueMax )[0] || 0;
-	options.valueMax = param2( id, defaultValueMin, defaultValueMax )[1] || 100;
+	options.valueMin = param2( id, defaultValueMin, defaultValueMax )[0];
+	options.valueMax = param2( id, defaultValueMin, defaultValueMax )[1];
 	options.tags = tags.split( ',' );
 	options.unit = options.unit||'';
 	

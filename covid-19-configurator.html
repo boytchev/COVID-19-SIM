@@ -226,7 +226,8 @@
 
 		addBoolean(
 			'dsaad', 'Age diagram', false, {},
-			'If checked, shows a diagram of age distribution of people (number of people per age in years). The theoretical distribution is shown in crimson, the actual distribution is shown in blue. Click on the diagram to hide it.' );
+			'If checked, shows a diagram of age distribution of people (number of people per age in years). The theoretical distribution is shown in crimson, the actual distribution is shown in blue. The curve may break between children and adults, because their number depends on the number of houses and apartments, and on the values of <em>Adults per house</em>, <em>Children per house</em>, <em>Adults per apartment</em> and <em>Children per apartment</em>. Click on the diagram to hide it.' );
+
 
 		addBoolean(
 			'dsvs', 'Viral diagram', false, {},
@@ -413,6 +414,26 @@
 			'aha', 'Adult height', 1.8, 1.4, {min:1.0, max:2.5, step:0.1, unit: 'm'},
 			'The proposed height of an adult, the first value is the height of a 18 year old, the second &ndash; of a 100 years old. The actual height is picked randomly within the &plusmn;10% variance of the values.' );
 
+		addNumericRange(
+			'aph', 'Adults per house', 1, 4, {min:1, max:10, step:1},
+			'The number of adults in a house. The actual number is randomly picked from this interval.' );
+
+		addNumericRange(
+			'cph', 'Children per house', 0, 3, {min:0, max:10, step:1},
+			'The number of children in a house. The actual number is randomly picked from this interval.' );
+
+		addNumericRange(
+			'apa', 'Adults per apartment', 1, 3, {min:1, max:10, step:1},
+			'The number of adults in an apartment. The actual number is randomly picked from this interval.' );
+
+		addNumericRange(
+			'cpa', 'Children per apartment', 0, 2, {min:0, max:10, step:1},
+			'The number of children in an apartment. The actual number is randomly picked from this interval.' );
+
+		addNumericRange(
+			'aws', 'Walking speed', 0.8, 2.0, {min:0.6, max:2.6, step:0.2, unit: 'm/s'},
+			'Speed of walking of people. This speed defines how fast people walk. The observed speed also depends on the height of a person.' );
+			
 
 
 

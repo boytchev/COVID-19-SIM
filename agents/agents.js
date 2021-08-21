@@ -464,6 +464,12 @@ var topologyData = [2, 2, 2, 0, 0, 2, 9, 9, 9, 0, 2, 4, 0, 3, 2, 2, 0, 2, 8, 8, 
 			'agentHeight',
 			new THREE.InstancedBufferAttribute(new Float32Array(heights), 1, false, 1));
 
+		var speeds = [];
+		for( var i=0; i<this.agents.length; i++ ) speeds.push( this.agents[i].walkingSpeed );
+		geometry.setAttribute(
+			'agentSpeed',
+			new THREE.InstancedBufferAttribute(new Float32Array(speeds), 1, false, 1));
+
 		return geometry;
 	}
 	

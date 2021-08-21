@@ -23,6 +23,7 @@ varying vec3 vViewPosition;
 	varying float vAgentId;
 	varying float vRandomId;
 	attribute float agentHeight;
+	attribute float agentSpeed;
 	attribute int motionType;
 	
 	//varying float vInfectionLevel;
@@ -131,7 +132,7 @@ void main() {
 #ifdef COVID19SYM
 	
 	
-	float speed = 1.8+0.8*sin(agentId); // speed of walking
+	float speed = agentSpeed; //1.8+0.8*sin(agentId); // speed of walking
 	float baseAngle = 0.2*1.6;
 
 	float rawTime = speed*uTime + agentId*15.0;

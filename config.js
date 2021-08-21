@@ -204,12 +204,12 @@ export const AGENT_AGE_YEARS = param2('aay',new Range( 0, 100 ));			// in years
 export const AGENT_HEIGHT_CHILD = param2('ahc',new Range( 0.5, 1.7 ));		// in meters
 export const AGENT_HEIGHT_ADULT = param2('aha',new Range( 1.8, 1.4 ));		// in meters
 
-export const AGENT_ADULTS_PER_HOUSE 	 = new Range( 1, 4 );
-export const AGENT_CHILDREN_PER_HOUSE   = new Range( 0, 3 );
-export const AGENT_ADULTS_PER_APARTMENT = new Range( 1, 3 );
-export const AGENT_CHILDREN_PER_APARTMENT = new Range( 0, 2 );
+export const AGENT_ADULTS_PER_HOUSE 	= param2('aph',new Range( 1, 4 ));
+export const AGENT_CHILDREN_PER_HOUSE   = param2('cph',new Range( 0, 3 ));
+export const AGENT_ADULTS_PER_APARTMENT = param2('apa',new Range( 1, 3 ));
+export const AGENT_CHILDREN_PER_APARTMENT = param2('cpa',new Range( 0, 2 ));
 
-export const AGENT_WALKING_SPEED = new Range( 0.6, 0.6 );		// in meters/second
+export const AGENT_WALKING_SPEED = param2('aws',new Range( 0.6, 2.6 ));		// in meters/second
 
 // nature
 export const NO_SUN = 0;
