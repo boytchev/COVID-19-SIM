@@ -434,6 +434,35 @@
 			'aws', 'Walking speed', 0.8, 2.0, {min:0.6, max:2.6, step:0.2, unit: 'm/s'},
 			'Speed of walking of people. This speed defines how fast people walk. The observed speed also depends on the height of a person.' );
 			
+		addNumericList(
+			'su', 'Sun', 0, {values:[0,'no',1,'static',2,'dynamic']},
+			'The motion of sun. <em>No</em> indicates there is no sun and light comes from everywhere. <em>Static</em> means the sun does not move, but stays as a position in the sky, defined by <em>STATIC SUN POSITION</em>. When the sun is <em>Dynamic</em>, it moves around the city, simulating day-night cycles.' );
+
+		addTime(
+			'sspm', 'Static sun position', timeMs(10,0,0), {min:timeMs(0,0,0), max:timeMs(23,59,00), step:timeMs(0,30,0),},
+			'Position of the sun when <em>sun = static</em> measured as time of the day. The sun stays at this position, affecting shadows and color of sunlight.' );
+
+		addTime(
+			'srm', 'Sunrise', timeMs(6), {min:timeMs(1), max:timeMs(11), step:timeMs(0,0,1),},
+			'Time of the sunrise. At sunrise the sun steps above the horizon. Together with <em>sunset</em> it defines the day-night cycle.' );
+
+		addTime(
+			'ssm', 'Sunset', timeMs(18), {min:timeMs(13), max:timeMs(23), step:timeMs(0,0,1),},
+			'Time of the sunset. At sunset the sun steps below the horizon. Together with <em>sunrise</em> it defines the day-night cycle.' );
+
+		addNumericList(
+			'sh', 'Shadows', 0, {values:[0,'no',1,'top',2,'full']},
+			'The type of shadows. This parameter is affective only when <em>sun = static</em> or <em>dynamic</em>. Value <em>No</em> indicates there are no shadows, this has highest performance. <em>Top</em> shadows are static as if the sun light comes from above. <em>Full</em> shadows are generated depending on the sun position. If the <em>sun = dynamic</em> then shadows are continuously recalculated, which negatively impacts performance.' );
+
+		addNumericList(
+			'shms', 'Shadow size', 4096, {values:[128,128,256,256,512,512,1024,1024,2048,2048,4096,4096,8192,8192,16384,16384], unit:'px'},
+			'The size of the shadow map measured in pixels. Larger maps makes more accurate shadows, but require more memory and time. Not all values are supported for all platforms, as the maximal size depends on the GPU.' );
+			
+		addNumeric(
+			'shmc', 'Shadow count', 3, {min:1, max:10, step:1},
+			'Number of overlapping shadows. These shadows are at different resolutions, providing better softness of shadows. However, more number of shadows slows the performance. ' );
+			
+
 
 
 

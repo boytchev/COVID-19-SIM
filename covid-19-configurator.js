@@ -52,6 +52,7 @@ const
 	PERCENTAGE = 4,
 	HEADER = 5,
 	NUMERIC_RANGE = 6;
+	NUMERIC_LIST = 7;
 
 // get a parameter
 function param( id, defaultValue )
@@ -75,7 +76,7 @@ function param( id, defaultValue )
 	if( value=='false' ) value = false;
 	if( !isNaN(parseFloat(value)) ) value = parseFloat(value);	
 	
-	//console.log(id,'=',value);
+	console.log(id,'=',value,configParams.get( id ));
 	
 	return value;
 }
@@ -405,6 +406,10 @@ function prepareValues( onlyModified )
 				if( (!onlyModified) || (data[id].valueMin.value != data[id].defaultValueMin) || (data[id].valueMax.value != data[id].defaultValueMax) )
 					cmd = data[id].valueMin.value+'~'+data[id].valueMax.value;
 				break;
+			case NUMERIC_LIST:
+				if( (!onlyModified) || (data[id].value.value != data[id].defaultValue) )
+					cmd = data[id].value.value;
+				break;
 			default:
 				throw 'Invalid configuration parameter type "'+id+'"';
 		}
@@ -602,4 +607,76 @@ function addNumericRange( id, name, defaultValueMin, defaultValueMax, options, i
 		tags: tags,
 	}
 	
+}
+
+
+function addNumericList( id, name, defaultValue, options, info='', tags='' )
+{
+	// check id
+	
+	if( ids.indexOf(id) > -1 )
+		throw `error: Element with id="${id}" is already decalred.`;
+
+	ids.push( id );
+	
+	// set default values for missing options
+
+	options.value = param( id, defaultValue );
+	options.tags = tags.split( ',' );
+	options.unit = options.unit||'';
+	
+	if( predefinedFavs )
+		options.fav = predefinedFavs.indexOf(id)>=0;
+	
+	var htmlOptions = '';
+	for( var i=0; i<options.values.length; i+=2 )
+		htmlOptions += `<option value="${options.values[i]}">${(''+options.values[i+1]).toUpperCase()}</option>`;
+	
+	// construct the html
+	var html =`
+		<table id="block-${id}" class="block">
+			<tr>
+				<td id="name-${id}"
+					width="1"
+					class="name ${options.fav?'fav':''}"
+					onclick="toggleFav('${id}')">
+					${name} 
+				</td>
+				<td class="valuerow">
+					<select id="${id}"
+						class="value"
+						name="${id}">
+						${htmlOptions}
+					</select>
+				</td>
+				<td class="unit" width="1">${options.unit}</td>
+			</tr>
+			<tr class="info"><td colspan="3">
+				${info} Default value is <em>${options.values[options.values.indexOf(defaultValue)+1]}</em>.
+			</td></tr>
+		</table>`;
+
+			
+
+
+	// create a new dom element
+	
+	var block = document.createElement('div');
+		block.innerHTML = html;
+	
+	// insert in dom 
+	
+	document.getElementById("blocks").appendChild( block );
+	
+	data[id] = {
+		type:	NUMERIC_LIST,
+		block:	document.getElementById('block-'+id),
+		name:	document.getElementById('name-'+id),
+		value:	document.getElementById(id),
+		defaultValue: defaultValue,
+		options: options,
+		tags: tags,
+	}
+
+	data[id].value.value = options.value;
 }

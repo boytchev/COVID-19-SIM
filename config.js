@@ -216,9 +216,31 @@ export const NO_SUN = 0;
 export const STATIC_SUN = 1;
 export const DYNAMIC_SUN = 2;
 
+export const SUN = param('su',NO_SUN);
+export const STATIC_SUN_POSITION_MS = param('sspm',timeMs(10,0,0));
+
+export const SUNRISE_MS = param('srm',timeMs(6));
+export const SUNSET_MS = param('ssm',timeMs(18));
+
+console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
+console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
+
+
 export const NO_SHADOWS = 0;
 export const TOP_SHADOWS = 1;
 export const FULL_SHADOWS = 2;
+
+export const SHADOWS = param('sh',NO_SHADOWS);
+export const SHADOWS_MAP_SIZE = param('shms',4096);
+export const SHADOWS_MAX_COUNT = param('shmc',3);
+
+
+
+
+export const SUN_HORIZONTAL_ANGLE = Math.PI/6;
+export const SUN_SIN = Math.sin(SUN_HORIZONTAL_ANGLE);
+export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
+		
 
 export const AGENTS_CAST_SHADOWS = !true;
 
@@ -263,26 +285,6 @@ export const LAMP_HOUSE_PM_INTENSITY_MS = new Range(
 				new Range( timeMs(17,15), timeMs(18) ),
 				new Range( timeMs(22,30), timeMs(24) ) );
 
-export const SUN = NO_SUN;
-//export const SUN = STATIC_SUN;
-//export const SUN = DYNAMIC_SUN;
-export const SUNRISE_MS = timeMs(6);
-export const SUNSET_MS = timeMs(18);
-export const STATIC_SUN_POSITION_MS = timeMs(17,0,0);
-console.assert(SUNRISE_MS<timeMs(12),'Sunrise must be before 12:00 [0955]');
-console.assert(SUNSET_MS>timeMs(12),'Sunset must be after 12:00 [0956]');
-
-export const SUN_HORIZONTAL_ANGLE = Math.PI/6;
-export const SUN_SIN = Math.sin(SUN_HORIZONTAL_ANGLE);
-export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
-		
-
-
-export const SHADOWS = NO_SHADOWS;
-//export const SHADOWS = TOP_SHADOWS;
-//export const SHADOWS = FULL_SHADOWS;
-export const SHADOWS_MAP_SIZE = 1024*4*2;
-export const SHADOWS_MAX_COUNT = 3;
 
 
 
