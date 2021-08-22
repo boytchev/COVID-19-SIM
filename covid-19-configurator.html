@@ -481,13 +481,8 @@
 			'Тime interval in the morning when office lamps are turned off. All office lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
 
 		addTimeRange(
-			'loain', 'Office lamps on intensity (morning)', timeMs(5,30), timeMs(6,10), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning when office lamps intensity goes from no intensity up to full intensity. This makes the first lamps to not shine too bright. It is suggested that this time overlaps with <em>Office lamps on (morning)</em>.' );
-
-		addTimeRange(
-			'loaif', 'Office lamps off intensity (morning)', timeMs(5,50), timeMs(6,20), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning when office lamps intensity goes from full intensity down to no intensity. This makes the last lamps to fade out smoothly. It is suggested that this time overlaps with <em>Office lamps off (morning)</em>.' );
-
+			'loai', 'Office lamps max intensity (morning)', timeMs(5,50), timeMs(6), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning, when office lamps are fully lit. This interval must be between <em>Office lamps on (morning)</em> and <em>Office lamps off (morning)</em>. This parameter is used to fade in or out the lights.' );
 
 		addTimeRange(
 			'lopn', 'Office lamps on (evening)', timeMs(17), timeMs(17,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
@@ -498,13 +493,8 @@
 			'Тime interval in the evening when office lamps are turned off. All office lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
 
 		addTimeRange(
-			'lopin', 'Office lamps on intensity (evening)', timeMs(17), timeMs(18), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening when office lamps intensity goes from no intensity up to full intensity. This makes the first lamps to not shine too bright. It is suggested that this time overlaps with <em>Office lamps on (evening)</em>.' );
-
-		addTimeRange(
-			'lopif', 'Office lamps off intensity (evening)', timeMs(21), timeMs(22), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening when office lamps intensity goes from full intensity down to no intensity. This makes the last lamps to fade out smoothly. It is suggested that this time overlaps with <em>Office lamps off (evening)</em>.' );
-
+			'lopi', 'Office lamps max intensity (evening)', timeMs(18), timeMs(21), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening, when office lamps are fully lit. This interval must be between <em>Office lamps on (evening)</em> and <em>Office lamps off (evening)</em>. This parameter is used to fade in or out the lights.' );
 
 
 

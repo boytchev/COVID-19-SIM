@@ -249,15 +249,19 @@ export const AGENTS_CAST_SHADOWS = param('acs',false);
 export const LAMP_OFFICE_AM_MS = new Range(
 				param2('loan',new Range( timeMs(5,30), timeMs(6,10) )),
 				param2('loaf',new Range( timeMs(6,10), timeMs(6,30) )) );
+const LAMP_OFFICE_AM_INTENSITY_SPAN_MS = param2('loai',new Range( timeMs(5,50), timeMs(6) ));
 export const LAMP_OFFICE_AM_INTENSITY_MS = new Range(
-				param2('loain',new Range( timeMs(5,30), timeMs(5,50) )),
-				param2('loaif',new Range( timeMs(5,50), timeMs(6,20) )) );
+				new Range( LAMP_OFFICE_AM_MS.min.min, LAMP_OFFICE_AM_INTENSITY_SPAN_MS.min ),
+				new Range( LAMP_OFFICE_AM_INTENSITY_SPAN_MS.max, LAMP_OFFICE_AM_MS.max.max ) );
+				
 export const LAMP_OFFICE_PM_MS = new Range(
 				param2('lopn',new Range( timeMs(17), timeMs(17,30) )),
 				param2('lopf',new Range( timeMs(18), timeMs(22) )) );
+const LAMP_OFFICE_PM_INTENSITY_SPAN_MS = param2('lopi',new Range( timeMs(18), timeMs(21) ));
 export const LAMP_OFFICE_PM_INTENSITY_MS = new Range(
-				param2('lopin',new Range( timeMs(17), timeMs(18) )),
-				param2('lopif',new Range( timeMs(21), timeMs(22) )) );
+				new Range( LAMP_OFFICE_PM_MS.min.min, LAMP_OFFICE_PM_INTENSITY_SPAN_MS.min ),
+				new Range( LAMP_OFFICE_PM_INTENSITY_SPAN_MS.max, LAMP_OFFICE_PM_MS.max.max ) );
+
 
 export const LAMP_APARTMENT_AM_MS = new Range(
 				new Range( timeMs(4,30), timeMs(5,30) ),
