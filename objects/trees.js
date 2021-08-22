@@ -59,7 +59,7 @@ export class Trees
 		var vec = new THREE.Vector3(),
 			pos = geometry.getAttribute( 'position' );
 
-console.log('tree',pos.count);
+//console.log('tree',pos.count);
 
 		for( var i=0; i<pos.count; i++ )
 		{

@@ -70,6 +70,7 @@ class HouseWing
 
 		// set door positions, (x,z) - inside the house; (outX,outZ) - outside the house
 		this.doors = [];
+
 		switch( 10*size.x + size.z )
 		{
 			case 44:
@@ -524,10 +525,13 @@ export class HouseBuildings
 					z2 = round( pos.z+2*THREE.Math.randInt(-1,1), 1 );
 					
 				// sizes
-				var sx1 = round( THREE.Math.randInt( 3, 2*HOUSE_BOUNDING_RADIUS-4 ), 4),
-					sz1 = round( THREE.Math.randInt( 3, 2*HOUSE_BOUNDING_RADIUS-4 ), 4),
-					sx2 = round( THREE.Math.randInt( 3, 2*HOUSE_BOUNDING_RADIUS-4 ), 4),
-					sz2 = round( THREE.Math.randInt( 3, 2*HOUSE_BOUNDING_RADIUS-4 ), 4);
+				// 2021.08.22: HOUSE_BOUNDING_RADIUS replaced by 6, because the house
+				// wing sizes must be 4 or 8. This size (see 44, 48, 84 & 88) is important
+				// for wing placement
+				var sx1 = round( THREE.Math.randInt( 3, 2*6/*HOUSE_BOUNDING_RADIUS*/-4 ), 4),
+					sz1 = round( THREE.Math.randInt( 3, 2*6/*HOUSE_BOUNDING_RADIUS*/-4 ), 4),
+					sx2 = round( THREE.Math.randInt( 3, 2*6/*HOUSE_BOUNDING_RADIUS*/-4 ), 4),
+					sz2 = round( THREE.Math.randInt( 3, 2*6/*HOUSE_BOUNDING_RADIUS*/-4 ), 4);
 
 				// if there are matching X walls move the first house in the opposite direction
 				var dMin = (x1-sx1/2)-(x2-sx2/2),

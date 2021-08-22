@@ -461,7 +461,49 @@
 		addNumeric(
 			'shmc', 'Shadow count', 3, {min:1, max:10, step:1},
 			'Number of overlapping shadows. These shadows are at different resolutions, providing better softness of shadows. However, more number of shadows slows the performance. ' );
+
+		addNumeric(
+			'sha', 'Sun angle', 30, {min:0, max:360, step:15, unit:'&deg;'},
+			'Angle (in degrees) of how the sun path in the sky is horizontally rotated in respect to the ground. This can be used to adjust North, East, South and West directions. Angles 0&deg;, 90&deg;, 180&deg;, 270&deg; and 360&deg; will make the sun trajectory aligned with the city streets.' );
 			
+		addBoolean(
+			'acs', 'People shadows', false, {},
+			'If checked, people have shadows. The current implementation of shadows in walking people is static and does not depend on body posture.' );
+
+
+
+		addTimeRange(
+			'loan', 'Office lamps on (morning)', timeMs(5,30), timeMs(6,10), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning when office lamps are turned on. All office lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
+
+		addTimeRange(
+			'loaf', 'Office lamps off (morning)', timeMs(6,10), timeMs(6,30), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning when office lamps are turned off. All office lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
+
+		addTimeRange(
+			'loain', 'Office lamps on intensity (morning)', timeMs(5,30), timeMs(6,10), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning when office lamps intensity goes from no intensity up to full intensity. This makes the first lamps to not shine too bright. It is suggested that this time overlaps with <em>Office lamps on (morning)</em>.' );
+
+		addTimeRange(
+			'loaif', 'Office lamps off intensity (morning)', timeMs(5,50), timeMs(6,20), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning when office lamps intensity goes from full intensity down to no intensity. This makes the last lamps to fade out smoothly. It is suggested that this time overlaps with <em>Office lamps off (morning)</em>.' );
+
+
+		addTimeRange(
+			'lopn', 'Office lamps on (evening)', timeMs(17), timeMs(17,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening when office lamps are turned on. All office lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
+
+		addTimeRange(
+			'lopf', 'Office lamps off (evening)', timeMs(18), timeMs(22), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening when office lamps are turned off. All office lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
+
+		addTimeRange(
+			'lopin', 'Office lamps on intensity (evening)', timeMs(17), timeMs(18), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening when office lamps intensity goes from no intensity up to full intensity. This makes the first lamps to not shine too bright. It is suggested that this time overlaps with <em>Office lamps on (evening)</em>.' );
+
+		addTimeRange(
+			'lopif', 'Office lamps off intensity (evening)', timeMs(21), timeMs(22), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening when office lamps intensity goes from full intensity down to no intensity. This makes the last lamps to fade out smoothly. It is suggested that this time overlaps with <em>Office lamps off (evening)</em>.' );
 
 
 

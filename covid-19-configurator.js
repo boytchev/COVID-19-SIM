@@ -51,8 +51,9 @@ const
 	TEMPORAL = 3,
 	PERCENTAGE = 4,
 	HEADER = 5,
-	NUMERIC_RANGE = 6;
-	NUMERIC_LIST = 7;
+	NUMERIC_RANGE = 6,
+	NUMERIC_LIST = 7,
+	TEMPORAL_RANGE = 8;
 
 // get a parameter
 function param( id, defaultValue )
@@ -62,11 +63,6 @@ function param( id, defaultValue )
 	// first look for the parameter in the URL
 	// if not there, then check in local storage
 	// eventually, return the default value
-//console.log('param',id);
-//console.log(urlParams.has(id),urlParams.get( id ));
-//console.log(storedParams.has(id),storedParams.get( id ));
-//console.log(defaultValue);
-
 	if( configParams.has(id) )
 		value = configParams.get( id )
 	else
@@ -80,8 +76,9 @@ function param( id, defaultValue )
 	
 	return value;
 }
-	
-function param2( id, defaultValueMin, defaultValueMax )
+
+
+function param2( id, defaultValueA, defaultValueB )
 {
 	var value;
 
@@ -92,8 +89,8 @@ function param2( id, defaultValueMin, defaultValueMax )
 		return [parseFloat(value[0]), parseFloat(value[1])];
 	}
 
-//console.log('a',id,	[defaultValueMin,defaultValueMax]);
-	return [defaultValueMin,defaultValueMax];
+//console.log('a',id,	[defaultValueA,defaultValueB]);
+	return [defaultValueA,defaultValueB];
 }
 	
 function addNumeric( id, name, defaultValue, options, info='', tags='' )
@@ -388,7 +385,7 @@ function prepareValues( onlyModified )
 				break;
 			case TEMPORAL:
 				var arr = (data[id].value.value+':00:00').split(':'),
-					value = 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]))
+					value = 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]));
 				if( (!onlyModified) || (value != data[id].defaultValue) )
 				{
 					cmd = value;
@@ -403,12 +400,22 @@ function prepareValues( onlyModified )
 			case HEADER:
 				break;
 			case NUMERIC_RANGE:
-				if( (!onlyModified) || (data[id].valueMin.value != data[id].defaultValueMin) || (data[id].valueMax.value != data[id].defaultValueMax) )
-					cmd = data[id].valueMin.value+'~'+data[id].valueMax.value;
+				if( (!onlyModified) || (data[id].valueA.value != data[id].defaultValueA) || (data[id].valueB.value != data[id].defaultValueB) )
+					cmd = data[id].valueA.value+'~'+data[id].valueB.value;
 				break;
 			case NUMERIC_LIST:
 				if( (!onlyModified) || (data[id].value.value != data[id].defaultValue) )
 					cmd = data[id].value.value;
+				break;
+			case TEMPORAL_RANGE:
+				var arrMin = (data[id].valueA.value+':00:00').split(':'),
+					arrMax = (data[id].valueB.value+':00:00').split(':'),
+					valueA = 1000*(parseInt(arrMin[0])*SECONDS_IN_HOUR + parseInt(arrMin[1])*SECONDS_IN_MINUTE + parseInt(arrMin[2])),
+					valueB = 1000*(parseInt(arrMax[0])*SECONDS_IN_HOUR + parseInt(arrMax[1])*SECONDS_IN_MINUTE + parseInt(arrMax[2]));
+				if( (!onlyModified) || (data[id].valueA.value != data[id].defaultValueA) || (data[id].valueB.value != data[id].defaultValueB) )
+				{
+					cmd = valueA+'~'+valueB;
+				}
 				break;
 			default:
 				throw 'Invalid configuration parameter type "'+id+'"';
@@ -454,7 +461,14 @@ function addTime( id, name, defaultValue, options, info='', tags='' )
 					${name} 
 				</td>
 				<td class="valuerow">
-					<input id="${id}" class="value" type="time" name="${id}" value="${options.value}" ${options.value?'checked':''}>
+					<input id="${id}"
+						class="value"
+						type="time"
+						name="${id}"
+						value="${options.value}"
+						min="${options.min}"
+						max="${options.max}"
+						${options.value?'checked':''}>
 				</td>
 			</tr>
 			<tr class="info"><td colspan="2">
@@ -520,7 +534,7 @@ function addHeader( level, name, logo='', info='', tags='' )
 }
 
 
-function addNumericRange( id, name, defaultValueMin, defaultValueMax, options, info='', tags='' )
+function addNumericRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
 {
 	// check id
 	
@@ -534,8 +548,8 @@ function addNumericRange( id, name, defaultValueMin, defaultValueMax, options, i
 	options.min = options.min||0;
 	options.max = options.max||100;
 	options.step = options.step||1;
-	options.valueMin = param2( id, defaultValueMin, defaultValueMax )[0];
-	options.valueMax = param2( id, defaultValueMin, defaultValueMax )[1];
+	options.valueA = param2( id, defaultValueA, defaultValueB )[0];
+	options.valueB = param2( id, defaultValueA, defaultValueB )[1];
 	options.tags = tags.split( ',' );
 	options.unit = options.unit||'';
 	
@@ -559,7 +573,7 @@ function addNumericRange( id, name, defaultValueMin, defaultValueMax, options, i
 						name="${id}"
 						min="${options.min}"
 						max="${options.max}"
-						value="${options.valueMin}"
+						value="${options.valueA}"
 						step="${options.step}">
 				</td>
 				<td class="unit" width="1">${options.unit}</td>
@@ -573,13 +587,13 @@ function addNumericRange( id, name, defaultValueMin, defaultValueMax, options, i
 						name="${id}"
 						min="${options.min}"
 						max="${options.max}"
-						value="${options.valueMax}"
+						value="${options.valueB}"
 						step="${options.step}">
 				</td>
 				<td class="unit" width="1">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="3">
-				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${defaultValueMin} to ${defaultValueMax}.
+				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${defaultValueA} to ${defaultValueB}.
 			</td></tr>
 		</table>`;
 
@@ -599,10 +613,10 @@ function addNumericRange( id, name, defaultValueMin, defaultValueMax, options, i
 		type:	NUMERIC_RANGE,
 		block:	document.getElementById('block-'+id),
 		name:	document.getElementById('name-'+id),
-		valueMin:	document.getElementById(id+'-min'),
-		valueMax:	document.getElementById(id+'-max'),
-		defaultValueMin: defaultValueMin,
-		defaultValueMax: defaultValueMax,
+		valueA:	document.getElementById(id+'-min'),
+		valueB:	document.getElementById(id+'-max'),
+		defaultValueA: defaultValueA,
+		defaultValueB: defaultValueB,
 		options: options,
 		tags: tags,
 	}
@@ -680,3 +694,95 @@ function addNumericList( id, name, defaultValue, options, info='', tags='' )
 
 	data[id].value.value = options.value;
 }
+
+
+
+function addTimeRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
+{
+	// check id
+	
+	if( ids.indexOf(id) > -1 )
+		throw `error: Element with id="${id}" is already decalred.`;
+
+	ids.push( id );
+	
+	// set default values for missing options
+
+	options.min = msToString(options.min||0);
+	options.max = msToString(options.max||1000);
+	options.step = options.step||1;
+	options.valueA = msToString(param2( id, defaultValueA, defaultValueB )[0]);
+	options.valueB = msToString(param2( id, defaultValueA, defaultValueB )[1]);
+	options.tags = tags.split( ',' );
+	options.unit = options.unit||'';
+	
+	if( predefinedFavs )
+		options.fav = predefinedFavs.indexOf(id)>=0;
+	
+	// construct the html
+	var html =`
+		<table id="block-${id}" class="block">
+			<tr>
+				<td id="name-${id}"
+					width="1"
+					class="name ${options.fav?'fav':''}"
+					onclick="toggleFav('${id}')">
+					${name}
+				</td>
+				<td class="valuerow">
+					<input id="${id}-min"
+						class="value"
+						type="time"
+						name="${id}"
+						min="${options.min}"
+						max="${options.max}"
+						value="${options.valueA}"
+						step="${options.step}">
+				</td>
+			</tr>
+			<tr>
+				<td class="name" style="text-align: right;">TO</td>
+				<td class="valuerow">
+					<input id="${id}-max"
+						class="value"
+						type="time"
+						name="${id}"
+						min="${options.min}"
+						max="${options.max}"
+						value="${options.valueB}"
+						step="${options.step}">
+				</td>
+				<td class="unit" width="1">${options.unit}</td>
+			</tr>
+			<tr class="info"><td colspan="2">
+				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${msToString(defaultValueA)} to ${msToString(defaultValueB)}.
+			</td></tr>
+		</table>`;
+
+			
+
+
+	// create a new dom element
+	
+	var block = document.createElement('div');
+		block.innerHTML = html;
+	
+	// insert in dom 
+	
+	document.getElementById("blocks").appendChild( block );
+	
+	data[id] = {
+		type:	TEMPORAL_RANGE,
+		block:	document.getElementById('block-'+id),
+		name:	document.getElementById('name-'+id),
+		valueA:	document.getElementById(id+'-min'),
+		valueB:	document.getElementById(id+'-max'),
+		defaultValueA: defaultValueA,
+		defaultValueB: defaultValueB,
+		options: options,
+		tags: tags,
+	}
+	
+}
+
+

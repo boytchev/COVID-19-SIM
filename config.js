@@ -237,27 +237,27 @@ export const SHADOWS_MAX_COUNT = param('shmc',3);
 
 
 
-export const SUN_HORIZONTAL_ANGLE = Math.PI/6;
+export const SUN_HORIZONTAL_ANGLE = param('sha',30)*Math.PI/180;
 export const SUN_SIN = Math.sin(SUN_HORIZONTAL_ANGLE);
 export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 		
 
-export const AGENTS_CAST_SHADOWS = !true;
+export const AGENTS_CAST_SHADOWS = param('acs',false);
 
 
 // time with lamps on
 export const LAMP_OFFICE_AM_MS = new Range(
-				new Range( timeMs(5,30), timeMs(6,10) ),
-				new Range( timeMs(6,10), timeMs(6,30) ) );
+				param2('loan',new Range( timeMs(5,30), timeMs(6,10) )),
+				param2('loaf',new Range( timeMs(6,10), timeMs(6,30) )) );
 export const LAMP_OFFICE_AM_INTENSITY_MS = new Range(
-				new Range( timeMs(5,30), timeMs(5,50) ),
-				new Range( timeMs(5,50), timeMs(6,20) ) );
+				param2('loain',new Range( timeMs(5,30), timeMs(5,50) )),
+				param2('loaif',new Range( timeMs(5,50), timeMs(6,20) )) );
 export const LAMP_OFFICE_PM_MS = new Range(
-				new Range( timeMs(17), timeMs(17,30) ),
-				new Range( timeMs(18), timeMs(22) ) );
+				param2('lopn',new Range( timeMs(17), timeMs(17,30) )),
+				param2('lopf',new Range( timeMs(18), timeMs(22) )) );
 export const LAMP_OFFICE_PM_INTENSITY_MS = new Range(
-				new Range( timeMs(17), timeMs(18) ),
-				new Range( timeMs(21), timeMs(22) ) );
+				param2('lopin',new Range( timeMs(17), timeMs(18) )),
+				param2('lopif',new Range( timeMs(21), timeMs(22) )) );
 
 export const LAMP_APARTMENT_AM_MS = new Range(
 				new Range( timeMs(4,30), timeMs(5,30) ),
