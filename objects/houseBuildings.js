@@ -477,7 +477,7 @@ export class HouseBuildings
 					
 					float windowId = (fract(5.0*cos(x+y*y)+vHouseId)+fract(7.0*sin(y+x*x+5.0*vHouseId)*(x+1.0))+0.02*sin(uTime*y/300.0+x+y+13.0*vHouseId))/2.0;
 				  `	
-				    +(!CARTOON_STYLE
+				    +(CARTOON_STYLE
 						? `	vec4 newColor = vec4(1);
 						  `
 						: `	float colorId = fract(12.81*windowId)+vHouseId-1.0;

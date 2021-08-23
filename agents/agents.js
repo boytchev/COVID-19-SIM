@@ -22,7 +22,7 @@ export var agentsAtHome = 0;
 export var agentsAtWork = 0;
 export var agentsOutside = 0;
 export var agentsOther = 0;
-export var agentsInfected = 0;
+export var agentsInfected = [0,0,0];
 
 
 export class Agents
@@ -172,7 +172,7 @@ export class Agents
 		
 			if( DEBUG_AGENT_HEALTH )
 			{
-				agentsInfected = 0;
+				agentsInfected = [0,0,0];
 			}
 			
 			// update positions and images of agents
@@ -240,7 +240,15 @@ export class Agents
 				if( DEBUG_AGENT_HEALTH )
 				{
 					if( agent.infectionPattern != undefined )
-						agentsInfected++;
+					{
+						if( agent.infectionLevel<20 )
+							agentsInfected[0]++;
+						else
+						if( agent.infectionLevel<60 )
+							agentsInfected[1]++;
+						else
+							agentsInfected[2]++;
+					}
 				} // if( DEBUG_AGENT_HEALTH )
 					
 			} // for agents

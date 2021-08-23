@@ -50,7 +50,7 @@
 	</div>
 	<br>
 	
-	<h2><div class="info">Note: There are more than 140 parameters. Not all of them are implemented in the configurator. Stay tuned. If you are unhappy of how parameters are grouped &ndash; that will be dealt with when all parameters are implemented. As well, there is a planned feature for tag-based filtering.
+	<h2><div class="info">Note: If you are unhappy of how parameters are grouped &ndash; that will be dealt with when all parameters are implemented. As well, there is a planned feature for tag-based filtering.
 	</div></h2>
 
 </div> <!--page-->	
@@ -271,7 +271,7 @@
 			
 		addBoolean(
 			'dah', 'Population health', false, {},
-			'If checked, once per second prints in the JS console the number of infected people.' );
+			'If checked, once per second prints in the JS console the number of infected people split into three health categories &ndash; asymptotic (infection level under 20%), medium (between 20% and 60%) and severe (above 60%).' );
 			
 
 // NAVIGATION ===================================
@@ -481,7 +481,7 @@
 			'Тime interval in the morning when office lamps are turned off. All office lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
 
 		addTimeRange(
-			'loai', 'Office lamps max intensity (morning)', timeMs(5,50), timeMs(6), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'loai', 'Office lamps max intensity (morning)', timeMs(5,40), timeMs(6), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
 			'Тime interval in the morning, when office lamps are fully lit. This interval must be between <em>Office lamps on (morning)</em> and <em>Office lamps off (morning)</em>. This parameter is used to fade in or out the lights.' );
 
 		addTimeRange(
@@ -493,13 +493,108 @@
 			'Тime interval in the evening when office lamps are turned off. All office lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
 
 		addTimeRange(
-			'lopi', 'Office lamps max intensity (evening)', timeMs(18), timeMs(21), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'lopi', 'Office lamps max intensity (evening)', timeMs(18), timeMs(22,50), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
 			'Тime interval in the evening, when office lamps are fully lit. This interval must be between <em>Office lamps on (evening)</em> and <em>Office lamps off (evening)</em>. This parameter is used to fade in or out the lights.' );
 
 
 
 
+		addTimeRange(
+			'laan', 'Apartment lamps on (morning)', timeMs(4,30), timeMs(5,30), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning when apartment lamps are turned on. All apartment lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
 
+		addTimeRange(
+			'laaf', 'Apartment lamps off (morning)', timeMs(6,30), timeMs(7), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning when apartment lamps are turned off. All apartment lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
+
+		addTimeRange(
+			'laai', 'Apartment lamps max intensity (morning)', timeMs(4,40), timeMs(6,50), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning, when apartment lamps are fully lit. This interval must be between <em>Apartment lamps on (morning)</em> and <em>Apartment lamps off (morning)</em>. This parameter is used to fade in or out the lights.' );
+
+		addTimeRange(
+			'lapn', 'Apartment lamps on (evening)', timeMs(17,45), timeMs(18,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening when apartment lamps are turned on. All apartment lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
+
+		addTimeRange(
+			'lapf', 'Apartment lamps off (evening)', timeMs(21), timeMs(23,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening when apartment lamps are turned off. All apartment lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
+
+		addTimeRange(
+			'lapi', 'Apartment lamps max intensity (evening)', timeMs(17,55), timeMs(22,50), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening, when apartment lamps are fully lit. This interval must be between <em>Apartment lamps on (evening)</em> and <em>Apartment lamps off (evening)</em>. This parameter is used to fade in or out the lights.' );
+
+
+		addTimeRange(
+			'lhan', 'House lamps on (morning)', timeMs(4,30), timeMs(5,30), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning when house lamps are turned on. All house lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
+
+		addTimeRange(
+			'lhaf', 'House lamps off (morning)', timeMs(6,30), timeMs(7), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning when house lamps are turned off. All house lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
+
+		addTimeRange(
+			'lhai', 'House lamps max intensity (morning)', timeMs(4,40), timeMs(6,50), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
+			'Тime interval in the morning, when house lamps are fully lit. This interval must be between <em>House lamps on (morning)</em> and <em>House lamps off (morning)</em>. This parameter is used to fade in or out the lights.' );
+
+		addTimeRange(
+			'lhpn', 'House lamps on (evening)', timeMs(17,45), timeMs(18,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening when house lamps are turned on. All house lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
+
+		addTimeRange(
+			'lhpf', 'House lamps off (evening)', timeMs(21), timeMs(23,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening when house lamps are turned off. All house lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
+
+		addTimeRange(
+			'lhpi', 'House lamps max intensity (evening)', timeMs(17,55), timeMs(22,50), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
+			'Тime interval in the evening, when house lamps are fully lit. This interval must be between <em>House lamps on (evening)</em> and <em>House lamps off (evening)</em>. This parameter is used to fade in or out the lights.' );
+
+		addNumeric(
+			'ipc', 'Infection patterns count', 10, {min:2, max:21, step:1},
+			'The number of infection patterns. Each pattern has a viral shedding curve with specific position of the peak value. Currently the infection pattern is picked individually for each person from the first half of available patterns (i.e. the infection peak is near the beginning of the illness.' );
+			
+		addTimeRange(
+			'itmh', 'Infection duration (hours)', timeMs(0,0,10), timeMs(10), {min:timeMs(0), max:timeMs(23,59,59), step:timeMs(0,0,10)},
+			'Duration of infection in hours. The full duration combines this value and the value of <em>Infection duration (days)</em>. ' );
+
+		addNumericRange(
+			'itmd', 'Infection duration (days)', 0, 0, {min:0, max:60, step:1, unit:'d'},
+			'Duration of infection in days. The full duration combines this value and the value of <em>Infection duration (hours)</em>. For example, if hours infection is 4:00 to 10:00 and days infection is 1..6 days, then the actual duration is picked from 1 day and 4 hours to 6 days and 10 hours.' );
+
+		addBoolean(
+			'ici', 'Infection color indicator', false, {},
+			'If checked, the skin color of infected people turn reddish depending on the level of illness.' );
+
+		addNumeric(
+			'is', 'Infection step', 200, {min:1, max:1000, step:10},
+			'The number of animation frames needed to check the whole population. If the value is 1, then all people are checked every frame. This may affect the performance badly in case of large but concentrated population. Distributing the check over higher number of frames, keeps the performance at the cost of some inaccuracy in infection &ndash; if two people meet and go away between their checks, they will not infect each other.' );
+
+		addNumeric(
+			'id', 'Infection distance', 1, {min:0.2, max:50, step:0.2, unit: 'm'},
+			'The maximal infection distance in meters. The distance is measured as Manhattan distance. If a person is further away from another person, then there is no infection trasnfer between both.' );
+
+		addPercentage(
+			'ist', 'Infection speed', 0.5, {min:0.1, max:1, step:0.1},
+			'A scaling factor the the infection speed. Larger factors make the infection spread faster.' );
+			
+		addNumericRange(
+			'ims', 'Immune strength', 100, 200, {min:10, max:1000, step:10},
+			'Initial immune strength for a person. When in contact with infection the strength decreases and when it reaches 0 the person becomes infected.' );
+
+		addNumeric(
+			'imrf', 'Immune recovery factor', 0.0005, {min:0, max:0.1, step:0.0005, unit:'/s'},
+			'Every second the immune system of a person self-recovers by this value. Larger recovery factors will protect a person against infection, as the decrease caused by the infection will be overcome by the immune system recovery. <em>Immune strength = 100</em> is completely recovered in 2 days and 8 hours by recovery factor 0.0005.' );
+			
+		addNumericRange(
+			'icf', 'Immune cure factor', 1.0, 1.2, {min:0.5, max:2, step:0.1},
+			'Scaling factor of immune strength after cure. Value 1.0 keeps the same immune strength as before the infection. Value 1.2 increates the strength by 20%. Value 0.5 decreases the strength twice.' );
+	
+		addPercentage(
+			'pii', 'Initial infected', 0.05, {min:0, max:1, step:0.05},
+			'Percentage of initially infected people. Although infected, the people will start with the asymptotic phase, so the infection will manifestated later on.' );
+			
+		addNumericList(
+			'adm', 'People clothes', 7, {values:[7,'CLOTHES',0,'WHITE',1,'CHECKERED',2,'CHESSBOARD',3,'CRIMSON',4,'BORDERS',5,'PATCHES',6,'RANDOM']},
+			'The clothes on people. The only clothes option is <em>CLOTHES</em>, the others are used for development &ndash; <em>WHITE</em> for all white, <em>CHECKERED</em> for colorful squares, <em>CHESSBOARD</em> for black and white squares, <em>CRIMSON</em> for black body with crimson stripes, <em>BORDERS</em> for white body with lines for clothes patches, <em>PATCHES</em> - for grayscale patches with topology codes, and <em>RANDOM</em> for randomly colored patches.' );
 
 
 

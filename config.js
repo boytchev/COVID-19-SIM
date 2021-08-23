@@ -249,62 +249,69 @@ export const AGENTS_CAST_SHADOWS = param('acs',false);
 export const LAMP_OFFICE_AM_MS = new Range(
 				param2('loan',new Range( timeMs(5,30), timeMs(6,10) )),
 				param2('loaf',new Range( timeMs(6,10), timeMs(6,30) )) );
-const LAMP_OFFICE_AM_INTENSITY_SPAN_MS = param2('loai',new Range( timeMs(5,50), timeMs(6) ));
+var INTENSITY_MS = param2('loai',new Range( timeMs(5,50), timeMs(6) ));
 export const LAMP_OFFICE_AM_INTENSITY_MS = new Range(
-				new Range( LAMP_OFFICE_AM_MS.min.min, LAMP_OFFICE_AM_INTENSITY_SPAN_MS.min ),
-				new Range( LAMP_OFFICE_AM_INTENSITY_SPAN_MS.max, LAMP_OFFICE_AM_MS.max.max ) );
+				new Range( LAMP_OFFICE_AM_MS.min.min, INTENSITY_MS.min ),
+				new Range( INTENSITY_MS.max, LAMP_OFFICE_AM_MS.max.max ) );
 				
 export const LAMP_OFFICE_PM_MS = new Range(
 				param2('lopn',new Range( timeMs(17), timeMs(17,30) )),
 				param2('lopf',new Range( timeMs(18), timeMs(22) )) );
-const LAMP_OFFICE_PM_INTENSITY_SPAN_MS = param2('lopi',new Range( timeMs(18), timeMs(21) ));
+var INTENSITY_MS = param2('lopi',new Range( timeMs(18), timeMs(21) ));
 export const LAMP_OFFICE_PM_INTENSITY_MS = new Range(
-				new Range( LAMP_OFFICE_PM_MS.min.min, LAMP_OFFICE_PM_INTENSITY_SPAN_MS.min ),
-				new Range( LAMP_OFFICE_PM_INTENSITY_SPAN_MS.max, LAMP_OFFICE_PM_MS.max.max ) );
+				new Range( LAMP_OFFICE_PM_MS.min.min, INTENSITY_MS.min ),
+				new Range( INTENSITY_MS.max, LAMP_OFFICE_PM_MS.max.max ) );
 
 
 export const LAMP_APARTMENT_AM_MS = new Range(
-				new Range( timeMs(4,30), timeMs(5,30) ),
-				new Range( timeMs(6,30), timeMs(7) ) );
+				param2('laan',new Range( timeMs(4,30), timeMs(5,30) )),
+				param2('laaf',new Range( timeMs(6,30), timeMs(7) )) );
+var INTENSITY_MS = param2('laai',new Range( timeMs(4,40), timeMs(6,50) ));
 export const LAMP_APARTMENT_AM_INTENSITY_MS = new Range(
-				new Range( timeMs(4,30), timeMs(5) ),
-				new Range( timeMs(6,0), timeMs(6,15) ) );
+				new Range( LAMP_APARTMENT_AM_MS.min.min, INTENSITY_MS.min ),
+				new Range( INTENSITY_MS.max, LAMP_APARTMENT_AM_MS.max.max ) );
+				
 export const LAMP_APARTMENT_PM_MS = new Range(
-				new Range( timeMs(17,45), timeMs(18,30) ),
-				new Range( timeMs(21), timeMs(24) ) );
+				param2('lapn',new Range( timeMs(17,45), timeMs(18,30) )),
+				param2('lapf',new Range( timeMs(21), timeMs(23,30) )) );
+var INTENSITY_MS = param2('lapi',new Range( timeMs(17,55), timeMs(22,50) ));
 export const LAMP_APARTMENT_PM_INTENSITY_MS = new Range(
-				new Range( timeMs(17,15), timeMs(18) ),
-				new Range( timeMs(22,30), timeMs(24) ) );
+				new Range( LAMP_APARTMENT_PM_MS.min.min, INTENSITY_MS.min ),
+				new Range( INTENSITY_MS.max, LAMP_APARTMENT_PM_MS.max.max ) );
 
 export const LAMP_HOUSE_AM_MS = new Range(
-				new Range( timeMs(4,30), timeMs(5,30) ),
-				new Range( timeMs(6,30), timeMs(7) ) );
+				param2('lhan',new Range( timeMs(4,30), timeMs(5,30) )),
+				param2('lhaf',new Range( timeMs(6,30), timeMs(7) )) );
+var INTENSITY_MS = param2('lhai',new Range( timeMs(4,40), timeMs(6,50) ));
 export const LAMP_HOUSE_AM_INTENSITY_MS = new Range(
-				new Range( timeMs(4,30), timeMs(5) ),
-				new Range( timeMs(6,0), timeMs(6,15) ) );
+				new Range( LAMP_HOUSE_AM_MS.min.min, INTENSITY_MS.min ),
+				new Range( INTENSITY_MS.max, LAMP_HOUSE_AM_MS.max.max ) );
+				
 export const LAMP_HOUSE_PM_MS = new Range(
-				new Range( timeMs(17,45), timeMs(18,30) ),
-				new Range( timeMs(21), timeMs(24) ) );
+				param2('lhpn',new Range( timeMs(17,45), timeMs(18,30) )),
+				param2('lhpf',new Range( timeMs(21), timeMs(23,30) )) );
+var INTENSITY_MS = param2('lhpi',new Range( timeMs(17,55), timeMs(22,50) ));
 export const LAMP_HOUSE_PM_INTENSITY_MS = new Range(
-				new Range( timeMs(17,15), timeMs(18) ),
-				new Range( timeMs(22,30), timeMs(24) ) );
+				new Range( LAMP_HOUSE_PM_MS.min.min, INTENSITY_MS.min ),
+				new Range( INTENSITY_MS.max, LAMP_HOUSE_PM_MS.max.max ) );
 
 
 
+export const INFECTION_PATTERNS_COUNT = param('ipc',10);
 
+var INFECTION_HOURS_MS = param2('itmh',new Range( timeMs(1), timeMs(10) )),
+	INFECTION_DAYS_MS  = param2('itmd',new Range( 14, 28 ));
+export const INFECTION_TOTAL_MS = new Range( HOURS_24_MS*INFECTION_DAYS_MS.min+INFECTION_HOURS_MS.min, HOURS_24_MS*INFECTION_DAYS_MS.max+INFECTION_HOURS_MS.max ); // 40 min - 10 hours
 
-export const INFECTION_PATTERNS_COUNT = 10;
-//const INFECTION_TOTAL_MS = new Range( 14*HOURS_24_MS, 28*HOURS_24_MS ); // 14-28 days in ms
-export const INFECTION_TOTAL_MS = new Range( timeMs(0), timeMs(0,10,0) ); // 40 min - 10 hours
 //export const INFECTION_OVERHEAD_INDICATOR = false;
-export const INFECTION_COLOR_INDICATOR = !false;
-export const INFECTION_STEP = 200;
-export const INFECTION_DISTANCE = 1; // in meters
-export const INFECTION_STRENGTH = 0.5; // factor of how fast is the infection
-export const IMMUNE_STRENGTH = new Range( 100, 200 );
-export const IMMUNE_RECOVERY_FACTOR = 0.0005; // recovery of immune per second
-export const IMMUNE_CURE_FACTOR = new Range( 1.0, 1.2 ); // increase of immunity after cure
-export const PERCENTAGE_INITIAL_INFECTED = 0.05; // 0.05=5%
+export const INFECTION_COLOR_INDICATOR = param('ici',false);
+export const INFECTION_STEP = param('is',200);
+export const INFECTION_DISTANCE = param('id',1); // in meters
+export const INFECTION_STRENGTH = param('ist',0.5); // factor of how fast is the infection
+export const IMMUNE_STRENGTH = param2('ims',new Range( 100, 200 ));
+export const IMMUNE_RECOVERY_FACTOR = param('imrf',0.0005); // recovery of immune per second
+export const IMMUNE_CURE_FACTOR = param2('icf',new Range( 1.0, 1.2 )); // increase of immunity after cure
+export const PERCENTAGE_INITIAL_INFECTED = param('pii',0.05); // 0.05=5%
 
 
 
@@ -318,7 +325,7 @@ export const AGENT_DRAW_MODE_PATCHES    = 5; // black-gray-white patches
 export const AGENT_DRAW_MODE_RANDOM     = 6; // random color patches
 export const AGENT_DRAW_MODE_CLOTHES	= 7; // shader-defined clothes
 
-export const AGENT_DRAW_MODE = AGENT_DRAW_MODE_CLOTHES;
+export const AGENT_DRAW_MODE = param('adm',AGENT_DRAW_MODE_CLOTHES);
 
 
 /*

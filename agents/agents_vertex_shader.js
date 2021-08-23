@@ -2,6 +2,9 @@
 //
 // Modified code is in COVID19SYM
 
+
+import {INFECTION_COLOR_INDICATOR} from '../config.js';
+
 export default `
 
 #define COVID19SYM
@@ -108,8 +111,12 @@ void main() {
 	#define KNEES 8
 	#define FEET  9
 	
-	vVertexColor = vec3( 1.0, 1.0-infectionLevel, 1.0-infectionLevel );
-	//vInfectionLevel = infectionLevel;
+	#if (${INFECTION_COLOR_INDICATOR?1:0})
+		vVertexColor = vec3( 1.0, 1.0-infectionLevel, 1.0-infectionLevel );
+	#else
+		vVertexColor = vec3( 1 );
+	#endif
+	
 	vAgentId = agentId;
 	vRandomId = randomId;
 	man = vRandomId<0.5;

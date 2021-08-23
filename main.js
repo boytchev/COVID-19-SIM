@@ -148,7 +148,7 @@ function oncePerSecond()
 	
 	if( DEBUG_AGENT_HEALTH )
 	{
-		console.log( 'infected',agentsInfected,'of',agents.agents.length);
+		console.log( `infected asymp:${agentsInfected[0]}(${Math.round(100*agentsInfected[0]/agents.agents.length)}%), medium:${agentsInfected[1]}(${Math.round(100*agentsInfected[1]/agents.agents.length)}%), severe:${agentsInfected[2]}(${Math.round(100*agentsInfected[2]/agents.agents.length)}%) of ${agents.agents.length}`);
 	}
 	
 

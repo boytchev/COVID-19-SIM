@@ -81,14 +81,17 @@ function param( id, defaultValue )
 function param2( id, defaultValueA, defaultValueB )
 {
 	var value;
+	
 
 	if( configParams.has(id) )
 	{
 		value = configParams.get( id ).split('~');
+		console.log(id,'=',value,configParams.get( id ));
 //console.log('a',id,	[parseFloat(value[0]), parseFloat(value[1])]);
 		return [parseFloat(value[0]), parseFloat(value[1])];
 	}
 
+	console.log(id,'=',value,configParams.get( id ));
 //console.log('a',id,	[defaultValueA,defaultValueB]);
 	return [defaultValueA,defaultValueB];
 }

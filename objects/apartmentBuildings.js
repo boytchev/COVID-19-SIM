@@ -282,8 +282,6 @@ export class ApartmentBuildings
 
 	static material()
 	{
-//return new THREE.MeshLambertMaterial();//TODO//
-
 		var material = new THREE.MeshStandardMaterial({
 				side: DEBUG_HIDE_ROOFS?THREE.DoubleSide:THREE.FrontSide,
 				color: 'white',
