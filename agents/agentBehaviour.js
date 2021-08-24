@@ -1037,6 +1037,7 @@ else
 				this.router( this.home, this.work );
 			this.doing = this.AGENT_WALKING_ROUTE;
 			this.doingNext = this.AGENT_WORKING_IN_OFFICE;
+			this.turnTowards( this.gotoPosition[0] );
 			
 			return;
 		}
@@ -1068,6 +1069,7 @@ else
 			this.doing = this.AGENT_WALKING_ROUTE;
 			this.doingNext = this.AGENT_STAYING_AT_HOME;
 			this.dailySchedule.alreadyWorkedToday = true;
+			this.turnTowards( this.gotoPosition[0] );
 			
 			return;
 		}
