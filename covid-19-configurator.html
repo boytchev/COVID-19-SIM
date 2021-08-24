@@ -596,6 +596,25 @@
 			'adm', 'People clothes', 7, {values:[7,'CLOTHES',0,'WHITE',1,'CHECKERED',2,'CHESSBOARD',3,'CRIMSON',4,'BORDERS',5,'PATCHES',6,'RANDOM']},
 			'The clothes on people. The only clothes option is <em>CLOTHES</em>, the others are used for development &ndash; <em>WHITE</em> for all white, <em>CHECKERED</em> for colorful squares, <em>CHESSBOARD</em> for black and white squares, <em>CRIMSON</em> for black body with crimson stripes, <em>BORDERS</em> for white body with lines for clothes patches, <em>PATCHES</em> - for grayscale patches with topology codes, and <em>RANDOM</em> for randomly colored patches.' );
 
+		addNumeric(
+			'mr', 'Males', 1, {min:0, max:10, step:1},
+			'Fraction of population that manifests biological male appearance, including clothing. This parameter affects adults and children alike. The actual proportion is <em>Males:Females</em> and 2:3 would mean approximately 2 out of 5 people are males. Proportion 0:0 is considered as 1:1.' );
+
+		addNumeric(
+			'fr', 'Females', 1, {min:0, max:10, step:1},
+			'Fraction of population that manifests biological female appearance, including clothing. This parameter affects adults and children alike. The actual proportion is <em>Males:Females</em> and 2:3 would mean approximately 2 out of 5 people are female. Proportion 0:0 is considered as 1:1.' );
+
+		addNumeric(
+			'fcr', 'Formal clothing', 1, {min:0, max:10, step:1},
+			'Fraction of population that wears formal business clothing. The actual proportion is <em>Formal:casual:intimate</em> and 5:3:2 would mean approximately 5 out of 10 people wear formal clothing. Proportion 0:0:0 is considered as 1:1:0.' );
+
+		addNumeric(
+			'ccr', 'Casual clothing', 1, {min:0, max:10, step:1},
+			'Fraction of population that wears casual clothing. The actual proportion is <em>Formal:casual:intimate</em> and 5:3:2 would mean approximately 3 out of 10 people wear casual clothing. Proportion 0:0:0 is considered as 1:1:0.' );
+
+		addNumeric(
+			'icr', 'Intimate clothing', 0, {min:0, max:10, step:1},
+			'Fraction of population that wears intimate clothing. The actual proportion is <em>Formal:casual:intimate</em> and 5:3:2 would mean approximately 2 out of 10 people wear casual clothing. Proportion 0:0:0 is considered as 1:1:0.' );
 
 
 

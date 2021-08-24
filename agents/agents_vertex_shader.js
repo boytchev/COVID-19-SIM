@@ -3,7 +3,7 @@
 // Modified code is in COVID19SYM
 
 
-import {INFECTION_COLOR_INDICATOR} from '../config.js';
+import {MALE_RATIO, INFECTION_COLOR_INDICATOR, FORMAL_CLOTHING_RATIO, CASUAL_CLOTHING_RATIO} from '../config.js';
 
 export default `
 
@@ -28,6 +28,7 @@ varying vec3 vViewPosition;
 	attribute float agentHeight;
 	attribute float agentSpeed;
 	attribute int motionType;
+	flat varying int vClothing;
 	
 	//varying float vInfectionLevel;
 #endif
@@ -111,16 +112,30 @@ void main() {
 	#define KNEES 8
 	#define FEET  9
 	
+	#define FORMAL_CLOTHING 1
+	#define CASUAL_CLOTHING 2
+	#define INTIMATE_CLOTHING 3
+	
 	#if (${INFECTION_COLOR_INDICATOR?1:0})
 		vVertexColor = vec3( 1.0, 1.0-infectionLevel, 1.0-infectionLevel );
 	#else
 		vVertexColor = vec3( 1 );
 	#endif
-	
+
 	vAgentId = agentId;
 	vRandomId = randomId;
-	man = vRandomId<0.5;
 
+	man = vRandomId<float( ${MALE_RATIO} );
+
+	float randomClothing = fract(7.32/randomId);
+	if( randomClothing<=${ Number(FORMAL_CLOTHING_RATIO).toFixed(4) } )
+		vClothing = FORMAL_CLOTHING;
+	else
+	if( randomClothing<=${ Number(CASUAL_CLOTHING_RATIO).toFixed(4) } )
+		vClothing = CASUAL_CLOTHING;
+	else
+		vClothing = INTIMATE_CLOTHING;
+	
 	// flatten the 3D effect
 	transformedNormal = mix(vec3(1),transformedNormal,0.6);
 	if( !man )

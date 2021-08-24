@@ -2,6 +2,8 @@
 //
 // Modified code is in COVID19SYM
 
+import {MALE_RATIO} from '../config.js';
+
 export default `
 
 
@@ -46,10 +48,15 @@ uniform float opacity;
 	varying float vAgentId;
 	varying float vRandomId;
 	//varying float vInfectionLevel;
+	flat varying int vClothing;
 #endif
 
 #ifdef COVID19SYM
 #ifdef COVID19SYM_RECOLOR
+
+	#define FORMAL_CLOTHING 1
+	#define CASUAL_CLOTHING 2
+	#define INTIMATE_CLOTHING 3
 
 	bool man;
 	bool resetColor;
@@ -442,12 +449,17 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	texelColor = mapTexelToLinear( texelColor );
 	#ifdef COVID19SYM_RECOLOR
 		#ifdef COVID19SYM
-			man = vRandomId<0.5;
+			man = vRandomId<float( ${MALE_RATIO} );
 			resetColor = false;
 			
-			//texelColor = recodeUndressedColor( texelColor );
-			texelColor = recodeInformalColor( texelColor );
-			//texelColor = recodeFormalColor( texelColor );
+			if( vClothing == FORMAL_CLOTHING )
+				texelColor = recodeFormalColor( texelColor );
+			else
+			if( vClothing == CASUAL_CLOTHING )
+				texelColor = recodeInformalColor( texelColor );
+			else
+				texelColor = recodeUndressedColor( texelColor );
+			
 			
 			if( resetColor ) diffuseColor = vec4(1);
 		#endif

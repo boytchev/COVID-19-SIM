@@ -327,6 +327,17 @@ export const AGENT_DRAW_MODE_CLOTHES	= 7; // shader-defined clothes
 
 export const AGENT_DRAW_MODE = param('adm',AGENT_DRAW_MODE_CLOTHES);
 
+var mr = param('mr',1), // male ratio
+	fr = param('fr',1); // female ration
+if( mr+fr<0.1 ) mr = fr = 1;
+export const MALE_RATIO = mr/(mr+fr); // 0.5=50%
+
+var fcr = param('fcr',1), // formal ratio
+	ccr = param('ccr',1), // casual ratio
+	icr = param('icr',1); // intimate ratio
+if( fcr+ccr+icr<0.1 ) fcr = ccr = 1;
+export const FORMAL_CLOTHING_RATIO = fcr/(fcr+ccr+icr);
+export const CASUAL_CLOTHING_RATIO = (fcr+ccr)/(fcr+ccr+icr);
 
 /*
 

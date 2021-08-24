@@ -504,6 +504,7 @@ var ID = 1;
 
 function addHeader( level, name, logo='', info='', tags='' )
 {
+	return;
 	// construct the html
 	var tag = 'h'+Math.round(level+1),
 		id = 'id'+(ID++);
