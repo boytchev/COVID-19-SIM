@@ -606,7 +606,7 @@ export class ApartmentBuildings
 		}
 
 		mesh.receiveShadow = true;
-		mesh.castShadow = true;
+		//mesh.castShadow = true;
 		//mesh.position.y = 0;
 
 		scene.add( mesh );
@@ -616,22 +616,20 @@ export class ApartmentBuildings
 			var geometry  = ApartmentBuildings.geometry(),
 				material  = new THREE.MeshBasicMaterial({
 					side: THREE.BackSide,
-					//color: 'black',
+					//color: 'crimson',
 					transparent: true,
 					opacity: 0,
-					polygonOffset: true,
-					polygonOffsetUnits: -1,
-					polygonOffsetFactor: -1,
+					depthWrite: false,
 				}),
 				shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
 			for( var i=0; i<instances; i++ )
 			{
-				matrix.makeScale( apartments[i].size.x-0.2, apartments[i].height-0.1, apartments[i].size.z-0.2 );
-				matrix.setPosition( apartments[i].center.x, -0.1, apartments[i].center.z );
+				matrix.makeScale( apartments[i].size.x-1, apartments[i].height-0.1, apartments[i].size.z-1 );
+				matrix.setPosition( apartments[i].center.x, -1, apartments[i].center.z );
 				shadowMesh.setMatrixAt( i, matrix );
 			}
 			shadowMesh.castShadow = true;
-			//scene.add( shadowMesh );
+			scene.add( shadowMesh );
 		}
 		
 		return mesh;

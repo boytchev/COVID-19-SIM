@@ -3,7 +3,7 @@
 
 const LOCAL_STORAGE_FAVS = 'covid-19-favs';
 const LOCAL_STORAGE_PARAMS = 'covid-19-params'; // same name used in config.js
-const LOCAL_STORAGE_FILTER = 'covid-19-filter';
+export const LOCAL_STORAGE_FILTER = 'covid-19-filter';
 
 const configParams = new URLSearchParams(
 		window.location.search ||
@@ -13,8 +13,9 @@ const configParams = new URLSearchParams(
 //console.log('STO',localStorage.getItem( LOCAL_STORAGE_PARAMS ));
 
 
-var ids = [],
-	tags = [],
+export var ids = [];
+
+var	tags = [],
 	data = {};
 
 
@@ -24,7 +25,7 @@ if( predefinedFavs !== null )
 	predefinedFavs = predefinedFavs.split( ' ' );
 
 
-function timeMs( hours, minutes=0, seconds=0 )
+export function timeMs( hours, minutes=0, seconds=0 )
 {
 	return 1000*(seconds + 60*minutes + 60*60*hours);
 } // timeMs
@@ -96,7 +97,7 @@ function param2( id, defaultValueA, defaultValueB )
 	return [defaultValueA,defaultValueB];
 }
 	
-function addNumeric( id, name, defaultValue, options, info='', tags='' )
+export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 {
 	// check id
 	
@@ -169,7 +170,7 @@ function addNumeric( id, name, defaultValue, options, info='', tags='' )
 }
 
 
-function addPercentage( id, name, defaultValue, options, info='', tags='' )
+export function addPercentage( id, name, defaultValue, options, info='', tags='' )
 {
 	// check id
 	
@@ -233,7 +234,7 @@ function addPercentage( id, name, defaultValue, options, info='', tags='' )
 }
 
 
-function addBoolean( id, name, defaultValue, options, info='', tags='' )
+export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 {
 	// check id
 	
@@ -292,7 +293,7 @@ function addBoolean( id, name, defaultValue, options, info='', tags='' )
 
 
 
-function toggleFav( id )
+export function toggleFav( id )
 {
 	// toggle on screen and memory
 	
@@ -310,7 +311,7 @@ function toggleFav( id )
 }
 
 
-function resetConfigurator()
+export function resetConfigurator()
 {
 	// clear local storage
 	
@@ -323,7 +324,7 @@ function resetConfigurator()
 	location.reload();
 }
 
-function debugConfigurator()
+export function debugConfigurator()
 {
 	console.log( 'Full parameters:', prepareValues( false ) );
 	console.log( 'Modified parameters:', prepareValues( true ) );
@@ -332,7 +333,7 @@ function debugConfigurator()
 
 }
 
-function shareConfigurator()
+export function shareConfigurator()
 {
 	prepareValues( true );
 	
@@ -343,7 +344,7 @@ function shareConfigurator()
 	prompt( 'Generating shareable URL is experimental feature. Grab the URL from below:', sharedURL );
 }
 
-function toggleFilter( )
+export function toggleFilter( )
 {
 	var filter = 'show-fav';
 
@@ -433,7 +434,7 @@ function prepareValues( onlyModified )
 	return str;
 }
 
-function addTime( id, name, defaultValue, options, info='', tags='' )
+export function addTime( id, name, defaultValue, options, info='', tags='' )
 {
 	// check id
 	
@@ -502,9 +503,9 @@ function addTime( id, name, defaultValue, options, info='', tags='' )
 
 var ID = 1;
 
-function addHeader( level, name, logo='', info='', tags='' )
+export function addHeader( level, name, logo='', info='', tags='' )
 {
-	return;
+
 	// construct the html
 	var tag = 'h'+Math.round(level+1),
 		id = 'id'+(ID++);
@@ -538,7 +539,7 @@ function addHeader( level, name, logo='', info='', tags='' )
 }
 
 
-function addNumericRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
+export function addNumericRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
 {
 	// check id
 	
@@ -628,7 +629,7 @@ function addNumericRange( id, name, defaultValueA, defaultValueB, options, info=
 }
 
 
-function addNumericList( id, name, defaultValue, options, info='', tags='' )
+export function addNumericList( id, name, defaultValue, options, info='', tags='' )
 {
 	// check id
 	
@@ -701,7 +702,7 @@ function addNumericList( id, name, defaultValue, options, info='', tags='' )
 
 
 
-function addTimeRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
+export function addTimeRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
 {
 	// check id
 	

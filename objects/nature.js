@@ -28,7 +28,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {DEBUG_TIME_SPEED, START_TIME, HOURS_24_MS, SHADOWS, NO_SHADOWS, SUN, FULL_SHADOWS, GROUND_EDGE, DEBUG_ALL_WHITE, EARTH_SIZE, DEBUG_SHOW_VIRAL_SHEDDING, STATIC_SUN, SHADOWS_MAP_SIZE, STATIC_SUN_POSITION_MS, DEBUG_SUN_POSITION_GUI, SUNRISE_MS, SUNSET_MS, GROUND_SIZE, SUN_SIN, SUN_COS, SHADOWS_MAX_COUNT, AGENTS_CAST_SHADOWS} from '../config.js';
-import {agents, scene, camera, renderer, guiObject} from '../main.js';
+import {agents, scene, camera, renderer, guiObject, controls} from '../main.js';
 import {timeMs} from '../core.js';
 
 
@@ -122,7 +122,7 @@ class SunLight extends THREE.DirectionalLight
 			this.castShadow = true;
 			this.shadow.mapSize.width = SHADOWS_MAP_SIZE>>shadowMapShift;
 			this.shadow.mapSize.height = SHADOWS_MAP_SIZE>>shadowMapShift;
-			this.shadow.camera.near = 0;
+			this.shadow.camera.near = 10;
 			this.shadow.camera.far = 10000;
 			this.shadow.camera.left = -GROUND_SIZE;
 			this.shadow.camera.right = GROUND_SIZE;
@@ -130,12 +130,14 @@ class SunLight extends THREE.DirectionalLight
 			this.shadow.camera.top = GROUND_SIZE;
 			this.shadow.bias = 0;//0.00001;//-0.001;
 			this.shadow.normalBias = 0.15;//-0.001;
+			this.shadow.radius = 10;
 		}
 		
 		scene.add( this );
+		
+		controls.maxDistance = 5*GROUND_SIZE; // TODO: remove this, temporary added to debug shadows
 	}
 }
-
 
 export class Nature
 {
@@ -147,6 +149,9 @@ export class Nature
 		this.sysType = 'Nature';
 		this.sunLights = [];
 		this.sunPosition = new THREE.Vector3();
+		this.sunTarget = new THREE.Object3D(); // for shadows
+		
+		scene.add( this.sunTarget );
 		
 		this.skyColorNight = DEBUG_ALL_WHITE ? new THREE.Color( 'dimgray' ) : new THREE.Color( 'darkblue' );
 		this.skyColorDay = DEBUG_ALL_WHITE ? new THREE.Color( 'lightgray' ) : new THREE.Color( 'skyblue' );
@@ -182,6 +187,7 @@ export class Nature
 		for( var i=0; i<shadowCount; i++)
 		{
 			this.sunLights[i] = new SunLight( i );
+			this.sunLights[i].target = this.sunTarget;
 		}
 		
 		
@@ -205,11 +211,31 @@ export class Nature
 			
 		if( DEBUG_SHOW_VIRAL_SHEDDING ) 
 			this.debugShowViralShedding();
+
+
+//		this.debugSpot = new THREE.Mesh( new THREE.BoxGeometry(1,0.1,1), new THREE.MeshLambertMaterial({color:'white'}));
+//		this.debugSpot.receiveShadow = true;
+//		scene.add( this.debugSpot );
+
 	} // Nature
 
 
 	update()
 	{
+//		this.debugSpot.position.set((controls.target.x),0,(controls.target.z));
+//		var shadowSize = 4*controls.target.distanceTo(camera.position);
+//		this.debugSpot.scale.set(shadowSize,1,shadowSize);
+/*
+		for( var i=0; i<this.sunLights.length; i++)
+		{
+			this.sunLights[i].shadow.camera.left = -shadowSize;
+			this.sunLights[i].shadow.camera.right = shadowSize;
+			this.sunLights[i].shadow.camera.bottom = -shadowSize;
+			this.sunLights[i].shadow.camera.top = shadowSize;
+			this.sunLights[i].shadow.camera.updateProjectionMatrix();
+			shadowSize = shadowSize*0.7;
+		}
+*/
 		
 		// update time markers
 		deltaTimeReal = clock.getDelta(),
@@ -255,7 +281,11 @@ export class Nature
 
 		// set light (sun) positions
 		for( var i=0; i<this.sunLights.length; i++)
-			this.sunLights[i].position.copy( this.sunPosition );
+		{
+			//this.sunLights[i].position.copy( this.sunPosition );
+			this.sunTarget.position.copy( controls.target );
+			this.sunLights[i].position.addVectors( controls.target, this.sunPosition );
+		}
 		
 		// request regeneration of shadows
 		if( SUN!=STATIC_SUN && SHADOWS==FULL_SHADOWS )

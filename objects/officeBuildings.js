@@ -262,7 +262,7 @@ export class OfficeBuildings
 					0, 1,    0,		0, 1, 0,	1, 1/2,
 				);
 		}
-				  
+				
 			data.push(
 				 // Front (from Z+) 
 				 -1/2, 1,  1/2,		0, 0, 1,	0, 1,
@@ -520,7 +520,7 @@ export class OfficeBuildings
 		}
 
 		mesh.receiveShadow = true;
-		mesh.castShadow = true;
+		//mesh.castShadow = true;
 		//mesh.position.y = -0.2;
 
 		scene.add( mesh );
@@ -530,19 +530,20 @@ export class OfficeBuildings
 			var geometry  = OfficeBuildings.geometry(),
 				material  = new THREE.MeshBasicMaterial({
 					side: THREE.BackSide,
-					color: 'black',
+					//color: 'black',
 					transparent: true,
 					opacity: 0,
+					depthWrite: false,
 				}),
 				shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
 			for( var i=0; i<instances; i++ )
 			{
-				matrix.makeScale( offices[i].size.x-0.2, offices[i].height-0.1, offices[i].size.z-0.2 );
-				matrix.setPosition( offices[i].center.x, -0.1, offices[i].center.z );
+				matrix.makeScale( offices[i].size.x-1, offices[i].height-0.1, offices[i].size.z-1 );
+				matrix.setPosition( offices[i].center.x, -1, offices[i].center.z );
 				shadowMesh.setMatrixAt( i, matrix );
 			}
 			shadowMesh.castShadow = true;
-			//scene.add( shadowMesh );
+			scene.add( shadowMesh );
 		}
 		
 		return mesh;

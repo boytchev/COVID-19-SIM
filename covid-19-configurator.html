@@ -19,614 +19,82 @@
 
 	<link rel="stylesheet" href="covid-19-configurator.css">
 
-	<script src="covid-19-configurator.js"></script> 
 	
 </head>
 
 <body>
-<div class="page">
-<h2>COVID-19 Configurator (under development)
-	<div class="info">The COVID-19 simulation is controlled by <span id="param_count"></span> parameters. Click on the name of a parameter to add or remove it from
-	the list of your favourite parameters. The data from this page is
-	stored only in your browser &ndash; it is not transmitted anywhere.<br><br>A few links that I often used during development (do not use them):
-	[<button class="syslink" onclick="resetConfigurator()">Reset</button>|<button class="syslink" onclick="debugConfigurator()">Debug</button>|<button class="syslink" onclick="shareConfigurator()">Share</button>]
-	</div>
-</h2>
-	
-	
-	<div class="start-block">
-	Show:
-	<label class="filters"><input type="radio" name="show" id="show-fav" checked onchange="toggleFilter()"><span>My</span></label>
-    <label class="filters"><input type="radio" name="show" id="show-all" onchange="toggleFilter()"><span>All</span></label>
-	</div>
 
-	<div class="start-block">
-		<a class="start" href="covid-19-simulator.html" onclick="prepareValues()">Start simulation</a>
-	</div>
-	<div id="blocks">
-	</div> <!--id="blocks"-->
-	<div class="start-block end">
-		<a class="start" href="covid-19-simulator.html" onclick="prepareValues()">Start simulation</a>
-	</div>
-	<br>
+	<div class="page">
 	
-	<h2><div class="info">Note: If you are unhappy of how parameters are grouped &ndash; that will be dealt with when all parameters are implemented. As well, there is a planned feature for tag-based filtering.
-	</div></h2>
-
-</div> <!--page-->	
+		<h2>COVID-19 Configurator (under development)
+			<div class="info">The COVID-19 simulation is controlled by
+				<span id="param_count"></span> parameters. Click on the
+				name of a parameter to add or remove it from the list of
+				your favourite parameters. The data from this page is
+				stored only in your browser &ndash; it is not transmitted
+				anywhere.
+				
+				<br><br>
+				
+				A few links that I use often during development:
+				[ <button id="reset" class="syslink">Reset</button>
+				| <button id="debug" class="syslink">Debug</button>
+				| <button id="share" class="syslink">Share</button> ]
+			</div>
+		</h2>
+	
+		<div class="start-block">
+			Show:
+			<label class="filters">
+				<input type="radio" name="show" id="show-fav" checked>
+				My
+			</label>
+			<label class="filters">
+				<input type="radio" name="show" id="show-all">
+				All
+			</label>
+		</div>
+				
+		<div class="start-block">
+			<a id="start1" class="start" href="covid-19-simulator.html">Start simulation</a>
+		</div>
+		
+		<div id="blocks"></div>
+	
+		
+		<div class="start-block end">
+			<a id="start2" class="start" href="covid-19-simulator.html">Start simulation</a>
+		</div>
+		
+	</div> <!--page-->	
 
 
 	<script>
+		var toggleFav;
+	</script>
 	
-// CITY LAYOUT ===================================
-
-		addHeader(
-			1, 'City', 'city',
-			'These prameters control the generation of the city layout.' );
-
-		addHeader(
-			2, 'General' );
-
-		addNumeric(
-			'rs', 'Random layout', 0, {min:0, max:100000, step:1},
-			'The number that determines the layout of streets and buildings. If 0, the simulator will pick an arbitrary layout. It not 0, the simulator will use that spacific layout if the other configuration parameters are the same.' );
-
-		addNumeric(
-			'gs', 'Ground size', 500, {min:10, max:10000, step:10, fav:true, unit:'m'},
-			'The active area of the simulation in meters. Buildings and people will be bound to a square of this size.' );
-
-		addNumeric(
-			'es', 'Earth size', 50000, {min:1000, max:100000, step:1000, unit:'m', offset: 7.4},
-			'The area surrounding the simulation area. Its edge makes the horizon.' );
-
-		addHeader(
-			2, 'Blocks' );
-
-		addNumeric(
-			'bst', 'Block split treshold', 110, {min:50, max:500, step:10, unit:'m'},
-			'This parameter is used when the city layout is generated. If a block is larger than this value, then it is considered for splitting into smaller blocks.' );
-
-		addNumeric(
-			'bm', 'Block split margin', 30, {min:10, max:100, step:10, unit:'m'},
-			'If a block is split into smaller blocks, they must be larger than this number. <em>Block split margin</em> should not exceed <em>Block split treshold/3</em>, if it exeeds it, then <em>Block split treshold/3</em> will be used. If the value is too small, it may prevent the formation of sloped streets in the city.' );
-
-		addHeader(
-			2, 'Navigational mesh' );
-
-		addPercentage(
-			'dnmo', 'Navmesh opacity', 0, {min:0, max:1, step:0.25},
-			'Percentage of opacity of the navigational mesh (navmesh) &ndash; crimson and orange areas showing locations of rooms, elevators, checkpoints, etc. At 100% the navmesh is fully opaque, while at 0% it is fully transparent. Navmeshes are shown on top of buildings and other 3D objects.' );
-			
-		addBoolean(
-			'dnmsf', 'Navmesh floors', false, {},
-			'If checked, generates images of navmesh rooms at the floor level. However, they are shown only if <em>Navmesh opacity</em> is not 0%.' );
-
-		addBoolean(
-			'dnmsl', 'Navmesh routes', false, {},
-			'If checked, generates images of navmesh routes. However, they are shown only if <em>Navmesh opacity</em> is not 0%.' );
-
-		addBoolean(
-			'dnmse', 'Navmesh elevators', false, {},
-			'If checked, generates images of navmesh elevators. However, they are shown only if <em>Navmesh opacity</em> is not 0%.' );
-
-		addHeader(
-			2, 'Others' );
-
-		addBoolean(
-			'dbwoh', 'Blocks with houses', false, {},
-			'If checked, generate blocks with houses. However, all <em>Blocks with ...</em> parameters are altogether not checked, then blocks with houses are generated.' );
-
-		addBoolean(
-			'dbwoa', 'Blocks with apartments', false, {},
-			'If checked, generate blocks with apartments. However, all <em>Blocks with ...</em> parameters are altogether not checked, then blocks with apartments are generated.' );
-
-		addBoolean(
-			'dbwoo', 'Blocks with offices', false, {},
-			'If checked, generate blocks with offices. However, all <em>Blocks with ...</em> parameters are altogether not checked, then blocks with offices are generated.' );
-
-		addBoolean(
-			'dbwop', 'Blocks with parks', false, {},
-			'If checked, generate blocks with parks. However, all <em>Blocks with ...</em> parameters are altogether not checked, then blocks with parks are generated.' );
-
-		addBoolean(
-			'dbwoz', 'Blocks with plazas', false, {},
-			'If checked, generate blocks with plazas. However, all <em>Blocks with ...</em> parameters are altogether not checked, then blocks with plazas are generated.' );
-
-		addPercentage(
-			'dbuo', 'Building opacity', 1, {min:0, max:1, step:0.25},
-			'Percentage of opacity of all buildings &ndash; houses, apartments and offices. At 100% the buildings are fully opaque, while at 0% they are fully transparent.' );
-			
-		addPercentage(
-			'dblo', 'Ground opacity', 1, {min:0, max:1, step:0.25},
-			'Percentage of opacity of the ground &ndash; pavements, streets, grass. At 100% the ground is fully opaque, while at 0% it is fully transparent.' );
-			
-		addBoolean(
-			'dhr', 'Hide roofs', false, {},
-			'If checked, buildings are drawn without roofs and it is possibel to see people inside.' );
-
-		addBoolean(
-			'dsd', 'Show directions', false, {},
-			'If checked, prints the directions and axes outside the city boundary. The orientation is as if the city is looked from below.' );
-
-		addBoolean(
-			'daaf', 'Apartment floors', false, {},
-			'If checked, the floors of the apartment building are drawn. To see the floors the view point should be inside the building or <em>Building opacity</em> should be less than 100%.' );
-
-		addPercentage(
-			'bpp', 'Park probability', 0.05, {min:0, max:1, step:0.01},
-			'Probability of a block to be generated as a park. Larger values make more green open areas in the city. Too small residential blocks will be turned into parks independent on this parameter.' );
-
-		addPercentage(
-			'bzp', 'Plaza probability', 0.03, {min:0, max:1, step:0.01},
-			'Probability of a block to be generated as a plaza. Larger values make more open areas in the city. This probability is tested after <em>Park probability</em>.' );
-
-		addPercentage(
-			'ovr', 'Office vs residential', 0.05, {min:-1, max:1, step:0.01},
-			'The probability of a block to be for office buildings or for residential buildings depends on the computed maximal height of the block. <em>Office vs residential</em> contributes to this probability by increasig or decreasing it. Value 100% generates only office buildings; value -100% generates only residential buildings; value 0% keeps the originally computed probability.</em>.' );
-
-		addNumeric(
-			'sw', 'Street width', 6, {min:1, max:20, step:1, unit:'m'},
-			'Street width in meters. Blocks are split by streets of this size.' );
-
-		addNumeric(
-			'aw', 'Avenue width', 18, {min:1, max:40, step:1, unit:'m'},
-			'Avenue width in meters. Exceptionally large blocks are initially split by avenues of this size.' );
-
-		addNumeric(
-			'at', 'Avenue treshold', 1000, {min:100, max:2000, step:100, unit:'m'},
-			'If a block is larger than this size, it might be split by an avenue, otherwise &ndash; by a street.' );
-
-		addPercentage(
-			'sut', 'Suburb treshold', 0.16, {min:0, max:1, step:0.01},
-			'Percentage of <em>Ground size</em>. If a block is larger than this size and it is in the suburbs of the city, it might be made as park. This makes the shape of the city less squarish.' );
-
-		addPercentage(
-			'urru', 'Rural-urban', 0.3, {min:0, max:1, step:0.1},
-			'Percentage of how rural or urban is the generated area. Approximate values are: 100% for vilages, 70% for small towns, 50% for towns, 30% for cities and 0% for megalopolises. The effect is visible when <em>Ground size</em> is larger (at least a few kilometers).' );
-
-		addPercentage(
-			'sks', 'Skyscrapers', 0.2, {min:-1, max:1, step:0.1},
-			'The probability of a skyscaper depends on the computed maximal height of the block. <em>Skyscrapers</em> contributes to this probability by increasig or decreasing it. Value 100% generates mostly skyscrapers; value -100% tries to avoid them.</em>.' );
-
-		addNumeric(
-			'fh', 'Floor height', 2.5, {min:1, max:4, step:0.1, unit:'m'},
-			'Height of a floor (storey) in meters. The same height is used for all buildings &ndash; residential and business.' );
-
-		addNumeric(
-			'mf', 'Maximal floors', 120, {min:10, max:400, step:10},
-			'Maximal number of floors (storey) in the tallest buildigs. The actual number of floors in a particular building depends on a random number bound by this value.' );
-
-		addNumeric(
-			'hbr', 'House bounding radius', 5, {min:4, max:20, step:1},
-			'The radius of invisible circle around a house. It determins how wide a house can be, how close it to neghtbour houses and how it is positioned in a block. Larger radius makes sparse house distribution.' );
-
-// PEOPLE ===================================
-
-		addHeader(
-			1, 'People', 'people',
-			'These prameters control the generation of virtual people, their properties and behaviour.' );
-
-		addHeader(
-			2, 'General' );
-
-		addNumeric(
-			'damc', 'People count', 100, {min:0, max:50000, step:100, fav:true},
-			'The maximal number of people in the simulation. Their number might be smaller if the amount of houses and apartments are not sufficient for all of them.' );
-
-		addHeader(
-			2, 'Behaviour' );
-
-		addBoolean(
-			'drw', 'RANDOM WANDERING', false, {},
-			'If checked, the people are walking in random directions and they do not follow any routine. If not checked, the people follow their daily routine.' );
-
-		addBoolean(
-			'dfal', 'Line formation', false, {},
-			'If checked, the people are positioned in lines and columns. If not checked, the people are positioned in buildings.' );
-
-		addBoolean(
-			'dsaad', 'Age diagram', false, {},
-			'If checked, shows a diagram of age distribution of people (number of people per age in years). The theoretical distribution is shown in crimson, the actual distribution is shown in blue. The curve may break between children and adults, because their number depends on the number of houses and apartments, and on the values of <em>Adults per house</em>, <em>Children per house</em>, <em>Adults per apartment</em> and <em>Children per apartment</em>. Click on the diagram to hide it.' );
-
-
-		addBoolean(
-			'dsvs', 'Viral diagram', false, {},
-			'If checked, shows a diagram of the viral shedding (infection level per time period). Higher values indicate higher probability of infecting nearby people. Vertical lines split the diagram into 14 periods. Click on the diagram to hide it.' );
-
-		addBoolean(
-			'dcvoa', 'Look at people', false, {},
-			'If checked, when the simulation starts, sets the view point on the people. This can be used to find people if they are a small compact group in a large city.' );
-
-		addNumeric(
-			'dfa', 'Follow person', -1, {min:-1, max:50000, step:1},
-			'Each person has an id number starting from 0. If this parameter cointains an existing person id, then the view point automatically follows this person as if spied from a drone. If the value is -1, such following is turned off.' );
-
-		addNumeric(
-			'dfah', 'Follow person health', -1, {min:-1, max:50000, step:1},
-			'If this parameter cointains an existing person id, then the health status of this person is printed in the JS console. If the value is -1, such printing is turned off.' );
-
-		addBoolean(
-			'dshtwa', 'Home-to-work arrow', false, {},
-			'If checked, an arrow is generated for each person pointing from home to office location.' );
-
-		addBoolean(
-			'dsr', 'Show route', false, {},
-			'If checked, show the route of each person as a sequence of arrows.' );
-
-		addBoolean(
-			'ddr', 'Print route', false, {},
-			'If checked, prints the route of each person in the JS console. This parameter is checked when there are a few people, preferable exactly one, i.e. <em>Agent count</em>=1.' );
-
-		addNumeric(
-			'drpa', 'Routes per person', 1, {min:1, max:200, step:1},
-			'The number of routes generated for each person. Independent on the value, onle one of the routes is used. THe others only indicate what possibilities exists. This parameter is often used with <em>Show route</em> checked and <em>Agent count</em>=1.' );
-
-		addNumeric(
-			'daa', 'Follow person actions', -1, {min:-1, max:50000, step:1},
-			'If this parameter cointains an existing person id, then the timestamped actions of  this person are printed in the JS console. If the value is -1, such printing is turned off.' );
-
-		addBoolean(
-			'dal', 'Population whereabouts', false, {},
-			'If checked, once per second prints in the JS console the number of people at home, commuting and at work.' );
-			
-		addBoolean(
-			'dah', 'Population health', false, {},
-			'If checked, once per second prints in the JS console the number of infected people split into three health categories &ndash; asymptotic (infection level under 20%), medium (between 20% and 60%) and severe (above 60%).' );
-			
-
-// NAVIGATION ===================================
-
-		addHeader(
-			1, 'Navigation', '',
-			'These prameters control how the user navigates in the city.' );
-
-		addBoolean(
-			'dar', 'Auto rotate', false, {},
-			'If checked, the scene rotates continuously with speed defined by <em>Auto rotate speed</em>. The user can still use the mouse to rotate manually. If not checked, the scene does not move by itself.' );
-
-		addNumeric(
-			'dars', 'Auto rotate speed', 0.3, {min:0, max:1, step:0.1, unit:'rad/s', offset: 7},
-			'The speed of automatic rotation measure in radians per second. The value is effective only if <em>Auto rotate</em> is checked, otherwise it has no effect.' );
-
-// GRAPHICS AND STYLE ===================================
-
-		addHeader(
-			1, 'Graphics and style', '',
-			'These prameters control the visual effects.' );
-
-		addBoolean(
-			'daw', 'All white', false, {},
-			'If checked, all buildings, trees and the ground are white. People colours are not affected.' );
-			
-		addBoolean(
-			'cs', 'Cartoon style', false, {},
-			'If checked, people, houses and trees are drawn in cartoon style &ndash white with heavy contrast shading.' );
-
-// NATURE ===================================
-
-		addHeader(
-			1, 'NATURE', '',
-			'These prameters control the nature &ndash; time, sun, etc.' );
-
-		addTime(
-			'dts', 'Time speed', timeMs(0,0,1), {min:timeMs(0,0,1), max:timeMs(1,0,0), step:timeMs(0,0,1),},
-			'How much virtual time passes for 1 second of real time. For example, 00:00:01 is for realtime simulation, 00:00:05 is for simulation 5 times faster.' );
-
-		addTime(
-			'st', 'Start time', timeMs(6,20), {min:timeMs(0,0,0), max:timeMs(23,59,59), step:timeMs(0,10,0),},
-			'The virtual time at which the simulation starts.' );
-
-		addBoolean(
-			'dspg', 'Manual sun', false, {},
-			'If checked, adds a control for manually changing the sun position. This affects lightings and shadows (if they are turned on). The position is set as hours &ndash; i.e. 18.5 corresponds to 18:30.' );
-
-// MISC ===================================
-
-		addHeader(
-			1, 'Miscallaneous', '',
-			'These prameters control the generation of virtual people, their properties and behaviour.' );
-
-		addBoolean(
-			'dri', 'Renderer info', false, {},
-			'If checked, shows renderer info (once per 10000 frames) in the JS console &ndash; number of geometries, textures, calls, lines, points and triangles.' );
-
-		addNumeric(
-			'sww', 'Sidewalk width', 3, {min:1, max:10, step:1, unit:'m', offset:4.8},
-			'The width of the sidewalk in meters. Sidewalks are area around each block where people can walk. It is also the width of pedestrian crossings.' );			
-			
-		addNumeric(
-			'odw', 'Office entrance width', 2, {min:2, max:8, step:2, unit:'m'},
-			'The width factor of office entrances (section of doors) in meters. If the width is 2 meters, then the entrance could be 2 meters, 4 meters, 6 meters wide.' );
-			
-		addNumeric(
-			'odd', 'Office entrances distance', 10, {min:2, max:20, step:2, unit:'m'},
-			'The distance between two entrances on one side of an office building. This distance is only suggestion, is some circumstances it might be ignored.' );
-			
-		addNumeric(
-			'add', 'Appartment building entrances span', 20, {min:10, max:40, step:2, unit:'m'},
-			'The distance allocated for one entrance. If a wall is long 60 meters, it will have 3 entrances.' );
-
-		addNumeric(
-			'cmc', 'Minimal crossing distance', 15, {min:5, max:20, step:1, unit:'m'},
-			'The minimal distance in meters between two pedestrian crossing in the same direction. If the Manhattan distance between two crossings is smaller than this value, one of the crossing will not be generated. The distance must consider <em>Street width</em> as this width indicates the theretical closeness of crossings.' );
-			
-		addNumericRange(
-			'ors', 'Office room size', 5, 10, {min:3, max:20, step:1, unit:'m'},
-			'The desired range for an office room size. The actual size is calculated from the building size.' );
-			
-		addNumeric(
-			'ocw', 'Office corridor width', 1, {min:1, max:5, step:1, unit:'m'},
-			'The width of corridors in office building. Wider corridors may reduce the amount of rooms.' );
-			
-		addNumericRange(
-			'orc', 'Office room count', 2, 9, {min:2, max:15, step:1},
-			'The desired number of office rooms. The actual number depends on this value, as well of building size and <em>Office room size</em>. Larger count results in smaller rooms and vice versa.' );
-
-		addNumericRange(
-			'abw', 'Apartment building width', 8, 16, {min:4, max:30, step:2, unit: 'm'},
-			'The range for the length (in meters) of the smaller wall of an apartment building. The length of the longer wall is restricted by the block size.' );
-			
-		addNumeric(
-			'abd', 'Apartment building distance', 24, {min:16, max:40, step:2, unit: 'm'},
-			'The desired distance between centers of apartment buildings. This value my be ignored if it is too small (i.e. at least <em>Apartment building width+8</em> meters) and the buildings are too big.' );
-			
-		addNumeric(
-			'mabf', 'Max additional apartment building floors', 30, {min:0, max:120, step:2},
-			'Every apartment building has two default floors. This value indicates the miximal number of additional floors. The actual height also depends on a random number and on the calculated building height for the block.' );
-			
-		addNumeric(
-			'ars', 'Apartment room size', 7, {min:3, max:20, step:1},
-			'The desired size of an apartment room in meters. The actual size may vary depending on the building size.' );
-			
-		addNumeric(
-			'elsz', 'Elevator size', 2, {min:1, max:4, step:1, unit:'m'},
-			'The size of elevators. Elevators shafts are square with side length equal to this value. When people use elevators they group outside them at some distance.' );
-			
-		addNumericRange(
-			'elsp', 'Elevator speed', 0.8, 2.4, {min:0.5, max:4, step:0.5, unit: 'm/s'},
-			'Speed of elevators in meters per second. This speed defines how fast people go to a different floor in apartment and office buildings.' );
-			
-		addNumericRange(
-			'th', 'Tree height', 3, 4, {min:2, max:8, step:0.5, unit: 'm'},
-			'Height of trees in meters. Actual height is randomly picked from this range. It applies to all trees &ndash; in parks and around houses.' );
-			
-		addNumeric(
-			'tc', 'Tree complexity', 4, {min:2, max:8, step:1},
-			'The complexity factor for trees. For value <em>n</em> the tree contains <em>2(n+1)<sup>2</sup></em> polygons (i.e. 150 polygons for complexity 4).' );
-
-		addPercentage(
-			'tpr', 'Tree park ratio', 0.2, {min:0, max:1, step:0.05},
-			'The ratio of generated trees in parks in respect to the maximal number of trees for parks of this size.' );
-
-		addPercentage(
-			'thr', 'Tree house ratio', 0.15, {min:0, max:1, step:0.05},
-			'The ratio of generated trees in house blocks in respect to the maximal number of trees for blocks of this size.' );
-
-		addNumericRange(
-			'aay', 'Person age', 0, 100, {min:0, max:100, step:10, unit: 'years'},
-			'The age of each person is picked from this range depending on the age distribution curve, shown by <em>Age diagram</em>. Note that the actual number of adults and children are controlled by <em>Adults per house</em>, <em>Adults per apartment</em>, <em>Children per house</em> and <em>Children per apartment</em>.' );
-
-		addNumericRange(
-			'ahc', 'Child height', 0.5, 1.7, {min:0.4, max:2, step:0.1, unit: 'm'},
-			'The proposed height of a child, the first value is the height of a newborn, the second &ndash; of a 17 years old. The actual height is picked randomly within the &plusmn;15% variance of the values.' );
-
-		addNumericRange(
-			'aha', 'Adult height', 1.8, 1.4, {min:1.0, max:2.5, step:0.1, unit: 'm'},
-			'The proposed height of an adult, the first value is the height of a 18 year old, the second &ndash; of a 100 years old. The actual height is picked randomly within the &plusmn;10% variance of the values.' );
-
-		addNumericRange(
-			'aph', 'Adults per house', 1, 4, {min:1, max:10, step:1},
-			'The number of adults in a house. The actual number is randomly picked from this interval.' );
-
-		addNumericRange(
-			'cph', 'Children per house', 0, 3, {min:0, max:10, step:1},
-			'The number of children in a house. The actual number is randomly picked from this interval.' );
-
-		addNumericRange(
-			'apa', 'Adults per apartment', 1, 3, {min:1, max:10, step:1},
-			'The number of adults in an apartment. The actual number is randomly picked from this interval.' );
-
-		addNumericRange(
-			'cpa', 'Children per apartment', 0, 2, {min:0, max:10, step:1},
-			'The number of children in an apartment. The actual number is randomly picked from this interval.' );
-
-		addNumericRange(
-			'aws', 'Walking speed', 0.8, 2.0, {min:0.6, max:2.6, step:0.2, unit: 'm/s'},
-			'Speed of walking of people. This speed defines how fast people walk. The observed speed also depends on the height of a person.' );
-			
-		addNumericList(
-			'su', 'Sun', 0, {values:[0,'no',1,'static',2,'dynamic']},
-			'The motion of sun. <em>No</em> indicates there is no sun and light comes from everywhere. <em>Static</em> means the sun does not move, but stays as a position in the sky, defined by <em>STATIC SUN POSITION</em>. When the sun is <em>Dynamic</em>, it moves around the city, simulating day-night cycles.' );
-
-		addTime(
-			'sspm', 'Static sun position', timeMs(10,0,0), {min:timeMs(0,0,0), max:timeMs(23,59,00), step:timeMs(0,30,0),},
-			'Position of the sun when <em>sun = static</em> measured as time of the day. The sun stays at this position, affecting shadows and color of sunlight.' );
-
-		addTime(
-			'srm', 'Sunrise', timeMs(6), {min:timeMs(1), max:timeMs(11), step:timeMs(0,0,1),},
-			'Time of the sunrise. At sunrise the sun steps above the horizon. Together with <em>sunset</em> it defines the day-night cycle.' );
-
-		addTime(
-			'ssm', 'Sunset', timeMs(18), {min:timeMs(13), max:timeMs(23), step:timeMs(0,0,1),},
-			'Time of the sunset. At sunset the sun steps below the horizon. Together with <em>sunrise</em> it defines the day-night cycle.' );
-
-		addNumericList(
-			'sh', 'Shadows', 0, {values:[0,'no',1,'top',2,'full']},
-			'The type of shadows. This parameter is affective only when <em>sun = static</em> or <em>dynamic</em>. Value <em>No</em> indicates there are no shadows, this has highest performance. <em>Top</em> shadows are static as if the sun light comes from above. <em>Full</em> shadows are generated depending on the sun position. If the <em>sun = dynamic</em> then shadows are continuously recalculated, which negatively impacts performance.' );
-
-		addNumericList(
-			'shms', 'Shadow size', 4096, {values:[128,128,256,256,512,512,1024,1024,2048,2048,4096,4096,8192,8192,16384,16384], unit:'px'},
-			'The size of the shadow map measured in pixels. Larger maps makes more accurate shadows, but require more memory and time. Not all values are supported for all platforms, as the maximal size depends on the GPU.' );
-			
-		addNumeric(
-			'shmc', 'Shadow count', 3, {min:1, max:10, step:1},
-			'Number of overlapping shadows. These shadows are at different resolutions, providing better softness of shadows. However, more number of shadows slows the performance. ' );
-
-		addNumeric(
-			'sha', 'Sun angle', 30, {min:0, max:360, step:15, unit:'&deg;'},
-			'Angle (in degrees) of how the sun path in the sky is horizontally rotated in respect to the ground. This can be used to adjust North, East, South and West directions. Angles 0&deg;, 90&deg;, 180&deg;, 270&deg; and 360&deg; will make the sun trajectory aligned with the city streets.' );
-			
-		addBoolean(
-			'acs', 'People shadows', false, {},
-			'If checked, people have shadows. The current implementation of shadows in walking people is static and does not depend on body posture.' );
-
-
-
-		addTimeRange(
-			'loan', 'Office lamps on (morning)', timeMs(5,30), timeMs(6,10), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning when office lamps are turned on. All office lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
-
-		addTimeRange(
-			'loaf', 'Office lamps off (morning)', timeMs(6,10), timeMs(6,30), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning when office lamps are turned off. All office lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
-
-		addTimeRange(
-			'loai', 'Office lamps max intensity (morning)', timeMs(5,40), timeMs(6), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning, when office lamps are fully lit. This interval must be between <em>Office lamps on (morning)</em> and <em>Office lamps off (morning)</em>. This parameter is used to fade in or out the lights.' );
-
-		addTimeRange(
-			'lopn', 'Office lamps on (evening)', timeMs(17), timeMs(17,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening when office lamps are turned on. All office lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
-
-		addTimeRange(
-			'lopf', 'Office lamps off (evening)', timeMs(18), timeMs(22), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening when office lamps are turned off. All office lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
-
-		addTimeRange(
-			'lopi', 'Office lamps max intensity (evening)', timeMs(18), timeMs(22,50), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening, when office lamps are fully lit. This interval must be between <em>Office lamps on (evening)</em> and <em>Office lamps off (evening)</em>. This parameter is used to fade in or out the lights.' );
-
-
-
-
-		addTimeRange(
-			'laan', 'Apartment lamps on (morning)', timeMs(4,30), timeMs(5,30), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning when apartment lamps are turned on. All apartment lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
-
-		addTimeRange(
-			'laaf', 'Apartment lamps off (morning)', timeMs(6,30), timeMs(7), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning when apartment lamps are turned off. All apartment lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
-
-		addTimeRange(
-			'laai', 'Apartment lamps max intensity (morning)', timeMs(4,40), timeMs(6,50), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning, when apartment lamps are fully lit. This interval must be between <em>Apartment lamps on (morning)</em> and <em>Apartment lamps off (morning)</em>. This parameter is used to fade in or out the lights.' );
-
-		addTimeRange(
-			'lapn', 'Apartment lamps on (evening)', timeMs(17,45), timeMs(18,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening when apartment lamps are turned on. All apartment lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
-
-		addTimeRange(
-			'lapf', 'Apartment lamps off (evening)', timeMs(21), timeMs(23,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening when apartment lamps are turned off. All apartment lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
-
-		addTimeRange(
-			'lapi', 'Apartment lamps max intensity (evening)', timeMs(17,55), timeMs(22,50), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening, when apartment lamps are fully lit. This interval must be between <em>Apartment lamps on (evening)</em> and <em>Apartment lamps off (evening)</em>. This parameter is used to fade in or out the lights.' );
-
-
-		addTimeRange(
-			'lhan', 'House lamps on (morning)', timeMs(4,30), timeMs(5,30), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning when house lamps are turned on. All house lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
-
-		addTimeRange(
-			'lhaf', 'House lamps off (morning)', timeMs(6,30), timeMs(7), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning when house lamps are turned off. All house lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunrise</em>.' );
-
-		addTimeRange(
-			'lhai', 'House lamps max intensity (morning)', timeMs(4,40), timeMs(6,50), {min:timeMs(1), max:timeMs(11), step:timeMs(0,10),},
-			'Тime interval in the morning, when house lamps are fully lit. This interval must be between <em>House lamps on (morning)</em> and <em>House lamps off (morning)</em>. This parameter is used to fade in or out the lights.' );
-
-		addTimeRange(
-			'lhpn', 'House lamps on (evening)', timeMs(17,45), timeMs(18,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening when house lamps are turned on. All house lamps are turned on randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
-
-		addTimeRange(
-			'lhpf', 'House lamps off (evening)', timeMs(21), timeMs(23,30), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening when house lamps are turned off. All house lamps are turned off randomly, but within this interval. It is suggested that this time adheres to the setting of <em>Sunset</em>.' );
-
-		addTimeRange(
-			'lhpi', 'House lamps max intensity (evening)', timeMs(17,55), timeMs(22,50), {min:timeMs(13), max:timeMs(23), step:timeMs(0,10),},
-			'Тime interval in the evening, when house lamps are fully lit. This interval must be between <em>House lamps on (evening)</em> and <em>House lamps off (evening)</em>. This parameter is used to fade in or out the lights.' );
-
-		addNumeric(
-			'ipc', 'Infection patterns count', 10, {min:2, max:21, step:1},
-			'The number of infection patterns. Each pattern has a viral shedding curve with specific position of the peak value. Currently the infection pattern is picked individually for each person from the first half of available patterns (i.e. the infection peak is near the beginning of the illness.' );
-			
-		addTimeRange(
-			'itmh', 'Infection duration (hours)', timeMs(0,0,10), timeMs(10), {min:timeMs(0), max:timeMs(23,59,59), step:timeMs(0,0,10)},
-			'Duration of infection in hours. The full duration combines this value and the value of <em>Infection duration (days)</em>. ' );
-
-		addNumericRange(
-			'itmd', 'Infection duration (days)', 0, 0, {min:0, max:60, step:1, unit:'d'},
-			'Duration of infection in days. The full duration combines this value and the value of <em>Infection duration (hours)</em>. For example, if hours infection is 4:00 to 10:00 and days infection is 1..6 days, then the actual duration is picked from 1 day and 4 hours to 6 days and 10 hours.' );
-
-		addBoolean(
-			'ici', 'Infection color indicator', false, {},
-			'If checked, the skin color of infected people turn reddish depending on the level of illness.' );
-
-		addNumeric(
-			'is', 'Infection step', 200, {min:1, max:1000, step:10},
-			'The number of animation frames needed to check the whole population. If the value is 1, then all people are checked every frame. This may affect the performance badly in case of large but concentrated population. Distributing the check over higher number of frames, keeps the performance at the cost of some inaccuracy in infection &ndash; if two people meet and go away between their checks, they will not infect each other.' );
-
-		addNumeric(
-			'id', 'Infection distance', 1, {min:0.2, max:50, step:0.2, unit: 'm'},
-			'The maximal infection distance in meters. The distance is measured as Manhattan distance. If a person is further away from another person, then there is no infection trasnfer between both.' );
-
-		addPercentage(
-			'ist', 'Infection speed', 0.5, {min:0.1, max:1, step:0.1},
-			'A scaling factor the the infection speed. Larger factors make the infection spread faster.' );
-			
-		addNumericRange(
-			'ims', 'Immune strength', 100, 200, {min:10, max:1000, step:10},
-			'Initial immune strength for a person. When in contact with infection the strength decreases and when it reaches 0 the person becomes infected.' );
-
-		addNumeric(
-			'imrf', 'Immune recovery factor', 0.0005, {min:0, max:0.1, step:0.0005, unit:'/s'},
-			'Every second the immune system of a person self-recovers by this value. Larger recovery factors will protect a person against infection, as the decrease caused by the infection will be overcome by the immune system recovery. <em>Immune strength = 100</em> is completely recovered in 2 days and 8 hours by recovery factor 0.0005.' );
-			
-		addNumericRange(
-			'icf', 'Immune cure factor', 1.0, 1.2, {min:0.5, max:2, step:0.1},
-			'Scaling factor of immune strength after cure. Value 1.0 keeps the same immune strength as before the infection. Value 1.2 increates the strength by 20%. Value 0.5 decreases the strength twice.' );
+	<script type="module">
+		import * as CFG from './configurator/configurator.js';
+		import './configurator/map.js';
+		import './configurator/buildings.js';
+		import './configurator/people.js';
+		import './configurator/health.js';
+		import './configurator/graphics.js';
 	
-		addPercentage(
-			'pii', 'Initial infected', 0.05, {min:0, max:1, step:0.05},
-			'Percentage of initially infected people. Although infected, the people will start with the asymptotic phase, so the infection will manifestated later on.' );
-			
-		addNumericList(
-			'adm', 'People clothes', 7, {values:[7,'CLOTHES',0,'WHITE',1,'CHECKERED',2,'CHESSBOARD',3,'CRIMSON',4,'BORDERS',5,'PATCHES',6,'RANDOM']},
-			'The clothes on people. The only clothes option is <em>CLOTHES</em>, the others are used for development &ndash; <em>WHITE</em> for all white, <em>CHECKERED</em> for colorful squares, <em>CHESSBOARD</em> for black and white squares, <em>CRIMSON</em> for black body with crimson stripes, <em>BORDERS</em> for white body with lines for clothes patches, <em>PATCHES</em> - for grayscale patches with topology codes, and <em>RANDOM</em> for randomly colored patches.' );
+		toggleFav = CFG.toggleFav;
 
-		addNumeric(
-			'mr', 'Males', 1, {min:0, max:10, step:1},
-			'Fraction of population that manifests biological male appearance, including clothing. This parameter affects adults and children alike. The actual proportion is <em>Males:Females</em> and 2:3 would mean approximately 2 out of 5 people are males. Proportion 0:0 is considered as 1:1.' );
-
-		addNumeric(
-			'fr', 'Females', 1, {min:0, max:10, step:1},
-			'Fraction of population that manifests biological female appearance, including clothing. This parameter affects adults and children alike. The actual proportion is <em>Males:Females</em> and 2:3 would mean approximately 2 out of 5 people are female. Proportion 0:0 is considered as 1:1.' );
-
-		addNumeric(
-			'fcr', 'Formal clothing', 1, {min:0, max:10, step:1},
-			'Fraction of population that wears formal business clothing. The actual proportion is <em>Formal:casual:intimate</em> and 5:3:2 would mean approximately 5 out of 10 people wear formal clothing. Proportion 0:0:0 is considered as 1:1:0.' );
-
-		addNumeric(
-			'ccr', 'Casual clothing', 1, {min:0, max:10, step:1},
-			'Fraction of population that wears casual clothing. The actual proportion is <em>Formal:casual:intimate</em> and 5:3:2 would mean approximately 3 out of 10 people wear casual clothing. Proportion 0:0:0 is considered as 1:1:0.' );
-
-		addNumeric(
-			'icr', 'Intimate clothing', 0, {min:0, max:10, step:1},
-			'Fraction of population that wears intimate clothing. The actual proportion is <em>Formal:casual:intimate</em> and 5:3:2 would mean approximately 2 out of 10 people wear casual clothing. Proportion 0:0:0 is considered as 1:1:0.' );
-
-
-
-
-
-
-
-		document.getElementById( 'param_count' ).innerHTML = ids.length;
+		document.getElementById( 'param_count' ).innerHTML = CFG.ids.length;
+		document.getElementById( 'reset' ).onclick = CFG.resetConfigurator;
+		document.getElementById( 'debug' ).onclick = CFG.debugConfigurator;
+		document.getElementById( 'share' ).onclick = CFG.shareConfigurator;
+		document.getElementById( 'show-fav' ).onclick = CFG.toggleFilter;
+		document.getElementById( 'show-all' ).onclick = CFG.toggleFilter;
+		document.getElementById( 'start1' ).onclick = CFG.prepareValues;
+		document.getElementById( 'start2' ).onclick = CFG.prepareValues;
 		
-		var filter = localStorage.getItem( LOCAL_STORAGE_FILTER ) || 'show-fav';
+		var filter = localStorage.getItem( CFG.LOCAL_STORAGE_FILTER ) || 'show-fav';
 		document.getElementById( filter ).checked = true;
-		toggleFilter();
+		CFG.toggleFilter();
 	</script>
 	
 </body>

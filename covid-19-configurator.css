@@ -53,6 +53,14 @@ h3.caption {
 	color: Black;
 }
 
+h3.caption ~ .info{
+	display: block;
+	font-size: 100%;
+	font-weight: 300;
+	padding-left: 0em;
+	#color: DimGray;
+}
+
 /*.block:hover {
 	outline: dotted 1px gray;
 	outline-offset: 0.25em;
@@ -208,14 +216,25 @@ td {
 	/*border: solid 1px red;*/
 }
 
-.syslink { /* buttons that must look like links */
+.mainsyslink { /* buttons that must look like links */
+	text-transform: uppercase;
+	font-weight: bold;
 	background: none;
 	border: none;
-	cursor: point;
+	cursor: pointer;
 	color: CornflowerBlue;
 }
 
-.syslink:hover {
+.syslink { /* buttons that must look like links */
+	text-transform: uppercase;
+	font-weight: 300;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: CornflowerBlue;
+}
+
+.mainsyslink:hover, .syslink:hover {
 	background: CornflowerBlue;
 	color: White;
 }
