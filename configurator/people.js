@@ -102,3 +102,21 @@ CFG.addNumeric(
 CFG.addNumeric(
 	'daa', 'Follow person actions', -1, {min:-1, max:50000, step:1},
 	'If this parameter cointains an existing person id, then the timestamped actions of  this person are printed in the JS console. If the value is -1, such printing is turned off.' );
+
+
+		CFG.addNumericRange(
+			'aph', 'Adults per house', 1, 4, {min:1, max:10, step:1},
+			'The number of adults in a house. The actual number is randomly picked from this interval.' );
+
+		CFG.addNumericRange(
+			'cph', 'Children per house', 0, 3, {min:0, max:10, step:1},
+			'The number of children in a house. The actual number is randomly picked from this interval.' );
+
+
+		CFG.addNumericRange(
+			'apa', 'Adults per apartment', 1, 3, {min:1, max:10, step:1},
+			'The number of adults in an apartment. The actual number is randomly picked from this interval.' );
+
+		CFG.addNumericRange(
+			'cpa', 'Children per apartment', 0, 2, {min:0, max:10, step:1},
+			'The number of children in an apartment. The actual number is randomly picked from this interval.' );
