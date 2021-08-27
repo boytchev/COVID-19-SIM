@@ -167,6 +167,3 @@ CFG.addHeader(
 		CFG.addTimeRange(
 			'lopi', 'Office PM lights max', CFG.timeMs(18), CFG.timeMs(22,50), {min:CFG.timeMs(13), max:CFG.timeMs(23), step:CFG.timeMs(0,10),},
 			'Time interval in the evening, when office lights are fully lit. This interval must be between the corresponding <em>Lights on</em> and <em>Lights off</em>. Lights outside this interval are faded.' );
-
-
-CFG.addHeader(	2, '<div style="background:crimson; color:white; padding: 0.5em 3em;">PARAMETERS BELOW ARE NOT GROUPED YET</div>' );
