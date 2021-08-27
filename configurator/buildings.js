@@ -111,5 +111,3 @@ CFG.addHeader(
 			'dhr', 'Hide roofs', false, {},
 			'If checked, buildings are drawn without roofs and it is possible to see people inside.' );
 
-
-CFG.addHeader(	2, '&ndash;&ndash; PARAMETERS BELOW ARE NOT GROUPED YET &ndash;&ndash;' );
