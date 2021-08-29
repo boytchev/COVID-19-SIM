@@ -387,8 +387,6 @@ export function toggleFilter( event )
 
 export function prepareValues( onlyModified = false )
 {
-	console.log('ppp');
-	
 	var str = '';
 
 	for( var id in data )
