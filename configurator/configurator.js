@@ -385,8 +385,10 @@ export function toggleFilter( event )
 	}
 }
 
-function prepareValues( onlyModified )
+export function prepareValues( onlyModified = false )
 {
+	console.log('ppp');
+	
 	var str = '';
 
 	for( var id in data )
@@ -446,7 +448,7 @@ function prepareValues( onlyModified )
 
 	localStorage.setItem( LOCAL_STORAGE_PARAMS, str );
 
-//	console.log(str);
+	console.log(str);
 	return str;
 }
 
