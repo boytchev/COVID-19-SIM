@@ -5,6 +5,8 @@ const LOCAL_STORAGE_FAVS = 'covid-19-favs';
 const LOCAL_STORAGE_PARAMS = 'covid-19-params'; // same name used in config.js
 export const LOCAL_STORAGE_FILTER = 'covid-19-filter';
 
+export const LOCALHOST = (location.hostname == 'localhost' || location.hostname == '127.0.0.1' || location.hostname == '');
+
 const configParams = new URLSearchParams(
 		window.location.search ||
 		localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
@@ -15,7 +17,7 @@ const configParams = new URLSearchParams(
 
 export var ids = [];
 
-var	tags = [],
+var allTags = [],
 	data = {};
 
 
@@ -73,7 +75,7 @@ function param( id, defaultValue )
 	if( value=='false' ) value = false;
 	if( !isNaN(parseFloat(value)) ) value = parseFloat(value);	
 	
-	console.log(id,'=',value,configParams.get( id ));
+	if( LOCALHOST ) console.log(id,'=',value,configParams.get( id ));
 	
 	return value;
 }
@@ -115,6 +117,8 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 	options.tags = tags.split( ',' );
 	options.unit = options.unit||'';
 	
+	allTags.push( ...options.tags );
+	
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
 	
@@ -142,6 +146,7 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 			</tr>
 			<tr class="info"><td colspan="3">
 				${info} Range is from ${options.min} to ${options.max}. Default value is ${defaultValue}.
+				<div class="tags">${tags.split(',')}</div>
 			</td></tr>
 		</table>`;
 
@@ -164,7 +169,6 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 		value:	document.getElementById(id),
 		defaultValue: defaultValue,
 		options: options,
-		tags: tags,
 	}
 	
 }
@@ -186,6 +190,8 @@ export function addPercentage( id, name, defaultValue, options, info='', tags=''
 	options.step = options.step||1;
 	options.value = param( id, defaultValue );
 	options.tags = tags.split( ',' );
+
+	allTags.push( ...options.tags );
 	
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
@@ -209,6 +215,7 @@ export function addPercentage( id, name, defaultValue, options, info='', tags=''
 			</tr>
 			<tr class="info"><td colspan="3">
 				${info} Range is from ${p(options.min)}% to ${p(options.max)}%. Default value is ${p(defaultValue)}%.
+				<div class="tags">${tags.split(',')}</div>
 			</td></tr>
 		</table>`;
 		
@@ -228,7 +235,6 @@ export function addPercentage( id, name, defaultValue, options, info='', tags=''
 		value:	document.getElementById(id),
 		defaultValue: defaultValue,
 		options: options,
-		tags: tags,
 	}
 	
 }
@@ -249,6 +255,8 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 	options.defaultValue = defaultValue;
 	options.tags = tags.split( ',' );
 	
+	allTags.push( ...options.tags );
+
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
 	
@@ -268,6 +276,7 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 			</tr>
 			<tr class="info"><td colspan="2">
 				${info} Default state is ${defaultValue?'checked':'not checked'}.
+				<div class="tags">${tags.split(',')}</div>
 			</td></tr>
 		</table>`;
 
@@ -287,7 +296,6 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 		value:	document.getElementById(id),
 		defaultValue: defaultValue,
 		options: options,
-		tags: tags,
 	}
 }
 
@@ -344,28 +352,36 @@ export function shareConfigurator()
 	prompt( 'Generating shareable URL is experimental feature. Grab the URL from below:', sharedURL );
 }
 
-export function toggleFilter( )
+export function toggleFilter( event )
 {
-	var filter = 'show-fav';
+	var elem = event.target,
+		filter = elem.id=='tags' ? elem.value : elem.id;
+	
+	var filterElems = document.querySelectorAll( '.filter' );
+	for( var filterElem of filterElems )
+		filterElem.classList.toggle( 'selected', filterElem==elem );
 
-	var elems = document.querySelectorAll('input[type="radio"][name="show"]');
-	for( var elem of elems )
-		if( elem.checked ) 
-			filter = elem.getAttribute( 'id' );
-		
 	localStorage.setItem( LOCAL_STORAGE_FILTER, filter );
 
 	switch( filter )
 	{
-		case 'show-fav':
+		case 'fav':
 			for( var id in data )
 				data[id].block.style.display = data[id].options?.fav ? 'block' : 'none';
 			break;
 			
-		case 'show-all':
-		default:
+		case '':
+		case 'all':
 			for( var id in data )
 				data[id].block.style.display = 'block';
+			break;
+			
+		default:
+			for( var id in data )
+			{
+				data[id].block.style.display = (data[id].options.tags.indexOf(filter)>=0) ? 'block' : 'none';
+//				console.log(id,data[id].options.tags,filter,data[id].options.tags.indexOf(filter));
+			}
 	}
 }
 
@@ -450,6 +466,9 @@ export function addTime( id, name, defaultValue, options, info='', tags='' )
 	options.step = options.step||1;
 	options.value = msToString(param( id, defaultValue ));
 	options.tags = tags.split( ',' );
+	
+	allTags.push( ...options.tags );
+
 //console.log('reading',param( id, defaultValue ),'as', options.value);
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
@@ -477,6 +496,7 @@ export function addTime( id, name, defaultValue, options, info='', tags='' )
 			</tr>
 			<tr class="info"><td colspan="2">
 				${info} Range is from ${options.min} to ${options.max}. Default value is ${msToString(defaultValue)}.
+				<div class="tags">${tags.split(',')}</div>
 			</td></tr>
 		</table>`;
 
@@ -496,7 +516,6 @@ export function addTime( id, name, defaultValue, options, info='', tags='' )
 		value:	document.getElementById(id),
 		defaultValue: defaultValue,
 		options: options,
-		tags: tags,
 	}
 	
 }
@@ -509,6 +528,8 @@ export function addHeader( level, name, logo='', info='', tags='' )
 	// construct the html
 	var tag = 'h'+Math.round(level+1),
 		id = 'id'+(ID++);
+
+	var options = {tags: tags.split(',')};
 	
 	if( logo )
 	{
@@ -519,6 +540,7 @@ export function addHeader( level, name, logo='', info='', tags='' )
 		<div id="block-${id}" class="header">
 			<${tag} class="caption">${logo}${name}</${tag}>
 			<div class="info">${info}</div>
+			<div class="tags">${tags.split(',')}</div>
 		</div>`;
 
 	// create a new dom element
@@ -533,9 +555,10 @@ export function addHeader( level, name, logo='', info='', tags='' )
 	data[id] = {
 		type:	HEADER,
 		block:	document.getElementById('block-'+id),
-		tags: tags,
+		options: options,
 	}
 	
+	allTags.push( ...options.tags );
 }
 
 
@@ -557,6 +580,8 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 	options.valueB = param2( id, defaultValueA, defaultValueB )[1];
 	options.tags = tags.split( ',' );
 	options.unit = options.unit||'';
+	
+	allTags.push( ...options.tags );
 	
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
@@ -599,6 +624,7 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 			</tr>
 			<tr class="info"><td colspan="3">
 				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${defaultValueA} to ${defaultValueB}.
+				<div class="tags">${tags.split(',')}</div>
 			</td></tr>
 		</table>`;
 
@@ -623,7 +649,6 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 		defaultValueA: defaultValueA,
 		defaultValueB: defaultValueB,
 		options: options,
-		tags: tags,
 	}
 	
 }
@@ -643,6 +668,8 @@ export function addNumericList( id, name, defaultValue, options, info='', tags='
 	options.value = param( id, defaultValue );
 	options.tags = tags.split( ',' );
 	options.unit = options.unit||'';
+
+	allTags.push( ...options.tags );
 	
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
@@ -672,6 +699,7 @@ export function addNumericList( id, name, defaultValue, options, info='', tags='
 			</tr>
 			<tr class="info"><td colspan="3">
 				${info} Default value is <em>${options.values[options.values.indexOf(defaultValue)+1]}</em>.
+				<div class="tags">${tags.split(',')}</div>
 			</td></tr>
 		</table>`;
 
@@ -694,7 +722,6 @@ export function addNumericList( id, name, defaultValue, options, info='', tags='
 		value:	document.getElementById(id),
 		defaultValue: defaultValue,
 		options: options,
-		tags: tags,
 	}
 
 	data[id].value.value = options.value;
@@ -720,6 +747,8 @@ export function addTimeRange( id, name, defaultValueA, defaultValueB, options, i
 	options.valueB = msToString(param2( id, defaultValueA, defaultValueB )[1]);
 	options.tags = tags.split( ',' );
 	options.unit = options.unit||'';
+	
+	allTags.push( ...options.tags );
 	
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
@@ -761,6 +790,7 @@ export function addTimeRange( id, name, defaultValueA, defaultValueB, options, i
 			</tr>
 			<tr class="info"><td colspan="2">
 				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${msToString(defaultValueA)} to ${msToString(defaultValueB)}.
+				<div class="tags">${tags.split(',')}</div>
 			</td></tr>
 		</table>`;
 
@@ -785,9 +815,31 @@ export function addTimeRange( id, name, defaultValueA, defaultValueB, options, i
 		defaultValueA: defaultValueA,
 		defaultValueB: defaultValueB,
 		options: options,
-		tags: tags,
 	}
 	
 }
 
 
+export function processTags()
+{
+	for( var filter of document.querySelectorAll('button.filter') )
+	{
+		var idx;
+		while( (idx=allTags.indexOf( filter.id )) !== -1 )
+			allTags.splice( idx, 1 );
+	}
+	
+	console.log('original count',allTags.length);
+	allTags = [...new Set(allTags)];
+	console.log('final count',allTags.length);
+	allTags.sort();
+	console.log('tags',allTags);
+	
+	var htmlOptions = '<option value="" disabled selected hidden>MORE...</option>';
+	
+	for( var tag of allTags )
+		htmlOptions += `<option value="${tag}">${tag.toUpperCase()}</option>`;
+
+	document.getElementById( 'tags' ).innerHTML = htmlOptions;
+
+}

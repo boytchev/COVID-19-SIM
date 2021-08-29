@@ -1,12 +1,14 @@
 body {
 	background-color: white;
 	font-family: 'Roboto', sans-serif;
+	margin: 0;
+	padding: 0;
 }
 
 .page {
 	max-width: 40em;
-	margin: auto;
-	padding: 0 5em;
+	margin: 0 auto;
+	padding: 0 0;
 }
 
 .block {
@@ -18,7 +20,7 @@ body {
 }
 
 .header {
-	/*text-align: center;*/
+	text-align: justified;
 }
 
 h2.caption {
@@ -165,42 +167,75 @@ h2 .info {
 	text-transform: uppercase;
 }
 
-.filters {
+.filter {
 	font-weight: 300;
 	color: Gray;
+	background: none;
+	border: none;
+	padding: 0.3em 0.5em 0.1em 0.5em;
+	text-transform: uppercase;
+	font-size: 0.8em;
+	display: inline-block;
+	text-align: center;
+	cursor: pointer;
+	border-bottom: 0.3em solid White;
+	outline: 1px solid white;
+	outline-offset: -1px;
 }
 
-.filters input {
+.filter.selected {
+	color: Black;
+	font-weight: bold;
+	border-color: Black;
+}
+
+.filter:hover {
+	#color: white;
+	border-color: CornflowerBlue;
+}
+
+.filter input {
+	height: 1.25em;
+	width: 1.25em;
+	#width: 100%;
+	#border: 0px;
 	#display: none;
 }
 
-.filters input:checked ~ span {
-	font-weight: bold;
-	color: Black;
-}
-
 .start-block {
+	width: 100%;
 	text-align: center;
 	position: -webkit-sticky;
 	position: sticky;
 	top: 0;
 	background: White;
-	padding: 1em;
-	border-top: dotted lightgray 1px;
+	padding: 0 0 0.3em 0;
+	border-top: none;
 	border-bottom: dotted lightgray 1px;
 	z-index: 10;
+	padding: 1em 0;
+	box-shadow: 0 1.5em 1em -1.5em gray;
 }
 
 .start-block.end {
 	bottom: 0;
+	border-bottom: none;
+	border-top: dotted lightgray 1px;
+	box-shadow: 0 -1.5em 1em -1.5em gray;
 }
+
 
 .start {
 	background: CornflowerBlue;
 	color: White;
 	padding: 0.25em 1em;
 	text-decoration: none;
-	/*text-transform: uppercase;*/
+	text-transform: uppercase;
+	border-bottom: 0.2em solid white;
+}
+
+.start:hover {
+	border-bottom: 0.2em solid black;
 }
 
 table {
@@ -237,4 +272,54 @@ td {
 .mainsyslink:hover, .syslink:hover {
 	background: CornflowerBlue;
 	color: White;
+}
+
+
+.tags {
+	display: inline-block;
+	display: none; /* hiding tags */
+	font-size: 0.7em;
+	background: Yellow;
+	padding: 0.3em 0.5em;
+}
+
+.leftbutton {
+	position: absolute;
+	left: 0;
+	background: none;
+	border: none;
+	text-transform: uppercase;
+	font-weight: 300;
+	color: gray;
+	cursor: pointer;
+}
+
+.leftbutton:hover {
+	border-bottom: 0.2em cornflowerblue solid;
+}
+
+.rightbutton {
+	position: absolute;
+	right: 0;
+	background: none;
+	border: none;
+	text-transform: uppercase;
+	font-weight: 300;
+	color: gray;
+	cursor: pointer;
+}
+
+.rightbutton:hover {
+	border-bottom: 0.2em cornflowerblue solid;
+}
+
+.rightbutton img {
+	height: 1em;
+}
+
+.wait {
+	text-align: center;
+	font-size: 3em;
+	margin: 2em 0;
+	text-shadow: 0 0 0.1em lightgray;
 }
