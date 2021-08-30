@@ -25,12 +25,12 @@ CFG.addHeader(
 	'health,infection,people,time' );
 
 		CFG.addPercentage(
-			'pii', 'Initially infected', 0.05, {min:0, max:1, step:0.05},
+			'pii', 'Initially infected', 0.05, {fav:true, min:0, max:1, step:0.05},
 			'Percentage of initially infected people. Although infected, the people will start with the asymptotic phase, so the infection will manifestated later on.',
 			'health,infection,people' );
 
 		CFG.addNumeric(
-			'id', 'Infection distance', 1, {min:0.2, max:50, step:0.2, unit: 'm'},
+			'id', 'Infection distance', 1, {fav:true, min:0.2, max:50, step:0.2, unit: 'm'},
 			'The maximal infection distance in meters. The distance is measured as Manhattan distance. If a person is further away from another person, then there is no infection trasnfer between both.',
 			'health,infection' );
 

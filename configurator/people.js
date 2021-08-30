@@ -96,12 +96,12 @@ CFG.addHeader(
 			'people,motion' );
 
 		CFG.addBoolean(
-			'dfal', 'Line formation', false, {},
+			'dfal', 'Line formation', false, {fav:true},
 			'If checked, the people are positioned in lines and columns. If not checked, the people are positioned in buildings.',
 			'people,motion' );
 
 		CFG.addBoolean(
-			'drw', 'Random wandering', false, {},
+			'drw', 'Random wandering', false, {fav:true},
 			'If checked, the people are walking in random directions and they do not follow any routine. If not checked, the people follow their daily routine.',
 			'people,motion' );
 

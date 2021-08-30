@@ -13,12 +13,12 @@ CFG.addHeader(
 	'daynight,time' );
 
 		CFG.addTime(
-			'dts', 'Time speed', CFG.timeMs(0,0,1), {min:CFG.timeMs(0,0,1), max:CFG.timeMs(1,0,0), step:CFG.timeMs(0,0,1),},
+			'dts', 'Time speed', CFG.timeMs(0,0,1), {fav:true, min:CFG.timeMs(0,0,1), max:CFG.timeMs(1,0,0), step:CFG.timeMs(0,0,1),},
 			'How much virtual time passes for 1 second of real time. For example, 00:00:01 is for realtime simulation, 00:00:05 is for simulation 5 times faster.',
 			'daynight,time' );
 
 		CFG.addTime(
-			'st', 'Start time', CFG.timeMs(6,20), {min:CFG.timeMs(0,0,0), max:CFG.timeMs(23,59,59), step:CFG.timeMs(0,10,0),},
+			'st', 'Start time', CFG.timeMs(6,20), {fav:true, min:CFG.timeMs(0,0,0), max:CFG.timeMs(23,59,59), step:CFG.timeMs(0,10,0),},
 			'The virtual time at which the simulation starts.',
 			'daynight,time' );
 
@@ -28,7 +28,7 @@ CFG.addHeader(
 	'daynight,sun,light,morning,evening' );
 
 		CFG.addNumericList(
-			'su', 'Sun', 0, {values:[0,'no',1,'static',2,'dynamic']},
+			'su', 'Sun', 0, {fav:true, values:[0,'no',1,'static',2,'dynamic']},
 			'The motion of sun. <em>No</em> indicates there is no sun and light comes from everywhere. <em>Static</em> means the sun does not move, but stays as a position in the sky, defined by <em>STATIC SUN POSITION</em>. When the sun is <em>Dynamic</em>, it moves around the city, simulating day-night cycles.',
 			'daynight,sun,light' );
 
@@ -62,7 +62,7 @@ CFG.addHeader(
 	'daynight,shadow,people' );
 	
 		CFG.addNumericList(
-			'sh', 'Shadows', 0, {values:[0,'no',1,'top',2,'full']},
+			'sh', 'Shadows', 0, {fav:true, values:[0,'no',1,'top',2,'full']},
 			'The type of shadows. This parameter is affective only when <em>sun = static</em> or <em>dynamic</em>. Value <em>No</em> indicates there are no shadows, this has highest performance. <em>Top</em> shadows are static as if the sun light comes from above. <em>Full</em> shadows are generated depending on the sun position. If the <em>sun = dynamic</em> then shadows are continuously recalculated, which negatively impacts performance.',
 			'daynight,shadow' );
 

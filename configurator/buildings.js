@@ -126,7 +126,7 @@ CFG.addHeader(
 			'building,floor' );
 			
 		CFG.addPercentage(
-			'dbuo', 'Building opacity', 1, {min:0, max:1, step:0.25},
+			'dbuo', 'Building opacity', 1, {min:0, max:1, step:0.25, fav:true},
 			'Percentage of opacity of all buildings &ndash; houses, apartments and offices. At 100% the buildings are fully opaque, while at 0% they are fully transparent.',
 			'building' );
 			

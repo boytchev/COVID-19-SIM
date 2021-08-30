@@ -41,7 +41,7 @@ CFG.addHeader(
 	'misc,rotation'  );
 
 		CFG.addBoolean(
-			'dar', 'Auto rotate', false, {},
+			'dar', 'Auto rotate', false, {fav:true},
 			'If checked, the scene rotates continuously with speed defined by <em>Auto rotate speed</em>. The user can still use the mouse to rotate manually. If not checked, the scene does not move by itself.',
 			'misc,rotation' );
 
