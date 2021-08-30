@@ -19,7 +19,7 @@ CFG.addHeader( 2, 'Dimensions', '', '', 'map,ground,earth' );
 		CFG.addNumeric(
 			'gs', 'Ground size', 500, {min:10, max:10000, step:10, fav:true, unit:'m'},
 			'The active area of the simulation in meters. Buildings and people will be bound to a square of this size.',
-			'map,ground' );
+			'map,ground,debug' );
 
 		CFG.addNumeric(
 			'es', 'Earth size', 50000, {min:1000, max:100000, step:1000, unit:'m', offset: 7.4},
@@ -31,7 +31,7 @@ CFG.addHeader( 2, 'Structure', '', '', 'map,block' );
 		CFG.addNumeric(
 			'rs', 'Layout', 0, {min:0, max:100000, step:1},
 			'A number that determines the layout of streets and buildings. If 0, the simulator will pick an arbitrary layout. It not 0, the simulator will use that specific layout if the other configuration parameters are the same.',
-			'map,block' );
+			'map,block,debug' );
 
 		CFG.addNumeric(
 			'bst', 'Split treshold', 110, {min:50, max:500, step:10, unit:'m'},
@@ -76,32 +76,32 @@ CFG.addHeader(
 CFG.addHeader(
 	2, 'Enforced block types', '',
 		'Restriction of what types of blocks are generated. If some are checked, only these types of blocks are created. If none are checked, the simulator decides what to create.',
-		'map,block,house,apartment,office,park,plaza' );
+		'map,block,house,apartment,office,park,plaza,debug' );
 
 		CFG.addBoolean(
 			'dbwoh', 'Only houses', false, {},
 			'If checked, generate blocks with houses.',
-			'map,block,house' );
+			'map,block,house,debug' );
 
 		CFG.addBoolean(
 			'dbwoa', 'Only apartments', false, {},
 			'If checked, generate blocks with apartments.',
-			'map,block,apartment' );
+			'map,block,apartment,debug' );
 
 		CFG.addBoolean(
 			'dbwoo', 'Only offices', false, {},
 			'If checked, generate blocks with offices.',
-			'map,block,office' );
+			'map,block,office,debug' );
 
 		CFG.addBoolean(
 			'dbwop', 'Only parks', false, {},
 			'If checked, generate blocks with parks.',
-			'map,block,park' );
+			'map,block,park,debug' );
 
 		CFG.addBoolean(
 			'dbwoz', 'Only plazas', false, {},
 			'If checked, generate blocks with plazas.',
-			'map,block,plaza' );
+			'map,block,plaza,debug' );
 
 
 

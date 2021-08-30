@@ -10,7 +10,7 @@ import * as CFG from './configurator.js';
 CFG.addHeader(
 	1, 'People', 'people',
 	'Prameters describing the population and individual people.',
-	'people,home,fashion,motion,tracking,adult,house,child,apartment,male,female,age' );
+	'people,home,fashion,motion,tracking,adult,house,child,apartment,male,female,age,debug' );
 
 CFG.addHeader(
 	2, 'Demographics', '', '',
@@ -19,7 +19,7 @@ CFG.addHeader(
 		CFG.addNumeric(
 			'damc', 'People count', 100, {min:0, max:50000, step:100, fav:true},
 			'The maximal number of people in the simulation. Their number might be smaller if the amount of houses and apartments are not sufficient for all of them.',
-			'people' );
+			'people,debug' );
 
 		CFG.addNumeric(
 			'mr', 'Males', 1, {min:0, max:10, step:1},
@@ -96,14 +96,14 @@ CFG.addHeader(
 			'people,motion' );
 
 		CFG.addBoolean(
-			'dfal', 'Line formation', false, {fav:true},
+			'dfal', 'Line formation', false, {},
 			'If checked, the people are positioned in lines and columns. If not checked, the people are positioned in buildings.',
-			'people,motion' );
+			'people,motion,debug' );
 
 		CFG.addBoolean(
-			'drw', 'Random wandering', false, {fav:true},
+			'drw', 'Random wandering', false, {},
 			'If checked, the people are walking in random directions and they do not follow any routine. If not checked, the people follow their daily routine.',
-			'people,motion' );
+			'people,motion,debug' );
 
 		CFG.addNumeric(
 			'dfa', 'Follow person', -1, {min:-1, max:50000, step:1},
@@ -123,22 +123,22 @@ CFG.addHeader(
 		CFG.addNumericList(
 			'adm', 'People clothes', 7, {values:[7,'CLOTHES',0,'WHITE',1,'CHECKERED',2,'CHESSBOARD',3,'CRIMSON',4,'BORDERS',5,'PATCHES',6,'RANDOM']},
 			'The clothes on people. The only clothes option is <em>CLOTHES</em>, the others are used for development &ndash; <em>WHITE</em> for all white, <em>CHECKERED</em> for colorful squares, <em>CHESSBOARD</em> for black and white squares, <em>CRIMSON</em> for black body with crimson stripes, <em>BORDERS</em> for white body with lines for clothes patches, <em>PATCHES</em> - for grayscale patches with topology codes, and <em>RANDOM</em> for randomly colored patches.',
-			'people,fashion,male,female' );
+			'people,fashion,male,female,debug' );
 
 		CFG.addNumeric(
 			'fcr', 'Formal clothing', 1, {min:0, max:10, step:1},
 			'Fraction of population that wears formal business clothing. The actual proportion is <em>Formal:casual:intimate</em> and 5:3:2 would mean approximately 5 out of 10 people wear formal clothing. Proportion 0:0:0 is considered as 1:1:0.',
-			'people,fashion,male,female' );
+			'people,fashion,male,female,debug' );
 
 		CFG.addNumeric(
 			'ccr', 'Casual clothing', 1, {min:0, max:10, step:1},
 			'Fraction of population that wears casual clothing. The actual proportion is <em>Formal:casual:intimate</em> and 5:3:2 would mean approximately 3 out of 10 people wear casual clothing. Proportion 0:0:0 is considered as 1:1:0.',
-			'people,fashion,male,female' );
+			'people,fashion,male,female,debug' );
 
 		CFG.addNumeric(
 			'icr', 'Intimate clothing', 0, {min:0, max:10, step:1},
 			'Fraction of population that wears intimate clothing. The actual proportion is <em>Formal:casual:intimate</em> and 5:3:2 would mean approximately 2 out of 10 people wear casual clothing. Proportion 0:0:0 is considered as 1:1:0.',
-			'people,fashion,male,female' );
+			'people,fashion,male,female,debug' );
 
 
 

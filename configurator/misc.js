@@ -14,7 +14,7 @@ import * as CFG from './configurator.js';
 CFG.addHeader(
 	1, 'Miscallaneous', 'misc',
 	'Prameters controlling the graphics and other miscallaneous features.',
-	'misc,route,tracking,home,house,apartment,office,people,navmesh,floor,route,elevator,rotation,graphics' );
+	'misc,route,tracking,home,house,apartment,office,people,navmesh,floor,route,elevator,rotation,graphics,debug' );
 
 
 CFG.addHeader(
@@ -54,27 +54,27 @@ CFG.addHeader(
 CFG.addHeader(
 	2, 'Navmeshes', '',
 	'A navigational mesh (navmesh) is a structure defining locations and paths where people can walk. These parameters are used to visualize the navmesh.',
-	'misc,navmesh,floor,route,elevator' );
+	'misc,navmesh,floor,route,elevator,debug' );
 
 		CFG.addPercentage(
 			'dnmo', 'Navmesh opacity', 0, {min:0, max:1, step:0.25},
 			'Percentage of opacity of the navmesh &ndash; crimson and orange areas showing locations of rooms, elevators, checkpoints, etc. At 100% the navmesh is fully opaque, while at 0% it is fully transparent. Navmeshes are shown on top of buildings and other 3D objects.',
-			'misc,navmesh' );
+			'misc,navmesh,debug' );
 			
 		CFG.addBoolean(
 			'dnmsf', 'Navmesh floors', false, {},
 			'If checked, generates images of navmesh rooms at the floor level. However, they are shown only if <em>Navmesh opacity</em> is not 0%.',
-			'misc,navmesh,floor' );
+			'misc,navmesh,floor,debug' );
 
 		CFG.addBoolean(
 			'dnmsl', 'Navmesh routes', false, {},
 			'If checked, generates images of navmesh routes. However, they are shown only if <em>Navmesh opacity</em> is not 0%.',
-			'misc,navmesh,route' );
+			'misc,navmesh,route,debug' );
 
 		CFG.addBoolean(
 			'dnmse', 'Navmesh elevators', false, {},
 			'If checked, generates images of navmesh elevators. However, they are shown only if <em>Navmesh opacity</em> is not 0%.',
-			'misc,navmesh,elevator' );
+			'misc,navmesh,elevator,debug' );
 
 
 

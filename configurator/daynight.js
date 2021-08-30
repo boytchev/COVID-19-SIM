@@ -15,12 +15,12 @@ CFG.addHeader(
 		CFG.addTime(
 			'dts', 'Time speed', CFG.timeMs(0,0,1), {fav:true, min:CFG.timeMs(0,0,1), max:CFG.timeMs(1,0,0), step:CFG.timeMs(0,0,1),},
 			'How much virtual time passes for 1 second of real time. For example, 00:00:01 is for realtime simulation, 00:00:05 is for simulation 5 times faster.',
-			'daynight,time' );
+			'daynight,time,debug' );
 
 		CFG.addTime(
 			'st', 'Start time', CFG.timeMs(6,20), {fav:true, min:CFG.timeMs(0,0,0), max:CFG.timeMs(23,59,59), step:CFG.timeMs(0,10,0),},
 			'The virtual time at which the simulation starts.',
-			'daynight,time' );
+			'daynight,time,debug' );
 
 	
 CFG.addHeader(
@@ -30,7 +30,7 @@ CFG.addHeader(
 		CFG.addNumericList(
 			'su', 'Sun', 0, {fav:true, values:[0,'no',1,'static',2,'dynamic']},
 			'The motion of sun. <em>No</em> indicates there is no sun and light comes from everywhere. <em>Static</em> means the sun does not move, but stays as a position in the sky, defined by <em>STATIC SUN POSITION</em>. When the sun is <em>Dynamic</em>, it moves around the city, simulating day-night cycles.',
-			'daynight,sun,light' );
+			'daynight,sun,light,debug' );
 
 		CFG.addTime(
 			'srm', 'Sunrise', CFG.timeMs(6), {min:CFG.timeMs(1), max:CFG.timeMs(11), step:CFG.timeMs(0,0,1),},
@@ -45,7 +45,7 @@ CFG.addHeader(
 		CFG.addTime(
 			'sspm', 'Static sun position', CFG.timeMs(10,0,0), {min:CFG.timeMs(0,0,0), max:CFG.timeMs(23,59,0), step:CFG.timeMs(0,30,0),},
 			'Position of the sun when <em>sun = static</em> measured as time of the day. The sun stays at this position, affecting shadows and color of sunlight.',
-			'daynight,sun' );
+			'daynight,sun,debug' );
 
 		CFG.addNumeric(
 			'sha', 'Sun angle', 30, {min:0, max:360, step:15, unit:'&deg;'},
@@ -55,7 +55,7 @@ CFG.addHeader(
 		CFG.addBoolean(
 			'dspg', 'Manual sun', false, {},
 			'If checked, adds a control for manually changing the sun position. This affects lightings and shadows (if they are turned on). The position is set as hours &ndash; i.e. 18.5 corresponds to 18:30.',
-			'daynight,sun' );
+			'daynight,sun,debug' );
 	
 CFG.addHeader(
 	2, 'Shadows', '', '',
@@ -64,7 +64,7 @@ CFG.addHeader(
 		CFG.addNumericList(
 			'sh', 'Shadows', 0, {fav:true, values:[0,'no',1,'top',2,'full']},
 			'The type of shadows. This parameter is affective only when <em>sun = static</em> or <em>dynamic</em>. Value <em>No</em> indicates there are no shadows, this has highest performance. <em>Top</em> shadows are static as if the sun light comes from above. <em>Full</em> shadows are generated depending on the sun position. If the <em>sun = dynamic</em> then shadows are continuously recalculated, which negatively impacts performance.',
-			'daynight,shadow' );
+			'daynight,shadow,debug' );
 
 		CFG.addNumericList(
 			'shms', 'Shadow size', 4096, {values:[128,128,256,256,512,512,1024,1024,2048,2048,4096,4096,8192,8192,16384,16384], unit:'px'},

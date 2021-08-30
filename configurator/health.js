@@ -22,12 +22,12 @@ CFG.addHeader(
 
 CFG.addHeader(
 	2, 'Infection', '', '',
-	'health,infection,people,time' );
+	'health,infection,people,time,debug' );
 
 		CFG.addPercentage(
 			'pii', 'Initially infected', 0.05, {fav:true, min:0, max:1, step:0.05},
 			'Percentage of initially infected people. Although infected, the people will start with the asymptotic phase, so the infection will manifestated later on.',
-			'health,infection,people' );
+			'health,infection,people,debug' );
 
 		CFG.addNumeric(
 			'id', 'Infection distance', 1, {fav:true, min:0.2, max:50, step:0.2, unit: 'm'},
@@ -88,7 +88,7 @@ CFG.addHeader(
 		CFG.addBoolean(
 			'ici', 'Infection color indicator', false, {},
 			'If checked, the skin color of infected people turn reddish depending on the level of illness.',
-			'health,people' );
+			'health,people,debug' );
 			
 		CFG.addBoolean(
 			'dsvs', 'Viral diagram', false, {},

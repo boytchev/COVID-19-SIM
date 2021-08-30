@@ -11,7 +11,7 @@ import * as CFG from './configurator.js';
 CFG.addHeader(
 	1, 'Buildings', 'buildings',
 	'Prameters for the buildings in the city.',
-	'building,floor,skyscraper,elevator,office,door,room,corridor,apartment,house,roof' );
+	'building,floor,skyscraper,elevator,office,door,room,corridor,apartment,house,roof,debug' );
 
 
 
@@ -128,7 +128,7 @@ CFG.addHeader(
 		CFG.addPercentage(
 			'dbuo', 'Building opacity', 1, {min:0, max:1, step:0.25, fav:true},
 			'Percentage of opacity of all buildings &ndash; houses, apartments and offices. At 100% the buildings are fully opaque, while at 0% they are fully transparent.',
-			'building' );
+			'building,debug' );
 			
 			
 		CFG.addBoolean(
