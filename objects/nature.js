@@ -44,7 +44,7 @@ export var previousDayTimeMs = dayTimeMs;
 var trueCurrentTimeMs = START_TIME;
 
 
-export var NatureMaterial = ( SHADOWS != NO_SHADOWS ) ? THREE.MeshStandardMaterial : THREE.MeshBasicMaterial;
+export var NatureMaterial = THREE.MeshStandardMaterial;
 
 var ambientIntensities = [
 		//NO  TOP  FULL_SHADOW
