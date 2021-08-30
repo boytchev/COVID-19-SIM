@@ -34,8 +34,8 @@
 		</h2>		
 		
 		<div class="start-block">
-			<a id="start1" class="start" href="covid-19-simulator.html">Start simulation</a>
-			<button id="share" class="rightbutton"><img src="icons/sharelink.svg"> Share</button>
+			<a id="start_button_1" class="start" href="covid-19-simulator.html">Start simulation</a>
+			<button id="share_button" class="rightbutton"><img src="icons/sharelink.svg"> Share</button>
 			<br>
 			<br>
 			<button id="fav" class="filter">My</button>
@@ -58,9 +58,9 @@
 	
 		
 		<div class="start-block end">
-			<a id="start2" class="start" href="covid-19-simulator.html">Start simulation</a>
-			<button id="reset" class="rightbutton"><img src="icons/reset.svg"> Reset</button>
-			<button id="debug" class="leftbutton">Debug</button>
+			<a id="start_button_2" class="start" href="covid-19-simulator.html">Start simulation</a>
+			<button id="reset_button" class="rightbutton"><img src="icons/reset.svg"> Reset</button>
+			<button id="debug_button" class="leftbutton">Debug</button>
 		</div>
 		
 	</div> <!--page-->	
@@ -84,9 +84,9 @@
 		toggleFav = CFG.toggleFav;
 
 		document.getElementById( 'param_count' ).innerHTML = CFG.ids.length;
-		document.getElementById( 'reset' ).onclick = CFG.resetConfigurator;
-		document.getElementById( 'debug' ).onclick = CFG.debugConfigurator;
-		document.getElementById( 'share' ).onclick = CFG.shareConfigurator;
+		document.getElementById( 'reset_button' ).onclick = CFG.resetConfigurator;
+		document.getElementById( 'debug_button' ).onclick = CFG.debugConfigurator;
+		document.getElementById( 'share_button' ).onclick = CFG.shareConfigurator;
 		
 		var elems = document.querySelectorAll( 'button.filter' );
 		for( var elem of elems )
@@ -96,25 +96,25 @@
 		for( var elem of elems )
 			elem.addEventListener( 'change', CFG.toggleFilter );
 			
-		document.getElementById( 'start1' ).onclick = CFG.prepareValues;
-		document.getElementById( 'start2' ).onclick = CFG.prepareValues;
+		document.getElementById( 'start_button_1' ).onclick = CFG.prepareValues;
+		document.getElementById( 'start_button_2' ).onclick = CFG.prepareValues;
 
 		var filter = localStorage.getItem( CFG.LOCAL_STORAGE_FILTER ) || 'fav',
 			elem = document.getElementById( filter );
 			
 		if( elem )
 		{
-			elem.click();
+			CFG.toggleFilter( {target:elem} );
 		}
 		else
 		{
 			elem = document.getElementById( 'tags' );
 			elem.classList.toggle( 'selected', true );
 			elem.value = filter;
-			elem.click();
+			CFG.toggleFilter( {target:elem} );
 		}
 		
-		if( !CFG.LOCALHOST ) document.getElementById( 'debug' ).style.display = 'none';
+		if( !CFG.LOCALHOST ) document.getElementById( 'debug_button' ).style.display = 'none';
 		
 		document.getElementsByClassName( 'wait' )[0].style.display = 'none';
 	</script>
