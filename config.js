@@ -110,6 +110,7 @@ export const DEBUG_SUN_POSITION_GUI = param('dspg',false);
 //export const DEBUG_BLOCK_COLOR = false;
 export const DEBUG_ALL_WHITE = param('daw',false);
 export const CARTOON_STYLE = param('cs',false); // only of agents, howses, trees
+export const PIXEL_ART_STYLE = param('pas',false);
 
 
 // a block is not split if smaller than the treshold, but if

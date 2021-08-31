@@ -30,6 +30,11 @@ CFG.addHeader(
 			'cs', 'Cartoon style', false, {},
 			'If checked, people, houses and trees are drawn in cartoon style &ndash white with heavy contrast shading.',
 			'misc,graphics' );
+			
+		CFG.addBoolean(
+			'pas', 'Pixel art style', false, {},
+			'If checked, the image is pixelated into blocks of 8×8 pixels. This simulates a retro style animation.',
+			'misc,graphics' );
 
 		CFG.addBoolean(
 			'dri', 'Renderer info', false, {},

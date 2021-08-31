@@ -1,6 +1,7 @@
 import * as THREE from './js/three.module.js';
 import * as dat from './js/dat.gui.module.js';
 import {OrbitControls} from './js/OrbitControls.js';
+import {PIXEL_ART_STYLE} from './config.js';
 
 var container = document.getElementById( 'container' );
 
@@ -10,8 +11,9 @@ var container = document.getElementById( 'container' );
 //	container.appendChild( stats.dom );
 
 
-export var renderer = new THREE.WebGLRenderer( { antialias: true } );
-	renderer.setPixelRatio( window.devicePixelRatio );
+export var renderer = new THREE.WebGLRenderer( { antialias: PIXEL_ART_STYLE?false:true } );
+	renderer.setPixelRatio( window.devicePixelRatio/(PIXEL_ART_STYLE?8:1) );
+	if( PIXEL_ART_STYLE ) renderer.domElement.style.imageRendering = 'pixelated';
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	container.appendChild( renderer.domElement );
 	
