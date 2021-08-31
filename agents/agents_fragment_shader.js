@@ -49,6 +49,7 @@ uniform float opacity;
 	varying float vRandomId;
 	//varying float vInfectionLevel;
 	flat varying int vClothing;
+	flat varying float vAge;
 #endif
 
 #ifdef COVID19SYM
@@ -214,7 +215,7 @@ uniform float opacity;
 			if( index<=30 )
 			{	// hair
 				int hair = randBool(0.9)?1:0;
-				int hairTopEnd = hair*randInt(23,26);
+				int hairTopEnd = hair*randInt( vAge<40.0?25:23, 26 ); // bald hair only for age 40+
 				int hairSideBeg = 27;
 				int hairSideEnd = hair*randInt(27,30);
 				if( index<=hairTopEnd && index2==0 ) color = colorHair();

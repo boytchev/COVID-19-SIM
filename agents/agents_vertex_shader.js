@@ -27,8 +27,10 @@ varying vec3 vViewPosition;
 	varying float vRandomId;
 	attribute float agentHeight;
 	attribute float agentSpeed;
+	attribute float agentAge;
 	attribute int motionType;
 	flat varying int vClothing;
+	flat varying float vAge;
 	
 	//varying float vInfectionLevel;
 #endif
@@ -124,6 +126,7 @@ void main() {
 
 	vAgentId = agentId;
 	vRandomId = randomId;
+	vAge = agentAge;
 
 	man = vRandomId<float( ${MALE_RATIO} );
 
@@ -173,6 +176,8 @@ void main() {
 
 	
 	float fat = 1.1*pow(0.5+0.5*sin(1.234*agentId),2.0);
+
+	float anthroScale = mapLinear( agentAge, 12.0, 50.0, 0.0, 1.0); // 1 = adult features; 0 = child features
 	
 	// belly - slim and fat people
 	if( aVertexTopology == BELLY || aVertexTopology == NIPS )
@@ -186,15 +191,16 @@ void main() {
 	#define HIP_SPAN 0.3
 	if( !man )
 	{
+		
 		if( (HIP_CENTER-HIP_SPAN)<transformed.y && transformed.y<(HIP_CENTER+HIP_SPAN) )
 		{	// HIP_CENTER-HIP_SPAN <- HIP_CENTER -> HIP_CENTER+HIP_SPAN
 			float y = PI*(transformed.y-HIP_CENTER)/HIP_SPAN;
-			transformed.x *= 1.0 + (0.1+0.05*fract(3.2/randomId))*clamp(0.5+0.5*cos(y)-0.3*fat,0.0,1.0);
+			transformed.x *= 1.0 + anthroScale*(0.1+0.05*fract(3.2/randomId))*clamp(0.5+0.5*cos(y)-0.3*fat,0.0,1.0);
 		}
 		
 		if( aVertexTopology == NIPS )
 		{
-			transformed.z *= 1.0 + (transformed.y>0.7?0.25:0.1)*(1.0-cos(PI/0.05*transformed.x))*mapLinear( transformed.y, 0.71, 0.76, 1.2, 0.3); //forward
+			transformed.z *= 1.0 + anthroScale*(transformed.y>0.7?0.25:0.1)*(1.0-cos(PI/0.05*transformed.x))*mapLinear( transformed.y, 0.71, 0.76, 1.2, 0.3); //forward
 			transformed.x *= mapLinear( transformed.y, 0.69, 0.76, 1.3, 1.1); //sideway
 		}
 
@@ -211,8 +217,8 @@ void main() {
 	if( (SHOULDER_CENTER-SHOULDER_SPAN)<transformed.y && transformed.y<(SHOULDER_CENTER+SHOULDER_SPAN) )
 	{	
 		float y = PI*(transformed.y-SHOULDER_CENTER)/SHOULDER_SPAN;
-		transformed.x *= 1.0 + (man?0.15:-0.1)*(0.5+0.5*cos(y));
-		transformed.y += 0.05*fract(5.8/randomId)*(0.5+0.5*cos(y));
+		transformed.x *= 1.0 + anthroScale*(man?0.15:-0.1)*(0.5+0.5*cos(y));
+		transformed.y += anthroScale*0.05*fract(5.8/randomId)*(0.5+0.5*cos(y));
 	}
 	
 	// long hair
@@ -330,7 +336,7 @@ void main() {
 	// constant head size make unproportionally big
 	// heads for slamm heights, so limit the headScale
 	
-	float headScale = clamp( 1.7/agentHeight, 0.80, 1.50 ),
+	float headScale = clamp( 1.7/agentHeight, 0.80, 1.80 ),
 		  bodyScale = headScale + (1.0-headScale)/0.863;
 
 	if( aVertexTopology == HEAD || aVertexTopology == HAIR )
