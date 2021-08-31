@@ -326,8 +326,11 @@ void main() {
 	
 	// rescale the head and the body (keeping the head
 	// constant size independent on the body height)
+	//
+	// constant head size make unproportionally big
+	// heads for slamm heights, so limit the headScale
 	
-	float headScale = 1.7/agentHeight,
+	float headScale = clamp( 1.7/agentHeight, 0.80, 1.50 ),
 		  bodyScale = headScale + (1.0-headScale)/0.863;
 
 	if( aVertexTopology == HEAD || aVertexTopology == HAIR )
