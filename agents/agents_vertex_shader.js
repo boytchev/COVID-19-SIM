@@ -18,6 +18,9 @@ varying vec3 vViewPosition;
 
 #ifdef COVID19SYM
 	uniform float uTime;
+	uniform float uViewAlpha;
+	uniform float uViewBeta;
+	
 	attribute int aVertexTopology;
 	varying vec3 vVertexColor;
 	attribute float infectionLevel;
@@ -31,8 +34,8 @@ varying vec3 vViewPosition;
 	attribute int motionType;
 	flat varying int vClothing;
 	flat varying float vAge;
-	
-	//varying float vInfectionLevel;
+	flat varying float vInfectionLevel;
+	flat varying int vVertexTopology;
 #endif
 
 #include <common>
@@ -109,7 +112,7 @@ void main() {
 	#define NIPS  3
 	#define BELLY 4
 	#define HAIR  5
-	//UNUSED      6 ??
+	#define OVERHEAD 6
 	#define LEGS  7
 	#define KNEES 8
 	#define FEET  9
@@ -127,6 +130,8 @@ void main() {
 	vAgentId = agentId;
 	vRandomId = randomId;
 	vAge = agentAge;
+	vInfectionLevel = infectionLevel;
+	vVertexTopology = aVertexTopology;
 
 	man = vRandomId<float( ${MALE_RATIO} );
 
@@ -140,7 +145,7 @@ void main() {
 		vClothing = INTIMATE_CLOTHING;
 	
 	// flatten the 3D effect
-	transformedNormal = mix(vec3(1),transformedNormal,0.6);
+	transformedNormal = mix(vec3(0,0,1),transformedNormal,0.6);
 	if( !man )
 	if( aVertexTopology == NIPS )
 	{
@@ -231,8 +236,30 @@ void main() {
 		transformed.y -= hairLength;
 	}
 	
+	// overhead indicator
+	if( aVertexTopology == OVERHEAD )
+	{
+		transformed.z = 0.05;
+		transformed.y += 0.15;
+
+		vec3 n = normalize(mat3(instanceMatrix) * objectNormal);
+
+		float normalAngle = atan( n.x, n.z );
+		
+		rot = rotX( PI/2.0-uViewBeta ) * rotY( uViewAlpha-normalAngle );
+		
+		//apply(rot,1.0);
+		
+		transformed.y -= 1.0;
+		transformed *= rot;
+		vNormal = vec3(0,0,1);
+		transformed.y += 1.0;
+
+	}
+
 	if( motionType == MOTION_TYPE_WALK )
 	{
+
 		// belly swing
 		if( aVertexTopology == BELLY )
 		{
@@ -361,6 +388,7 @@ void main() {
 		apply(rot,0.863);
 	}
 	else
+	if( aVertexTopology != OVERHEAD )
 	{
 		// scale the body down
 		transformed *= bodyScale;
@@ -380,37 +408,7 @@ void main() {
 		rot = rotX(PI/2.0);
 		apply(rot,0.0);
 	}
-	
-	//float r = 0.5+0.5*sin(float(1.2*agentId)+1.76434*float(aVertexTopology));
-	//float g = 0.5+0.5*cos(float(1.7*agentId)+2.16434*float(aVertexTopology));
-	//float b = 0.5-0.5*sin(float(1.9*agentId)+1.134*float(aVertexTopology));
-	/*
-	if( aVertexTopology == HAIR )
-		vVertexColor = vec3(0,0,0);
-	else
-	if( aVertexTopology == HEAD )
-		vVertexColor = vec3(1,1,0);
-	else
-	if( aVertexTopology == HANDS )
-		vVertexColor = vec3(1,0,0);
-	else
-	if( aVertexTopology == LEGS )
-		vVertexColor = vec3(0,0,1);
-	else
-	if( aVertexTopology == KNEES )
-		vVertexColor = vec3(1,0,1);
-	else
-	if( aVertexTopology == FEET )
-		vVertexColor = vec3(0,1,1);
-	else
-	if( aVertexTopology == NIPS )
-		vVertexColor = vec3(0,1,0);
-	else
-	if( aVertexTopology == BELLY )
-		vVertexColor = vec3(0.5,0.5,0.5);
-	else
-		vVertexColor = vec3(1,1,1);
-	*/
+
 #endif
 
 	#include <morphtarget_vertex>

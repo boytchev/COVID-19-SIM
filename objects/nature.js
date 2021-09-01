@@ -246,7 +246,6 @@ export class Nature
 		dayTimeMs = currentTimeMs % HOURS_24_MS;
 		frame++;
 
-
 		if( SUN )
 		{
 			var sunAngle = this.getSunAngularPosition(),

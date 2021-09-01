@@ -95,9 +95,9 @@ CFG.addHeader(
 			'Speed of walking of people. This speed defines how fast people walk. The observed speed also depends on the height of a person.',
 			'people,motion' );
 
-		CFG.addBoolean(
-			'dfal', 'Line formation', false, {},
-			'If checked, the people are positioned in lines and columns. If not checked, the people are positioned in buildings.',
+		CFG.addNumericList(
+			'dfal', 'Formation', 0, {values: [0,'Random',1,'Line',2,'Circle']},
+			'Initial formation of people. <em>Random</em> positions people randomly, <em>Line</em> orders them in one or more rows, <em>Circle</em> places them in a circle.',
 			'people,motion,debug' );
 
 		CFG.addBoolean(

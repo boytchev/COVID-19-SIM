@@ -47,9 +47,10 @@ uniform float opacity;
 	varying vec3 vVertexColor;
 	varying float vAgentId;
 	varying float vRandomId;
-	//varying float vInfectionLevel;
+	flat varying float vInfectionLevel;
 	flat varying int vClothing;
 	flat varying float vAge;
+	flat varying int vVertexTopology;
 #endif
 
 #ifdef COVID19SYM
@@ -58,6 +59,8 @@ uniform float opacity;
 	#define FORMAL_CLOTHING 1
 	#define CASUAL_CLOTHING 2
 	#define INTIMATE_CLOTHING 3
+
+	#define OVERHEAD 6
 
 	bool man;
 	bool resetColor;
@@ -185,6 +188,32 @@ uniform float opacity;
 		);
 	}
 	
+	vec4 colorOverhead( )
+	{
+		// x: 6-8	->  6-8
+		// y: 5-16  -> 15-16
+		
+		vec2 uv = 32.0*vUv;
+		
+		
+		float level = vInfectionLevel + 0.02*cos(2.0*3.14156*10.0*vInfectionLevel+3.14159/2.0);
+		
+		uv.y = (uv.y-5.0)/11.0 + 15.0+10.0*level;
+		float yLimit = fract(32.0*vUv.y/10.5+0.45);
+		
+		vec3 col = texture2D( map, uv/32.0 ).rgb;
+
+//		if( uv.x<6.05 || uv.x>7.95 || yLimit<0.025 || yLimit>0.975 ) 
+//			return vec4(0,0,0,1);
+
+		float cosX = 0.5+0.505*cos( (uv.x-7.0)*3.14159 );
+		float cosY = 0.5+0.505*cos( (yLimit-0.5)*2.0*3.14159 );
+		
+		float frame = pow( cosX*cosY, 0.1 );
+		return vec4( frame*(1.0-col.g), frame*(1.0-col.g)*(1.0-vInfectionLevel), frame*(1.0-col.g)*(1.0-vInfectionLevel), 1.0 );
+		//return vec4( 1,col.g,col.g, 1.0);
+	}
+	
 	vec4 colorShirtFormal( )
 	{
 		float r = 0.8+0.2*rand();
@@ -226,7 +255,7 @@ uniform float opacity;
 			}
 			else
 			{   // beard
-				int beard = randBool(0.2)?1:0;
+				int beard = (randBool(0.2) && (vAge>18.0)) ? 1 : 0 ;
 				int beardTopEnd = beard*randInt(31,33);
 				int beardBottomBeg = 34;
 				int beardBottomEnd = beard*randInt(34,35);
@@ -249,7 +278,6 @@ uniform float opacity;
 			color = colorHumanSkin();
 		}
 			
-		//if( index==31 || index==32 || index==99 )
 		if( index2==7 )
 		{
 			color = colorMask();
@@ -299,7 +327,7 @@ uniform float opacity;
 	{
 		int index = int(round(100.0*color.r));
 		int index2 = int(round(100.0*color.g));
-		
+	
 		if( index<=11 ) // bottom clothes -- shoes-to-belt
 		{
 			int shoeEnd = randInt(2,man?6:7); // man:[2..6] woman:[2..7]
@@ -452,15 +480,22 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 		#ifdef COVID19SYM
 			man = vRandomId<float( ${MALE_RATIO} );
 			resetColor = false;
-			
-			if( vClothing == FORMAL_CLOTHING )
-				texelColor = recodeFormalColor( texelColor );
+	
+			if( vVertexTopology==OVERHEAD )
+			{
+				texelColor = colorOverhead( );
+				resetColor = true;
+			}
 			else
-			if( vClothing == CASUAL_CLOTHING )
-				texelColor = recodeInformalColor( texelColor );
-			else
-				texelColor = recodeUndressedColor( texelColor );
-			
+			{
+				if( vClothing == FORMAL_CLOTHING )
+					texelColor = recodeFormalColor( texelColor );
+				else
+				if( vClothing == CASUAL_CLOTHING )
+					texelColor = recodeInformalColor( texelColor );
+				else
+					texelColor = recodeUndressedColor( texelColor );
+			}
 			
 			if( resetColor ) diffuseColor = vec4(1);
 		#endif

@@ -26,7 +26,7 @@ var currentTime_elem = document.getElementById('time'),
 
 import './font.js';
 
-import {DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, DEBUG_FOLLOW_AGENT_HEALTH, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH} from './config.js';
+import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, DEBUG_FOLLOW_AGENT_HEALTH, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH} from './config.js';
 import {msToString, round} from './core.js';
 import {Nature, currentTimeMs, frame} from './objects/nature.js';
 
@@ -55,7 +55,10 @@ export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.
 	camera.position.set( 10*GROUND_SIZE, 3*GROUND_SIZE, 10*GROUND_SIZE );
 	camera.position.set( -GROUND_SIZE/6, GROUND_SIZE/15, -GROUND_SIZE/5 );
 	//camera.position.set( 0.01+0*GROUND_SIZE/0.8, GROUND_SIZE*2, 0 );
-	camera.position.set( GROUND_SIZE*2, GROUND_SIZE/2, GROUND_SIZE/1 );
+	if( DEBUG_FORM_A_LINE )
+		camera.position.set( 0, 4, GROUND_SIZE/3 );
+	else
+		camera.position.set( GROUND_SIZE*2, GROUND_SIZE/2, GROUND_SIZE/1 );
 	//camera.position.set( 15, 5, 0 );
 			
 export var controls = new OrbitControls( camera, renderer.domElement );

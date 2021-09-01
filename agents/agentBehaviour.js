@@ -46,7 +46,7 @@ import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../
 import {dayTimeMs, deltaTime} from '../objects/nature.js';
 import {Crossing} from '../objects/crossings.js';
 import {Elevator} from '../objects/elevators.js';
-import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE, FLOOR_HEIGHT} from '../config.js';
+import {DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE, FLOOR_HEIGHT} from '../config.js';
 
 
 
@@ -155,7 +155,7 @@ export class AgentBehaviour
 			this.doing = this.AGENT_WANDERING;
 		}
 		
-		if( DEBUG_FORM_A_LINE )
+		if( DEBUG_FORM_A_LINE || DEBUG_FORM_A_CIRCLE )
 		{
 			this.doing = this.AGENT_DOING_NOTHING;
 		}
@@ -903,6 +903,7 @@ export class AgentBehaviour
 		agents.images.instanceMatrix.array[this.id*16+10] = cos;
 //console.log('turn ',angle,v.x,v.z);
 	}
+
 
 	
 	walkRoute( nextAction = this.AGENT_DOING_NOTHING )

@@ -1,6 +1,6 @@
 // size of the simulated world
 
-import {timeMs, Size, Range, round} from './core.js';
+import {msToString, timeMs, Size, Range, round} from './core.js';
 
 
 const LOCAL_STORAGE_PARAMS = 'covid-19-params'; // same name used in covid-19-configurator.js
@@ -71,7 +71,10 @@ console.log('seed=',DEBUG_RANDOM_SEED);
 
 export const DEBUG_AGENT_MAX_COUNT = param('damc', 100);
 export const DEBUG_RANDOM_WANDERING = param('drw',false);
-export const DEBUG_FORM_A_LINE = param('dfal',false);
+
+var formation = param('dfal',0);
+export const DEBUG_FORM_A_LINE = formation==1;
+export const DEBUG_FORM_A_CIRCLE = formation==2;
 
 export const DEBUG_TIME_SPEED = param('dts',timeMs(0,0,1))/1000;	// time ellapsed for 1 second
 export const START_TIME = param('st',timeMs(6,20));			// start time
@@ -301,8 +304,8 @@ export const LAMP_HOUSE_PM_INTENSITY_MS = new Range(
 export const INFECTION_PATTERNS_COUNT = param('ipc',10);
 
 var INFECTION_HOURS_MS = param2('itmh',new Range( timeMs(1), timeMs(10) )),
-	INFECTION_DAYS_MS  = param2('itmd',new Range( 14, 28 ));
-export const INFECTION_TOTAL_MS = new Range( HOURS_24_MS*INFECTION_DAYS_MS.min+INFECTION_HOURS_MS.min, HOURS_24_MS*INFECTION_DAYS_MS.max+INFECTION_HOURS_MS.max ); // 40 min - 10 hours
+	INFECTION_DAYS  = param2('itmd',new Range( 14, 28 ));
+export const INFECTION_TOTAL_MS = new Range( HOURS_24_MS*INFECTION_DAYS.min+INFECTION_HOURS_MS.min, HOURS_24_MS*INFECTION_DAYS.max+INFECTION_HOURS_MS.max ); // 40 min - 10 hours
 
 //export const INFECTION_OVERHEAD_INDICATOR = false;
 export const INFECTION_COLOR_INDICATOR = param('ici',false);

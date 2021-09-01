@@ -36,7 +36,7 @@ CFG.addHeader(
 
 		CFG.addPercentage(
 			'ist', 'Infection speed', 0.5, {min:0.1, max:1, step:0.1},
-			'A scaling factor the the infection speed. Larger factors make the infection spread faster.',
+			'A scaling factor for the infection speed. Larger factors make the infection spread faster.',
 			'health,infection' );
 	
 		CFG.addTimeRange(
@@ -45,7 +45,7 @@ CFG.addHeader(
 			'health,infection,time' );
 
 		CFG.addNumericRange(
-			'itmd', 'Infection duration (days)', 0, 0, {min:0, max:60, step:1, unit:'d'},
+			'itmd', 'Infection duration (days)', 14, 28, {min:0, max:60, step:1, unit:'d'},
 			'Duration of infection in days. The full duration combines this value and the value of <em>Infection duration (hours)</em>. For example, if hours infection is 4:00 to 10:00 and days infection is 1..6 days, then the actual duration is picked from 1 day and 4 hours to 6 days and 10 hours.',
 			'health,infection,time' );
 

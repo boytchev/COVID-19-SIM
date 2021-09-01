@@ -126,9 +126,12 @@ class Agent extends AgentBehaviour
 				var elapsedTime = currentTimeMs-this.infectionPeriodMs.min,
 					totalTime = this.infectionPeriodMs.diff(),
 					relativeTime = elapsedTime/totalTime;
-					
 				var infLev = viralShedding.getPointAt( relativeTime ).y;
 				this.infectionLevel = 100*infLev;
+//if(this.id==0)
+//{
+//	console.log('relT=',relativeTime.toFixed(5),'inf=',infLev.toFixed(5),'total=',totalTime);
+//}	
 			}
 		}
 		else
@@ -298,11 +301,15 @@ class Agent extends AgentBehaviour
 	
 	infect()
 	{
+		var timeSpan = INFECTION_TOTAL_MS.randFloat(),
+			elepasedTime = 0*timeSpan*Math.random()*0.5;
+			
 		this.infectionLevel = 0;
 		this.infectionPattern = THREE.Math.randInt( 1, Math.round(INFECTION_PATTERNS_COUNT/2) );
-		this.infectionPeriodMs = new Range( currentTimeMs, currentTimeMs + INFECTION_TOTAL_MS.randFloat() );
-		
-		//console.log('agent №'+this.id,'is infected');
+		this.infectionPeriodMs = new Range( currentTimeMs - elepasedTime, currentTimeMs - elepasedTime + timeSpan  );
+
+		if( this.id == DEBUG_FOLLOW_AGENT_HEALTH )
+			console.log('agent №'+this.id,'is infected from',msToString(this.infectionPeriodMs.min),'to',msToString(this.infectionPeriodMs.max));
 	}
 	
 	cure()
@@ -314,7 +321,8 @@ class Agent extends AgentBehaviour
 		this.generalImmuneStrength = Math.min( this.generalImmuneStrength * IMMUNE_CURE_FACTOR.randFloat(), IMMUNE_STRENGTH.max );
 		this.currentImmuneStrength = this.generalImmuneStrength;
 		
-		//console.log('agent №'+this.id,'is cured');
+		if( this.id == DEBUG_FOLLOW_AGENT_HEALTH )
+			console.log('agent №'+this.id,'is cured');
 	}
 	
 } // Agent

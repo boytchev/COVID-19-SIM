@@ -376,7 +376,18 @@ export class AgentTexture extends ProceduralTexture
 /*100*/	colorIndex( 100 ); // face
 		poly( [4, 9.5, 3+1/4, 11.5, 3.5, 12, 3+3/4, 11, 5+e, 11, 5+e, 9.5] );
 
-
+/*98*/	colorIndex( 98, 0 ); // overhead borderStyle
+		fill( 6, 5, 8, 16 );
+		
+		
+		// draw texts
+		ctx.font = 'bold '+(H/32/1.5)+'px Arial';
+		ctx.textAlign = 'center';
+		colorIndex( 98, 100 );
+		for( var i=0; i<=100; i+=10 )
+		{
+			ctx.fillText( i+'%', X(7), Y(16-i/10-0.25) );
+		}
 	} // AgentTexture.drawClothesTags
 
 
@@ -493,7 +504,10 @@ export class AgentTexture extends ProceduralTexture
 		line( [3+1/4, 11.5, 2.5, 11.5] ); // X9
 		line( [3+2/4, 12, 3+3/4, 11, 5, 11] ); // X10
 		
-		
+		// overhead borderStyle
+		line( [6, 5, 8, 5, 8, 16, 6, 16, 6, 5] ); // rectangular border
+		line( [6, 5, 8, 16] ); // diagonal 1
+		line( [8, 5, 6, 16] ); // diagonal 2
 	} // AgentTexture.addBorders
 
 
