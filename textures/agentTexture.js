@@ -7,7 +7,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {ProceduralTexture} from './proceduralTexture.js';
-import {AGENT_DRAW_MODE_CHECKERED, AGENT_DRAW_MODE_CHESSBOARD, AGENT_DRAW_MODE_CRIMSON, AGENT_DRAW_MODE_BORDERS, AGENT_DRAW_MODE_PATCHES, AGENT_DRAW_MODE_RANDOM, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE} from '../config.js';
+import {AGENT_DRAW_MODE_WHITE,AGENT_DRAW_MODE_CHECKERED, AGENT_DRAW_MODE_CHESSBOARD, AGENT_DRAW_MODE_CRIMSON, AGENT_DRAW_MODE_BORDERS, AGENT_DRAW_MODE_PATCHES, AGENT_DRAW_MODE_RANDOM, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE} from '../config.js';
 
 
 
@@ -28,6 +28,45 @@ export class AgentTexture extends ProceduralTexture
 		
 	} // AgentTexture.map
 
+
+
+	addHealthIndicatorTexts()
+	{
+		function X( x ) {return x/N*W;}
+		function Y( y ) {return y/N*H;}
+
+		var ctx = this.ctx,
+			W = this.width,
+			H = this.height;
+
+		ctx.font = 'bold '+(H/32/1.5)+'px Arial';
+		ctx.textAlign = 'center';
+		for( var i=0; i<=10; i++ )
+		{
+			ctx.fillText( i?i:'OK', X(7), Y(16-i-0.25) );
+		}
+	}
+
+
+	// a white texture 
+	drawWhite()
+	{
+		function X( x ) {return x/N*W;}
+		function Y( y ) {return y/N*H;}
+
+		var ctx = this.ctx,
+			W = this.width,
+			H = this.height;
+
+		ctx.fillStyle = 'black';
+		ctx.fillRect( X(6), Y(5), X(2), Y(11) );
+		ctx.fillStyle = 'white';
+		this.addHealthIndicatorTexts();
+		
+	} // AgentTexture.drawWhite
+
+	
+	
 	// a texture of 32x32 color cells with black dots
 	drawCheckered()
 	{
@@ -142,6 +181,12 @@ export class AgentTexture extends ProceduralTexture
 		ctx.lineWidth = X(0.4);
 		line( 13, 14.5, 16, 17 );
 		line( 10, 9, 10, 17 );
+
+		ctx.fillStyle = 'black';
+		ctx.fillRect( X(6), Y(5), X(2), Y(11) );
+		ctx.fillStyle = 'white';
+		this.addHealthIndicatorTexts();
+		
 	} // AgentTexture.drawBlackCrimson
 	
 	
@@ -381,50 +426,10 @@ export class AgentTexture extends ProceduralTexture
 		
 		
 		// draw texts
-		ctx.font = 'bold '+(H/32/1.5)+'px Arial';
-		ctx.textAlign = 'center';
 		colorIndex( 98, 100 );
-		for( var i=0; i<=10; i++ )
-		{
-			ctx.fillText( i?i:'OK', X(7), Y(16-i-0.25) );
-		}
-		/*
-		function box( x, y )
-		{
-			//colorIndex( 98, 10 );
-			//ctx.fillRect( X(6)+X(x/8)-1, Y(5.05)+Y(y/8), X(1/8)+1, Y(1/8) );
-			//ctx.fillRect( X(6)+X(x/8), Y(5.05)+Y(y/8)-1, X(1/8), Y(1/8)+1 );
-			ctx.fillRect( X(6)+X(x/8), Y(5.05)+Y(y/8), X(1/8), Y(1/8)-1 );
-		}
-		function boxes( x1, y1, x2, y2 )
-		{
-			var sx = Math.sign(x2-x1),
-				sy = Math.sign(y2-y1);
+		this.addHealthIndicatorTexts();
 
-			for( ; x1!=x2 || y1!=y2; x1+=sx, y1+=sy )
-				box( x1, y1 );
-			box( x2, y2 );
-		}
-		
-		var boxData = [
-			3, 80, 5, 80, // OK
-			3, 86, 5, 86,
-			2, 81, 2, 85,
-			6, 81, 6, 85,
-			8, 80, 8, 86,
-			9, 83, 12, 80,
-			10, 84, 12, 86,
-			
-			5, 78, 9, 78, // 1
-			7, 72, 7, 77,
-			5, 73, 6, 73,
-		];
-
-		for( var i=0; i<boxData.length; i+=4 )
-			boxes( boxData[i], boxData[i+1], boxData[i+2], boxData[i+3] );
-		*/
 	} // AgentTexture.drawClothesTags
-
 
 	// add crimson borders
 	addBorders()
@@ -541,8 +546,11 @@ export class AgentTexture extends ProceduralTexture
 		
 		// overhead borderStyle
 		line( [6, 5, 8, 5, 8, 16, 6, 16, 6, 5] ); // rectangular border
-		line( [6, 5, 8, 16] ); // diagonal 1
-		line( [8, 5, 6, 16] ); // diagonal 2
+	
+		ctx.fillStyle = 'black';
+		ctx.fillRect( X(6), Y(5), X(2), Y(11) );
+		ctx.fillStyle = 'white';
+		this.addHealthIndicatorTexts();
 	} // AgentTexture.addBorders
 
 
@@ -551,6 +559,9 @@ export class AgentTexture extends ProceduralTexture
 		super.draw();
 		switch( AGENT_DRAW_MODE )
 		{
+			case AGENT_DRAW_MODE_WHITE:
+					this.drawWhite();
+					break;
 			case AGENT_DRAW_MODE_CHECKERED:
 					this.drawCheckered();
 					break;

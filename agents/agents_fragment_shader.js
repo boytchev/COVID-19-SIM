@@ -54,13 +54,42 @@ uniform float opacity;
 #endif
 
 #ifdef COVID19SYM
+	#define OVERHEAD 6
+
+	vec4 colorOverhead( )
+	{
+		// x: 6-8	->  6-8
+		// y: 5-16  -> 15-16
+		
+		vec2 uv = 32.0*vUv;
+		
+		
+		float level = vInfectionLevel + 0.02*cos(2.0*3.14156*10.0*vInfectionLevel+3.14159/2.0);
+		
+		uv.y = (uv.y-5.0)/11.0 + 15.0+10.0*level;
+		float yLimit = fract(32.0*vUv.y/10.5+0.45);
+		
+		vec3 col = texture2D( map, uv/32.0 ).rgb;
+
+		float cosX = 0.5+0.505*cos( (uv.x-7.0)*3.14159 );
+		float cosY = 0.5+0.505*cos( (yLimit-0.5)*2.0*3.14159 );
+		
+		// inf   0.0 0.5 1.0
+		// 1-inf 1.0 0.5 0.0
+		// colr  1.0 1.0 1.0
+		//    g  1.0 1.0 0.0
+		//    b  1.0 0.0 0.0
+		
+		float frame = pow( cosX*cosY, 0.1 );
+		return vec4( frame*(1.0-col.g), frame*(1.0-col.g)*smoothstep(0.0,0.5,1.0-vInfectionLevel), frame*(1.0-col.g)*smoothstep(0.5,1.0,1.0-vInfectionLevel), 1.0 );
+	}
+
 #ifdef COVID19SYM_RECOLOR
 
 	#define FORMAL_CLOTHING 1
 	#define CASUAL_CLOTHING 2
 	#define INTIMATE_CLOTHING 3
 
-	#define OVERHEAD 6
 
 	bool man;
 	bool resetColor;
@@ -188,33 +217,6 @@ uniform float opacity;
 		);
 	}
 	
-	vec4 colorOverhead( )
-	{
-		// x: 6-8	->  6-8
-		// y: 5-16  -> 15-16
-		
-		vec2 uv = 32.0*vUv;
-		
-		
-		float level = vInfectionLevel + 0.02*cos(2.0*3.14156*10.0*vInfectionLevel+3.14159/2.0);
-		
-		uv.y = (uv.y-5.0)/11.0 + 15.0+10.0*level;
-		float yLimit = fract(32.0*vUv.y/10.5+0.45);
-		
-		vec3 col = texture2D( map, uv/32.0 ).rgb;
-
-		float cosX = 0.5+0.505*cos( (uv.x-7.0)*3.14159 );
-		float cosY = 0.5+0.505*cos( (yLimit-0.5)*2.0*3.14159 );
-		
-		// inf   0.0 0.5 1.0
-		// 1-inf 1.0 0.5 0.0
-		// colr  1.0 1.0 1.0
-		//    g  1.0 1.0 0.0
-		//    b  1.0 0.0 0.0
-		
-		float frame = pow( cosX*cosY, 0.1 );
-		return vec4( frame*(1.0-col.g), frame*(1.0-col.g)*smoothstep(0.0,0.5,1.0-vInfectionLevel), frame*(1.0-col.g)*smoothstep(0.5,1.0,1.0-vInfectionLevel), 1.0 );
-	}
 	
 	vec4 colorShirtFormal( )
 	{
@@ -478,8 +480,8 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	vec4 texelColor = texture2D( map, vUv );
 
 	texelColor = mapTexelToLinear( texelColor );
-	#ifdef COVID19SYM_RECOLOR
-		#ifdef COVID19SYM
+	#ifdef COVID19SYM
+		#ifdef COVID19SYM_RECOLOR
 			man = vRandomId<float( ${MALE_RATIO} );
 			resetColor = false;
 	
@@ -500,6 +502,13 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 			}
 			
 			if( resetColor ) diffuseColor = vec4(1);
+		#else
+			// overhead indicators do not obey coloring preferences
+			if( vVertexTopology==OVERHEAD )
+			{
+				texelColor = colorOverhead( );
+				diffuseColor = vec4(1,1,1,1);
+			}
 		#endif
 	#endif
 	diffuseColor *= texelColor;

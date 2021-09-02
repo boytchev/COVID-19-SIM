@@ -401,11 +401,11 @@ export class Agents
 		});
 //console.log(vertexShader);		
 
-		if( AGENT_DRAW_MODE != AGENT_DRAW_MODE_WHITE )
-		{
+//		if( AGENT_DRAW_MODE != AGENT_DRAW_MODE_WHITE )
+//		{
 			material.uniforms.map.value = texture;
 			material.map = texture;
-		}
+//		}
 		
 		return material;
 	}
