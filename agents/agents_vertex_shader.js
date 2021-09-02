@@ -240,7 +240,6 @@ void main() {
 	// overhead indicator
 	if( aVertexTopology == OVERHEAD )
 	{
-		transformed.y += 0.3;
 
 		vec3 n = normalize(mat3(instanceMatrix) * objectNormal);
 
@@ -248,11 +247,20 @@ void main() {
 		
 		rot = rotX( PI/2.0-uViewBeta ) * rotY( uViewAlpha-normalAngle );
 		
-		transformed.y -= 1.08;
+		transformed.y -= 0.764;
 		transformed *= rot;
 		vNormal = vec3(0,0,1);
-		transformed.y += 1.08;
 
+		if( motionType == MOTION_TYPE_SLEEP )
+		{
+			transformed.z -= 0.9;
+			transformed.y += 0.17;
+		}
+		else
+		{
+			transformed.y += 0.964;
+			transformed.z += 0.04;
+		}
 	}
 
 	if( motionType == MOTION_TYPE_WALK )
@@ -403,8 +411,11 @@ void main() {
 	else if( motionType == MOTION_TYPE_SLEEP )
 	{
 		// lying the whole body
-		rot = rotX(PI/2.0);
-		apply(rot,0.0);
+		if( aVertexTopology != OVERHEAD )
+		{
+			rot = rotX(PI/2.0);
+			apply(rot,0.0);
+		}
 	}
 
 #endif
