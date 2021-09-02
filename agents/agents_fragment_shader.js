@@ -2,7 +2,7 @@
 //
 // Modified code is in COVID19SYM
 
-import {MALE_RATIO} from '../config.js';
+import {INFECTION_OVERHEAD_INDICATOR, MALE_RATIO} from '../config.js';
 
 export default `
 
@@ -54,7 +54,8 @@ uniform float opacity;
 #endif
 
 #ifdef COVID19SYM
-	#define OVERHEAD 6
+	// if INFECTION_OVERHEAD_INDICATOR is not set, then make OVERHEAD value invalid
+	#define OVERHEAD ${INFECTION_OVERHEAD_INDICATOR?6:-1}
 
 	vec4 colorOverhead( )
 	{

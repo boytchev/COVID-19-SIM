@@ -86,8 +86,13 @@ CFG.addHeader(
 	'health,people,tracking' );
 
 		CFG.addBoolean(
-			'ici', 'Infection color indicator', false, {},
-			'If checked, the skin color of infected people turn reddish depending on the level of illness.',
+			'ioi', 'Health overhead indicator', false, {},
+			'If checked, there is overhead indicator showing the health status as colour and as numeric level from OK (no infection), then 1, 2, ... to 10 (higly infected person).',
+			'health,people,debug' );
+			
+		CFG.addBoolean(
+			'ici', 'Health color indicator', false, {},
+			'If checked, the skin color of infected people turn reddish depending on the level of the health status.',
 			'health,people,debug' );
 			
 		CFG.addBoolean(

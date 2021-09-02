@@ -307,7 +307,7 @@ var INFECTION_HOURS_MS = param2('itmh',new Range( timeMs(1), timeMs(10) )),
 	INFECTION_DAYS  = param2('itmd',new Range( 14, 28 ));
 export const INFECTION_TOTAL_MS = new Range( HOURS_24_MS*INFECTION_DAYS.min+INFECTION_HOURS_MS.min, HOURS_24_MS*INFECTION_DAYS.max+INFECTION_HOURS_MS.max ); // 40 min - 10 hours
 
-//export const INFECTION_OVERHEAD_INDICATOR = false;
+export const INFECTION_OVERHEAD_INDICATOR = param('ioi',false);
 export const INFECTION_COLOR_INDICATOR = param('ici',false);
 export const INFECTION_STEP = param('is',200);
 export const INFECTION_DISTANCE = param('id',1); // in meters

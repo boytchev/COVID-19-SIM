@@ -3,7 +3,7 @@
 // Modified code is in COVID19SYM
 
 
-import {MALE_RATIO, INFECTION_COLOR_INDICATOR, FORMAL_CLOTHING_RATIO, CASUAL_CLOTHING_RATIO} from '../config.js';
+import {INFECTION_OVERHEAD_INDICATOR, MALE_RATIO, INFECTION_COLOR_INDICATOR, FORMAL_CLOTHING_RATIO, CASUAL_CLOTHING_RATIO} from '../config.js';
 
 export default `
 
@@ -112,7 +112,8 @@ void main() {
 	#define NIPS  3
 	#define BELLY 4
 	#define HAIR  5
-	#define OVERHEAD 6
+	// if INFECTION_OVERHEAD_INDICATOR is not set, then make OVERHEAD value invalid
+	#define OVERHEAD ${INFECTION_OVERHEAD_INDICATOR?6:-1}
 	#define LEGS  7
 	#define KNEES 8
 	#define FEET  9
