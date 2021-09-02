@@ -143,9 +143,10 @@ void main() {
 		vClothing = CASUAL_CLOTHING;
 	else
 		vClothing = INTIMATE_CLOTHING;
-	
+
 	// flatten the 3D effect
-	transformedNormal = mix(vec3(0,0,1),transformedNormal,0.6);
+	transformedNormal = mix(vec3(0,0,1),transformedNormal,0.7);
+
 	if( !man )
 	if( aVertexTopology == NIPS )
 	{
@@ -239,8 +240,7 @@ void main() {
 	// overhead indicator
 	if( aVertexTopology == OVERHEAD )
 	{
-		transformed.z = 0.05;
-		transformed.y += 0.15;
+		transformed.y += 0.3;
 
 		vec3 n = normalize(mat3(instanceMatrix) * objectNormal);
 
@@ -248,12 +248,10 @@ void main() {
 		
 		rot = rotX( PI/2.0-uViewBeta ) * rotY( uViewAlpha-normalAngle );
 		
-		//apply(rot,1.0);
-		
-		transformed.y -= 1.0;
+		transformed.y -= 1.08;
 		transformed *= rot;
 		vNormal = vec3(0,0,1);
-		transformed.y += 1.0;
+		transformed.y += 1.08;
 
 	}
 

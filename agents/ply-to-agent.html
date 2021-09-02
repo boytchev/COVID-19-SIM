@@ -70,7 +70,7 @@
 		for( var i=idx; i<idx+12*verticesCount; i+=12 )
 		{
 			vertices.push( {x:rescaleXZ(obj[i+0]), y:rescaleY(obj[i+2]), z:-rescaleXZ(obj[i+1])} );
-			normals.push( {x:parseFloat(obj[i+3]), y:parseFloat(obj[i+4]), z:parseFloat(obj[i+5])} );
+			normals.push( {x:parseFloat(obj[i+3]), y:parseFloat(obj[i+5]), z:-parseFloat(obj[i+4])} );
 			uvs.push( {x:parseFloat(obj[i+6]), y:parseFloat(obj[i+7])} );
 			colors.push( {r:parseInt(obj[i+8]), g:parseInt(obj[i+9]), b:parseInt(obj[i+10])} );
 			//[i+11] is alpha and is ignored
@@ -131,6 +131,9 @@
 			topologyData += topology( colors[f1] );
 			topologyData += topology( colors[f2] );
 			topologyData += topology( colors[f3] );
+			
+/*if( topology(colors[f1])==6 )*/ console.log('c=',topology(colors[f1]),'p=',string( vertices[f1] ),'n=',string( normals[f1] ) );
+if( topology(colors[f1]) == 6 ) console.log('!c=',topology(colors[f1]),'p=',string( vertices[f1] ),'n=',string( normals[f1] ) );
 		}
 
 		// remove last ", "
