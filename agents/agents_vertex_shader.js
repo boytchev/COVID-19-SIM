@@ -253,12 +253,12 @@ void main() {
 
 		if( motionType == MOTION_TYPE_SLEEP )
 		{
-			transformed.z -= 0.9;
+			transformed.z -= 0.7;
 			transformed.y += 0.17;
 		}
 		else
 		{
-			transformed.y += 0.964;
+			transformed.y += 1.064;
 			transformed.z += 0.04;
 		}
 	}

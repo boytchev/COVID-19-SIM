@@ -45,7 +45,7 @@ export class Textures
 		
 		//this.apartment.debugShow( );
 		//this.houseBump.debugShow( '256px' );
-		//this.agent.debugShow( '1em', 1/3 );
+		//this.agent.debugShow( '1em', 1 );
 		
 	} // Textures
 	

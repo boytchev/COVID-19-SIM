@@ -384,10 +384,45 @@ export class AgentTexture extends ProceduralTexture
 		ctx.font = 'bold '+(H/32/1.5)+'px Arial';
 		ctx.textAlign = 'center';
 		colorIndex( 98, 100 );
-		for( var i=0; i<=100; i+=10 )
+		for( var i=0; i<=10; i++ )
 		{
-			ctx.fillText( i+'%', X(7), Y(16-i/10-0.25) );
+			ctx.fillText( i?i:'OK', X(7), Y(16-i-0.25) );
 		}
+		/*
+		function box( x, y )
+		{
+			//colorIndex( 98, 10 );
+			//ctx.fillRect( X(6)+X(x/8)-1, Y(5.05)+Y(y/8), X(1/8)+1, Y(1/8) );
+			//ctx.fillRect( X(6)+X(x/8), Y(5.05)+Y(y/8)-1, X(1/8), Y(1/8)+1 );
+			ctx.fillRect( X(6)+X(x/8), Y(5.05)+Y(y/8), X(1/8), Y(1/8)-1 );
+		}
+		function boxes( x1, y1, x2, y2 )
+		{
+			var sx = Math.sign(x2-x1),
+				sy = Math.sign(y2-y1);
+
+			for( ; x1!=x2 || y1!=y2; x1+=sx, y1+=sy )
+				box( x1, y1 );
+			box( x2, y2 );
+		}
+		
+		var boxData = [
+			3, 80, 5, 80, // OK
+			3, 86, 5, 86,
+			2, 81, 2, 85,
+			6, 81, 6, 85,
+			8, 80, 8, 86,
+			9, 83, 12, 80,
+			10, 84, 12, 86,
+			
+			5, 78, 9, 78, // 1
+			7, 72, 7, 77,
+			5, 73, 6, 73,
+		];
+
+		for( var i=0; i<boxData.length; i+=4 )
+			boxes( boxData[i], boxData[i+1], boxData[i+2], boxData[i+3] );
+		*/
 	} // AgentTexture.drawClothesTags
 
 

@@ -203,15 +203,17 @@ uniform float opacity;
 		
 		vec3 col = texture2D( map, uv/32.0 ).rgb;
 
-//		if( uv.x<6.05 || uv.x>7.95 || yLimit<0.025 || yLimit>0.975 ) 
-//			return vec4(0,0,0,1);
-
 		float cosX = 0.5+0.505*cos( (uv.x-7.0)*3.14159 );
 		float cosY = 0.5+0.505*cos( (yLimit-0.5)*2.0*3.14159 );
 		
+		// inf   0.0 0.5 1.0
+		// 1-inf 1.0 0.5 0.0
+		// colr  1.0 1.0 1.0
+		//    g  1.0 1.0 0.0
+		//    b  1.0 0.0 0.0
+		
 		float frame = pow( cosX*cosY, 0.1 );
-		return vec4( frame*(1.0-col.g), frame*(1.0-col.g)*(1.0-vInfectionLevel), frame*(1.0-col.g)*(1.0-vInfectionLevel), 1.0 );
-		//return vec4( 1,col.g,col.g, 1.0);
+		return vec4( frame*(1.0-col.g), frame*(1.0-col.g)*smoothstep(0.0,0.5,1.0-vInfectionLevel), frame*(1.0-col.g)*smoothstep(0.5,1.0,1.0-vInfectionLevel), 1.0 );
 	}
 	
 	vec4 colorShirtFormal( )
