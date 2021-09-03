@@ -31,9 +31,6 @@ export class GrassTexture extends ProceduralTexture
 			y+=Math.random();
 		}
 		
-//		 document.body.appendChild(this.canvas);
-//		 this.canvas.style="position:fixed; top:10em; left:1em; z-index:100;";
-
 	} // GrassTexture.draw
 	
 } // GrassTexture

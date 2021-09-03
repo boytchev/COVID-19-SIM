@@ -23,7 +23,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {GROUND_EDGE, GROUND_SIZE, SUBURB_TRESHOLD, BLOCK_PARK, BLOCK_PLAZA, OFFICE_VS_RESIDENTIAL, MAX_FLOORS, FLOOR_HEIGHT, BLOCK_APARTMENTS, BLOCK_HOUSES, DEBUG_BLOCK_WITH_ONLY_PARK, DEBUG_BLOCK_WITH_ONLY_PLAZA, DEBUG_BLOCK_WITH_ONLY_HOUSES, BLOCK_OFFICE, DEBUG_BLOCK_WITH_ONLY_OFFICES, DEBUG_BLOCK_WITH_ONLY_APARTMENTS, AVENUE_TRESHOLD, STREET_WIDTH, BLOCK_SPLIT_TRESHOLD, BLOCK_MARGIN, /*DEBUG_BLOCK_COLOR, */SIDEWALK_WIDTH, URBAN_RURAL, SIDEWALK_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, AVENUE_WIDTH} from '../config.js';
+import {GROUND_EDGE, GROUND_SIZE, SUBURB_TRESHOLD, BLOCK_PARK, BLOCK_PLAZA, OFFICE_VS_RESIDENTIAL, MAX_FLOORS, FLOOR_HEIGHT, BLOCK_APARTMENTS, BLOCK_HOUSES, DEBUG_BLOCK_WITH_ONLY_PARK, DEBUG_BLOCK_WITH_ONLY_PLAZA, DEBUG_BLOCK_WITH_ONLY_HOUSES, BLOCK_OFFICE, DEBUG_BLOCK_WITH_ONLY_OFFICES, DEBUG_BLOCK_WITH_ONLY_APARTMENTS, AVENUE_TRESHOLD, STREET_WIDTH, BLOCK_SPLIT_TRESHOLD, BLOCK_MARGIN, SIDEWALK_WIDTH, URBAN_RURAL, SIDEWALK_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, AVENUE_WIDTH} from '../config.js';
 import {Pos, Zone, round, BOTTOM, RIGHT, LEFT, TOP} from '../core.js';
 import {pick} from '../coreNav.js';
 import {textures, scene} from '../main.js';
@@ -53,15 +53,6 @@ class Block
 		
 		this.agents = []; // array of agents in this block
 		
-		/*
-		if( DEBUG_BLOCK_COLOR )
-		{
-			var r = Math.random()/2+0.5;
-			var g = Math.random()/2+0.5;
-			var b = Math.random()/2+0.5;
-			this.color = new THREE.Color().setRGB(r,g,b);
-		}
-		*/
 	} // Block.constructor
 
 	
@@ -94,13 +85,23 @@ class Block
 		return index;
 	}
 	
-	
+
+	// set matrix so that unit square is projected to the block
+	//
+	//	(0,1)---(1,1)		(a)---(b)
+	//    |       |		=>	 |     |
+	//    |       |			 |     |
+	//  (0,0)---(1,0)		(d)---(c)
+	//
 	setMatrix( matrix )
 	{
-		var u0 = this.d.x, v0 = this.d.z,
-			u1 = this.c.x, v1 = this.c.z,
-			u2 = this.b.x, v1 = this.b.z,
-			u3 = this.a.x, v1 = this.a.z;
+		var s='dcba';
+		var u0 = this.zone[s[0]].x, v0 = this.zone[s[0]].z,
+			u1 = this.zone[s[1]].x, v1 = this.zone[s[1]].z,
+			u2 = this.zone[s[2]].x, v2 = this.zone[s[2]].z,
+			u3 = this.zone[s[3]].x, v3 = this.zone[s[3]].z;
+
+//         
 
 		var u01 = u0-u1,
 			u12 = u1-u2,
@@ -309,7 +310,7 @@ export class Blocks
 			this.allTrueBlocks.push( block );
 	
 			// if block with houses, add shrinked park (yard) as overlayed block
-			if( type==BLOCK_HOUSES /*&& !DEBUG_BLOCK_COLOR*/ )
+			if( type==BLOCK_HOUSES )
 			{
 				var yardZone = zone.shrink( SIDEWALK_WIDTH ),
 					yard = new Block( yardZone, type );
@@ -323,19 +324,138 @@ export class Blocks
 	} // splitIntoBlocks
 	
 
+	static geometry()
+	{
+		var data = [
+			// 	x, y, z		nx, ny, nz, 	u, v
+				0, 0, 0,	0, 1, 0,		0, 0,
+				0, 0, 1,	0, 1, 0,		0, 1,
+				1, 0, 0,	0, 1, 0,		1, 0,
+				
+				1, 0, 1,	0, 1, 0,		1, 1,
+				1, 0, 0,	0, 1, 0,		1, 0,
+				0, 0, 1,	0, 1, 0,		0, 1 ];
+				
+		var vertexBuffer = new THREE.InterleavedBuffer( new Float32Array(data), 8);
+	
+		var positions = new THREE.InterleavedBufferAttribute( vertexBuffer, 3/*values*/, 0/*offset*/ );
+		var normals   = new THREE.InterleavedBufferAttribute( vertexBuffer, 3/*values*/, 3/*offset*/ );
+		var uvs       = new THREE.InterleavedBufferAttribute( vertexBuffer, 2/*values*/, 6/*offset*/ );
+		
+		var geometry = new THREE.InstancedBufferGeometry();
+			geometry.setAttribute( 'normal', normals);
+			geometry.setAttribute( 'position', positions );
+			geometry.setAttribute( 'uv', uvs);
+			geometry.setAttribute( 'uv2', uvs);
+			
+		return geometry;
+	}
+
+	
+	material( blockType, texture, textureScale )
+	{
+		var material = new NatureMaterial({
+				color: blockType.color,
+				map: texture.map( 1/textureScale, 1/textureScale ),
+				depthTest: false,
+				transparent: DEBUG_BLOCKS_OPACITY<1,
+				opacity: DEBUG_BLOCKS_OPACITY,
+			});
+
+		// inject GLSL code to rescale textures
+		material.onBeforeCompile = shader => {
+			//console.log(shader.vertexShader);
+			//console.log(shader.fragmentShader);
+
+			material.userData.shader = shader;
+			
+			shader.vertexShader =
+				shader.vertexShader.replace(
+				  'void main() {',
+				  
+				  `
+					varying vec4 vPosition;
+					flat varying mat4 vInstanceMatrix;
+					flat varying mat3 vUVTransform;
+					
+					void main() {
+				  `
+				);
+
+			shader.vertexShader =
+				shader.vertexShader.replace(
+					'#include <project_vertex>',
+					
+					`
+					#include <project_vertex>
+					#ifdef USE_UV
+						vPosition = vec4( position, 1.0 );
+						vInstanceMatrix = instanceMatrix;
+						vUVTransform = uvTransform;
+					#endif					  
+					`
+				);
+
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+				  '#include <map_fragment>',
+				  
+				  `
+					vec4 pos = vInstanceMatrix*vPosition;
+					vec4 texelColor = texture2D( map, (vUVTransform*vec3(pos.xz/pos.w,1)).xy );
+
+					texelColor = mapTexelToLinear( texelColor );
+					diffuseColor *= texelColor;
+				  `
+				);
+
+			shader.fragmentShader =
+				shader.fragmentShader.replace(
+				  'void main() {',
+				  
+				  `
+					varying vec4 vPosition;
+					flat varying mat4 vInstanceMatrix;
+					flat varying mat3 vUVTransform;
+					
+					void main() {
+				  `
+				);
+
+		} // material.onBeforeCompile
+
+		return material;
+	}
+	
+	
 	constructBlockImages( blockType, texture, textureScale )
 	{
+		var blocks = this[blockType.name],
+			instances = blocks.length;
+		
+		var mesh = new THREE.InstancedMesh( Blocks.geometry(), this.material( blockType, texture, textureScale ), instances );
 
+		// create an apartment building matrix
+		var matrix = new THREE.Matrix4();
+		for( var i=0; i<instances; i++ )
+		{
+			blocks[i].setMatrix( matrix );
+			mesh.setMatrixAt( i, matrix );
+		}
+
+		mesh.renderOrder = blockType.renderOrder;
+		mesh.receiveShadow = true;
+
+		scene.add( mesh );
+		
+	} // Blocks.constructBlockImages
+
+
+	constructBlockImages_old( blockType, texture, textureScale )
+	{
 		var vertices = [];
 		var normals = [];
 		var uvs = [];
-		
-		/*
-		if( DEBUG_BLOCK_COLOR )
-		{
-			var colors = [];
-		}
-		*/
 		
 		var blocks = this[blockType.name];
 
@@ -362,24 +482,10 @@ export class Blocks
 				d.x,d.z, b.x,b.z, c.x,c.z
 			);
 			
-			/*
-			if( DEBUG_BLOCK_COLOR )
-			{
-				colors.push(
-					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b,
-					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b,
-					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b,
-					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b,
-					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b,
-					blocks[i].color.r, blocks[i].color.g, blocks[i].color.b
-				);
-			}
-			*/
 		}
 		
 		var material = new NatureMaterial({
 				color: blockType.color,
-				/*vertexColors: DEBUG_BLOCK_COLOR,*/
 				map: texture.map( 1/textureScale, 1/textureScale ),
 				//TODO:
 				depthTest: false,
@@ -397,14 +503,6 @@ export class Blocks
 			geometry.setAttribute(
 				'uv',
 				new THREE.BufferAttribute(new Float32Array(uvs),2));
-			/*	
-			if( DEBUG_BLOCK_COLOR )
-			{
-				geometry.setAttribute(
-					'color',
-					new THREE.BufferAttribute(new Float32Array(colors),3));
-			}
-			*/
 			
 		var image = new THREE.Mesh(geometry, material);
 			image.updateMatrix();
@@ -413,7 +511,7 @@ export class Blocks
 			image.receiveShadow = true;
 		scene.add(image);
 		
-	} // Blocks.constructBlockImages
+	} // Blocks.constructBlockImages_old
 	
 
 	

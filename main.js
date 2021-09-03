@@ -75,19 +75,21 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
 	controls.update();
 
-export var navmesh = new NavMesh();		//console.log('navmesh\t\t',clock.getDelta());
-export var textures = new Textures();		//console.log('textures\t',clock.getDelta());
-var ground = new Ground();			//console.log('ground\t\t',clock.getDelta());
-export var blocks = new Blocks();			//console.log('blocks\t\t',clock.getDelta());
+var clock = new THREE.Clock();
+
+export var navmesh = new NavMesh();		console.log('navmesh\t\t',clock.getDelta().toFixed(3),'s');
+export var textures = new Textures();	console.log('textures\t',clock.getDelta().toFixed(3),'s');
+var ground = new Ground();				console.log('ground\t\t',clock.getDelta().toFixed(3),'s');
+export var blocks = new Blocks();		console.log('blocks\t\t',clock.getDelta().toFixed(3),'s');
 
 //randomTarget = pick(blocks.allTrueBlocks).randomPos();
 //drawArrow( randomTarget, randomTarget.addY(30) );
 
-export var buildings = new Buildings();	//console.log('buildings\t',clock.getDelta());
-var trees = new Trees();			//console.log('trees\t\t',clock.getDelta());
-var crossings = new Crossings();	//console.log('crossings\t',clock.getDelta());
-export var agents = new Agents();			//console.log('agents\t\t',clock.getDelta());
-var nature = new Nature();			//console.log('nature\t\t',clock.getDelta());
+export var buildings = new Buildings();	console.log('buildings\t',clock.getDelta().toFixed(3),'s');
+var trees = new Trees();				console.log('trees\t\t',clock.getDelta().toFixed(3),'s');
+var crossings = new Crossings();		console.log('crossings\t',clock.getDelta().toFixed(3),'s');
+export var agents = new Agents();		console.log('agents\t\t',clock.getDelta().toFixed(3),'s');
+var nature = new Nature();				console.log('nature\t\t',clock.getDelta().toFixed(3),'s');
 
 agents_elem.innerHTML = agents.agents.length;
 

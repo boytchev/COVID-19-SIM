@@ -14,7 +14,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {DEBUG_ALL_WHITE, SIDEWALK_WIDTH, DEBUG_BLOCKS_OPACITY} from '../config.js';
+import {SIDEWALK_TEXTURE_SCALE,DEBUG_ALL_WHITE, SIDEWALK_WIDTH, DEBUG_BLOCKS_OPACITY} from '../config.js';
 import {RIGHT, TOP, LEFT, BOTTOM, Pos, Size} from '../core.js';
 import {NatureMaterial} from './nature.js';
 import {textures, scene} from '../main.js';
@@ -180,7 +180,7 @@ export class HouseSidewalks
 		
 		var material = new NatureMaterial({
 				color: 'white',
-				map: textures.sidewalk.map( 4, 4 ),
+				map: textures.sidewalk.map( 1/SIDEWALK_TEXTURE_SCALE, 1/SIDEWALK_TEXTURE_SCALE ),
 				depthTest: false,
 				transparent: DEBUG_BLOCKS_OPACITY<1,
 				opacity: DEBUG_BLOCKS_OPACITY,

@@ -1,5 +1,6 @@
 // size of the simulated world
 
+import * as THREE from './js/three.module.js';
 import {msToString, timeMs, Size, Range, round} from './core.js';
 
 
@@ -110,7 +111,6 @@ export const DEBUG_AGENT_ACTIONS = param('daa',-1); // agent id or -1 for no deb
 export const DEBUG_AGENT_LOCATIONS = param('dal',false); // count agents at home, at work or outside
 export const DEBUG_AGENT_HEALTH = param('dah',false); // count infected agents
 export const DEBUG_SUN_POSITION_GUI = param('dspg',false);
-//export const DEBUG_BLOCK_COLOR = false;
 export const DEBUG_ALL_WHITE = param('daw',false);
 export const CARTOON_STYLE = param('cs',false); // only of agents, howses, trees
 export const PIXEL_ART_STYLE = param('pas',false);
@@ -162,7 +162,7 @@ export const APARTMENT_TEXTURE_SCALE_U = 2;			// 1 tile = 2x2.5 meters
 export const OFFICE_TEXTURE_SCALE_U = 1;				// 1 tile = 1x2.5 meters
 export const OFFICE_DOOR_TEXTURE_SCALE = 2;			// 1 door - 2 meter wide
 export const SIDEWALK_TEXTURE_SCALE = 0.25;			// 1 tile = 25x25 cm
-export const GRASS_TEXTURE_SCALE = 5;				// 1 tile = 50x50 cm
+export const GRASS_TEXTURE_SCALE = 2;				// 1 tile = 50x50 cm
 export const CROSSING_TEXTURE_SCALE = 1.0;
 
 export const SIDEWALK_WIDTH = param('sww',3);		// in meters
@@ -343,63 +343,55 @@ if( fcr+ccr+icr<0.1 ) fcr = ccr = 1;
 export const FORMAL_CLOTHING_RATIO = fcr/(fcr+ccr+icr);
 export const CASUAL_CLOTHING_RATIO = (fcr+ccr)/(fcr+ccr+icr);
 
-//console.log(fcr,ccr,icr);
 
 /*
-
-// https://math.stackexchange.com/questions/296794/finding-the-transform-matrix-from-4-projected-points-with-javascript/339033#339033
-// http://jsfiddle.net/dFrHS/1/
-function trapezoidMatrix(x1d, y1d,
-	  x2d, y2d,
-	  x3d, y3d,
-	  x4d, y4d)
+function setTrapezoidMatrix( matrix,
+	x0, z0,
+	x1, z1,
+	x2, z2,
+	x3, z3 )
 {
-	function adj(m) { // Compute the adjugate of m
-	  return [
-		m[4]*m[8]-m[5]*m[7], m[2]*m[7]-m[1]*m[8], m[1]*m[5]-m[2]*m[4],
-		m[5]*m[6]-m[3]*m[8], m[0]*m[8]-m[2]*m[6], m[2]*m[3]-m[0]*m[5],
-		m[3]*m[7]-m[4]*m[6], m[1]*m[6]-m[0]*m[7], m[0]*m[4]-m[1]*m[3]
-	  ];
-	}
-	function multmm(a, b) { // multiply two matrices
-	  var c = Array(9);
-	  for (var i = 0; i != 3; ++i) {
-		for (var j = 0; j != 3; ++j) {
-		  var cij = 0;
-		  for (var k = 0; k != 3; ++k) {
-			cij += a[3*i + k]*b[3*k + j];
-		  }
-		  c[3*i + j] = cij;
-		}
-	  }
-	  return c;
-	}
-	function multmv(m, v) { // multiply matrix and vector
-	  return [
-		m[0]*v[0] + m[1]*v[1] + m[2]*v[2],
-		m[3]*v[0] + m[4]*v[1] + m[5]*v[2],
-		m[6]*v[0] + m[7]*v[1] + m[8]*v[2]
-	  ];
-	}
-	function basisToPoints(x1, y1, x2, y2, x3, y3, x4, y4) {
-	  var m = [
-		x1, x2, x3,
-		y1, y2, y3,
-		 1,  1,  1
-	  ];
-	  var v = multmv(adj(m), [x4, y4, 1]);
-	  return multmm(m, [
-		v[0], 0, 0,
-		0, v[1], 0,
-		0, 0, v[2]
-	  ]);
-	}
+	var a1 = x1-x2,
+		a2 = z1-z2,
+		b1 = x3-x2,
+		b2 = z3-z2,
+		c1 = x0-x1+x2-x3,
+		c2 = z0-z1+z2-z3,
+		d  = a1*b2-a2*b1;
+		
+	var h6 = (b2*c1-b1*c2)/d,
+		h7 = (a1*c2-a2*c1)/d;
+		
+	var h0 = x1-x0+x1*h6,
+		h1 = x3-x0+x3*h7,
+		h3 = z1-z0+z1*h6,
+		h4 = z3-z0+z3*h7;
 	
-	
-	  var adjs = [-1, -1, 1, -1, 0, 0, 0, -1, 0];
-	  var d = basisToPoints(x1d, y1d, x2d, y2d, x3d, y3d, x4d, y4d);
-	  return multmm(d, adjs);
+	matrix.set(
+		h0,  0, h1, x0,
+	 	 0,  1,  0,  0,
+		h3,  0, h4, z0,
+		h6,  0, h7,  1 );
 }
-//                          Ax Ay Bx By Dx Dy Cx Cy
-console.log(trapezoidMatrix(20,20,40,20,20,10,30,10));
+
+var m = new THREE.Matrix4();
+
+setTrapezoidMatrix( m, 21,22, 23,24, 25,36, 22,48 );
+
+var v = new THREE.Vector4(0,0,0,1);
+v.applyMatrix4(m);
+console.log( v.x/v.w, v.y/v.w, v.z/v.w );
+
+var v = new THREE.Vector4(1,0,0,1);
+v.applyMatrix4(m);
+console.log( v.x/v.w, v.y/v.w, v.z/v.w );
+
+var v = new THREE.Vector4(1,0,1,1);
+v.applyMatrix4(m);
+console.log( v.x/v.w, v.y/v.w, v.z/v.w );
+
+var v = new THREE.Vector4(0,0,1,1);
+v.applyMatrix4(m);
+console.log( v.x/v.w, v.y/v.w, v.z/v.w );
+	
 */
