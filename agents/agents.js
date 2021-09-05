@@ -12,7 +12,7 @@ import {timeMs, Pos} from '../core.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
 import {frame, dayTimeMs, currentTimeMs} from '../objects/nature.js';
-import {CARTOON_STYLE, GROUND_SIZE, GROUND_EDGE, DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED, AGENT_DRAW_MODE, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE_WHITE, AGENT_AGE_YEARS} from '../config.js';
+import {CARTOON_STYLE, GROUND_SIZE, GROUND_EDGE, DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED, AGENT_DRAW_MODE, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE_WHITE, AGENT_AGE_YEARS, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF} from '../config.js';
 
 import vertexShader from './agents_vertex_shader.js';
 import fragmentShader from './agents_fragment_shader.js';
@@ -203,6 +203,7 @@ export class Agents
 				//this.images.instanceColor.array[i*3] = agent.infectionLevel/100;
 				//this.images.instanceColor.array[i*3+1] = i;
 				this.images.infectionLevel.array[i] = agent.infectionLevel/100;
+				this.images.mask.array[i] = agent.mask;
 				
 				//agent.updateImage();
 				
@@ -270,6 +271,7 @@ export class Agents
 			//this.images.instanceColor.needsUpdate = true;
 			this.images.infectionLevel.needsUpdate = true;
 			this.images.motionType.needsUpdate = true;
+			this.images.mask.needsUpdate = true;
 
 //			console.log(this.agents[0].position.block==null,this.agents[0].doing);
 		}
@@ -434,6 +436,10 @@ var topologyData = [2, 2, 2, 0, 0, 2, 9, 9, 9, 0, 2, 4, 0, 3, 2, 2, 0, 2, 8, 8, 
 			new THREE.InstancedBufferAttribute(new Float32Array(this.agents.length), 1, false, 1));
 
 		geometry.setAttribute(
+			'mask',
+			new THREE.InstancedBufferAttribute(new Int32Array(this.agents.length), 1, false, 1));
+
+		geometry.setAttribute(
 			'motionType',
 			new THREE.InstancedBufferAttribute(new Int32Array(this.agents.length), 1, false, 1));
 
@@ -483,6 +489,7 @@ var topologyData = [2, 2, 2, 0, 0, 2, 9, 9, 9, 0, 2, 4, 0, 3, 2, 2, 0, 2, 8, 8, 
 		//mesh.instanceColor = new THREE.InstancedBufferAttribute( new Float32Array(3*instances), 3, false, 1 );
 		mesh.infectionLevel = geometry.getAttribute( 'infectionLevel' );
 		mesh.motionType = geometry.getAttribute( 'motionType' );
+		mesh.mask = geometry.getAttribute( 'mask' );
 //mesh.rotation.x = -Math.PI/2;
 //mesh.position.y = 1;
 //console.log(geometry.getAttribute('agentId').array);

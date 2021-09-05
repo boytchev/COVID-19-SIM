@@ -21,6 +21,31 @@ CFG.addHeader(
 
 
 CFG.addHeader(
+	2, 'Masks', '', '',
+	'health,people,mask,adult,child' );
+
+		CFG.addNumericRange(
+			'amon', 'Adult mask on', 2, 4, {min:0, max:10, step:1},
+			'When an adult puts a mask on. This is interval of infection levels from 0 (healthy) to 10 (most infected). For each adult the actual condition of putting mask on is randomly picked within the interval. The condition occurs when the infection level raises and goes above the picked value.',
+			'health,people,mask,adult' );
+			
+		CFG.addNumericRange(
+			'amof', 'Adult mask off', 1, 5, {min:0, max:10, step:1},
+			'When an adult takes a mask off. This is interval of infection levels from 0 (healthy) to 10 (most infected). For each adult the actual condition of taking mask off is randomly picked within the interval. The condition occurs when the infection level decreases and goes below the picked value.',
+			'health,people,mask,adult' );
+			
+		CFG.addNumericRange(
+			'cmon', 'Child mask on', 2, 4, {min:0, max:10, step:1},
+			'When a child puts a mask on. This is interval of infection levels from 0 (healthy) to 10 (most infected). For each child the actual condition of putting mask on is randomly picked within the interval. The condition occurs when the infection level raises and goes above the picked value.',
+			'health,people,mask,child' );
+			
+		CFG.addNumericRange(
+			'cmof', 'Child mask off', 1, 5, {min:0, max:10, step:1},
+			'When a child takes a mask off. This is interval of infection levels from 0 (healthy) to 10 (most infected). For each child the actual condition of taking mask off is randomly picked within the interval. The condition occurs when the infection level decreases and goes below the picked value.',
+			'health,people,mask,child' );
+			
+			
+CFG.addHeader(
 	2, 'Infection', '', '',
 	'health,infection,people,time,debug' );
 

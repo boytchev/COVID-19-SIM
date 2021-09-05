@@ -31,7 +31,7 @@ import * as THREE from '../js/three.module.js';
 import {AgentBehaviour} from './agentBehaviour.js';
 import {Agents} from './agents.js';
 import {WorkAddress} from './address.js';
-import {/*INFECTION_OVERHEAD_INDICATOR, */AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, /*DEBUG_BLOCK_COLOR, */INFECTION_STRENGTH, IMMUNE_CURE_FACTOR, INFECTION_STEP} from '../config.js';
+import {/*INFECTION_OVERHEAD_INDICATOR, */AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, /*DEBUG_BLOCK_COLOR, */INFECTION_STRENGTH, IMMUNE_CURE_FACTOR, INFECTION_STEP, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF} from '../config.js';
 import {font} from '../font.js';
 import {scene, controls, agents} from '../main.js';
 import {round, Range, drawArrow, msToString} from '../core.js';
@@ -71,8 +71,14 @@ class Agent extends AgentBehaviour
 		
 		this.isAdult = isAdult;
 		
+		
 		// set age and height
 		this.age = this.getRandomAge( );
+		
+		// mask (scaling 10 is because mask on/off param are from 0 to 10)
+		this.mask = false;
+		this.maskOn = 10 * (isAdult ? ADULT_MASK_ON.randFloat() : CHILD_MASK_ON.randFloat());
+		this.maskOff = 10 * (isAdult ? ADULT_MASK_OFF.randFloat() : CHILD_MASK_OFF.randFloat());
 		
 		// other things
 		this.home = home;
@@ -109,6 +115,8 @@ class Agent extends AgentBehaviour
 	
 	update()
 	{
+		var oldInfectionLevel = this.infectionLevel;
+		
 		// update infection status
 		if( this.infectionPattern!=undefined )
 		{
@@ -179,7 +187,20 @@ class Agent extends AgentBehaviour
 			} // for j
 		}
 		
-
+		// decide whether to put on mask or take off mask
+		if( oldInfectionLevel < this.infectionLevel )
+		{
+			// infection increases, it not masked, check whether to put mask on
+			if( !this.mask && this.infectionLevel >= this.maskOn )
+				this.mask = true;
+		}
+		else
+		{
+			// infection decreases, if masked, check whether to take mask off
+			if( this.mask && this.infectionLevel <= this.maskOff )
+				this.mask = false;
+		}
+		
 		// if a new day has started, reset schedule 
 		if( previousDayTimeMs > dayTimeMs )
 		{

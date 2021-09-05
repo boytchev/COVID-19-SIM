@@ -344,54 +344,7 @@ export const FORMAL_CLOTHING_RATIO = fcr/(fcr+ccr+icr);
 export const CASUAL_CLOTHING_RATIO = (fcr+ccr)/(fcr+ccr+icr);
 
 
-/*
-function setTrapezoidMatrix( matrix,
-	x0, z0,
-	x1, z1,
-	x2, z2,
-	x3, z3 )
-{
-	var a1 = x1-x2,
-		a2 = z1-z2,
-		b1 = x3-x2,
-		b2 = z3-z2,
-		c1 = x0-x1+x2-x3,
-		c2 = z0-z1+z2-z3,
-		d  = a1*b2-a2*b1;
-		
-	var h6 = (b2*c1-b1*c2)/d,
-		h7 = (a1*c2-a2*c1)/d;
-		
-	var h0 = x1-x0+x1*h6,
-		h1 = x3-x0+x3*h7,
-		h3 = z1-z0+z1*h6,
-		h4 = z3-z0+z3*h7;
-	
-	matrix.set(
-		h0,  0, h1, x0,
-	 	 0,  1,  0,  0,
-		h3,  0, h4, z0,
-		h6,  0, h7,  1 );
-}
-
-var m = new THREE.Matrix4();
-
-setTrapezoidMatrix( m, 21,22, 23,24, 25,36, 22,48 );
-
-var v = new THREE.Vector4(0,0,0,1);
-v.applyMatrix4(m);
-console.log( v.x/v.w, v.y/v.w, v.z/v.w );
-
-var v = new THREE.Vector4(1,0,0,1);
-v.applyMatrix4(m);
-console.log( v.x/v.w, v.y/v.w, v.z/v.w );
-
-var v = new THREE.Vector4(1,0,1,1);
-v.applyMatrix4(m);
-console.log( v.x/v.w, v.y/v.w, v.z/v.w );
-
-var v = new THREE.Vector4(0,0,1,1);
-v.applyMatrix4(m);
-console.log( v.x/v.w, v.y/v.w, v.z/v.w );
-	
-*/
+export const ADULT_MASK_ON  = param2( 'amon',new Range( 2, 4 ));
+export const ADULT_MASK_OFF = param2( 'amof',new Range( 1, 5 ));
+export const CHILD_MASK_ON  = param2( 'cmon',new Range( 2, 4 ));
+export const CHILD_MASK_OFF = param2( 'cmof',new Range( 1, 5 ));

@@ -51,6 +51,7 @@ uniform float opacity;
 	flat varying int vClothing;
 	flat varying float vAge;
 	flat varying int vVertexTopology;
+	flat varying int vMask;
 #endif
 
 #ifdef COVID19SYM
@@ -283,7 +284,7 @@ uniform float opacity;
 			color = colorHumanSkin();
 		}
 			
-		if( index2==7 )
+		if( vMask!=0 && index2==7 )
 		{
 			color = colorMask();
 			resetColor = true;

@@ -32,10 +32,12 @@ varying vec3 vViewPosition;
 	attribute float agentSpeed;
 	attribute float agentAge;
 	attribute int motionType;
+	attribute int mask;
 	flat varying int vClothing;
 	flat varying float vAge;
 	flat varying float vInfectionLevel;
 	flat varying int vVertexTopology;
+	flat varying int vMask;
 #endif
 
 #include <common>
@@ -132,6 +134,7 @@ void main() {
 	vRandomId = randomId;
 	vAge = agentAge;
 	vInfectionLevel = infectionLevel;
+	vMask = mask;
 	vVertexTopology = aVertexTopology;
 
 	man = vRandomId<float( ${MALE_RATIO} );
