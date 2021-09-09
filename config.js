@@ -344,6 +344,9 @@ export const FORMAL_CLOTHING_RATIO = fcr/(fcr+ccr+icr);
 export const CASUAL_CLOTHING_RATIO = (fcr+ccr)/(fcr+ccr+icr);
 
 
+export const MASK_INHALE_EFFECTIVENESS = param( 'mie', 0.3 );
+export const MASK_EXHALE_EFFECTIVENESS = param( 'mee', 0.9 );
+
 export const ADULT_MASK_ON  = param2( 'amon',new Range( 2, 4 ));
 export const ADULT_MASK_OFF = param2( 'amof',new Range( 1, 5 ));
 export const CHILD_MASK_ON  = param2( 'cmon',new Range( 2, 4 ));

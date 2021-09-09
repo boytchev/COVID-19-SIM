@@ -24,6 +24,24 @@ CFG.addHeader(
 	2, 'Masks', '', '',
 	'health,people,mask,adult,child' );
 
+CFG.addHeader(
+	3, 'Effectiveness', '', '',
+	'health,people,mask' );
+	
+		CFG.addPercentage(
+			'mie', 'Mask inhale effectiveness', 0.3, {min:0, max:1, step:0.1},
+			'Mask effectiveness for inhaled air &ndash i.e. how effective is the mask protecting a person from other people. The amount of incoming infectious particles is reduced by this factor.',
+			'health,people,mask' );
+	
+		CFG.addPercentage(
+			'mee', 'Mask exhale effectiveness', 0.9, {min:0, max:1, step:0.1},
+			'Mask effectiveness for exhaled air &ndash i.e. how effective is the mask protecting other people from this person. The amount of outgoing infectious particles is reduced by this factor.',
+			'health,people,mask' );
+	
+CFG.addHeader(
+	3, 'Behaviour', '', '',
+	'health,people,mask,adult,child' );
+	
 		CFG.addNumericRange(
 			'amon', 'Adult mask on', 2, 4, {min:0, max:10, step:1},
 			'When an adult puts a mask on. This is interval of infection levels from 0 (healthy) to 10 (most infected). For each adult the actual condition of putting mask on is randomly picked within the interval. The condition occurs when the infection level raises and goes above the picked value.',

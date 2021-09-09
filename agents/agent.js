@@ -31,7 +31,7 @@ import * as THREE from '../js/three.module.js';
 import {AgentBehaviour} from './agentBehaviour.js';
 import {Agents} from './agents.js';
 import {WorkAddress} from './address.js';
-import {/*INFECTION_OVERHEAD_INDICATOR, */AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, /*DEBUG_BLOCK_COLOR, */INFECTION_STRENGTH, IMMUNE_CURE_FACTOR, INFECTION_STEP, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF} from '../config.js';
+import {AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, INFECTION_STRENGTH, IMMUNE_CURE_FACTOR, INFECTION_STEP, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF, MASK_INHALE_EFFECTIVENESS, MASK_EXHALE_EFFECTIVENESS} from '../config.js';
 import {font} from '../font.js';
 import {scene, controls, agents} from '../main.js';
 import {round, Range, drawArrow, msToString} from '../core.js';
@@ -176,6 +176,14 @@ class Agent extends AgentBehaviour
 				
 				// calculate how much infection [0,100] is transferred in the actual time slot
 				var infectionTransfer = infectionStrength * otherAgent.infectionLevel * deltaTime * INFECTION_STEP;
+				
+				// if this agent has mask, consider its effectiveness
+				if( this.mask )
+					infectionTransfer *= 1-MASK_INHALE_EFFECTIVENESS;
+					
+				// if the other agent has a mask, consider its effectiveness
+				if( otherAgent.mask )
+					infectionTransfer *= 1-MASK_EXHALE_EFFECTIVENESS;
 				
 				this.currentImmuneStrength -= infectionTransfer;
 				if( this.currentImmuneStrength < 0 )
