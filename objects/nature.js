@@ -329,7 +329,7 @@ export class Nature
 	debugShowViralShedding()
 	{
 		var totalDays = INFECTION_PATTERNS_COUNT+1,
-			peakDay = 4;
+			peakDay = Math.round(INFECTION_PATTERNS_COUNT/3);
 			
 		var viralShedding = new THREE.SplineCurve( [
 				new THREE.Vector2( 0, 0 ),
@@ -351,6 +351,8 @@ export class Nature
 			ctx.fillRect( 0, 0, W, H );	
 		
 
+		// draw bars
+		
 		var dX = (W-40)/(10*totalDays);
 		
 		for( var i=0; i<=10*totalDays; i++ )
@@ -362,6 +364,42 @@ export class Nature
 			ctx.fillRect( 20+dX*i, H-20-columnHeight, dX, columnHeight );	
 		}
 
+		// draw curves
+		
+		ctx.strokeStyle = 'black';
+		ctx.lineWidth = 1;
+		var dX = (W-40)/(30*totalDays);
+		for( var j = 0; j<INFECTION_PATTERNS_COUNT; j++ )
+		{
+			var peakDay = j+1;
+			
+			viralShedding = new THREE.SplineCurve( [
+				new THREE.Vector2( 0, 0 ),
+				new THREE.Vector2( peakDay/2, 0.15 ),
+				new THREE.Vector2( peakDay, 1 ),
+				new THREE.Vector2( (totalDays+peakDay)/2, 0.15 ),
+				new THREE.Vector2( totalDays, 0 )
+			] );
+		
+			ctx.beginPath();
+			for( var i=0; i<=30*totalDays; i++ )
+			{
+				var xx = i/30/totalDays;
+
+				var x = 20+dX*i+dX/2,
+					y = H-20-(H-40)*viralShedding.getPointAt( xx ).y;
+		
+				if( i )
+					ctx.lineTo( x, y );
+				else
+					ctx.moveTo( x, y );
+			}
+			ctx.stroke();
+		}
+
+		
+		// draw grid
+		
 		var dX = (W-40)/(totalDays);
 		for( var i=0; i<=totalDays; i++ )
 		{

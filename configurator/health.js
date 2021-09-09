@@ -140,7 +140,7 @@ CFG.addHeader(
 			
 		CFG.addBoolean(
 			'dsvs', 'Viral diagram', false, {},
-			'If checked, shows a diagram of the viral shedding (infection level per time period). Higher values indicate higher probability of infecting nearby people. Vertical lines split the diagram into 14 periods. Click on the diagram to hide it.',
+			'If checked, shows a diagram of the viral shedding (infection level per time period). Higher values indicate higher probability of infecting nearby people. Vertical lines split the diagram into periods. Black lines indicate different patterns. Blue bars emphasize the pattern near the 1/3 of all patterns. Click on the diagram to hide it.',
 			'health' );
 
 		CFG.addBoolean(

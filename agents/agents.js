@@ -370,7 +370,7 @@ export class Agents
 				new THREE.Vector2( peakDay/2, 0.15 ),
 				new THREE.Vector2( peakDay, 1 ),
 				new THREE.Vector2( (totalDays+peakDay)/2, 0.15 ),
-				new THREE.Vector2( 10, 0 )
+				new THREE.Vector2( totalDays, 0 )
 			] ) );
 		}
 	}
