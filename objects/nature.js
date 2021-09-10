@@ -349,26 +349,16 @@ export class Nature
 		var ctx = canvas.getContext( '2d' );
 			ctx.fillStyle = 'white';
 			ctx.fillRect( 0, 0, W, H );	
+			ctx.font = '12px sans-serif';
 		
-
-		// draw bars
-		
-		var dX = (W-40)/(10*totalDays);
-		
-		for( var i=0; i<=10*totalDays; i++ )
-		{
-			ctx.fillStyle = 'cornflowerblue';
-			var xx = i/10/totalDays;
-
-			var columnHeight = (H-40)*viralShedding.getPointAt( xx ).y;
-			ctx.fillRect( 20+dX*i, H-20-columnHeight, dX, columnHeight );	
-		}
 
 		// draw curves
 		
-		ctx.strokeStyle = 'black';
+		ctx.strokeStyle = 'crimson';
 		ctx.lineWidth = 1;
-		var dX = (W-40)/(30*totalDays);
+		ctx.fillStyle = 'crimson';
+		ctx.textAlign = 'center';
+		var dX = (W-80)/(30*totalDays);
 		for( var j = 0; j<INFECTION_PATTERNS_COUNT; j++ )
 		{
 			var peakDay = j+1;
@@ -381,32 +371,52 @@ export class Nature
 				new THREE.Vector2( totalDays, 0 )
 			] );
 		
+			var oldY = -100,
+				captioned = false;
+			
 			ctx.beginPath();
 			for( var i=0; i<=30*totalDays; i++ )
 			{
 				var xx = i/30/totalDays;
 
-				var x = 20+dX*i+dX/2,
-					y = H-20-(H-40)*viralShedding.getPointAt( xx ).y;
+				var x = 50+dX*i+dX/2,
+					y = H-20-(H-60)*viralShedding.getPointAt( xx ).y;
 		
 				if( i )
 					ctx.lineTo( x, y );
 				else
 					ctx.moveTo( x, y );
+
+				// pattern caption
+				if( i>30 && y>oldY && !captioned )
+				{
+					ctx.fillText('Pattern', x, 20 );
+					ctx.fillText('№'+peakDay, x, 35 );
+					captioned = true;
+				}
+				
+				oldY = y;
 			}
 			ctx.stroke();
 		}
 
+
+		ctx.fillStyle = 'black';
+		ctx.textAlign = 'right';
+		ctx.fillText('Time:', 45, H-5 );
+		ctx.fillText('Infect:', 45, 20 );
+		
 		
 		// draw grid
-		
-		var dX = (W-40)/(totalDays);
-		for( var i=0; i<=totalDays; i++ )
+		ctx.fillStyle = 'black';
+		ctx.fillRect( 50, 20, 2, H-40 );	
+		ctx.fillRect( 20, H-20, W-40, 2 );	
+
+		for( var i=1; i<=10; i++ )
 		{
-			ctx.fillStyle = 'crimson';
-			var xx = i/totalDays;
-			var columnHeight = (H-40);
-			ctx.fillRect( 20+dX*i, H-20-columnHeight, 1, columnHeight );	
+			var y = H-20-(H-60)*i/10-1;
+			ctx.fillText( (10*i)+'%', 35, y+5 );
+			ctx.fillRect( 40, y, W-60, 1 );
 		}
 		
 		document.body.appendChild( canvas );
