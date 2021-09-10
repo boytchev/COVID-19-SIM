@@ -354,9 +354,9 @@ export class Nature
 
 		// draw curves
 		
-		ctx.strokeStyle = 'crimson';
-		ctx.lineWidth = 1;
-		ctx.fillStyle = 'crimson';
+		//ctx.strokeStyle = 'crimson';
+		ctx.lineWidth = 2;
+		//ctx.fillStyle = 'crimson';
 		ctx.textAlign = 'center';
 		var dX = (W-80)/(30*totalDays);
 		for( var j = 0; j<INFECTION_PATTERNS_COUNT; j++ )
@@ -373,6 +373,9 @@ export class Nature
 		
 			var oldY = -100,
 				captioned = false;
+			
+			ctx.strokeStyle = `hsl(${360*(j-1)/(INFECTION_PATTERNS_COUNT-1)}, 100%, 35%)`;
+			ctx.fillStyle = ctx.strokeStyle;
 			
 			ctx.beginPath();
 			for( var i=0; i<=30*totalDays; i++ )
@@ -412,11 +415,20 @@ export class Nature
 		ctx.fillRect( 50, 20, 2, H-40 );	
 		ctx.fillRect( 20, H-20, W-40, 2 );	
 
+		ctx.fillStyle = 'gray';
 		for( var i=1; i<=10; i++ )
 		{
 			var y = H-20-(H-60)*i/10-1;
 			ctx.fillText( (10*i)+'%', 35, y+5 );
-			ctx.fillRect( 40, y, W-60, 1 );
+			ctx.fillRect( 40, y, W-60-10, 1 );
+		}
+		
+		ctx.textAlign = 'center';
+		for( var i=1; i<=10; i++ )
+		{
+			var x = 50+(W-80)*i/10;
+			ctx.fillText( (10*i)+'%', x, H-5 );
+			ctx.fillRect( x, 40, 1, H-60+5 );
 		}
 		
 		document.body.appendChild( canvas );
