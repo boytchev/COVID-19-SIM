@@ -58,8 +58,8 @@ CFG.addHeader(
 			'map,block' );
 
 		CFG.addPercentage(
-			'sut', 'Suburbs', 0.16, {min:0, max:1, step:0.01},
-			'Percentage of <em>Ground size</em>. If a block is larger than this size and it is in the suburbs of the city, it might be made as park. This makes the shape of the city less squarish.',
+			'sut', 'Suburbs', 0.16, {min:0, max:0.4, step:0.01},
+			'Percentage of <em>Ground size</em>. If a block is smaller than this size and it is in the suburbs of the city, it might be made as park. This makes the shape of the city less squarish.',
 			'map,block' );
 	
 		CFG.addPercentage(

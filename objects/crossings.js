@@ -198,7 +198,7 @@ export class Crossings
 		}
 		
 		// vertical crossing	
-		var streetWidth = block.streetWidths[TOP];
+		var streetWidth = block.streets[TOP].width;
 		if( streetWidth )
 		{
 			// from A to top -----------------------------------
@@ -253,7 +253,7 @@ export class Crossings
 			}
 		}
 
-		var streetWidth = block.streetWidths[BOTTOM];
+		var streetWidth = block.streets[BOTTOM].width;
 		if( streetWidth )
 		{
 			// from D to bottom --------------------------------
@@ -313,7 +313,7 @@ export class Crossings
 
 		// horizontal crossing
 		
-		var streetWidth = block.streetWidths[LEFT];
+		var streetWidth = block.streets[LEFT].width;
 		if( streetWidth )
 		{
 			// from A to left ----------------------------------
@@ -372,7 +372,7 @@ export class Crossings
 		}		
 
 
-		var streetWidth = block.streetWidths[RIGHT];
+		var streetWidth = block.streets[RIGHT].width;
 		if( streetWidth )
 		{
 			// from B to right ---------------------------------

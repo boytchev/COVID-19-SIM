@@ -30,35 +30,59 @@ import {textures, scene} from '../main.js';
 import {NatureMaterial} from './nature.js';
 
 
+class Street
+{
+
+	static id = 0;
+	
+	constructor( width )
+	{
+		this.sysType = 'Street';
+
+		this.id = ++Street.id;
+		this.width = width;
+
+		this.blocks = []; // array of blocks around this street
+	} // Street.constructor
+	
+} // Street
+
+const NO_STREET = new Street( 0 );
+
 class Block
 {
 	
-	constructor( zone, type = BLOCK_PARK, streetWidths = [0,0,0,0] )
+	static blockId = 0;
+	
+	constructor( zone, type, streets = [NO_STREET,NO_STREET,NO_STREET,NO_STREET] )
 	{
 		this.sysType = 'Block';
 
 		this.id = ++Block.id;
-		
+
 		this.zone = zone;
 		this.zone.block = this;
 		this.type = type;
 		
 		this.height = zone.perlinHeight( );
 		
-		this.streetWidths = streetWidths;
+		this.streets = streets;
 	
 		this.buildings = [];
 		this.ring = []; // crossings and edges
 		this.crossings = []; // only crossings
 		
 		this.agents = []; // array of agents in this block
-		
+	
+		for( var street of streets )
+			street.blocks.push( this );
 	} // Block.constructor
 
 	
 	
 	randomPos( )
 	{
+		
 		return this.zone.randomPos();
 		
 	} // Block.randomPos
@@ -134,7 +158,6 @@ class Block
 		
 Block.id		= 0;
 
-
 export class Blocks
 {
 	constructor()
@@ -155,13 +178,15 @@ export class Blocks
 				new Pos( -GROUND_EDGE, -GROUND_EDGE )
 			);
 			
-		this.splitIntoBlocks( zone, [0,0,0,0] /* street widths */ );
+		this.splitIntoBlocks( zone, [NO_STREET,NO_STREET,NO_STREET,NO_STREET] );
 
 		this.constructBlockImages( BLOCK_PLAZA, textures.sidewalk, SIDEWALK_TEXTURE_SCALE );
 		this.constructBlockImages( BLOCK_OFFICE, textures.sidewalk, SIDEWALK_TEXTURE_SCALE );
 		this.constructBlockImages( BLOCK_APARTMENTS, textures.sidewalk, SIDEWALK_TEXTURE_SCALE );
 		this.constructBlockImages( BLOCK_HOUSES, textures.sidewalk, SIDEWALK_TEXTURE_SCALE );
 		this.constructBlockImages( BLOCK_PARK, textures.grass, GRASS_TEXTURE_SCALE ); 
+		
+		console.log('blocks',this.allTrueBlocks);
 	} // Blocks
 
 	
@@ -180,8 +205,9 @@ export class Blocks
 	}
 	
 		
-	splitIntoBlocks( zone, streetWidths )
+	splitIntoBlocks( zone, streets )
 	{
+
 		var center = zone.center,
 			dX = zone.dX(),
 			dZ = zone.dZ();
@@ -204,7 +230,7 @@ export class Blocks
 			if ( distanceToCityCenter > urbanRadius + suburbRadius)
 			{	
 				// this block is with vegetation
-				var block = new Block( zone, BLOCK_PARK, streetWidths );
+				var block = new Block( zone, BLOCK_PARK, streets );
 				block.outskirts = true;
 				this.parks.push( block );
 				this.allTrueBlocks.push( block );
@@ -243,11 +269,12 @@ export class Blocks
 		
 		var isSplitByAvenue = Math.min(dX,dZ)>AVENUE_TRESHOLD;
 		var streetWidth = isSplitByAvenue ? AVENUE_WIDTH : STREET_WIDTH;
+		var street = new Street( streetWidth );
 	
 		var addVerticalStreet = dX*(0.7+Math.random()) > dZ*(0.7+Math.random()),
 			addHorizontalStreet = !addVerticalStreet;
 
-		var n,m,cn,cm,qm,qn,qa,qd,newStreetWidths;
+		var n,m,cn,cm,qm,qn,qa,qd,newStreets;
 		if( addVerticalStreet && (dX >= tresholdFactor*BLOCK_SPLIT_TRESHOLD) )
 		{	// split left-right
 			//	A---M-------B
@@ -264,16 +291,16 @@ export class Blocks
 			// left block
 			m = Zone.midX( zone.a, zone.b, mx-streetWidth/2 );
 			n = Zone.midX( zone.d, zone.c, nx-streetWidth/2 );
-			newStreetWidths = [...streetWidths];
-			newStreetWidths[RIGHT] = streetWidth;
-			this.splitIntoBlocks( new Zone(zone.a,m,n,zone.d), newStreetWidths );
+			newStreets = [...streets];
+			newStreets[RIGHT] = street;
+			this.splitIntoBlocks( new Zone(zone.a,m,n,zone.d), newStreets );
 			
 			// right block
 			m = Zone.midX( zone.a, zone.b, mx+streetWidth/2 );
 			n = Zone.midX( zone.d, zone.c, nx+streetWidth/2 );
-			newStreetWidths = [...streetWidths];
-			newStreetWidths[LEFT] = streetWidth;
-			this.splitIntoBlocks( new Zone(m,zone.b,zone.c,n), newStreetWidths );
+			newStreets = [...streets];
+			newStreets[LEFT] = street;
+			this.splitIntoBlocks( new Zone(m,zone.b,zone.c,n), newStreets );
 		}
 		else if( addHorizontalStreet && (dZ >= tresholdFactor*BLOCK_SPLIT_TRESHOLD) )
 		{	// split top-bottom
@@ -292,20 +319,21 @@ export class Blocks
 			// top block
 			m = Zone.midZ( zone.d, zone.a, mz+streetWidth/2 );
 			n = Zone.midZ( zone.c, zone.b, nz+streetWidth/2 );
-			newStreetWidths = [...streetWidths];
-			newStreetWidths[BOTTOM] = streetWidth;
-			this.splitIntoBlocks( new Zone(zone.a,zone.b,n,m), newStreetWidths );
+			newStreets = [...streets];
+			newStreets[BOTTOM] = street;
+			this.splitIntoBlocks( new Zone(zone.a,zone.b,n,m), newStreets );
 			
 			// bottom block
 			m = Zone.midZ( zone.d, zone.a, mz-streetWidth/2 );
 			n = Zone.midZ( zone.c, zone.b, nz-streetWidth/2 );
-			newStreetWidths = [...streetWidths];
-			newStreetWidths[TOP] = streetWidth;
-			this.splitIntoBlocks( new Zone(m,n,zone.c,zone.d), newStreetWidths );
+			newStreets = [...streets];
+			newStreets[TOP] = street;
+			this.splitIntoBlocks( new Zone(m,n,zone.c,zone.d), newStreets );
 		}	
 		else
 		{	// no split
-			var block = new Block( zone, type, streetWidths );
+if( streets[0].id==2 || streets[1].id==2 || streets[2].id==2 || streets[3].id==2 ) type = BLOCK_HOUSES; else type = BLOCK_OFFICE;
+			var block = new Block( zone, type, streets );
 			this[type.name].push( block );
 			this.allTrueBlocks.push( block );
 	
