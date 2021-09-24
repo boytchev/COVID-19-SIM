@@ -20,17 +20,20 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {blocks, scene, navmesh, textures} from '../main.js';
+import {/*clock,*/ blocks, scene, navmesh, textures} from '../main.js';
 import {pick, sortRing} from '../coreNav.js';
 import {LEFT, RIGHT, BOTTOM, TOP, Size, Zone, timeMs, almostEqual} from '../core.js';
 import {SIDEWALK_WIDTH, CROSSING_MINIMAL_CLOSENESS, CROSSING_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY} from '../config.js';
 import {NatureMaterial, dayTimeMs} from './nature.js';
 
 
+var oldScan = 0,
+	newScan = 0;
+	
 export class Crossing
 {
 
-	constructor( zone, type, length, blockA, blockB, priority )
+	constructor( zone, type, street, blockA, blockB, priority )
 	{
 		this.sysType = 'Crossing';
 		
@@ -38,9 +41,13 @@ export class Crossing
 		this.center = zone.center; // remember it, because it will be used alot
 
 		this.type = type;
-		this.scale = length;
+		this.scale = street.width;
 		this.priority = priority;
+		this.deleted = false;
 	
+		// the crossing is across street 
+		street.crossings.push( this );
+		
 		// the crossing connects block A and block B
 		this.blockA = blockA;
 		this.blockB = blockB;
@@ -64,7 +71,6 @@ export class Crossing
 
 
 
-
 export class Crossings
 {
 	
@@ -79,23 +85,70 @@ export class Crossings
 		for( var i=0; i<blocks.allTrueBlocks.length; i++ )
 			this.generate( blocks.allTrueBlocks[i] );
 
+//console.log('all crossings\t',clock.getDelta().toFixed(3),'s');
+
+		this.reduceCrossings();
+		
+//console.log('reduce crossings\t',clock.getDelta().toFixed(3),'s');
+
 		// generate meshes for x-crosses
 		for (var i=0; i<this.xCrossings.length; i++)
 			navmesh.addCrossing( this.xCrossings[i] );
+
+//console.log('x-crossings\t',clock.getDelta().toFixed(3),'s');
 
 		// generate meshes for z-crosses
 		for (var i=0; i<this.zCrossings.length; i++)
 			navmesh.addCrossing( this.zCrossings[i] );
 
+//console.log('y-crossings\t',clock.getDelta().toFixed(3),'s');
+
+
 		// reorder crosses for each block
 		for( var i=0; i<blocks.allTrueBlocks.length; i++ )
 			this.reorder( blocks.allTrueBlocks[i] );
 		
+//console.log('reorder crossings\t',clock.getDelta().toFixed(3),'s');
+
+//console.log('old',oldScan,'new',newScan,(100*newScan/oldScan).toFixed(1)+'%');
+
 		this.image( this.xCrossings );
 		this.image( this.zCrossings );
-		
 	} // Crossings.constructor
 	
+	
+	
+	// remove crosses if they are too dense
+	reduceCrossings()
+	{
+		for( var street of blocks.streets ) if( street.crossings.length )
+		{
+			street.crossings.sort( (a,b)=> a.x+a.z>b.x+b.z?1:-1 );
+			for( var i=0; i<street.crossings.length-1; i++ ) if( !street.crossings[i].deleted )
+			for( var j=i+1; j<street.crossings.length; j++ ) if( !street.crossings[j].deleted )
+			{
+				var crossingA = street.crossings[i],
+					crossingB = street.crossings[j];
+					
+				if( crossingA.deleted || crossingB.deleted ) continue;
+				
+				if( crossingA.center.manhattanDistanceTo( crossingB.center ) < CROSSING_MINIMAL_CLOSENESS )
+				{	// either ignore the i-th or the (i-1)-st crossing
+					// keep the one with the higher priority
+					// if equal, then randomly pick which one to keep
+					if( crossingA.priority == crossingB.priority )
+						street.crossings[pick([i,j])].deleted = true;
+					else if( crossingA.priority < crossingB.priority )
+						street.crossings[i].deleted = true;
+					else 
+						street.crossings[j].deleted = true;
+				}
+			}				
+		}
+
+		this.xCrossings = this.xCrossings.filter( crossing => !crossing.deleted ); // remove null elements
+		this.zCrossings = this.zCrossings.filter( crossing => !crossing.deleted ); // remove null elements
+	} // Crossings.reduceCrossings
 	
 	
 	// generate crossings from a block to neighbouring blocks
@@ -106,6 +159,10 @@ export class Crossings
 
 		function add( crossings, crossing )
 		{
+			/*
+oldScan += crossings.length;
+newScan += crossings.length;
+
 			for( var i=0; i<crossings.length; i++ )
 				if( crossing.center.manhattanDistanceTo( crossings[i].center ) < CROSSING_MINIMAL_CLOSENESS )
 				{	// either ignore the old or the new crossing
@@ -119,14 +176,18 @@ export class Crossings
 						crossings[i] = crossing;
 					return; 
 				}
-
+				*/
+				
 			// add
 			crossings.push( crossing );
 		}
 		
 		
-		function findBlock( vertex )
+		function findBlock( vertex, onlyBlocks )
 		{
+oldScan += blocks.allTrueBlocks.length;
+newScan += onlyBlocks.length;
+
 			function betweenX( a, b, c )
 			{	// a.x is between b.x and c.x
 				return (a.x-b.x)*(a.x-c.x)<=0;
@@ -140,9 +201,9 @@ export class Crossings
 				return almostEqual( 0, a.x*(b.z-c.z)+b.x*(c.z-a.z)+c.x*(a.z-b.z) );
 			}
 			
-			for( var i=0; i<blocks.allTrueBlocks.length; i++ )
+			for( var i=0; i<onlyBlocks.length; i++ )
 			{
-				var block = blocks.allTrueBlocks[i],
+				var block = onlyBlocks[i],
 					zone = block.zone;
 				if( betweenX(vertex,zone.a,zone.b) && zeroArea(vertex,zone.a,zone.b) ) return block;
 				if( betweenZ(vertex,zone.b,zone.c) && zeroArea(vertex,zone.b,zone.c) ) return block;
@@ -153,45 +214,55 @@ export class Crossings
 			return null;
 		}
 		
-		function existsBlockA( vertex )
+		function existsBlockA( vertex, onlyBlocks )
 		{
-			for( var i=0; i<blocks.allTrueBlocks.length; i++ )
+oldScan += blocks.allTrueBlocks.length;
+newScan += onlyBlocks.length;
+			for( var i=0; i<onlyBlocks.length; i++ )
 			{
-				if( vertex.manhattanDistanceTo(blocks.allTrueBlocks[i].zone.a) < 0.2 )
-					return blocks.allTrueBlocks[i];
+				if( vertex.manhattanDistanceTo(onlyBlocks[i].zone.a) < 0.2 )
+					return onlyBlocks[i];
 			}
 			
 			return null;
 		}
 		
-		function existsBlockB( vertex )
+		function existsBlockB( vertex, onlyBlocks )
 		{
-			for( var i=0; i<blocks.allTrueBlocks.length; i++ )
+oldScan += blocks.allTrueBlocks.length;
+newScan += onlyBlocks.length;
+			for( var i=0; i<onlyBlocks.length; i++ )
 			{
-				if( vertex.manhattanDistanceTo(blocks.allTrueBlocks[i].zone.b) < 0.2 )
-					return blocks.allTrueBlocks[i];
+				if( vertex.manhattanDistanceTo(onlyBlocks[i].zone.b) < 0.2 )
+					return onlyBlocks[i];
 			}
 			
 			return null;
 		}
 		
-		function existsBlockC( vertex )
+		function existsBlockC( vertex, onlyBlocks )
 		{
-			for( var i=0; i<blocks.allTrueBlocks.length; i++ )
+oldScan += blocks.allTrueBlocks.length;
+newScan += onlyBlocks.length;
+			for( var i=0; i<onlyBlocks.length; i++ )
 			{
-				if( vertex.manhattanDistanceTo(blocks.allTrueBlocks[i].zone.c) < 0.2 )
-					return blocks.allTrueBlocks[i];
+				if( vertex.manhattanDistanceTo(onlyBlocks[i].zone.c) < 0.2 )
+					return onlyBlocks[i];
 			}
 			
 			return null;
 		}
 		
-		function existsBlockD( vertex )
+		function existsBlockD( vertex, onlyBlocks )
 		{
-			for( var i=0; i<blocks.allTrueBlocks.length; i++ )
+oldScan += blocks.allTrueBlocks.length;
+newScan += onlyBlocks.length;
+			for( var i=0; i<onlyBlocks.length; i++ )
 			{
-				if( vertex.manhattanDistanceTo(blocks.allTrueBlocks[i].zone.d) < 0.2 )
-					return blocks.allTrueBlocks[i];
+				if( vertex.manhattanDistanceTo(onlyBlocks[i].zone.d) < 0.2 )
+				{	
+					return onlyBlocks[i];
+				}
 			}
 			
 			return null;
@@ -210,20 +281,20 @@ export class Crossings
 				a = d.add(v),
 				b = c.add(v);
 			
-			var otherBlock = existsBlockD( a );
+			var otherBlock = existsBlockD( a, block.streets[TOP].blocks );
 			if( otherBlock )
 			{	// crossing continues the sidewalk
-				add( this.xCrossings, new Crossing( new Zone(a,b,c,d), TOP, streetWidth, block, otherBlock, 2 ) );
+				add( this.xCrossings, new Crossing( new Zone(a,b,c,d), TOP, block.streets[TOP], block, otherBlock, 2 ) );
 			}
 			else
 			{	// crossing is orthogonal to the street
-				otherBlock = findBlock( a );
+				otherBlock = findBlock( a, block.streets[TOP].blocks );
 				if( otherBlock )
 				{
 					v = zone.a.closestTo( a, b );
 					a = d.add(v);
 					b = c.add(v);
-					add( this.xCrossings, new Crossing( new Zone(a,b,c,d), TOP, streetWidth, block, otherBlock, 1 ) );
+					add( this.xCrossings, new Crossing( new Zone(a,b,c,d), TOP, block.streets[TOP], block, otherBlock, 1 ) );
 				}
 			}
 
@@ -235,20 +306,20 @@ export class Crossings
 				a = d.add(v),
 				b = c.add(v);
 		
-			var otherBlock = existsBlockC( b );
+			var otherBlock = existsBlockC( b, block.streets[TOP].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
-				add( this.xCrossings, new Crossing( new Zone(a,b,c,d), TOP, streetWidth, block, otherBlock,2 ) );
+				add( this.xCrossings, new Crossing( new Zone(a,b,c,d), TOP, block.streets[TOP], block, otherBlock,2 ) );
 			}
 			else
 			{	// crossing is orthogonal to the street
-				otherBlock = findBlock( b );
+				otherBlock = findBlock( b, block.streets[TOP].blocks );
 				if( otherBlock )
 				{
 					v = zone.b.closestTo( a, b );
 					a = d.add(v);
 					b = c.add(v);
-					add( this.xCrossings, new Crossing( new Zone(a,b,c,d), TOP, streetWidth, block, otherBlock,1 ) );
+					add( this.xCrossings, new Crossing( new Zone(a,b,c,d), TOP, block.streets[TOP], block, otherBlock,1 ) );
 				}
 			}
 		}
@@ -265,20 +336,20 @@ export class Crossings
 				d = a.add(v),
 				c = b.add(v);
 		
-			var otherBlock = existsBlockA( d );
+			var otherBlock = existsBlockA( d, block.streets[BOTTOM].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
-				add( this.xCrossings, new Crossing( new Zone(a,b,c,d), BOTTOM, streetWidth, block, otherBlock, 2 ) );
+				add( this.xCrossings, new Crossing( new Zone(a,b,c,d), BOTTOM, block.streets[BOTTOM], block, otherBlock, 2 ) );
 			}
 			else
 			{	// crossing is orthogonal to the street
-				otherBlock = findBlock(d);
+				otherBlock = findBlock(d, block.streets[BOTTOM].blocks);
 				if( otherBlock )
 				{
 					v = zone.d.closestTo( c, d );
 					c = b.add(v);
 					d = a.add(v);
-					add( this.xCrossings, new Crossing( new Zone(a,b,c,d), BOTTOM, streetWidth, block, otherBlock, 1 ) );
+					add( this.xCrossings, new Crossing( new Zone(a,b,c,d), BOTTOM, block.streets[BOTTOM], block, otherBlock, 1 ) );
 				}
 			}
 
@@ -292,20 +363,20 @@ export class Crossings
 				c = b.add(v),
 				d = a.add(v);
 			
-			var otherBlock = existsBlockB( c );
+			var otherBlock = existsBlockB( c, block.streets[BOTTOM].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
-				add( this.xCrossings, new Crossing( new Zone(a,b,c,d), BOTTOM, streetWidth, block, otherBlock, 2 ) );
+				add( this.xCrossings, new Crossing( new Zone(a,b,c,d), BOTTOM, block.streets[BOTTOM], block, otherBlock, 2 ) );
 			}
 			else
 			{	// crossing is orthogonal to the street
-				otherBlock = findBlock(c);
+				otherBlock = findBlock(c, block.streets[BOTTOM].blocks);
 				if( otherBlock )
 				{
 					v = zone.d.closestTo( d, c );
 					c = b.add(v),
 					d = a.add(v);
-					add( this.xCrossings, new Crossing( new Zone(a,b,c,d), BOTTOM, streetWidth, block, otherBlock, 1 ) );
+					add( this.xCrossings, new Crossing( new Zone(a,b,c,d), BOTTOM, block.streets[BOTTOM], block, otherBlock, 1 ) );
 				}
 			}
 		}
@@ -325,20 +396,20 @@ export class Crossings
 				a = b.add(v),
 				d = c.add(v);
 		
-			var otherBlock = existsBlockB( a );
+			var otherBlock = existsBlockB( a, block.streets[LEFT].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
-				add( this.zCrossings, new Crossing( new Zone(a,b,c,d), LEFT, streetWidth, block, otherBlock, 2 ) );
+				add( this.zCrossings, new Crossing( new Zone(a,b,c,d), LEFT, block.streets[LEFT], block, otherBlock, 2 ) );
 			}
 			else
 			{	// crossing is orthogonal to the street
-				otherBlock = findBlock(a);
+				otherBlock = findBlock(a, block.streets[LEFT].blocks);
 				if( otherBlock )
 				{
 					v = zone.a.closestTo( a, d );
 					a = b.add(v),
 					d = c.add(v);
-					add( this.zCrossings, new Crossing( new Zone(a,b,c,d), LEFT, streetWidth, block, otherBlock, 1 ) );
+					add( this.zCrossings, new Crossing( new Zone(a,b,c,d), LEFT, block.streets[LEFT], block, otherBlock, 1 ) );
 				}
 			}
 
@@ -352,20 +423,20 @@ export class Crossings
 				a = b.add(v),
 				d = c.add(v);
 		
-			var otherBlock = existsBlockC( d );
+			var otherBlock = existsBlockC( d, block.streets[LEFT].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
-				add( this.zCrossings, new Crossing( new Zone(a,b,c,d), LEFT, streetWidth, block, otherBlock, 2 ) );
+				add( this.zCrossings, new Crossing( new Zone(a,b,c,d), LEFT, block.streets[LEFT], block, otherBlock, 2 ) );
 			}
 			else
 			{	// crossing is orthogonal to the street
-				otherBlock = findBlock(d);
+				otherBlock = findBlock(d, block.streets[LEFT].blocks);
 				if( otherBlock )
 				{
 					v = zone.d.closestTo( a, d );
 					a = b.add(v),
 					d = c.add(v);
-					add( this.zCrossings, new Crossing( new Zone(a,b,c,d), LEFT, streetWidth, block, otherBlock, 1 ) );
+					add( this.zCrossings, new Crossing( new Zone(a,b,c,d), LEFT, block.streets[LEFT], block, otherBlock, 1 ) );
 				}
 			}
 			
@@ -384,20 +455,20 @@ export class Crossings
 				b = a.add(v),
 				c = d.add(v);
 
-			var otherBlock = existsBlockA( b );
+			var otherBlock = existsBlockA( b, block.streets[RIGHT].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
-				add( this.zCrossings, new Crossing( new Zone(a,b,c,d), RIGHT, streetWidth, block, otherBlock, 2 ) );
+				add( this.zCrossings, new Crossing( new Zone(a,b,c,d), RIGHT, block.streets[RIGHT], block, otherBlock, 2 ) );
 			}
 			else
 			{	// crossing is orthogonal to the street
-				otherBlock = findBlock(b);
+				otherBlock = findBlock(b, block.streets[RIGHT].blocks);
 				if( otherBlock )
 				{
 					v = zone.b.closestTo( b, c );
 					b = a.add(v);
 					c = d.add(v);
-					add( this.zCrossings, new Crossing( new Zone(a,b,c,d), RIGHT, streetWidth, block, otherBlock, 1 ) );
+					add( this.zCrossings, new Crossing( new Zone(a,b,c,d), RIGHT, block.streets[RIGHT], block, otherBlock, 1 ) );
 				}
 			}
 
@@ -410,20 +481,20 @@ export class Crossings
 				b = a.add(v),
 				c = d.add(v);
 		
-			var otherBlock = existsBlockD( c );
+			var otherBlock = existsBlockD( c, block.streets[RIGHT].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
-				add( this.zCrossings, new Crossing( new Zone(a,b,c,d), RIGHT, streetWidth, block, otherBlock, 2 ) );
+				add( this.zCrossings, new Crossing( new Zone(a,b,c,d), RIGHT, block.streets[RIGHT], block, otherBlock, 2 ) );
 			}
 			else
 			{	// crossing is orthogonal to the street
-				otherBlock = findBlock(c);
+				otherBlock = findBlock(c, block.streets[RIGHT].blocks);
 				if( otherBlock )
 				{
 					v = zone.c.closestTo( b, c );
 					b = a.add(v);
 					c = d.add(v);
-					add( this.zCrossings, new Crossing( new Zone(a,b,c,d), RIGHT, streetWidth, block, otherBlock, 1 ) );
+					add( this.zCrossings, new Crossing( new Zone(a,b,c,d), RIGHT, block.streets[RIGHT], block, otherBlock, 1 ) );
 				}
 			}
 
@@ -444,10 +515,11 @@ export class Crossings
 		for (var i=0; i<crossings.length; i++)
 		{
 			var crossing = crossings[i];
+			var y = 0;
 			
 			vertices.push(
-				crossing.zone.a.x,0,crossing.zone.a.z, crossing.zone.b.x,0,crossing.zone.b.z, crossing.zone.d.x,0,crossing.zone.d.z,
-				crossing.zone.d.x,0,crossing.zone.d.z, crossing.zone.b.x,0,crossing.zone.b.z, crossing.zone.c.x,0,crossing.zone.c.z
+				crossing.zone.a.x,y,crossing.zone.a.z, crossing.zone.b.x,y,crossing.zone.b.z, crossing.zone.d.x,y,crossing.zone.d.z,
+				crossing.zone.d.x,y,crossing.zone.d.z, crossing.zone.b.x,y,crossing.zone.b.z, crossing.zone.c.x,y,crossing.zone.c.z
 			);
 			
 			normals.push(

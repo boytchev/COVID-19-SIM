@@ -75,12 +75,14 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
 	controls.update();
 
-var clock = new THREE.Clock();
+export var clock = new THREE.Clock();
 
 export var navmesh = new NavMesh();		console.log('navmesh\t\t',clock.getDelta().toFixed(3),'s');
 export var textures = new Textures();	console.log('textures\t',clock.getDelta().toFixed(3),'s');
 var ground = new Ground();				console.log('ground\t\t',clock.getDelta().toFixed(3),'s');
 export var blocks = new Blocks();		console.log('blocks\t\t',clock.getDelta().toFixed(3),'s');
+
+//console.log(blocks);
 
 //randomTarget = pick(blocks.allTrueBlocks).randomPos();
 //drawArrow( randomTarget, randomTarget.addY(30) );

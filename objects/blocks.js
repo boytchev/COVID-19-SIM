@@ -43,6 +43,8 @@ class Street
 		this.width = width;
 
 		this.blocks = []; // array of blocks around this street
+		this.crossings = [];
+		
 	} // Street.constructor
 	
 } // Street
@@ -170,6 +172,7 @@ export class Blocks
 		this.apartments = [];
 		this.houses = [];
 		this.allTrueBlocks = [];
+		this.streets = [ NO_STREET ];
 		
 		var zone = new Zone(
 				new Pos( -GROUND_EDGE, +GROUND_EDGE ),
@@ -186,7 +189,6 @@ export class Blocks
 		this.constructBlockImages( BLOCK_HOUSES, textures.sidewalk, SIDEWALK_TEXTURE_SCALE );
 		this.constructBlockImages( BLOCK_PARK, textures.grass, GRASS_TEXTURE_SCALE ); 
 		
-		console.log('blocks',this.allTrueBlocks);
 	} // Blocks
 
 	
@@ -270,6 +272,8 @@ export class Blocks
 		var isSplitByAvenue = Math.min(dX,dZ)>AVENUE_TRESHOLD;
 		var streetWidth = isSplitByAvenue ? AVENUE_WIDTH : STREET_WIDTH;
 		var street = new Street( streetWidth );
+		
+		this.streets.push( street );
 	
 		var addVerticalStreet = dX*(0.7+Math.random()) > dZ*(0.7+Math.random()),
 			addHorizontalStreet = !addVerticalStreet;
@@ -332,7 +336,6 @@ export class Blocks
 		}	
 		else
 		{	// no split
-if( streets[0].id==2 || streets[1].id==2 || streets[2].id==2 || streets[3].id==2 ) type = BLOCK_HOUSES; else type = BLOCK_OFFICE;
 			var block = new Block( zone, type, streets );
 			this[type.name].push( block );
 			this.allTrueBlocks.push( block );
