@@ -112,3 +112,14 @@ CFG.addHeader(
 			'The number of routes generated for each person. Independent on the value, onle one of the routes is used. THe others only indicate what possibilities exists. This parameter is often used with <em>Show route</em> checked and <em>Agent count</em>=1.',
 			'misc,route,people' );
 
+
+
+CFG.addHeader(
+	2, 'Configurator', '',
+	'This section contains parameters that configure the configurator itself. They are not used by the simulator.',
+	'misc,config'  );
+
+		CFG.addBoolean(
+			'cfg-si', 'Show info', true, {config: true},
+			'If checked, each configuraiton parameter is accompanied by short description. This makes the page longer, but more suitable for novice users. If unchecked, these descriptions are hidden and the page is much shorter.',
+			'misc,config' );

@@ -17,7 +17,7 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
 
-	<link rel="stylesheet" href="covid-19-configurator.css">
+	<link title="config-css" rel="stylesheet" href="covid-19-configurator.css">
 
 	
 </head>
@@ -113,6 +113,16 @@
 			elem.value = filter;
 			CFG.toggleFilter( {target:elem} );
 		}
+		
+		// configurator show info
+		if( localStorage.getItem( 'covid-19-cfg-si' ) == '0' )
+		{
+			document.querySelector( '#cfg-si' ).checked = false;
+			
+			for( var elem of document.querySelectorAll( '.info' ) )
+				elem.style.display = 'none';	
+		}
+		
 		
 		if( !CFG.LOCALHOST ) document.getElementById( 'debug_button' ).style.display = 'none';
 		

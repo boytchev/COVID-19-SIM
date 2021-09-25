@@ -27,6 +27,10 @@ if( predefinedFavs !== null )
 	predefinedFavs = predefinedFavs.split( ' ' );
 
 
+export var configInfo = param( 'cfg-si', true );
+
+console.log('configInfo',configInfo)
+
 export function timeMs( hours, minutes=0, seconds=0 )
 {
 	return 1000*(seconds + 60*minutes + 60*60*hours);
@@ -296,6 +300,16 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 		value:	document.getElementById(id),
 		defaultValue: defaultValue,
 		options: options,
+	}
+	
+	if( options.config )
+	{
+		data[id].value.addEventListener( 'change', event =>
+			{
+				localStorage.setItem( 'covid-19-'+id, event.target.checked?'1':'0' );
+				for( var elem of document.querySelectorAll( '.info' ) )
+					elem.style.display = event.target.checked?'':'none';
+			} );
 	}
 }
 
