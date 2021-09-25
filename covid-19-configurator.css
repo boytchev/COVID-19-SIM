@@ -153,6 +153,11 @@ h3.caption ~ .info{
 	color: DimGray;
 }
 
+.block .from-to {
+	font-weight: 300;
+	color: DimGray;
+}
+
 h2 .info {
 	display: block;
 	font-size: 0.6em;
@@ -326,3 +331,9 @@ td {
 	margin: 2em 0;
 	text-shadow: 0 0 0.1em lightgray;
 }
+
+/*
+input {
+	border: solid 1px red !important;
+}
+*/

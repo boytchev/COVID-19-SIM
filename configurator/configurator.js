@@ -125,6 +125,14 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 	
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
+
+
+	// calculate width of field
+	var testVal = parseFloat(options.max)+parseFloat(options.step),
+		testVal = Math.round( 1000000*testVal )/1000000;
+	
+	var width = Math.max( (testVal+'').length*0.9+0.5, 1.5 );
+
 	
 	// construct the html
 	var html =`
@@ -144,7 +152,8 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 						min="${options.min}"
 						max="${options.max}"
 						value="${options.value}"
-						step="${options.step}">
+						step="${options.step}"
+						style="width: ${width}em;">
 				</td>
 				<td class="unit" width="1%">${options.unit}</td>
 			</tr>
@@ -202,6 +211,13 @@ export function addPercentage( id, name, defaultValue, options, info='', tags=''
 
 	function p( x ) { return Math.round(100*x); }
 	
+	// calculate width of field
+	var testVal = parseFloat(p(options.max))+parseFloat(p(options.step)),
+		testVal = Math.round( 1000000*testVal )/1000000;
+	
+	var width = Math.max( (testVal+'').length*0.9+0.5, 1.5 );
+
+
 	// construct the html
 		
 	var html =`
@@ -213,7 +229,8 @@ export function addPercentage( id, name, defaultValue, options, info='', tags=''
 					${name} 
 				</td>
 				<td class="valuerow">
-					<input id="${id}" class="value" type="number" name="${id}" min="${p(options.min)}" max="${p(options.max)}" value="${p(options.value)}" step="${p(options.step)}">
+					<input id="${id}" class="value" type="number" name="${id}" min="${p(options.min)}" 	max="${p(options.max)}" value="${p(options.value)}" step="${p(options.step)}"
+					style="width: ${width}em;">				
 				</td>
 				<td class="unit" width="1%">%</td>
 			</tr>
@@ -340,6 +357,8 @@ export function resetConfigurator()
 	localStorage.removeItem( LOCAL_STORAGE_FAVS );
 	localStorage.removeItem( LOCAL_STORAGE_PARAMS );
 	localStorage.removeItem( LOCAL_STORAGE_FILTER );
+
+	localStorage.removeItem( 'covid-19-cfg-si' );
 	
 	// reload page
 	
@@ -600,6 +619,12 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 	if( predefinedFavs )
 		options.fav = predefinedFavs.indexOf(id)>=0;
 	
+	// calculate width of field
+	var testVal = parseFloat(options.max)+parseFloat(options.step),
+		testVal = Math.round( 1000000*testVal )/1000000;
+	
+	var width = Math.max( (testVal+'').length*0.9+0.5, 1.5 );
+	
 	// construct the html
 	var html =`
 		<table id="block-${id}" class="block">
@@ -618,13 +643,9 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 						min="${options.min}"
 						max="${options.max}"
 						value="${options.valueA}"
-						step="${options.step}">
-				</td>
-				<td class="unit" width="1%">${options.unit}</td>
-			</tr>
-			<tr>
-				<td class="name" style="text-align: right;">TO</td>
-				<td class="valuerow">
+						step="${options.step}"
+						style="width: ${width}em;">
+					<span class="from-to">&#x223C;</span>	
 					<input id="${id}-max"
 						class="value"
 						type="number"
@@ -632,7 +653,8 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 						min="${options.min}"
 						max="${options.max}"
 						value="${options.valueB}"
-						step="${options.step}">
+						step="${options.step}"
+						style="width: ${width}em;">
 				</td>
 				<td class="unit" width="1%">${options.unit}</td>
 			</tr>
@@ -786,11 +808,7 @@ export function addTimeRange( id, name, defaultValueA, defaultValueB, options, i
 						max="${options.max}"
 						value="${options.valueA}"
 						step="${options.step}">
-				</td>
-			</tr>
-			<tr>
-				<td class="name" style="text-align: right;">TO</td>
-				<td class="valuerow">
+					<span class="from-to">&#x223C;</span>	
 					<input id="${id}-max"
 						class="value"
 						type="time"
@@ -800,7 +818,6 @@ export function addTimeRange( id, name, defaultValueA, defaultValueB, options, i
 						value="${options.valueB}"
 						step="${options.step}">
 				</td>
-				<td class="unit" width="1%">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="2">
 				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${msToString(defaultValueA)} to ${msToString(defaultValueB)}.
