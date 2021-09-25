@@ -131,7 +131,7 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 		<table id="block-${id}" class="block">
 			<tr>
 				<td id="name-${id}"
-					width="1"
+					width="1%"
 					class="name ${options.fav?'fav':''}"
 					onclick="toggleFav('${id}')">
 					${name} 
@@ -146,7 +146,7 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 						value="${options.value}"
 						step="${options.step}">
 				</td>
-				<td class="unit" width="1">${options.unit}</td>
+				<td class="unit" width="1%">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="3">
 				${info} Range is from ${options.min} to ${options.max}. Default value is ${defaultValue}.
@@ -605,7 +605,7 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 		<table id="block-${id}" class="block">
 			<tr>
 				<td id="name-${id}"
-					width="1"
+					width="1%"
 					class="name ${options.fav?'fav':''}"
 					onclick="toggleFav('${id}')">
 					${name}
@@ -620,7 +620,7 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 						value="${options.valueA}"
 						step="${options.step}">
 				</td>
-				<td class="unit" width="1">${options.unit}</td>
+				<td class="unit" width="1%">${options.unit}</td>
 			</tr>
 			<tr>
 				<td class="name" style="text-align: right;">TO</td>
@@ -634,7 +634,7 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 						value="${options.valueB}"
 						step="${options.step}">
 				</td>
-				<td class="unit" width="1">${options.unit}</td>
+				<td class="unit" width="1%">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="3">
 				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${defaultValueA} to ${defaultValueB}.
@@ -697,7 +697,7 @@ export function addNumericList( id, name, defaultValue, options, info='', tags='
 		<table id="block-${id}" class="block">
 			<tr>
 				<td id="name-${id}"
-					width="1"
+					width="1%"
 					class="name ${options.fav?'fav':''}"
 					onclick="toggleFav('${id}')">
 					${name} 
@@ -709,7 +709,7 @@ export function addNumericList( id, name, defaultValue, options, info='', tags='
 						${htmlOptions}
 					</select>
 				</td>
-				<td class="unit" width="1">${options.unit}</td>
+				<td class="unit" width="1%">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="3">
 				${info} Default value is <em>${options.values[options.values.indexOf(defaultValue)+1]}</em>.
@@ -772,7 +772,7 @@ export function addTimeRange( id, name, defaultValueA, defaultValueB, options, i
 		<table id="block-${id}" class="block">
 			<tr>
 				<td id="name-${id}"
-					width="1"
+					width="1%"
 					class="name ${options.fav?'fav':''}"
 					onclick="toggleFav('${id}')">
 					${name}
@@ -800,7 +800,7 @@ export function addTimeRange( id, name, defaultValueA, defaultValueB, options, i
 						value="${options.valueB}"
 						step="${options.step}">
 				</td>
-				<td class="unit" width="1">${options.unit}</td>
+				<td class="unit" width="1%">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="2">
 				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${msToString(defaultValueA)} to ${msToString(defaultValueB)}.
