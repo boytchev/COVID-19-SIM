@@ -63,6 +63,16 @@ h3.caption ~ .info{
 	#color: DimGray;
 }
 
+h4.caption ~ .info{
+	position: relative;
+	display: block;
+	font-size: 100%;
+	font-weight: 300;
+	padding-left: 0em;
+	top: -1em;
+	#color: DimGray;
+}
+
 /*.block:hover {
 	outline: dotted 1px gray;
 	outline-offset: 0.25em;
