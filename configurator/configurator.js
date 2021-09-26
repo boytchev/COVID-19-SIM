@@ -1,4 +1,31 @@
 
+//
+//	Retrieve/load the values of parameters
+//		param( id, defaultValue )
+//		param2( id, defaultValueA, defaultValueB )
+//		processTags()
+//
+//	Generate/store the values of parameters 
+//		prepareValues( onlyModified = false )
+//
+//	Generate HTML representation of parameter
+//		addHeader( level, name, logo='', info='', tags='' )
+//		addNumeric( id, name, defaultValue, options, info='', tags='' )
+//		addNumericRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
+//		addNumericList( id, name, defaultValue, options, info='', tags='' )
+//		addPercentage( id, name, defaultValue, options, info='', tags='' )
+//		addBoolean( id, name, defaultValue, options, info='', tags='' )
+//		addTime( id, name, defaultValue, options, info='', tags='' )
+//		addTimeRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
+//
+//	User interaction
+//		toggleFav( id )
+//		resetConfigurator()
+//		debugConfigurator()
+//		shareConfigurator()
+//		toggleFilter( event )
+//
+
 // templates
 
 const LOCAL_STORAGE_FAVS = 'covid-19-favs';
@@ -454,7 +481,20 @@ export function prepareValues( onlyModified = false )
 				break;
 			case NUMERIC_RANGE:
 				if( (!onlyModified) || (data[id].valueA.value != data[id].defaultValueA) || (data[id].valueB.value != data[id].defaultValueB) )
-					cmd = data[id].valueA.value+'~'+data[id].valueB.value;
+				{
+					var min, max;
+					if( data[id].options.noswap )
+					{
+						min = data[id].valueA.value;
+						max = data[id].valueB.value;
+					}
+					else
+					{
+						min = Math.min( data[id].valueA.value, data[id].valueB.value );
+						max = Math.max( data[id].valueA.value, data[id].valueB.value );
+					}
+					cmd = min+'~'+max;
+				}
 				break;
 			case NUMERIC_LIST:
 				if( (!onlyModified) || (data[id].value.value != data[id].defaultValue) )
@@ -467,7 +507,18 @@ export function prepareValues( onlyModified = false )
 					valueB = 1000*(parseInt(arrMax[0])*SECONDS_IN_HOUR + parseInt(arrMax[1])*SECONDS_IN_MINUTE + parseInt(arrMax[2]));
 				if( (!onlyModified) || (valueA != data[id].defaultValueA) || (valueB != data[id].defaultValueB) )
 				{
-					cmd = valueA+'~'+valueB;
+					var min, max;
+					if( data[id].options.noswap )
+					{
+						min = data[id].valueA.value;
+						max = data[id].valueB.value;
+					}
+					else
+					{
+						min = Math.min( data[id].valueA.value, data[id].valueB.value );
+						max = Math.max( data[id].valueA.value, data[id].valueB.value );
+					}
+					cmd = min+'~'+max;
 				}
 				break;
 			default:

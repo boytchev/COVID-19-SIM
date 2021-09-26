@@ -42,7 +42,7 @@ CFG.addHeader(
 			'people,age' );
 
 		CFG.addNumericRange(
-			'aha', 'Adult height', 1.8, 1.4, {min:1.0, max:2.5, step:0.1, unit: 'm'},
+			'aha', 'Adult height', 1.8, 1.4, {min:1.0, max:2.5, step:0.1, unit: 'm', noswap: true},
 			'The proposed height of an adult, the first value is the height of a 18 year old, the second &ndash; of a 100 years old. The actual height is picked randomly within the &plusmn;10% variance of the values.',
 			'people,adult' );
 
