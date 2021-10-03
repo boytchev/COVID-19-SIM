@@ -6,7 +6,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {Zone, timeMs, Size} from '../core.js';
+import {RectZone, timeMs, Size} from '../core.js';
 import {dayTimeMs} from './nature.js';
 import {pick} from '../coreNav.js';
 import {ELEVATOR_SIZE, ELEVATOR_SPEED} from '../config.js';
@@ -19,7 +19,7 @@ export class Elevator
 		this.sysType = 'Elevator';
 
 		// size is lobby size
-		this.zone = new Zone( center, new Size(ELEVATOR_SIZE, ELEVATOR_SIZE) );
+		this.zone = new RectZone( center, new Size(ELEVATOR_SIZE, ELEVATOR_SIZE) );
 		this.doors = doors; // list of closest doors
 		
 		// timing for when to enter elevator

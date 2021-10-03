@@ -1,3 +1,28 @@
+export var clock = new THREE.Clock();
+
+
+
+const measure_usedJSHeapSize = window.performance.memory.usedJSHeapSize;
+const measure_totalJSHeapSize = window.performance.memory.totalJSHeapSize;
+export function measure( name )
+{
+	if( name.length<12 ) name += '\t';
+	if( name.length<9 ) name += '\t';
+	
+	console.log(
+		name+'\t',
+		clock.getDelta().toFixed(3), 's',
+		(100*window.performance.memory.usedJSHeapSize/window.performance.memory.jsHeapSizeLimit).toFixed(1)+'% of memory',
+
+//		Math.round( (window.performance.memory.usedJSHeapSize-measure_usedJSHeapSize)/1024/1024), 'of',
+//		'total', Math.round( (window.performance.memory.totalJSHeapSize-measure_totalJSHeapSize)/1024/1024), 'MB',
+		//'limit', Math.round(window.performance.memory.jsHeapSizeLimit/1024/1024), 'MB',
+	);
+}
+
+measure( 'start' );
+
+
 import * as THREE from './js/three.module.js';
 import * as dat from './js/dat.gui.module.js';
 import {OrbitControls} from './js/OrbitControls.js';
@@ -75,23 +100,21 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
 	controls.update();
 
-export var clock = new THREE.Clock();
-
-export var navmesh = new NavMesh();		console.log('navmesh\t\t',clock.getDelta().toFixed(3),'s');
-export var textures = new Textures();	console.log('textures\t',clock.getDelta().toFixed(3),'s');
-var ground = new Ground();				console.log('ground\t\t',clock.getDelta().toFixed(3),'s');
-export var blocks = new Blocks();		console.log('blocks\t\t',clock.getDelta().toFixed(3),'s');
+export var navmesh = new NavMesh();		measure( 'navmesh' );
+export var textures = new Textures();	measure( 'textures' );
+var ground = new Ground();				measure( 'ground' );
+export var blocks = new Blocks();		measure( 'blocks' );
 
 //console.log(blocks);
 
 //randomTarget = pick(blocks.allTrueBlocks).randomPos();
 //drawArrow( randomTarget, randomTarget.addY(30) );
 
-export var buildings = new Buildings();	console.log('buildings\t',clock.getDelta().toFixed(3),'s');
-var trees = new Trees();				console.log('trees\t\t',clock.getDelta().toFixed(3),'s');
-var crossings = new Crossings();		console.log('crossings\t',clock.getDelta().toFixed(3),'s');
-export var agents = new Agents();		console.log('agents\t\t',clock.getDelta().toFixed(3),'s');
-var nature = new Nature();				console.log('nature\t\t',clock.getDelta().toFixed(3),'s');
+export var buildings = new Buildings();	measure( 'buildings' );
+var trees = new Trees();				measure( 'trees' );
+var crossings = new Crossings();		measure( 'crossings' );
+export var agents = new Agents();		measure( 'agents' );
+var nature = new Nature();				measure( 'nature' );
 
 agents_elem.innerHTML = agents.agents.length;
 

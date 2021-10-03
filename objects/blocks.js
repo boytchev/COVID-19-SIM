@@ -24,7 +24,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {GROUND_EDGE, GROUND_SIZE, SUBURB_TRESHOLD, BLOCK_PARK, BLOCK_PLAZA, OFFICE_VS_RESIDENTIAL, MAX_FLOORS, FLOOR_HEIGHT, BLOCK_APARTMENTS, BLOCK_HOUSES, DEBUG_BLOCK_WITH_ONLY_PARK, DEBUG_BLOCK_WITH_ONLY_PLAZA, DEBUG_BLOCK_WITH_ONLY_HOUSES, BLOCK_OFFICE, DEBUG_BLOCK_WITH_ONLY_OFFICES, DEBUG_BLOCK_WITH_ONLY_APARTMENTS, AVENUE_TRESHOLD, STREET_WIDTH, BLOCK_SPLIT_TRESHOLD, BLOCK_MARGIN, SIDEWALK_WIDTH, URBAN_RURAL, SIDEWALK_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, AVENUE_WIDTH} from '../config.js';
-import {Pos, Zone, round, BOTTOM, RIGHT, LEFT, TOP} from '../core.js';
+import {midX, midZ, Pos, BlockZone, round, BOTTOM, RIGHT, LEFT, TOP} from '../core.js';
 import {pick} from '../coreNav.js';
 import {textures, scene} from '../main.js';
 import {NatureMaterial} from './nature.js';
@@ -174,7 +174,7 @@ export class Blocks
 		this.allTrueBlocks = [];
 		this.streets = [ NO_STREET ];
 		
-		var zone = new Zone(
+		var zone = new BlockZone(
 				new Pos( -GROUND_EDGE, +GROUND_EDGE ),
 				new Pos( +GROUND_EDGE, +GROUND_EDGE ),
 				new Pos( +GROUND_EDGE, -GROUND_EDGE ),
@@ -293,18 +293,18 @@ export class Blocks
 				nx = mx;
 
 			// left block
-			m = Zone.midX( zone.a, zone.b, mx-streetWidth/2 );
-			n = Zone.midX( zone.d, zone.c, nx-streetWidth/2 );
+			m = midX( zone.a, zone.b, mx-streetWidth/2 );
+			n = midX( zone.d, zone.c, nx-streetWidth/2 );
 			newStreets = [...streets];
 			newStreets[RIGHT] = street;
-			this.splitIntoBlocks( new Zone(zone.a,m,n,zone.d), newStreets );
+			this.splitIntoBlocks( new BlockZone(zone.a,m,n,zone.d), newStreets );
 			
 			// right block
-			m = Zone.midX( zone.a, zone.b, mx+streetWidth/2 );
-			n = Zone.midX( zone.d, zone.c, nx+streetWidth/2 );
+			m = midX( zone.a, zone.b, mx+streetWidth/2 );
+			n = midX( zone.d, zone.c, nx+streetWidth/2 );
 			newStreets = [...streets];
 			newStreets[LEFT] = street;
-			this.splitIntoBlocks( new Zone(m,zone.b,zone.c,n), newStreets );
+			this.splitIntoBlocks( new BlockZone(m,zone.b,zone.c,n), newStreets );
 		}
 		else if( addHorizontalStreet && (dZ >= tresholdFactor*BLOCK_SPLIT_TRESHOLD) )
 		{	// split top-bottom
@@ -321,18 +321,18 @@ export class Blocks
 				nz = mz;
 
 			// top block
-			m = Zone.midZ( zone.d, zone.a, mz+streetWidth/2 );
-			n = Zone.midZ( zone.c, zone.b, nz+streetWidth/2 );
+			m = midZ( zone.d, zone.a, mz+streetWidth/2 );
+			n = midZ( zone.c, zone.b, nz+streetWidth/2 );
 			newStreets = [...streets];
 			newStreets[BOTTOM] = street;
-			this.splitIntoBlocks( new Zone(zone.a,zone.b,n,m), newStreets );
+			this.splitIntoBlocks( new BlockZone(zone.a,zone.b,n,m), newStreets );
 			
 			// bottom block
-			m = Zone.midZ( zone.d, zone.a, mz-streetWidth/2 );
-			n = Zone.midZ( zone.c, zone.b, nz-streetWidth/2 );
+			m = midZ( zone.d, zone.a, mz-streetWidth/2 );
+			n = midZ( zone.c, zone.b, nz-streetWidth/2 );
 			newStreets = [...streets];
 			newStreets[TOP] = street;
-			this.splitIntoBlocks( new Zone(m,n,zone.c,zone.d), newStreets );
+			this.splitIntoBlocks( new BlockZone(m,n,zone.c,zone.d), newStreets );
 		}	
 		else
 		{	// no split

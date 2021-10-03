@@ -86,14 +86,14 @@ export class Pos
 {
 	constructor( x = 0, z = 0, block = undefined, y = 0 )
 	{
-		this.sysType = 'Pos';
+//		this.sysType = 'Pos';
 		
 		this.x = x;
-		this.y = y;
 		this.z = z;
+		this.y = y;
 		
-		this.block = block;
-		this.zone = undefined;
+		if( block ) this.block = block;
+		//this.zone = undefined;
 		
 	} // Pos.constructor
 
@@ -369,26 +369,26 @@ export class Range
 
 
 
-export class Zone
+export class BlockZone
 {
 	constructor( a, b, c, d )
 	{
 		this.sysType = 'Zone';
-		this.id = Zone.id++;
+		this.id = BlockZone.id++;
 
 		if( d instanceof Pos )
-		{	// Zone(a,b,c,d)
+		{	// BlockZone(a,b,c,d)
 			this.a = a;
 			this.b = b;
 			this.c = c;
 			this.d = d;
 			
-			this.xRange = new Range( Math.max( this.a.x, this.d.x ), Math.min( this.b.x, this.c.x ) );
-			this.zRange = new Range( Math.max( this.d.z, this.c.z ), Math.min( this.a.z, this.b.z ) );
+			//this.xRange = new Range( Math.max( this.a.x, this.d.x ), Math.min( this.b.x, this.c.x ) );
+			//this.zRange = new Range( Math.max( this.d.z, this.c.z ), Math.min( this.a.z, this.b.z ) );
 			this.center = new Pos( this.xRange.mid(), this.zRange.mid(), this.block || this.a.block );
 		}
 		else
-		{	// Zone(center,size)
+		{	// BlockZone(center,size)
 			this.center = a
 			
 			var size = b;
@@ -398,23 +398,34 @@ export class Zone
 			this.c = this.center.addXZ(  size.x/2, -size.z/2 );
 			this.d = this.center.addXZ( -size.x/2, -size.z/2 );
 			
-			this.xRange = new Range( this.a.x, this.b.x );
-			this.zRange = new Range( this.d.z, this.a.z );
+			//this.xRange = new Range( this.a.x, this.b.x );
+			//this.zRange = new Range( this.d.z, this.a.z );
 		}
 		
-	} // Zone.constructor
+	} // BlockZone.constructor
 
 
+	get xRange()
+	{
+		return new Range( Math.max( this.a.x, this.d.x ), Math.min( this.b.x, this.c.x ) );
+	}
+	
+	get zRange()
+	{
+		return new Range( Math.max( this.d.z, this.c.z ), Math.min( this.a.z, this.b.z ) );
+	}
+	
+	
 	dX()
 	{
 		return this.xRange.diff();
-	} // Zone.dX
+	} // BlockZone.dX
 	
 	
 	dZ()
 	{
 		return this.zRange.diff();
-	} // Zone.dZ
+	} // BlockZone.dZ
 
 	
 	
@@ -445,7 +456,7 @@ export class Zone
 		h = Math.pow(h,2);
 		
 		return h;
-	} // Zone.perlinHeight
+	} // BlockZone.perlinHeight
 	
 	
 	randomPos( )
@@ -467,7 +478,7 @@ export class Zone
 		
 		return pos;
 
-	} // Zone.randomPos
+	} // BlockZone.randomPos
 
 	
 	isRectangular( )
@@ -477,71 +488,163 @@ export class Zone
 				almostEqual(this.a.z,this.b.z) &&
 				almostEqual(this.c.z,this.d.z);
 				
-	} // Zone.isRectangular
+	} // BlockZone.isRectangular
 	
 	
 	shrink( margin )
 	{
 		// shrink along X
-		var a = Zone.midX( this.a, this.b, this.a.x + margin ),
-			b = Zone.midX( this.a, this.b, this.b.x - margin ),
-			c = Zone.midX( this.d, this.c, this.c.x - margin ),
-			d = Zone.midX( this.d, this.c, this.d.x + margin );
+		var a = midX( this.a, this.b, this.a.x + margin ),
+			b = midX( this.a, this.b, this.b.x - margin ),
+			c = midX( this.d, this.c, this.c.x - margin ),
+			d = midX( this.d, this.c, this.d.x + margin );
 		
 		// shrink along Z
-		return new Zone(
-			Zone.midZ( d, a, a.z - margin ),
-			Zone.midZ( c, b, b.z - margin ),
-			Zone.midZ( c, b, c.z + margin ),
-			Zone.midZ( d, a, d.z + margin )
+		return new BlockZone(
+			midZ( d, a, a.z - margin ),
+			midZ( c, b, b.z - margin ),
+			midZ( c, b, c.z + margin ),
+			midZ( d, a, d.z + margin )
 		);
 		
-	} // Zone.shrinkBlock
+	} // BlockZone.shrinkBlock
 
 
-	// midpoint on "horizontal" segment
-	static midX( a, b, x )
-	{
-		//  ....x
-		//      |
-		//	a---?---b
-		var k = (x-a.x)/(b.x-a.x);
-		return new Pos(
-			x,
-			THREE.Math.lerp( a.z, b.z, k),
-			a.block
-		);
-	} // Zone.midX
-	
-	
-	
-	// midpoint on "vertical" segment
-	static midZ( a, b, z )
-	{
-		//	b
-		//	|
-		//	?---z
-		//	|   :
-		//	a   :
-		var k = (z-a.z)/(b.z-a.z);
-		return new Pos(
-			THREE.Math.lerp( a.x, b.x, k ),
-			z,
-			a.block
-		);
-	} // Zone.midZ
-	
-	
-	
+
 	minX( ) { return this.xRange.min; }
 	maxX( ) { return this.xRange.max; }
 	minZ( ) { return this.zRange.min; }
 	maxZ( ) { return this.zRange.max; }
 	
 	
-} // Zone
+} // BlockZone
 
-Zone.id = 0;
+BlockZone.id = 0;
+
+
+// midpoint on "horizontal" segment
+export function midX( a, b, x )
+{
+	//  ....x
+	//      |
+	//	a---?---b
+	var k = (x-a.x)/(b.x-a.x);
+	return new Pos(
+		x,
+		THREE.Math.lerp( a.z, b.z, k),
+		a.block
+	);
+} // midX
+
+
+
+// midpoint on "vertical" segment
+export function midZ( a, b, z )
+{
+	//	b
+	//	|
+	//	?---z
+	//	|   :
+	//	a   :
+	var k = (z-a.z)/(b.z-a.z);
+	return new Pos(
+		THREE.Math.lerp( a.x, b.x, k ),
+		z,
+		a.block
+	);
+} // midZ
+
+export class RectZone
+{
+	constructor( center, size )
+	{
+//		this.sysType = 'RectZone';
+		this.id = BlockZone.id++;
+
+		this.center = center;
+		this.size = size;
+			
+	} // RectZone.constructor
+
+	get xRange()
+	{
+		return new Range( this.minX(), this.maxX() );
+	}
+	
+	get zRange()
+	{
+		return new Range( this.minZ(), this.maxZ() );
+	}
+	
+	get a()
+	{
+		return new Pos( this.center.x-this.size.x/2, this.center.z+this.size.z/2, this.center.block, this.center.y );
+	}
+	
+	get b()
+	{
+		return new Pos( this.center.x+this.size.x/2, this.center.z+this.size.z/2, this.center.block, this.center.y );
+	}
+	
+	get c()
+	{
+		return new Pos( this.center.x+this.size.x/2, this.center.z-this.size.z/2, this.center.block, this.center.y );
+	}
+	
+	get d()
+	{
+		return new Pos( this.center.x-this.size.x/2, this.center.z-this.size.z/2, this.center.block, this.center.y );
+	}
+	
+	dX()
+	{
+		return this.size.x;
+	} // RectZone.dX
+	
+	
+	dZ()
+	{
+		return this.size.z;
+	} // RectZone.dZ
+	
+	
+	randomPos( )
+	{
+		var rx = this.size.x * THREE.Math.randFloat(-0.5,0.5),
+			rz = this.size.z * THREE.Math.randFloat(-0.5,0.5);
+			
+		var pos = new Pos(
+			this.center.x + rx,
+			this.center.z + rz,
+			this.block || this.center.block
+		);
+		
+		pos.zone = this;
+		
+		return pos;
+
+	} // RectZone.randomPos
+
+	
+	shrink( margin )
+	{
+		var zone = new RectZone(
+						this.center,
+						new Size( this.size.x-2*margin, this.size.z-2*margin )
+					);
+		
+		return zone;
+		
+	} // RectZone.shrinkBlock
+
+
+	minX( ) { return this.center.x - this.size.x/2; }
+	maxX( ) { return this.center.x + this.size.x/2; }
+	minZ( ) { return this.center.z - this.size.z/2; }
+	maxZ( ) { return this.center.z + this.size.z/2; }
+	
+	
+} // RectZone
 
 
 export function timeMs( hours, minutes=0, seconds=0 )

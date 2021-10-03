@@ -16,7 +16,7 @@ import {OfficeDoor} from './officeDoors.js';
 import {Elevator} from './elevators.js';
 import {Room} from './rooms.js';
 import {blocks, navmesh, textures, scene} from '../main.js';
-import {Zone, round, Pos, Size, LEFT, RIGHT, BOTTOM, TOP} from '../core.js';
+import {midX, midZ, round, Pos, Size, LEFT, RIGHT, BOTTOM, TOP} from '../core.js';
 import {DEBUG_ALL_WHITE, SIDEWALK_WIDTH, APARTMENT_BUILDING_DISTANCE, MAX_APARTMENT_BUILDING_FLOORS, DEBUG_HIDE_ROOFS, APARTMENT_BUILDING_WIDTH, FLOOR_HEIGHT, DEBUG_APARTMENT_ADD_FLOORS, OFFICE_DOOR_WIDTH, APARTMENT_DOOR_DISTANCE, APARTMENT_ROOM_SIZE, APARTMENT_TEXTURE_SCALE_U, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, SHADOWS, NO_SHADOWS} from '../config.js';
 
 
@@ -521,10 +521,10 @@ export class ApartmentBuildings
 					for( var s = 0; s<slices; s++ )
 					{
 						addApartmentBuildingX(
-							Zone.midZ( d, a, fromZ+(s+1)*sliceSize ),
-							Zone.midZ( c, b, fromZ+(s+1)*sliceSize ),
-							Zone.midZ( c, b, fromZ+s*sliceSize ),
-							Zone.midZ( d, a, fromZ+s*sliceSize )
+							midZ( d, a, fromZ+(s+1)*sliceSize ),
+							midZ( c, b, fromZ+(s+1)*sliceSize ),
+							midZ( c, b, fromZ+s*sliceSize ),
+							midZ( d, a, fromZ+s*sliceSize )
 						);
 					}
 				}
@@ -550,10 +550,10 @@ export class ApartmentBuildings
 					for( var s = 0; s<slices; s++ )
 					{
 						addApartmentBuildingZ(
-							Zone.midX( a, b, fromX+s*sliceSize ),
-							Zone.midX( a, b, fromX+(s+1)*sliceSize ),
-							Zone.midX( d, c, fromX+(s+1)*sliceSize ),
-							Zone.midX( d, c, fromX+s*sliceSize )
+							midX( a, b, fromX+s*sliceSize ),
+							midX( a, b, fromX+(s+1)*sliceSize ),
+							midX( d, c, fromX+(s+1)*sliceSize ),
+							midX( d, c, fromX+s*sliceSize )
 						);
 					}
 				}

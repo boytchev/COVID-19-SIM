@@ -40,7 +40,7 @@
 
 import * as THREE from '../js/three.module.js';
 
-import {timeMs, Pos, Range, Zone, almostEqual, drawArrow} from '../core.js';
+import {RectZone, BlockZone, timeMs, Pos, Range, almostEqual, drawArrow} from '../core.js';
 import {agents} from '../main.js';
 import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../coreNav.js';
 import {dayTimeMs, deltaTime} from '../objects/nature.js';
@@ -877,7 +877,7 @@ export class AgentBehaviour
 		
 		this.routePosition = this.gotoPosition[ this.gotoPosition.length-1 ];
 		
-		if( pos instanceof Zone )
+		if( pos instanceof BlockZone || pos instanceof RectZone )
 			this.routePosition.zone = pos;
 		
 		this.routePosition.mark = mark;

@@ -3,7 +3,7 @@
 
 import * as THREE from './js/three.module.js';
 import {GROUND_SIZE, DEBUG_NAVMESH_SHOW_LINES} from './config.js';
-import {Zone, Pos, almostEqual, TOP, RIGHT, LEFT, BOTTOM} from './core.js';
+import {midX, midZ, Pos, almostEqual, TOP, RIGHT, LEFT, BOTTOM} from './core.js';
 import {navmesh} from './main.js';
 import {OfficeDoor} from './objects/officeDoors.js';
 import {Room} from './objects/rooms.js';
@@ -244,28 +244,28 @@ function clipLine( from, to, obstacles, margin = 1, avoidPositions = [] )
 		if( to.x<maxX && maxX<from.x )
 		{
 			// a line right-to-left, test intersection with bc
-			var q = Zone.midX( from, to, maxX );
+			var q = midX( from, to, maxX );
 			if( minZ<=q.z && q.z<=maxZ ) return true;
 		}
 
 		if( from.x<minX && minX<to.x )
 		{
 			// a line left-to-right, test intersection with ad
-			var q = Zone.midX( from, to, minX );
+			var q = midX( from, to, minX );
 			if( minZ<=q.z && q.z<=maxZ ) return true;
 		}
 		
 		if( to.z<maxZ && maxZ<from.z )
 		{
 			// a line top-to-bottom, test intersection with ab
-			var q = Zone.midZ( from, to, maxZ );
+			var q = midZ( from, to, maxZ );
 			if( minX<=q.x && q.x<=maxX ) return true;
 		}
 
 		if( from.z<minZ && minZ<to.z )
 		{
 			// a line bottom-to-top, test intersection with dc
-			var q = Zone.midZ( from, to, minZ );
+			var q = midZ( from, to, minZ );
 			if( minX<=q.x && q.x<=maxX ) return true;
 		}
 

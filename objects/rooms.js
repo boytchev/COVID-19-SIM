@@ -4,7 +4,7 @@
 //
 
 
-import {Zone} from '../core.js';
+import {RectZone} from '../core.js';
 
 
 export class Room
@@ -13,7 +13,7 @@ export class Room
 	{
 		this.sysType = 'Room';
 
-		this.zone = new Zone( center, size );
+		this.zone = new RectZone( center, size );
 		this.facing = facing;
 		this.center = center;
 		this.size = size;

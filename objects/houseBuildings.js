@@ -33,7 +33,7 @@
 import * as THREE from '../js/three.module.js';
 import {HouseSidewalks, HouseSidewalk, HouseSidewalkPath} from './houseSidewalks.js';
 import {blocks, navmesh, textures, scene} from '../main.js';
-import {round, Pos, Size, Zone} from '../core.js';
+import {round, Pos, Size, RectZone} from '../core.js';
 import {pick} from '../coreNav.js';
 import {CARTOON_STYLE, SIDEWALK_WIDTH, HOUSE_BOUNDING_RADIUS, FLOOR_HEIGHT, DEBUG_HIDE_ROOFS, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_BUILDINGS_OPACITY} from '../config.js';
 
@@ -43,7 +43,7 @@ class HouseDoor
 
 	constructor( center, rotation )
 	{
-		this.sysType = 'HouseDoor';
+		//this.sysType = 'HouseDoor';
 		
 		this.center = center;
 		this.rotation = rotation;
@@ -59,44 +59,62 @@ class HouseWing
 	
 	constructor( center, size, floors )
 	{
-		this.sysType = 'HouseWing';
 		
-		this.center = center;
+		//this.sysType = 'HouseWing';
+		
 		this.size = size;
 		this.floors = floors;
-		this.zone = new Zone( center, size );
-
-		this.height = floors * FLOOR_HEIGHT;
-
-		// set door positions, (x,z) - inside the house; (outX,outZ) - outside the house
-		this.doors = [];
-
-		switch( 10*size.x + size.z )
-		{
-			case 44:
-				this.doors.push( new HouseDoor( center.addXZ(1,2), 0 ) );
-				break;
-			case 48:
-				this.doors.push( new HouseDoor( center.addXZ(1,4), 0 ) );
-				this.doors.push( new HouseDoor( center.addXZ(2,-3), 1 ) );
-				this.doors.push( new HouseDoor( center.addXZ(-2,3), 3 ) );
-				break;
-			case 84:
-				this.doors.push( new HouseDoor( center.addXZ(1,2), 0 ) );
-				this.doors.push( new HouseDoor( center.addXZ(-3,-2), 2 ) );
-				break;
-			case 88:
-				this.doors.push( new HouseDoor( center.addXZ(1,4), 0 ) );
-				this.doors.push( new HouseDoor( center.addXZ(4,-3), 1 ) );
-				this.doors.push( new HouseDoor( center.addXZ(-4,3), 3 ) );
-				this.doors.push( new HouseDoor( center.addXZ(-3,-4), 2 ) );
-				break;
-		}
-		
+		this.zone = new RectZone( center, size );
 	} // HouseWing.constructor
 	
 	
+		
+	get doors( )
+	{
+		switch( 10*this.size.x + this.size.z )
+		{
+			case 44:
+				return [
+					new HouseDoor( this.center.addXZ(1,2), 0 ) 
+				];
+			case 48:
+				return [
+					new HouseDoor( this.center.addXZ(1,4), 0 ),
+					new HouseDoor( this.center.addXZ(2,-3), 1 ),
+					new HouseDoor( this.center.addXZ(-2,3), 3 )
+				];
+			case 84:
+				return [
+					new HouseDoor( this.center.addXZ(1,2), 0 ),
+					new HouseDoor( this.center.addXZ(-3,-2), 2 )
+				];
+			case 88:
+				return [
+					new HouseDoor( this.center.addXZ(1,4), 0 ),
+					new HouseDoor( this.center.addXZ(4,-3), 1 ),
+					new HouseDoor( this.center.addXZ(-4,3), 3 ),
+					new HouseDoor( this.center.addXZ(-3,-4), 2 )
+				];
+			default:
+				console.error( 'Unhandled situation with doors of a house wing.', this );
+		}
+	} // HouseWing.doors
+		
 	
+	
+	
+	get height( )
+	{
+		return this.floors * FLOOR_HEIGHT;
+	}
+
+
+	get center( )
+	{
+		return this.zone.center;
+	}
+
+
 	randomPos( )
 	{
 		return this.insideZone.randomPos( );
@@ -107,7 +125,7 @@ class HouseWing
 	
 	isInside( position, margin = 0 )
 	{
-		return 	this.zone.xRange.inside( position.x, margin ) && this.zone.zRange.inside( position.z, margin );
+		return this.zone.xRange.inside( position.x, margin ) && this.zone.zRange.inside( position.z, margin );
 				
 	} // HouseWing.isInside
 
@@ -135,22 +153,28 @@ export class HouseBuilding
 		this.ring = [ ];
 
 		// remove doors from wingA that are inside wingB
-		for( var i=wingA.doors.length-1; i>=0; i-- )
-			if( !wingB.isInside( wingA.doors[i].center ) )
-				this.doors.push( wingA.doors[i] );
+		var wingDoors = wingA.doors;
+		for( var i=wingDoors.length-1; i>=0; i-- )
+			if( !wingB.isInside( wingDoors[i].center ) )
+				this.doors.push( wingDoors[i] );
 		
+		wingDoors = wingB.doors;
 		// remove doors from wingB that are inside wingA
-		for( var i=wingB.doors.length-1; i>=0; i-- )
-			if( !wingA.isInside( wingB.doors[i].center ) )
-				this.doors.push( wingB.doors[i] );
+		for( var i=wingDoors.length-1; i>=0; i-- )
+			if( !wingA.isInside( wingDoors[i].center ) )
+				this.doors.push( wingDoors[i] );
 			
-		// prepare ring
+//		this.doors = [this.doors[0]];
+		
+		// prepare ring		
 		var pos,
 			size = new Size(1,1),
 			zoneA = wingA.zone.shrink(-0.5),
 			zoneB = wingB.zone.shrink(-0.5);
+
 		var x = [zoneA.minX(),zoneA.maxX(),zoneB.minX(),zoneB.maxX()];
 		var z = [zoneA.minZ(),zoneA.maxZ(),zoneB.minZ(),zoneB.maxZ()];
+
 		for( var ix=0; ix<4; ix++ )
 		for( var iz=0; iz<4; iz++ )
 		{
@@ -158,11 +182,8 @@ export class HouseBuilding
 			if( wingA.isInside(pos) ) continue;
 			if( wingB.isInside(pos) ) continue;
 			if( !wingA.isInside(pos,-1) && !wingB.isInside(pos,-1) ) continue;
-			this.ring.push( new Zone(pos,size) );
+			this.ring.push( new RectZone(pos,size) );
 		}
-		
-		delete wingA.doors;
-		delete wingB.doors;
 
 	} // HouseBuilding.constructor
 	
@@ -511,7 +532,7 @@ export class HouseBuildings
 	{
 
 		for( var i=0; i<blocks.houses.length; i++ )
-		{				
+		{
 			var block = blocks.houses[i];
 			//block.walkingAreas = [];
 			

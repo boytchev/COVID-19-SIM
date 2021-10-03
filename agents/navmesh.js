@@ -1,4 +1,4 @@
-//	class NavMeshZone
+//	class NavMeshBlockZone
 //		constructor( center, size, block, parent )
 //		constructor( zone, block, parent )
 //
@@ -26,23 +26,26 @@
 import * as THREE from '../js/three.module.js';
 import {DEBUG_NAVMESH_SHOW_LINES, DEBUG_NAVMESH_SHOW_MESHES, DEBUG_NAVMESH_SHOW_FLOORS, SIDEWALK_WIDTH, DEBUG_NAVMESH_OPACITY, DEBUG_NAVMESH_SHOW_ELEVATORS, ELEVATOR_SIZE, FLOOR_HEIGHT} from '../config.js';
 import {scene, buildings, navmesh} from '../main.js';
-import {Zone, Size, Pos, TOP, RIGHT, LEFT, BOTTOM} from '../core.js';
+import {RectZone, BlockZone, Size, Pos, TOP, RIGHT, LEFT, BOTTOM} from '../core.js';
 import {sortRing} from '../coreNav.js';
 
 
 
-class NavMeshZone extends Zone
+class NavMeshBlockZone extends BlockZone
 {
 	constructor( center, size, block = undefined, parent = undefined )
 	{
-		if( center instanceof Zone )
-		{	// NavMeshZone( center, size,  block, parent )	
-			//                |       |       |
-			// NavMeshZone(  zone,  block, parent )	
+		if( center instanceof RectZone )
+			console.error( 'Cannot process RectZone in NavMeshBlockZone' );
+		
+		if( center instanceof BlockZone )
+		{	// NavMeshBlockZone( center, size,  block, parent )	
+			//                     |      |       |
+			// NavMeshBlockZone(  zone,  block, parent )	
 			parent = block;
 			block = size;
 			var zone = center;
-
+			
 			zone.a.block = block;
 			zone.b.block = block;
 			zone.c.block = block;
@@ -50,7 +53,7 @@ class NavMeshZone extends Zone
 			super( zone.a, zone.b, zone.c, zone.d );
 		}
 		else
-		{	// NavMeshZone( center, size, block, parent )	
+		{	// NavMeshBlockZone( center, size, block, parent )	
 			var sx = size.x/2,
 				sz = size.z/2;
 				
@@ -62,22 +65,64 @@ class NavMeshZone extends Zone
 			);
 		}
 
-		this.sysType = 'NavMeshZone';
+		this.sysType = 'NavMeshBlockZone';
 		
 		this.pairZone = undefined; // zone paired with this zone
 		this.block = block;
 
-if( !this.center.block || !block || this.center.block.id!=block.id)		
-console.error(this.center.block?this.center.block.id:'null',block?block.id:'null');
+		if( !this.center.block || !block || this.center.block.id!=block.id)		
+			console.error( this.center.block?this.center.block.id:'null', block?block.id:'null' );
 
 		this.parent = parent;
-	} // NavMeshZone.constructor
+	} // NavMeshBlockZone.constructor
 	
-} // NavMeshZone
+} // NavMeshBlockZone
 
 
 
-export class NavMeshCrossingZone extends NavMeshZone
+class NavMeshRectZone extends RectZone
+{
+	constructor( center, size, block = undefined, parent = undefined )
+	{		
+		if( center instanceof BlockZone )
+			console.error( 'Cannot process BlockZone in NavMeshRectZone' );
+		
+		if( center instanceof RectZone )
+		{	// NavMeshRecZone( center, size,  block, parent )	
+			//                     |     |      |
+			// NavMeshRecZone(  zone,  block, parent )	
+			parent = block;
+			block = size;
+			var zone = center;
+			
+			super( zone.center, zone.size );
+		}
+		else
+		{	// NavMeshRectZone( center, size, block, parent )	
+			super( center, size );
+		}
+
+		//this.sysType = 'NavMeshRectZone';
+		
+		this.pairZone = undefined; // zone paired with this zone
+
+		if( !this.center.block || !block || this.center.block.id!=block.id)		
+			console.error( this.center.block?this.center.block.id:'null', block?block.id:'null' );
+
+		if( parent ) this.parent = parent;
+		
+	} // NavMeshRectZone.constructor
+
+	get block()
+	{
+		return this.center.block;
+	}
+	
+} // NavMeshRectZone
+
+
+
+export class NavMeshCrossingZone extends NavMeshBlockZone
 {
 	constructor( center, size, block = undefined )
 	{
@@ -92,7 +137,7 @@ export class NavMeshCrossingZone extends NavMeshZone
 
 
 
-class NavMeshHouseZone extends NavMeshZone
+class NavMeshHouseZone extends NavMeshRectZone
 {
 	constructor( center, size, block = undefined, parent = undefined )
 	{
@@ -170,8 +215,8 @@ export class NavMesh
 		size = new Size( size.x*(door.width-2)+1, size.z*(door.width-2)+1 );
 
 		// set door outer navmesh
-		door.outsideZone = new NavMeshZone( door.center.add(out,+1), size, door.center.block );
-		door.insideZone  = new NavMeshZone( door.center.add(out,-1), size, door.center.block );
+		door.outsideZone = new NavMeshRectZone( door.center.add(out,+1), size, door.center.block );
+		door.insideZone  = new NavMeshRectZone( door.center.add(out,-1), size, door.center.block );
 		
 		this.pairZones( door.insideZone, door.outsideZone );
 
@@ -195,29 +240,29 @@ export class NavMesh
 			case TOP:
 				v = d.to(a).normalize(); //vector across the street
 				
-				insideZone = new NavMeshCrossingZone( new Zone(a.add(v,2),b.add(v,2),b,a).shrink(1/2), crossing.blockB );
-				outsideZone  = new NavMeshCrossingZone( new Zone(d,c,c.add(v,-2),d.add(v,-2)).shrink(1/2), crossing.blockA );
+				insideZone = new NavMeshCrossingZone( new BlockZone(a.add(v,2),b.add(v,2),b,a).shrink(1/2), crossing.blockB );
+				outsideZone  = new NavMeshCrossingZone( new BlockZone(d,c,c.add(v,-2),d.add(v,-2)).shrink(1/2), crossing.blockA );
 				break;
 				
 			case BOTTOM:
 				v = d.to(a).normalize(); //vector across the street
 				
-				insideZone = new NavMeshCrossingZone( new Zone(a.add(v,2),b.add(v,2),b,a).shrink(1/2), crossing.blockA );
-				outsideZone  = new NavMeshCrossingZone( new Zone(d,c,c.add(v,-2),d.add(v,-2)).shrink(1/2), crossing.blockB );
+				insideZone = new NavMeshCrossingZone( new BlockZone(a.add(v,2),b.add(v,2),b,a).shrink(1/2), crossing.blockA );
+				outsideZone  = new NavMeshCrossingZone( new BlockZone(d,c,c.add(v,-2),d.add(v,-2)).shrink(1/2), crossing.blockB );
 				break;
 
 			case LEFT:
 				v = a.to(b).normalize(); //vector across the street
 				
-				insideZone = new NavMeshCrossingZone( new Zone(b,b.add(v,2),c.add(v,2),c).shrink(1/2), crossing.blockA );
-				outsideZone  = new NavMeshCrossingZone( new Zone(a.add(v,-2),a,d,d.add(v,-2)).shrink(1/2), crossing.blockB );
+				insideZone = new NavMeshCrossingZone( new BlockZone(b,b.add(v,2),c.add(v,2),c).shrink(1/2), crossing.blockA );
+				outsideZone  = new NavMeshCrossingZone( new BlockZone(a.add(v,-2),a,d,d.add(v,-2)).shrink(1/2), crossing.blockB );
 				break;				
 				
 			case RIGHT:
 				v = a.to(b).normalize(); //vector across the street
 				
-				insideZone = new NavMeshCrossingZone( new Zone(b,b.add(v,2),c.add(v,2),c).shrink(1/2), crossing.blockB );
-				outsideZone  = new NavMeshCrossingZone( new Zone(a.add(v,-2),a,d,d.add(v,-2)).shrink(1/2), crossing.blockA );
+				insideZone = new NavMeshCrossingZone( new BlockZone(b,b.add(v,2),c.add(v,2),c).shrink(1/2), crossing.blockB );
+				outsideZone  = new NavMeshCrossingZone( new BlockZone(a.add(v,-2),a,d,d.add(v,-2)).shrink(1/2), crossing.blockA );
 				break;				
 		}
 		
@@ -249,13 +294,13 @@ export class NavMesh
 		
 		// house floor of wingA
 		size = house.wingA.size.shrink(1);
-		zone = new NavMeshZone( house.wingA.center, size, house.block );
+		zone = new NavMeshRectZone( house.wingA.center, size, house.block );
 		house.wingA.insideZone = zone;
 		this.zones.push( zone );
 		
 		// house floors of wingB
 		size = house.wingB.size.shrink(1);
-		zone = new NavMeshZone( house.wingB.center, size, house.block );
+		zone = new NavMeshRectZone( house.wingB.center, size, house.block );
 		house.wingB.insideZone = zone;
 		this.zones.push( zone );
 		
@@ -267,8 +312,8 @@ export class NavMesh
 			var out = this.v[ door.rotation ];
 
 			// set door outer navmesh
-			door.outsideZone = new NavMeshZone( door.center.add(out,+1/2), sizeHalf, house.block, door );
-			door.insideZone  = new NavMeshZone( door.center.add(out,-1/2), sizeHalf, house.block, door );
+			door.outsideZone = new NavMeshRectZone( door.center.add(out,+1/2), sizeHalf, house.block, door );
+			door.insideZone  = new NavMeshRectZone( door.center.add(out,-1/2), sizeHalf, house.block, door );
 			
 			this.pairZones( door.insideZone, door.outsideZone );
 		
@@ -282,7 +327,7 @@ export class NavMesh
 
 		// set path outer navmesh
 		house.path.outsideZone = new NavMeshHouseZone( house.path.center.add(out,+house.path.length/2), size, house.block, house );
-		house.path.insideZone  = new NavMeshZone( house.path.center.add(out,-house.path.length/2), sizeHalf, house.block, house.path );
+		house.path.insideZone  = new NavMeshBlockZone( house.path.center.add(out,-house.path.length/2), sizeHalf, house.block, house.path );
 		
 		house.block.ring.push( house.path.outsideZone );
 		house.ring.push( house.path.insideZone );
@@ -316,7 +361,7 @@ export class NavMesh
 			
 			if( DEBUG_NAVMESH_SHOW_MESHES && DEBUG_NAVMESH_SHOW_FLOORS )
 			{
-				zone = new NavMeshZone( room.zone, officeBuilding.block );
+				zone = new NavMeshRectZone( room.zone, officeBuilding.block );
 				this.zones.push( zone );	
 			}
 			
@@ -328,20 +373,20 @@ export class NavMesh
 			switch( room.facing )
 			{
 				case TOP:
-						room.outsideZone = new NavMeshZone( center.addXZ(0,sizeZ+1/2), doorSize, officeBuilding.block );
-						room.insideZone  = new NavMeshZone( center.addXZ(0,sizeZ-1/2), doorSize, officeBuilding.block );
+						room.outsideZone = new NavMeshRectZone( center.addXZ(0,sizeZ+1/2), doorSize, officeBuilding.block );
+						room.insideZone  = new NavMeshRectZone( center.addXZ(0,sizeZ-1/2), doorSize, officeBuilding.block );
 						break;
 				case BOTTOM:
-						room.outsideZone = new NavMeshZone( center.addXZ(0,-sizeZ-1/2), doorSize, officeBuilding.block );
-						room.insideZone  = new NavMeshZone( center.addXZ(0,-sizeZ+1/2), doorSize, officeBuilding.block );
+						room.outsideZone = new NavMeshRectZone( center.addXZ(0,-sizeZ-1/2), doorSize, officeBuilding.block );
+						room.insideZone  = new NavMeshRectZone( center.addXZ(0,-sizeZ+1/2), doorSize, officeBuilding.block );
 						break;
 				case LEFT:
-						room.outsideZone = new NavMeshZone( center.addXZ(-sizeX-1/2,0), doorSize, officeBuilding.block );
-						room.insideZone  = new NavMeshZone( center.addXZ(-sizeX+1/2,0), doorSize, officeBuilding.block );
+						room.outsideZone = new NavMeshRectZone( center.addXZ(-sizeX-1/2,0), doorSize, officeBuilding.block );
+						room.insideZone  = new NavMeshRectZone( center.addXZ(-sizeX+1/2,0), doorSize, officeBuilding.block );
 						break;
 				case RIGHT:
-						room.outsideZone = new NavMeshZone( center.addXZ(sizeX+1/2,0), doorSize, officeBuilding.block );
-						room.insideZone  = new NavMeshZone( center.addXZ(sizeX-1/2,0), doorSize, officeBuilding.block );
+						room.outsideZone = new NavMeshRectZone( center.addXZ(sizeX+1/2,0), doorSize, officeBuilding.block );
+						room.insideZone  = new NavMeshRectZone( center.addXZ(sizeX-1/2,0), doorSize, officeBuilding.block );
 						break;
 				default: console.error( 'Missing apartment room facing. Code 1024.' );
 			}
@@ -354,7 +399,7 @@ export class NavMesh
 		// office elevators 
 		for( var i=0; i<officeBuilding.elevators.length; i++ )
 		{
-			zone = new NavMeshZone( officeBuilding.elevators[i].zone, officeBuilding.block );
+			zone = new NavMeshRectZone( officeBuilding.elevators[i].zone, officeBuilding.block );
 			
 			this.zones.push( zone );	
 		}
@@ -369,10 +414,10 @@ export class NavMesh
 		var center = apartmentBuilding.center,
 			size = apartmentBuilding.size;
 			
-//		apartmentBuilding.cornerZones.a = new NavMeshZone( center.addXZ(-size.x/2-1,+size.z/2+1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
-//		apartmentBuilding.cornerZones.b = new NavMeshZone( center.addXZ(+size.x/2+1,+size.z/2+1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
-//		apartmentBuilding.cornerZones.c = new NavMeshZone( center.addXZ(+size.x/2+1,-size.z/2-1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
-//		apartmentBuilding.cornerZones.d = new NavMeshZone( center.addXZ(-size.x/2-1,-size.z/2-1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
+//		apartmentBuilding.cornerZones.a = new NavMeshBlockZone( center.addXZ(-size.x/2-1,+size.z/2+1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
+//		apartmentBuilding.cornerZones.b = new NavMeshBlockZone( center.addXZ(+size.x/2+1,+size.z/2+1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
+//		apartmentBuilding.cornerZones.c = new NavMeshBlockZone( center.addXZ(+size.x/2+1,-size.z/2-1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
+//		apartmentBuilding.cornerZones.d = new NavMeshBlockZone( center.addXZ(-size.x/2-1,-size.z/2-1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
 		
 //		this.zones.push( apartmentBuilding.cornerZones.a,
 //						 apartmentBuilding.cornerZones.b,
@@ -388,7 +433,7 @@ export class NavMesh
 
 			if( DEBUG_NAVMESH_SHOW_MESHES && DEBUG_NAVMESH_SHOW_FLOORS )
 			{
-				zone = new NavMeshZone( room.zone, apartmentBuilding.block );
+				zone = new NavMeshRectZone( room.zone, apartmentBuilding.block );
 				this.zones.push( zone );	
 			}
 		
@@ -400,20 +445,20 @@ export class NavMesh
 			switch( room.facing )
 			{
 				case TOP:
-						room.outsideZone = new NavMeshZone( center.addXZ(0,sizeZ+1/2), doorSize, apartmentBuilding.block );
-						room.insideZone  = new NavMeshZone( center.addXZ(0,sizeZ-1/2), doorSize, apartmentBuilding.block );
+						room.outsideZone = new NavMeshRectZone( center.addXZ(0,sizeZ+1/2), doorSize, apartmentBuilding.block );
+						room.insideZone  = new NavMeshRectZone( center.addXZ(0,sizeZ-1/2), doorSize, apartmentBuilding.block );
 						break;
 				case BOTTOM:
-						room.outsideZone = new NavMeshZone( center.addXZ(0,-sizeZ-1/2), doorSize, apartmentBuilding.block );
-						room.insideZone  = new NavMeshZone( center.addXZ(0,-sizeZ+1/2), doorSize, apartmentBuilding.block );
+						room.outsideZone = new NavMeshRectZone( center.addXZ(0,-sizeZ-1/2), doorSize, apartmentBuilding.block );
+						room.insideZone  = new NavMeshRectZone( center.addXZ(0,-sizeZ+1/2), doorSize, apartmentBuilding.block );
 						break;
 				case LEFT:
-						room.outsideZone = new NavMeshZone( center.addXZ(-sizeX-1/2,0), doorSize, apartmentBuilding.block );
-						room.insideZone  = new NavMeshZone( center.addXZ(-sizeX+1/2,0), doorSize, apartmentBuilding.block );
+						room.outsideZone = new NavMeshRectZone( center.addXZ(-sizeX-1/2,0), doorSize, apartmentBuilding.block );
+						room.insideZone  = new NavMeshRectZone( center.addXZ(-sizeX+1/2,0), doorSize, apartmentBuilding.block );
 						break;
 				case RIGHT:
-						room.outsideZone = new NavMeshZone( center.addXZ(sizeX+1/2,0), doorSize, apartmentBuilding.block );
-						room.insideZone  = new NavMeshZone( center.addXZ(sizeX-1/2,0), doorSize, apartmentBuilding.block );
+						room.outsideZone = new NavMeshRectZone( center.addXZ(sizeX+1/2,0), doorSize, apartmentBuilding.block );
+						room.insideZone  = new NavMeshRectZone( center.addXZ(sizeX-1/2,0), doorSize, apartmentBuilding.block );
 						break;
 				default: console.error( 'Missing apartment room facing. Code 1024.' );
 			}
@@ -426,7 +471,7 @@ export class NavMesh
 		// elevators 
 		//for( var i=0; i<apartmentBuilding.elevators.length; i++ )
 		//{
-		//	zone = new NavMeshZone( apartmentBuilding.elevators[i].zone, apartmentBuilding.block );
+		//	zone = new NavMeshBlockZone( apartmentBuilding.elevators[i].zone, apartmentBuilding.block );
 		//	
 		//	this.zones.push( zone );	
 		//}
@@ -571,7 +616,8 @@ export class NavMesh
 	
 	imageMesh( )
 	{
-		this.imageMeshZones( NavMeshZone, 'crimson' );
+		this.imageMeshZones( NavMeshBlockZone, 'violet' );
+		this.imageMeshZones( NavMeshRectZone, 'crimson' );
 		this.imageMeshZones( NavMeshCrossingZone, 'orange' );
 		this.imageMeshZones( NavMeshHouseZone, 'cornflowerblue' );
 		
