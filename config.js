@@ -60,7 +60,7 @@ export const VR = false;
 export const GROUND_SIZE = param('gs', 500);	// in meters
 export const GROUND_EDGE = GROUND_SIZE/2;
 
-export const EARTH_SIZE = param('es', 50000);	// in meters
+export const EARTH_SIZE = 20*GROUND_SIZE;	// in meters
 
 	
 // debug flags

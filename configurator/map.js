@@ -11,22 +11,22 @@ import * as CFG from './configurator.js';
 
 // MAP ===================================
 
-CFG.addHeader( 1, 'Map', 'map', 'A general map of the city and its areas.', 'map,ground,earth,block,office,residential,park,plaza,house,apartment,avenue,street,sidewalk,crossing,tree' );
+CFG.addHeader( 1, 'Map', 'map', 'A general map of the city and its areas.', 'map,ground,block,office,residential,park,plaza,house,apartment,avenue,street,sidewalk,crossing,tree' );
 
 
-CFG.addHeader( 2, 'Dimensions', '', '', 'map,ground,earth' );
+CFG.addHeader( 2, 'Dimensions', '', '', 'map,ground' );
 
 		CFG.addNumeric(
 			'gs', 'Ground size', 500, {min:10, max:10000, step:10, fav:true, unit:'m'},
 			'The active area of the simulation in meters. Buildings and people will be bound to a square of this size.',
 			'map,ground,debug' );
 
-		CFG.addNumeric(
-			'es', 'Earth size', 50000, {min:1000, max:100000, step:1000, unit:'m', offset: 7.4},
-			'The area surrounding the simulation area. Its edge makes the horizon.',
-			'map,earth' );
+		//CFG.addNumeric(
+		//	'es', 'Earth size', 50000, {min:1000, max:100000, step:1000, unit:'m', offset: 7.4},
+		//	'The area surrounding the simulation area. Its edge makes the horizon.',
+		//	'map,earth' );
 
-CFG.addHeader( 2, 'Structure', '', '', 'map,block' );
+//CFG.addHeader( 2, 'Structure', '', '', 'map,block' );
 
 		CFG.addNumeric(
 			'rs', 'Layout', 0, {min:0, max:100000, step:1},
