@@ -510,13 +510,13 @@ export function prepareValues( onlyModified = false )
 					var min, max;
 					if( data[id].options.noswap )
 					{
-						min = data[id].valueA.value;
-						max = data[id].valueB.value;
+						min = valueA;
+						max = valueB;
 					}
 					else
 					{
-						min = Math.min( data[id].valueA.value, data[id].valueB.value );
-						max = Math.max( data[id].valueA.value, data[id].valueB.value );
+						min = Math.min( valueA, valueB );
+						max = Math.max( valueA, valueB );
 					}
 					cmd = min+'~'+max;
 				}
