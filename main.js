@@ -2,10 +2,12 @@ export var clock = new THREE.Clock();
 
 
 
-const measure_usedJSHeapSize = window.performance.memory.usedJSHeapSize;
-const measure_totalJSHeapSize = window.performance.memory.totalJSHeapSize;
+const measure_usedJSHeapSize = window.performance.memory?.usedJSHeapSize;
+const measure_totalJSHeapSize = window.performance.memory?.totalJSHeapSize;
 export function measure( name )
 {
+	if( window.performance.memory === undefined ) return;
+	
 	if( name.length<12 ) name += '\t';
 	if( name.length<9 ) name += '\t';
 	
