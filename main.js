@@ -55,7 +55,7 @@ import './font.js';
 
 import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, DEBUG_FOLLOW_AGENT_HEALTH, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH} from './config.js';
 import {msToString, round} from './core.js';
-import {Nature, currentTimeMs, frame} from './objects/nature.js';
+import {Nature, currentTimeMs, frame, simulationPlaying, toggleSimulationPlayPause} from './objects/nature.js';
 
 import {Ground} from './objects/ground.js';
 import {Textures} from './textures/textures.js';
@@ -101,6 +101,7 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.autoRotate = DEBUG_AUTOROTATE;
 	controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
 	controls.update();
+	controls.addEventListener( 'change', function(){renderer.render(scene, camera);} );
 
 export var navmesh = new NavMesh();		measure( 'navmesh' );
 export var textures = new Textures();	measure( 'textures' );
@@ -200,9 +201,12 @@ function animate()
 	// mesh.quaternion.copy(camera.quaternion);
 	//stats.update();
 
-	buildings.update();
-	nature.update();
-	agents.update();
+	if( simulationPlaying )
+	{
+		buildings.update();
+		nature.update();
+		agents.update();
+	}
 	
 	if( VR )
 	{
@@ -223,7 +227,7 @@ function animate()
 	{
 		// not in VR
 		/*if( DEBUG_FOLLOW_AGENT<0 ) */controls.update();
-		if( frame%6 == 0 ) renderer.render(scene, camera);
+		if( frame%6 == 0 /*|| !simulationPlaying*/ ) renderer.render(scene, camera);
 	}
 	
 	
@@ -273,3 +277,6 @@ if( VR )
 	user.add( rightController );
 	scene.add( user );
 }
+
+
+document.getElementById('playpause').addEventListener( 'click', toggleSimulationPlayPause );

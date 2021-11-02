@@ -43,6 +43,7 @@ export var dayTimeMs = currentTimeMs % HOURS_24_MS;
 export var previousDayTimeMs = dayTimeMs;
 var trueCurrentTimeMs = START_TIME;
 
+export var simulationPlaying = true;
 
 export var NatureMaterial = THREE.MeshStandardMaterial;
 
@@ -439,3 +440,21 @@ export class Nature
 	
 } // Nature
 
+
+
+
+export function toggleSimulationPlayPause()
+{
+
+	simulationPlaying = !simulationPlaying;
+
+	document.getElementById('play').style.display = simulationPlaying ? 'inline' : 'none';
+	document.getElementById('pause').style.display = simulationPlaying ? 'none' : 'inline';
+
+	if( simulationPlaying )
+	{
+		// consume elapsed time during a pause
+		clock.getDelta();
+	}
+
+} // toggleSimulationPlayPause

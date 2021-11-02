@@ -24,7 +24,7 @@ body {
 
 #hud .link {
 	text-decoration: none;
-	
+	cursor: pointer;
 }
 
 #hud img, #hud .link img {
@@ -32,3 +32,11 @@ body {
 	position: relative;
 	top:0.3em;
 }
+
+#pause {
+	display: none;
+}
+
+/*#play {
+	display: none;
+}*/
