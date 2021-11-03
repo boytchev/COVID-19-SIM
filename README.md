@@ -2,14 +2,14 @@
 
 I started to build a COVID-19 simulator from scratch. Simulation is based on a reasonably detailed social behaviour. I track my decision path [here](https://twitter.com/PavelBoytchev).
 
-The simulator is still not ready for a general use &ndash; it is still under heavy development. However, you can try the simulator here: [Simulator](https://boytchev.github.io/COVID-19-SIM/covid-19-simulator.html) or by cicking on the image:
+The simulator is still not ready for a general use &ndash; it is still under heavy development. However, you can try the simulator [here](https://boytchev.github.io/COVID-19-SIM/covid-19-simulator.html) or click on the image to launch it:
 
 [<img src="icons/logo.jpg">](https://boytchev.github.io/COVID-19-SIM/covid-19-simulator.html)
 
  
 ### Configuration
 
-There is a configuration page, where you can tune most of the simulator's parameters: [Configurator](https://boytchev.github.io/COVID-19-SIM/covid-19-configurator.html)
+There is a configuration page, where you can tune most of the simulator's parameters: [Configurator](https://boytchev.github.io/COVID-19-SIM/covid-19-configurator.html).
 
 ### Publications
 * Boytchev P., Boytcheva S. (2021) **Visual Educational Simulator of Pandemic: Work in Progress**. In: Lopata A., Gudonienė D., Butkienė R. (eds) Information and Software Technologies. ICIST 2021. Communications in Computer and Information Science, vol 1486. Springer, Cham. DOI: [10.1007/978-3-030-88304-1_26](https://doi.org/10.1007/978-3-030-88304-1_26), URL: [rdcu.be/czkc0](https://rdcu.be/czkc0), ISBN: 978-3-030-88303-4, SJR: 0.16 (2020, Q4, Computer Science (miscellaneous))
