@@ -552,7 +552,7 @@ export class NavMesh
 				transparent: DEBUG_NAVMESH_OPACITY<1,
 				opacity: DEBUG_NAVMESH_OPACITY
 			}),
-			geometry = new THREE.BoxBufferGeometry( 1/5, 1/2, 1/5 );
+			geometry = new THREE.BoxGeometry( 1/5, 1/2, 1/5 );
 			
 		var instances = this.lines.length/3,
 			mesh = new THREE.InstancedMesh( geometry, material, instances ),
@@ -584,7 +584,7 @@ export class NavMesh
 				opacity: DEBUG_NAVMESH_OPACITY
 			});
 	
-		var geometry = new THREE.BoxBufferGeometry( ELEVATOR_SIZE, 1, ELEVATOR_SIZE );
+		var geometry = new THREE.BoxGeometry( ELEVATOR_SIZE, 1, ELEVATOR_SIZE );
 			
 		for( var j=0; j<buildings.offices.length; j++ )
 		for( var i=0; i<buildings.offices[j].elevators.length; i++ )

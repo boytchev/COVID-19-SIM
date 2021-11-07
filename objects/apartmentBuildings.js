@@ -48,7 +48,7 @@ export class ApartmentBuilding
 		if( DEBUG_APARTMENT_ADD_FLOORS )
 		{
 			var floorMaterial = new THREE.MeshLambertMaterial({color:'white', transparent: true, opacity: 0.8});
-			var floorGeometry = new THREE.BoxBufferGeometry(size.x-0.1,0.1,size.z-0.1);
+			var floorGeometry = new THREE.BoxGeometry(size.x-0.1,0.1,size.z-0.1);
 			for( var floor = 1; floor<floors; floor++ )
 			{
 				var mesh = new THREE.Mesh( floorGeometry, floorMaterial );

@@ -28,7 +28,7 @@ class Ground
 	{
 
 		// add black ground
-		var geometry = new THREE.PlaneBufferGeometry( GROUND_SIZE, GROUND_SIZE );
+		var geometry = new THREE.CircleGeometry( GROUND_SIZE/2, 16 );
 
 		var material = new NatureMaterial( {
 				color: DEBUG_ALL_WHITE?'lightgray':'#303030',
@@ -49,7 +49,7 @@ class Ground
 		scene.add( image );
 	
 		// add green ground around the city
-		var geometry = new THREE.BoxBufferGeometry( EARTH_SIZE, 10, EARTH_SIZE );
+		var geometry = new THREE.BoxGeometry( EARTH_SIZE, 10, EARTH_SIZE );
 		var material = new NatureMaterial( {
 				color: BLOCK_PARK.color,
 				depthTest: false,
