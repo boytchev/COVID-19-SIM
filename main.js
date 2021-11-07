@@ -57,6 +57,7 @@ import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE
 import {msToString, round} from './core.js';
 import {Nature, currentTimeMs, frame, simulationPlaying, toggleSimulationPlayPause} from './objects/nature.js';
 
+import {Sky} from './objects/sky.js';
 import {Ground} from './objects/ground.js';
 import {Textures} from './textures/textures.js';
 import {Blocks} from './objects/blocks.js';
@@ -105,6 +106,7 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 
 export var navmesh = new NavMesh();		measure( 'navmesh' );
 export var textures = new Textures();	measure( 'textures' );
+export var sky = new Sky();				measure( 'sky' );
 var ground = new Ground();				measure( 'ground' );
 export var blocks = new Blocks();		measure( 'blocks' );
 

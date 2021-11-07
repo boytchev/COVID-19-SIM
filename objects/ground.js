@@ -27,8 +27,8 @@ class Ground
 	constructGroundImage( )
 	{
 
-		// add black ground
-		var geometry = new THREE.CircleGeometry( GROUND_SIZE/2, 16 );
+		// add black ground -- it imitates street asphalt
+		var geometry = new THREE.PlaneGeometry( GROUND_SIZE, GROUND_SIZE );
 
 		var material = new NatureMaterial( {
 				color: DEBUG_ALL_WHITE?'lightgray':'#303030',
@@ -43,28 +43,64 @@ class Ground
 			image.rotation.x = -Math.PI/2;
 			image.updateMatrix();
 			image.matrixAutoUpdate = false;
-			image.receiveShadow = true;
-			image.castShadow = true;
+			image.receiveShadow = false;
+			image.castShadow = false;
 			
 		scene.add( image );
-	
+
 		// add green ground around the city
-		var geometry = new THREE.BoxGeometry( EARTH_SIZE, 10, EARTH_SIZE );
+		var geometry = new THREE.CylinderGeometry( GROUND_SIZE/3, EARTH_SIZE/2, 0.001, 128, 5, true );
 		var material = new NatureMaterial( {
 				color: BLOCK_PARK.color,
-				depthTest: false,
+				//depthTest: false,
 				map: textures.grass.map( Math.round(EARTH_SIZE/GRASS_TEXTURE_SCALE), Math.round(EARTH_SIZE/GRASS_TEXTURE_SCALE) ),
 				transparent: DEBUG_BLOCKS_OPACITY<1,
 				opacity: DEBUG_BLOCKS_OPACITY,
+				//wireframe: true,
+				vertexColors: true,
 			} );
 		
+		// add mountains
+		var colors = [];
+		var pos = geometry.getAttribute( 'position' );
+		for( var i=0; i<pos.count; i++ )
+		{
+			var x = pos.getX( i ),
+				z = pos.getZ( i );
+
+			var r = 0.9+0.1*Math.cos(x+z);
+
+			if( x*x+z*z > 0.5*EARTH_SIZE*EARTH_SIZE/2/2 )
+			{
+				var y = 120+70*Math.sin(x/21.232)+60*Math.sin(z/213.912);
+				pos.setXYZ( i, x, y*GROUND_SIZE/500, z );
+				colors.push( 0.3, 0.5, 0.3 );
+			}
+			else
+			if( x*x+z*z > 0.1*EARTH_SIZE*EARTH_SIZE/2/2 )
+			{
+				var y = 120+70*Math.sin(z/121.232)+60*Math.sin(x/73.912);
+				pos.setXYZ( i, x*r, y*GROUND_SIZE/1000, z*r );
+				colors.push( 0.5, 0.8, 0.5 );
+			}
+			else
+			{
+				pos.setXYZ( i, x*r, 0, z*r );
+				colors.push( 1, 1, 1 );
+			}
+		}
+		
+		
+		var colorAttribute = new THREE.BufferAttribute( new Float32Array(colors), 3, false );
+		geometry.setAttribute( 'color', colorAttribute );
+
+
 		var image = new THREE.Mesh( geometry, material );
 			image.renderOrder = -110;
-			image.position.y = -5;
 			image.updateMatrix();
 			image.matrixAutoUpdate = false;
 			image.receiveShadow = true;
-			image.castShadow = true;
+			image.castShadow = false;
 			
 		scene.add( image );
 	
