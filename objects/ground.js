@@ -49,7 +49,7 @@ class Ground
 		scene.add( image );
 
 		// add green ground around the city
-		var geometry = new THREE.CylinderGeometry( GROUND_SIZE/3, EARTH_SIZE/2, 0.001, 128, 5, true );
+		var geometry = new THREE.RingGeometry( GROUND_SIZE/3, EARTH_SIZE/2, 128, 5, true ).rotateX( -Math.PI/2 );
 		var material = new NatureMaterial( {
 				color: BLOCK_PARK.color,
 				//depthTest: false,
@@ -63,21 +63,23 @@ class Ground
 		// add mountains
 		var colors = [];
 		var pos = geometry.getAttribute( 'position' );
+		var limit = EARTH_SIZE*EARTH_SIZE/2/2;
 		for( var i=0; i<pos.count; i++ )
 		{
 			var x = pos.getX( i ),
-				z = pos.getZ( i );
+				z = pos.getZ( i ),
+				dist = x*x+z*z;
 
-			var r = 0.9+0.1*Math.cos(x+z);
+			var r = 0.8+0.1*Math.cos(x+z);
 
-			if( x*x+z*z > 0.5*EARTH_SIZE*EARTH_SIZE/2/2 )
+			if( dist > 0.5*limit )
 			{
 				var y = 120+70*Math.sin(x/21.232)+60*Math.sin(z/213.912);
 				pos.setXYZ( i, x, y*GROUND_SIZE/500, z );
-				colors.push( 0.3, 0.5, 0.3 );
+				colors.push( 0.15, 0.3, 0.15 );
 			}
 			else
-			if( x*x+z*z > 0.1*EARTH_SIZE*EARTH_SIZE/2/2 )
+			if( dist > 0.1*limit )
 			{
 				var y = 120+70*Math.sin(z/121.232)+60*Math.sin(x/73.912);
 				pos.setXYZ( i, x*r, y*GROUND_SIZE/1000, z*r );
