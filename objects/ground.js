@@ -45,7 +45,7 @@ class Ground
 			image.matrixAutoUpdate = false;
 			image.receiveShadow = false;
 			image.castShadow = false;
-			
+		
 		scene.add( image );
 
 		// add green ground around the city

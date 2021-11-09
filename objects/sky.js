@@ -145,7 +145,7 @@ class Sky
 			new THREE.CircleGeometry( EARTH_SIZE/37, 32 ),
 			new THREE.MeshBasicMaterial( {color: 'white'} )
 		);
-		scene.add( this.sun );
+		if( SUN ) scene.add( this.sun );
 		
 		this.sunLights = [];
 		this.sunTarget = new THREE.Object3D(); // for shadows
