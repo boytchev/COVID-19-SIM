@@ -5,7 +5,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {EARTH_SIZE, GROUND_SIZE, BLOCK_PARK, DEBUG_ALL_WHITE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, DEBUG_SHOW_DIRECTIONS} from '../config.js';
+import {EARTH_SIZE, GROUND_SIZE, BLOCK_PARK, DEBUG_ALL_WHITE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, DEBUG_SHOW_DIRECTIONS, DEBUG_RANDOM_SEED} from '../config.js';
 import {NatureMaterial} from './nature.js';
 import {scene, textures} from '../main.js';
 import {font} from '../font.js';
@@ -49,7 +49,7 @@ class Ground
 		scene.add( image );
 
 		// add green ground around the city
-		var geometry = new THREE.RingGeometry( GROUND_SIZE/3, EARTH_SIZE/2, 128, 5, true ).rotateX( -Math.PI/2 );
+		var geometry = new THREE.RingGeometry( 0, EARTH_SIZE/2, 128, 5, true ).rotateX( -Math.PI/2 );
 		var material = new NatureMaterial( {
 				color: BLOCK_PARK.color,
 				//depthTest: false,
@@ -64,6 +64,7 @@ class Ground
 		var colors = [];
 		var pos = geometry.getAttribute( 'position' );
 		var limit = EARTH_SIZE*EARTH_SIZE/2/2;
+		const RND = (DEBUG_RANDOM_SEED/1000)%1;
 		for( var i=0; i<pos.count; i++ )
 		{
 			var x = pos.getX( i ),
@@ -74,14 +75,14 @@ class Ground
 
 			if( dist > 0.5*limit )
 			{
-				var y = 120+70*Math.sin(x/21.232)+60*Math.sin(z/213.912);
+				var y = 120+70*Math.sin(x/21.232+RND)+60*Math.sin(z/213.912+RND);
 				pos.setXYZ( i, x, y*GROUND_SIZE/500, z );
 				colors.push( 0.15, 0.3, 0.15 );
 			}
 			else
 			if( dist > 0.1*limit )
 			{
-				var y = 120+70*Math.sin(z/121.232)+60*Math.sin(x/73.912);
+				var y = 120+70*Math.sin(z/121.232+RND)+60*Math.sin(x/73.912+RND);
 				pos.setXYZ( i, x*r, y*GROUND_SIZE/1000, z*r );
 				colors.push( 0.5, 0.8, 0.5 );
 			}

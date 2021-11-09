@@ -36,7 +36,7 @@ export class Nature
 
 	constructor()
 	{
-		
+	
 		this.sysType = 'Nature';
 		
 		this.ground = new Ground();

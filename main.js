@@ -78,6 +78,7 @@ if( DEBUG_SUN_POSITION_GUI )
 }
 
 export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 2*EARTH_SIZE );
+	camera.layers.enable( 2 ); // for sky dome
 	camera.position.set( 10*GROUND_SIZE, 3*GROUND_SIZE, 10*GROUND_SIZE );
 	camera.position.set( -GROUND_SIZE/6, GROUND_SIZE/15, -GROUND_SIZE/5 );
 	//camera.position.set( 0.01+0*GROUND_SIZE/0.8, GROUND_SIZE*2, 0 );

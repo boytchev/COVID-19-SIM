@@ -242,8 +242,6 @@ export const SHADOWS_MAX_COUNT = param('shmc',3);
 
 
 export const SUN_HORIZONTAL_ANGLE = param('sha',30)*Math.PI/180;
-export const SUN_SIN = Math.sin(SUN_HORIZONTAL_ANGLE);
-export const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 		
 
 export const AGENTS_CAST_SHADOWS = param('acs',false);
