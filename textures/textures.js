@@ -14,6 +14,7 @@ import {OfficeTexture, OfficeNormalTexture} from './officeTexture.js';
 import {SidewalkTexture} from './sidewalkTexture.js';
 import {AgentTexture} from './agentTexture.js';
 import {SunTexture} from './sunTexture.js';
+import {MoonTexture} from './moonTexture.js';
 
 
 export class Textures
@@ -44,7 +45,8 @@ export class Textures
 		
 		this.agent = new AgentTexture( 1024 );
 		
-		this.sun = new SunTexture( 8, 256, 'white' );
+		this.sun = new SunTexture( 4, 256, 'white' );
+		this.moon = new MoonTexture( 4, 256, 'white' );
 		
 		//this.apartment.debugShow( );
 		//this.houseBump.debugShow( '256px' );
