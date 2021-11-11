@@ -282,7 +282,8 @@ class Sky
 			}
 
 		this.moonLight = new MoonLight();
-		
+		if( !SUN ) this.moonLight.visible = false;
+			
 	} // Sky.constructor
 
 	
