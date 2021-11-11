@@ -126,30 +126,111 @@ class SunLight extends THREE.DirectionalLight
 }
 
 
+class MoonLight extends THREE.DirectionalLight
+{
+	constructor( )
+	{
+		super( 'navy', 1 );
+		
+		this.name = 'moon';
+		
+		scene.add( this );
+	}
+}
+
+
+class Sun extends THREE.Mesh
+{
+	
+	constructor( )
+	{
+
+		super(
+			new THREE.CircleGeometry( EARTH_SIZE/37, 32 ).translate(0,0,EARTH_SIZE),
+			new THREE.MeshBasicMaterial( {
+					color: 'white',
+					side: THREE.BackSide
+				} )
+		);
+		
+		// the sun halo
+		this.halo = new THREE.Mesh(
+			new THREE.SphereGeometry( 1.1*EARTH_SIZE, 64, 1, 0, 2*Math.PI, 0, Math.PI/2 ).rotateX( Math.PI/2 ),
+			new THREE.MeshBasicMaterial( {
+					color: 'white',
+					side: THREE.BackSide,
+					alphaMap: textures.sun.map(),
+					transparent: true,
+				} )
+		);
+			
+		this.add( this.halo );
+		
+	} // Sun.constructor
+	
+} // Sun
+
+
+
+class Moon extends THREE.Mesh
+{
+	
+	constructor( )
+	{
+
+		super(
+			new THREE.CircleGeometry( EARTH_SIZE/37, 32 ).translate(0,0,EARTH_SIZE),
+			new THREE.MeshBasicMaterial( {
+					color: 'white',
+					side: THREE.BackSide
+				} )
+		);
+		
+		// the moon halo
+		this.halo = new THREE.Mesh(
+			new THREE.SphereGeometry( 1.1*EARTH_SIZE, 64, 1, 0, 2*Math.PI, 0, Math.PI/2 ).rotateX( Math.PI/2 ),
+			new THREE.MeshBasicMaterial( {
+					color: 'white',
+					side: THREE.BackSide,
+					alphaMap: textures.moon.map(),
+					transparent: true,
+				} )
+		);
+			
+		this.add( this.halo );
+		
+	} // Moon.constructor
+	
+} // Moon
+
+
+
 class Sky
 {
 	
 	
 	constructor( )
 	{
-//scene.scale.set(0.1,0.1,0.1);			
 		this.sysType = 'Sky';
-		this.constructSkyImage( );
 		
-		scene.background = new THREE.Color();
+		// the sun and the moon
+		this.sun = new Sun();
+		this.moon = new Moon();
+		if( SUN ) scene.add( this.sun, this.moon );
+		
+//scene.scale.set(0.1,0.1,0.1);			
+	
 		
 		this.skyColorNight = DEBUG_ALL_WHITE ? new THREE.Color( 'dimgray' ) : new THREE.Color( 'darkblue' );
 		this.skyColorDay = DEBUG_ALL_WHITE ? new THREE.Color( 'lightgray' ) : new THREE.Color( 'skyblue' );
 	
-		this.sun = new THREE.Mesh(
-			new THREE.CircleGeometry( EARTH_SIZE/37, 32 ),
-			new THREE.MeshBasicMaterial( {color: 'white'} )
-		);
-		if( SUN ) scene.add( this.sun );
+		scene.background = new THREE.Color( 'skyblue' );
+
+		this.sunPosition = new THREE.Vector3();
 		
 		this.sunLights = [];
+
 		this.sunTarget = new THREE.Object3D(); // for shadows
-		
 		scene.add( this.sunTarget );
 		
 		// set shadow capabilities of renderer
@@ -175,8 +256,6 @@ class Sky
 		if( SHADOWS != NO_SHADOWS )
 		{
 			this.topLight = new TopLight();
-			//this.topLightHelper = new THREE.DirectionalLightHelper( this.topLight, 100, 'white' );
-			//scene.add( this.topLightHelper );
 		}
 		
 		
@@ -187,11 +266,6 @@ class Sky
 			this.sunLights[i] = new SunLight( i );
 			this.sunLights[i].target = this.sunTarget;
 		}
-		
-		
-		// add background color
-		//scene.background = new THREE.Color( DEBUG_ALL_WHITE?'white':'skyblue' );
-		//scene.fog = new THREE.Fog( DEBUG_ALL_WHITE?'white':'skyblue', 2*GROUND_SIZE, 0.4*EARTH_SIZE );
 		
 		
 		// adjust light intensities total to be 1
@@ -207,32 +281,10 @@ class Sky
 				//console.log( scene.children[i].intensity.toFixed(2), scene.children[i].name );
 			}
 
+		this.moonLight = new MoonLight();
+		
 	} // Sky.constructor
 
-	
-	constructSkyImage( )
-	{
-
-		var geometry = new THREE.SphereGeometry( 1.1*EARTH_SIZE, 64, 1, 0, 2*Math.PI, 0, Math.PI/2 ).rotateX( Math.PI/2 );
-		var material = new THREE.MeshBasicMaterial( {
-				color: 'white',
-				//depthTest: false,
-				//depthWrite: false,
-				side: THREE.BackSide,
-				side: THREE.DoubleSide,
-				alphaMap: textures.sun.map(),
-				transparent: true,
-			} );
-		
-		this.skyDome = new THREE.Mesh( geometry, material );
-		this.skyDome.renderOrder = -210;
-		//this.skyDome.updateMatrix();
-		//this.skyDome.matrixAutoUpdate = false;
-			
-		scene.add( this.skyDome );
-	
-	} // Sky.constructSkyImage
-	
 	
 	update( )
 	{
@@ -241,16 +293,17 @@ class Sky
 			var sunAngle = this.getSunAngularPosition(),
 				cos = Math.cos( sunAngle ),
 				sin = Math.sin( sunAngle );
-			this.sun.position.set( EARTH_SIZE*cos*SUN_SIN, EARTH_SIZE*sin, EARTH_SIZE*cos*SUN_COS );
+			this.sunPosition.set( EARTH_SIZE*cos*SUN_SIN, EARTH_SIZE*sin, EARTH_SIZE*cos*SUN_COS );
 			
-			this.sun.lookAt( scene.position );
-			this.skyDome.lookAt( this.sun.position );
+			this.sun.lookAt( this.sunPosition );
+			
+			this.moonLight.position.set( -this.sunPosition.x, -this.sunPosition.y, -this.sunPosition.z );
+			this.moon.lookAt( this.moonLight.position );
 
-
-			var lightness = THREE.Math.clamp( 7*sin, 0, 1 ); // 0=night, 1=day, 8=speed at morning light-up 
+			var lightness = THREE.Math.clamp( 7*sin, 0.2, 1 ); // 0.3=night, 1=day, 8=speed at morning light-up 
 
 			// set sun color
-			var hue = THREE.Math.clamp( 0.5*sin, 0, 0.2 ); // 0=red, 0.2 = yellow
+			var hue = THREE.Math.clamp( sin, 0, 0.2 ); // 0=red, 0.2 = yellow
 			for( var i=0; i<this.sunLights.length; i++)
 			{
 				this.sunLights[i].color.setHSL( hue, DEBUG_ALL_WHITE?0:1/*saturation*/, lightness );
@@ -264,25 +317,24 @@ class Sky
 				this.topLight.color.copy( this.ambientLight.color );
 			}
 			
-			this.skyDome.material.color.copy( this.ambientLight.color );
-			
 			this.sun.material.color.setHSL( hue, DEBUG_ALL_WHITE?0:1/*saturation*/, 1.5*lightness );
+			this.sun.halo.material.color.copy( this.ambientLight.color );
+
+			this.moonLight.intensity = THREE.Math.clamp( 0.1-sin, 0, 0.3 );
 			
 			scene.background.lerpColors( this.skyColorNight, this.skyColorDay, lightness ).multiplyScalar( lightness );
 			//scene.fog.color = scene.background;
 		}
 		else
 		{
-			camera.getWorldDirection( this.sun.position );
-			this.sun.position.multiplyScalar( -1 );
+			camera.getWorldDirection( this.sunPosition );
+			this.sunPosition.multiplyScalar( -1 );
 		}
 
 		// set light (sun) positions
 		for( var i=0; i<this.sunLights.length; i++)
 		{
-			this.sunLights[i].position.copy( this.sun.position ).setLength( GROUND_SIZE );
-			//this.sunTarget.position.copy( controls.target );
-			//this.sunLights[i].position.addVectors( controls.target, this.sun.position );
+			this.sunLights[i].position.copy( this.sunPosition ).setLength( GROUND_SIZE );
 		}
 
 		// request regeneration of shadows

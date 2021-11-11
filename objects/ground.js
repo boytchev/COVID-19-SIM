@@ -44,7 +44,7 @@ class Ground
 			image.updateMatrix();
 			image.matrixAutoUpdate = false;
 			image.receiveShadow = false;
-			image.castShadow = false;
+			image.castShadow = true;
 		
 		scene.add( image );
 
@@ -103,7 +103,7 @@ class Ground
 			image.updateMatrix();
 			image.matrixAutoUpdate = false;
 			image.receiveShadow = true;
-			image.castShadow = false;
+			image.castShadow = true;
 			
 		scene.add( image );
 	

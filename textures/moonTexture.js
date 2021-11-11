@@ -24,8 +24,8 @@ export class MoonTexture extends ProceduralTexture
 
 		var gradient = ctx.createLinearGradient( 0, 0, 0, H );
 			gradient.addColorStop( 0.02, 'white' );
-			gradient.addColorStop( 0.021, '#101010' );
-			gradient.addColorStop( 0.4, 'black' );
+			gradient.addColorStop( 0.021, '#202040' );
+			gradient.addColorStop( 0.3, 'black' );
 			gradient.addColorStop( 1, 'black' );
 			
 		ctx.fillStyle = DEBUG_ALL_WHITE?'white':gradient;
