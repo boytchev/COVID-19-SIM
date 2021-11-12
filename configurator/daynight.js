@@ -6,7 +6,7 @@ import * as CFG from './configurator.js';
 CFG.addHeader(
 	1, 'Day and night', 'daynight',
 	'Prameters for the day-night light cycle in the simulation.',
-	'daynight,time,sun,shadow,light,morning,evening,house,apartment,office,people' );
+	'daynight,time,sun,moon,shadow,light,morning,evening,house,apartment,office,people' );
 		
 CFG.addHeader(
 	2, 'Time', '', '',
@@ -24,12 +24,13 @@ CFG.addHeader(
 
 	
 CFG.addHeader(
-	2, 'Sun', '', '',
-	'daynight,sun,light,morning,evening' );
+	2, 'Sun & moon', '',
+	'These parameters control the simulation of the sun and the moon. If they are present, they are always in opposite directions.',
+	'daynight,sun,moon,light,morning,evening' );
 
 		CFG.addNumericList(
 			'su', 'Sun', 0, {fav:true, values:[0,'no',1,'static',2,'dynamic']},
-			'The motion of sun. <em>No</em> indicates there is no sun and light comes from everywhere. <em>Static</em> means the sun does not move, but stays as a position in the sky, defined by <em>STATIC SUN POSITION</em>. When the sun is <em>Dynamic</em>, it moves around the city, simulating day-night cycles.',
+			'The motion of sun. <em>No</em> indicates there is no sun and light comes from everywhere. <em>Static</em> means the sun does not move, but stays at a position in the sky, defined by <em>STATIC SUN POSITION</em>. When the sun is <em>Dynamic</em>, it moves around the city, simulating day-night cycles.',
 			'daynight,sun,light,debug' );
 
 		CFG.addTime(
