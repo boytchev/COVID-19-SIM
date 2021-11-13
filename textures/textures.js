@@ -45,8 +45,8 @@ export class Textures
 		
 		this.agent = new AgentTexture( 1024 );
 		
-		this.sun = new SunTexture( 4, 256, 'white' );
-		this.moon = new MoonTexture( 4, 256, 'white' );
+		this.sun = new SunTexture( 1, 1024, 'white' );
+		this.moon = new MoonTexture( 1, 1024, 'white' );
 		
 		//this.apartment.debugShow( );
 		//this.houseBump.debugShow( '256px' );

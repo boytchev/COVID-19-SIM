@@ -130,7 +130,7 @@ class MoonLight extends THREE.DirectionalLight
 {
 	constructor( )
 	{
-		super( 'navy', 1 );
+		super( 0x202040, 0.6 );
 		
 		this.name = 'moon';
 		
@@ -139,32 +139,44 @@ class MoonLight extends THREE.DirectionalLight
 }
 
 
-class Sun extends THREE.Mesh
+class Sun extends THREE.Group
 {
 	
 	constructor( )
 	{
-
-		super(
-			new THREE.CircleGeometry( EARTH_SIZE/37, 32 ).translate(0,0,EARTH_SIZE),
+		
+		super();
+		
+		const
+			DISTANCE = 0.55*EARTH_SIZE,
+			SIZE = 0.016*DISTANCE;
+		
+		this.body = new THREE.Mesh(
+			new THREE.CircleGeometry( SIZE, 32 ).translate(0,0,DISTANCE),
 			new THREE.MeshBasicMaterial( {
 					color: 'white',
-					side: THREE.BackSide
+					side: THREE.BackSide,
+					side: THREE.DoubleSide,
+					polygonOffset: true,
+					polygonOffsetUnits: -5,
+					polygonOffsetFactor: -5,
 				} )
 		);
 		
 		// the sun halo
 		this.halo = new THREE.Mesh(
-			new THREE.SphereGeometry( 1.1*EARTH_SIZE, 64, 1, 0, 2*Math.PI, 0, Math.PI/2 ).rotateX( Math.PI/2 ),
+			new THREE.ConeGeometry( DISTANCE, 0, 32, 1, true ).translate(0,DISTANCE,0).rotateX( Math.PI/2 ),
 			new THREE.MeshBasicMaterial( {
 					color: 'white',
 					side: THREE.BackSide,
+					side: THREE.DoubleSide,
 					alphaMap: textures.sun.map(),
 					transparent: true,
 				} )
 		);
-			
-		this.add( this.halo );
+		
+		this.add( this.body, this.halo );
+		scene.add( this );
 		
 	} // Sun.constructor
 	
@@ -172,32 +184,44 @@ class Sun extends THREE.Mesh
 
 
 
-class Moon extends THREE.Mesh
+class Moon extends THREE.Group
 {
 	
 	constructor( )
 	{
+		
+		super();
 
-		super(
-			new THREE.CircleGeometry( EARTH_SIZE/37, 32 ).translate(0,0,EARTH_SIZE),
+		const
+			DISTANCE = 0.55*EARTH_SIZE,
+			SIZE = 0.016*DISTANCE;
+		
+		this.body = new THREE.Mesh(
+			new THREE.CircleGeometry( SIZE, 32 ).translate(0,0,DISTANCE),
 			new THREE.MeshBasicMaterial( {
 					color: 'white',
-					side: THREE.BackSide
+					side: THREE.BackSide,
+					side: THREE.DoubleSide,
+					polygonOffset: true,
+					polygonOffsetUnits: -5,
+					polygonOffsetFactor: -5,
 				} )
 		);
 		
 		// the moon halo
 		this.halo = new THREE.Mesh(
-			new THREE.SphereGeometry( 1.1*EARTH_SIZE, 64, 1, 0, 2*Math.PI, 0, Math.PI/2 ).rotateX( Math.PI/2 ),
+			new THREE.ConeGeometry( DISTANCE, 0, 32, 1, true ).translate(0,DISTANCE,0).rotateX( Math.PI/2 ),
 			new THREE.MeshBasicMaterial( {
 					color: 'white',
 					side: THREE.BackSide,
+					side: THREE.DoubleSide,
 					alphaMap: textures.moon.map(),
 					transparent: true,
 				} )
 		);
 			
-		this.add( this.halo );
+		this.add( this.body, this.halo );
+		scene.add( this );
 		
 	} // Moon.constructor
 	
@@ -291,40 +315,53 @@ class Sky
 	{
 		if( SUN )
 		{
+			// calculate sun position
 			var sunAngle = this.getSunAngularPosition(),
 				cos = Math.cos( sunAngle ),
 				sin = Math.sin( sunAngle );
 			this.sunPosition.set( EARTH_SIZE*cos*SUN_SIN, EARTH_SIZE*sin, EARTH_SIZE*cos*SUN_COS );
 			
+			// set the sun position
 			this.sun.lookAt( this.sunPosition );
-			
+
+			// set the moon position - opposite of the sun
 			this.moonLight.position.set( -this.sunPosition.x, -this.sunPosition.y, -this.sunPosition.z );
 			this.moon.lookAt( this.moonLight.position );
 
-			var lightness = THREE.Math.clamp( 7*sin, 0.2, 1 ); // 0.3=night, 1=day, 8=speed at morning light-up 
 
-			// set sun color
-			var hue = THREE.Math.clamp( sin, 0, 0.2 ); // 0=red, 0.2 = yellow
+			// light strength from sun and moon
+			var lightness, hue;
+			
+			// set sun light
+			lightness = THREE.Math.clamp( 5*sin, 0, 1 ); // 0=night, 1=day
+			hue = THREE.Math.clamp( sin, 0, 0.25 ); // 0=red, 0.2 = yellow
 			for( var i=0; i<this.sunLights.length; i++)
 			{
-				this.sunLights[i].color.setHSL( hue, DEBUG_ALL_WHITE?0:1/*saturation*/, lightness );
+				this.sunLights[i].color.setHSL( hue, DEBUG_ALL_WHITE?0:1, lightness );
 			}
 			
-			var hue = THREE.Math.clamp( sin, 0, 0.2 ); // 0=red, 0.2 = yellow
-			this.ambientLight.color.setHSL( hue, DEBUG_ALL_WHITE?0:1/*saturation*/, lightness );
-			
+			// set sun color
+			this.sun.body.material.color.setHSL( hue+0.05, DEBUG_ALL_WHITE?0:1, 0.5+1.5*lightness );
+			this.sun.halo.material.color.setHSL( hue, DEBUG_ALL_WHITE?0:1, 0.3+lightness );
+
+			// set moon color
+			lightness = THREE.Math.clamp( 0.2-10*sin, 0.4, 1 ); // 0=day, 1=night
+			this.moon.halo.material.opacity = lightness;
+
+			// set ambient light
+			hue = THREE.Math.clamp( sin, -0.5, 0.5 ); // 0=red, 0.2 = yellow
+			lightness = THREE.Math.clamp( 7*sin, 0, 1 ); // 0=night, 1=day
+			this.ambientLight.color.setHSL( hue, DEBUG_ALL_WHITE?0:1, lightness );
+/*			
+			// set top light
 			if( this.topLight )
 			{
 				this.topLight.color.copy( this.ambientLight.color );
 			}
-			
-			this.sun.material.color.setHSL( hue, DEBUG_ALL_WHITE?0:1/*saturation*/, 1.5*lightness );
-			this.sun.halo.material.color.copy( this.ambientLight.color );
-
-			this.moonLight.intensity = THREE.Math.clamp( 0.1-sin, 0, 0.3 );
-			
-			scene.background.lerpColors( this.skyColorNight, this.skyColorDay, lightness ).multiplyScalar( lightness );
-			//scene.fog.color = scene.background;
+*/			
+			// sky color
+			lightness = THREE.Math.clamp( 5*sin, 0, 1 ); // 0=day, 1=night
+			scene.background.lerpColors( this.skyColorNight, this.skyColorDay, lightness ).multiplyScalar( 0.2+0.8*lightness );
 		}
 		else
 		{

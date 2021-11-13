@@ -23,15 +23,14 @@ export class MoonTexture extends ProceduralTexture
 			H = this.height;
 
 		var gradient = ctx.createLinearGradient( 0, 0, 0, H );
-			gradient.addColorStop( 0.02, 'white' );
-			gradient.addColorStop( 0.021, '#202040' );
-			gradient.addColorStop( 0.3, 'black' );
+			gradient.addColorStop( 0.015, 'white' );
+			gradient.addColorStop( 0.016, '#404080' );
 			gradient.addColorStop( 1, 'black' );
 			
 		ctx.fillStyle = DEBUG_ALL_WHITE?'white':gradient;
 
 		ctx.fillRect( 0, 0, W, H );
-		
+
 		this.repeatU = THREE.RepeatWrapping;
 		this.repeatV = THREE.ClampToEdgeWrapping;
 		
