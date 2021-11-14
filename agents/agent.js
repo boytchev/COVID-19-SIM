@@ -35,7 +35,7 @@ import {AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_T
 import {font} from '../font.js';
 import {scene, controls, agents} from '../main.js';
 import {round, Range, drawArrow, msToString} from '../core.js';
-import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs, frame} from '../objects/nature.js';
+import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs, frame} from '../nature/nature.js';
 
 
 

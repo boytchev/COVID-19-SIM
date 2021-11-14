@@ -18,7 +18,7 @@ import {OfficeDoors} from './officeDoors.js';
 
 import {buildings, measure} from '../main.js';
 import {HOURS_12_MS, LAMP_OFFICE_AM_MS, LAMP_OFFICE_AM_INTENSITY_MS,LAMP_OFFICE_PM_MS, LAMP_OFFICE_PM_INTENSITY_MS, LAMP_APARTMENT_AM_MS, LAMP_APARTMENT_AM_INTENSITY_MS,LAMP_APARTMENT_PM_MS, LAMP_APARTMENT_PM_INTENSITY_MS, LAMP_HOUSE_AM_MS, LAMP_HOUSE_AM_INTENSITY_MS,LAMP_HOUSE_PM_MS, LAMP_HOUSE_PM_INTENSITY_MS} from '../config.js';
-import {dayTimeMs} from '../objects/nature.js';
+import {dayTimeMs} from '../nature/nature.js';
 
 export class Buildings
 {

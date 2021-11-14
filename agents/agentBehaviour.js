@@ -43,7 +43,7 @@ import * as THREE from '../js/three.module.js';
 import {RectZone, BlockZone, timeMs, Pos, Range, almostEqual, drawArrow} from '../core.js';
 import {agents} from '../main.js';
 import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../coreNav.js';
-import {dayTimeMs, deltaTime} from '../objects/nature.js';
+import {dayTimeMs, deltaTime} from '../nature/nature.js';
 import {Crossing} from '../objects/crossings.js';
 import {Elevator} from '../objects/elevators.js';
 import {DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE, FLOOR_HEIGHT} from '../config.js';

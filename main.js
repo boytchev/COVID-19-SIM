@@ -55,11 +55,11 @@ import './font.js';
 
 import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, DEBUG_FOLLOW_AGENT_HEALTH, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH} from './config.js';
 import {msToString, round} from './core.js';
-import {Nature, currentTimeMs, frame, simulationPlaying, toggleSimulationPlayPause} from './objects/nature.js';
+import {Nature, currentTimeMs, frame, simulationPlaying, toggleSimulationPlayPause} from './nature/nature.js';
 
 import {Textures} from './textures/textures.js';
 import {Blocks} from './objects/blocks.js';
-import {Trees} from './objects/trees.js';
+import {Trees} from './nature/trees.js';
 import {Crossing,Crossings} from './objects/crossings.js';
 import {Agents, agentsAtHome, agentsAtWork, agentsOutside, agentsInfected} from './agents/agents.js';
 import {NavMesh} from './agents/navmesh.js';

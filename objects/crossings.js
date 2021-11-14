@@ -24,7 +24,7 @@ import {/*clock,*/ blocks, scene, navmesh, textures} from '../main.js';
 import {pick, sortRing} from '../coreNav.js';
 import {LEFT, RIGHT, BOTTOM, TOP, Size, BlockZone, timeMs, almostEqual} from '../core.js';
 import {SIDEWALK_WIDTH, CROSSING_MINIMAL_CLOSENESS, CROSSING_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY} from '../config.js';
-import {NatureMaterial, dayTimeMs} from './nature.js';
+import {NatureMaterial, dayTimeMs} from '../nature/nature.js';
 
 
 var oldScan = 0,

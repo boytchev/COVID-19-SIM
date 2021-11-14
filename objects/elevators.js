@@ -7,7 +7,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {RectZone, timeMs, Size} from '../core.js';
-import {dayTimeMs} from './nature.js';
+import {dayTimeMs} from '../nature/nature.js';
 import {pick} from '../coreNav.js';
 import {ELEVATOR_SIZE, ELEVATOR_SPEED} from '../config.js';
 

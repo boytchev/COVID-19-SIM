@@ -27,7 +27,7 @@ import {GROUND_EDGE, GROUND_SIZE, SUBURB_TRESHOLD, BLOCK_PARK, BLOCK_PLAZA, OFFI
 import {midX, midZ, Pos, BlockZone, round, BOTTOM, RIGHT, LEFT, TOP} from '../core.js';
 import {pick} from '../coreNav.js';
 import {textures, scene} from '../main.js';
-import {NatureMaterial} from './nature.js';
+import {NatureMaterial} from '../nature/nature.js';
 
 
 class Street
