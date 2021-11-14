@@ -5,14 +5,14 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {EARTH_SIZE, GROUND_EDGE, DEBUG_ALL_WHITE, DEBUG_BLOCKS_OPACITY, SUN, STATIC_SUN, STATIC_SUN_POSITION_MS, DEBUG_SUN_POSITION_GUI, SUNRISE_MS, SUNSET_MS, GROUND_SIZE, SHADOWS, NO_SHADOWS, FULL_SHADOWS, SHADOWS_MAP_SIZE, SHADOWS_MAX_COUNT, AGENTS_CAST_SHADOWS, SUN_HORIZONTAL_ANGLE, HOURS_24_MS } from '../config.js';
+import {EARTH_SIZE, GROUND_EDGE, DEBUG_ALL_WHITE, DEBUG_BLOCKS_OPACITY, SUN, STATIC_SUN, STATIC_SUN_POSITION_MS, DEBUG_SUN_POSITION_GUI, SUNRISE_MS, SUNSET_MS, GROUND_SIZE, SHADOWS, NO_SHADOWS, FULL_SHADOWS, SHADOWS_MAP_SIZE, SHADOWS_MAX_COUNT, AGENTS_CAST_SHADOWS, HOURS_24_MS } from '../config.js';
 import {NatureMaterial, dayTimeMs} from './nature.js';
+import {SunLight, Sun, SUN_SIN, SUN_COS} from './sun.js';
+import {MoonLight, Moon} from './moon.js';
 import {agents, scene, guiObject, renderer, controls, camera, textures} from '../main.js';
 import {timeMs} from '../core.js';
 
 
-const SUN_SIN = Math.sin(SUN_HORIZONTAL_ANGLE);
-const SUN_COS = Math.cos(SUN_HORIZONTAL_ANGLE);
 
 /* Comments:
 												SHADOW	SHADOW
@@ -46,12 +46,7 @@ var topIntensities = [
 		[0.1, 0.2, 0.2]	// SYNAMIC_SUN
 	];
 	
-var sunIntensities = [
-		//NO  TOP  FULL_SHADOW
-		[1.0, 1.0, 1.0],// NO_SUN
-		[1.0, 1.0, 1.0],// STATIC_SUN
-		[1.0, 1.0, 1.0]	// SYNAMIC_SUN
-	];
+
 
 
 class AmbientLight extends THREE.AmbientLight
@@ -92,141 +87,6 @@ class TopLight extends THREE.DirectionalLight
 		scene.add( this );
 	}
 }
-
-
-class SunLight extends THREE.DirectionalLight
-{
-	constructor( shadowMapShift = 0 )
-	{
-		super( 'white', sunIntensities[SUN][SHADOWS]*Math.pow(0.7,shadowMapShift) );
-		
-		//this.position.set( GROUND_EDGE, 2*GROUND_EDGE, GROUND_EDGE );
-		this.name = 'sun_'+shadowMapShift;
-		
-		if( SHADOWS == FULL_SHADOWS )
-		{
-			this.castShadow = true;
-			this.shadow.mapSize.width = SHADOWS_MAP_SIZE>>shadowMapShift;
-			this.shadow.mapSize.height = SHADOWS_MAP_SIZE>>shadowMapShift;
-			this.shadow.camera.near = 10;
-			this.shadow.camera.far = 10000;
-			this.shadow.camera.left = -GROUND_SIZE;
-			this.shadow.camera.right = GROUND_SIZE;
-			this.shadow.camera.bottom = -GROUND_SIZE;
-			this.shadow.camera.top = GROUND_SIZE;
-			this.shadow.bias = 0;//0.00001;//-0.001;
-			this.shadow.normalBias = 0.15;//-0.001;
-			this.shadow.radius = 10;
-		}
-		
-		scene.add( this );
-		
-		//controls.maxDistance = 5*GROUND_SIZE; // TODO: remove this, temporary added to debug shadows
-	}
-}
-
-
-class MoonLight extends THREE.DirectionalLight
-{
-	constructor( )
-	{
-		super( 0x202040, 0.6 );
-		
-		this.name = 'moon';
-		
-		scene.add( this );
-	}
-}
-
-
-class Sun extends THREE.Group
-{
-	
-	constructor( )
-	{
-		
-		super();
-		
-		const
-			DISTANCE = 0.55*EARTH_SIZE,
-			SIZE = 0.016*DISTANCE;
-		
-		this.body = new THREE.Mesh(
-			new THREE.CircleGeometry( SIZE, 32 ).translate(0,0,DISTANCE),
-			new THREE.MeshBasicMaterial( {
-					color: 'white',
-					side: THREE.BackSide,
-					side: THREE.DoubleSide,
-					polygonOffset: true,
-					polygonOffsetUnits: -5,
-					polygonOffsetFactor: -5,
-				} )
-		);
-		
-		// the sun halo
-		this.halo = new THREE.Mesh(
-			new THREE.ConeGeometry( DISTANCE, 0, 32, 1, true ).translate(0,DISTANCE,0).rotateX( Math.PI/2 ),
-			new THREE.MeshBasicMaterial( {
-					color: 'white',
-					side: THREE.BackSide,
-					side: THREE.DoubleSide,
-					alphaMap: textures.sun.map(),
-					transparent: true,
-				} )
-		);
-		
-		this.add( this.body, this.halo );
-		scene.add( this );
-		
-	} // Sun.constructor
-	
-} // Sun
-
-
-
-class Moon extends THREE.Group
-{
-	
-	constructor( )
-	{
-		
-		super();
-
-		const
-			DISTANCE = 0.55*EARTH_SIZE,
-			SIZE = 0.016*DISTANCE;
-		
-		this.body = new THREE.Mesh(
-			new THREE.CircleGeometry( SIZE, 32 ).translate(0,0,DISTANCE),
-			new THREE.MeshBasicMaterial( {
-					color: 'white',
-					side: THREE.BackSide,
-					side: THREE.DoubleSide,
-					polygonOffset: true,
-					polygonOffsetUnits: -5,
-					polygonOffsetFactor: -5,
-				} )
-		);
-		
-		// the moon halo
-		this.halo = new THREE.Mesh(
-			new THREE.ConeGeometry( DISTANCE, 0, 32, 1, true ).translate(0,DISTANCE,0).rotateX( Math.PI/2 ),
-			new THREE.MeshBasicMaterial( {
-					color: 'white',
-					side: THREE.BackSide,
-					side: THREE.DoubleSide,
-					alphaMap: textures.moon.map(),
-					transparent: true,
-				} )
-		);
-			
-		this.add( this.body, this.halo );
-		scene.add( this );
-		
-	} // Moon.constructor
-	
-} // Moon
-
 
 
 class Sky
