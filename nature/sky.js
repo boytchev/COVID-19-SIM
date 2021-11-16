@@ -5,13 +5,12 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {EARTH_SIZE, GROUND_EDGE, DEBUG_ALL_WHITE, DEBUG_BLOCKS_OPACITY, SUN, STATIC_SUN, STATIC_SUN_POSITION_MS, DEBUG_SUN_POSITION_GUI, SUNRISE_MS, SUNSET_MS, GROUND_SIZE, SHADOWS, NO_SHADOWS, FULL_SHADOWS, SHADOWS_MAP_SIZE, SHADOWS_MAX_COUNT, AGENTS_CAST_SHADOWS, HOURS_24_MS } from '../config.js';
+import {EARTH_SIZE, GROUND_EDGE, DEBUG_ALL_WHITE, SUN, STATIC_SUN, STATIC_SUN_POSITION_MS, GROUND_SIZE, SHADOWS, NO_SHADOWS, FULL_SHADOWS, SHADOWS_MAP_SIZE, SHADOWS_MAX_COUNT, AGENTS_CAST_SHADOWS, DEBUG_SUN_POSITION_GUI, SUN_HORIZONTAL_ANGLE } from '../config.js';
 import {NatureMaterial, dayTimeMs} from './nature.js';
-import {SunLight, Sun, SUN_SIN, SUN_COS} from './sun.js';
-import {MoonLight, Moon} from './moon.js';
-import {agents, scene, guiObject, renderer, controls, camera, textures} from '../main.js';
+import {Sun} from './sun.js';
+import {/*MoonLight, */Moon} from './moon.js';
+import {agents, scene, renderer, controls, camera, textures} from '../main.js';
 import {timeMs} from '../core.js';
-
 
 
 /* Comments:
@@ -74,7 +73,7 @@ class TopLight extends THREE.DirectionalLight
 			this.castShadow = true;
 			this.shadow.mapSize.width = SHADOWS_MAP_SIZE>>2;
 			this.shadow.mapSize.height = SHADOWS_MAP_SIZE>>2;
-			this.shadow.camera.near = -10000;
+			this.shadow.camera.near = 0;
 			this.shadow.camera.far = 10000;
 			this.shadow.camera.left = -GROUND_EDGE;
 			this.shadow.camera.right = GROUND_EDGE;
@@ -97,26 +96,21 @@ class Sky
 	{
 		this.sysType = 'Sky';
 		
-		// the sun and the moon
 		this.sun = new Sun();
 		this.moon = new Moon();
-		if( SUN ) scene.add( this.sun, this.moon );
+
+		// sky dome for sun, moon, stars
+		this.skyDome = new THREE.Group();
+		this.skyDome.rotation.set( 3*Math.PI/2, SUN_HORIZONTAL_ANGLE, 0, 'YXZ' );
+		this.skyDome.add( this.sun, this.moon );
+		scene.add( this.skyDome );
 		
-//scene.scale.set(0.1,0.1,0.1);			
-	
 		
 		this.skyColorNight = DEBUG_ALL_WHITE ? new THREE.Color( 'dimgray' ) : new THREE.Color( 'darkblue' );
 		this.skyColorDay = DEBUG_ALL_WHITE ? new THREE.Color( 'lightgray' ) : new THREE.Color( 'skyblue' );
 	
 		scene.background = new THREE.Color( 'skyblue' );
 
-		this.sunPosition = new THREE.Vector3();
-		
-		this.sunLights = [];
-
-		this.sunTarget = new THREE.Object3D(); // for shadows
-		scene.add( this.sunTarget );
-		
 		// set shadow capabilities of renderer
 		if( SHADOWS != NO_SHADOWS )
 		{
@@ -132,42 +126,34 @@ class Sky
 		}
 		
 		
+		// collect all lights (except the moon light)
+		var lights = [...this.sun.lights];
+		
 		// set ambient light - always present
 		this.ambientLight = new AmbientLight();
+		lights.push( this.ambientLight );
 		
-
+		
 		// set top light - present if there are any types of shadows
 		if( SHADOWS != NO_SHADOWS )
 		{
 			this.topLight = new TopLight();
-		}
-		
-		
-		// set normal sun light, for full shadows there are many
-		var shadowCount = (SHADOWS==FULL_SHADOWS) ? SHADOWS_MAX_COUNT : 1;
-		for( var i=0; i<shadowCount; i++)
-		{
-			this.sunLights[i] = new SunLight( i );
-			this.sunLights[i].target = this.sunTarget;
+			lights.push( this.topLight );
 		}
 		
 		
 		// adjust light intensities total to be 1
 		var totalIntensity = 0;
-		for( var i=0; i<scene.children.length; i++ )
-			if( scene.children[i] instanceof THREE.Light )
-				totalIntensity += scene.children[i].intensity;
-		for( var i=0; i<scene.children.length; i++ )
-			if( scene.children[i] instanceof THREE.Light )
-			{
-				scene.children[i].intensity /= totalIntensity;
-				scene.children[i].originalIntensity = scene.children[i].intensity;
-				//console.log( scene.children[i].intensity.toFixed(2), scene.children[i].name );
-			}
+		for( var light of lights )
+		{
+			totalIntensity += light.intensity;
+		}
+		for( var light of lights )
+		{
+			light.intensity /= totalIntensity;
+			//console.log( light.intensity.toFixed(2), light.name );
+		}
 
-		this.moonLight = new MoonLight();
-		if( !SUN ) this.moonLight.visible = false;
-			
 	} // Sky.constructor
 
 	
@@ -176,63 +162,29 @@ class Sky
 		if( SUN )
 		{
 			// calculate sun position
-			var sunAngle = this.getSunAngularPosition(),
-				cos = Math.cos( sunAngle ),
-				sin = Math.sin( sunAngle );
-			this.sunPosition.set( EARTH_SIZE*cos*SUN_SIN, EARTH_SIZE*sin, EARTH_SIZE*cos*SUN_COS );
+			var sunAngle = this.sun.getAngularPosition(),
+				phase = Math.cos( sunAngle );
 			
-			// set the sun position
-			this.sun.lookAt( this.sunPosition );
+			// set sun and moon positions
+			this.sun.update( phase );
+			this.moon.update( -phase );
+			this.skyDome.rotation.set( sunAngle+Math.PI, SUN_HORIZONTAL_ANGLE, 0, 'YXZ' );
 
-			// set the moon position - opposite of the sun
-			this.moonLight.position.set( -this.sunPosition.x, -this.sunPosition.y, -this.sunPosition.z );
-			this.moon.lookAt( this.moonLight.position );
-
-
-			// light strength from sun and moon
-			var lightness, hue;
-			
-			// set sun light
-			lightness = THREE.Math.clamp( 5*sin, 0, 1 ); // 0=night, 1=day
-			hue = THREE.Math.clamp( sin, 0, 0.25 ); // 0=red, 0.2 = yellow
-			for( var i=0; i<this.sunLights.length; i++)
-			{
-				this.sunLights[i].color.setHSL( hue, DEBUG_ALL_WHITE?0:1, lightness );
-			}
-			
-			// set sun color
-			this.sun.body.material.color.setHSL( hue+0.05, DEBUG_ALL_WHITE?0:1, 0.5+1.5*lightness );
-			this.sun.halo.material.color.setHSL( hue, DEBUG_ALL_WHITE?0:1, 0.3+lightness );
-
-			// set moon color
-			lightness = THREE.Math.clamp( 0.2-10*sin, 0.4, 1 ); // 0=day, 1=night
-			this.moon.halo.material.opacity = lightness;
 
 			// set ambient light
-			hue = THREE.Math.clamp( sin, -0.5, 0.5 ); // 0=red, 0.2 = yellow
-			lightness = THREE.Math.clamp( 7*sin, 0, 1 ); // 0=night, 1=day
+			var hue = THREE.Math.clamp( phase, -0.5, 0.5 ); // 0=red, 0.2 = yellow
+			var lightness = THREE.Math.clamp( 7*phase, 0, 1 ); // 0=night, 1=day
 			this.ambientLight.color.setHSL( hue, DEBUG_ALL_WHITE?0:1, lightness );
-/*			
+			
 			// set top light
 			if( this.topLight )
 			{
 				this.topLight.color.copy( this.ambientLight.color );
 			}
-*/			
+			
 			// sky color
-			lightness = THREE.Math.clamp( 5*sin, 0, 1 ); // 0=day, 1=night
+			lightness = THREE.Math.clamp( 5*phase, 0, 1 ); // 0=day, 1=night
 			scene.background.lerpColors( this.skyColorNight, this.skyColorDay, lightness ).multiplyScalar( 0.2+0.8*lightness );
-		}
-		else
-		{
-			camera.getWorldDirection( this.sunPosition );
-			this.sunPosition.multiplyScalar( -1 );
-		}
-
-		// set light (sun) positions
-		for( var i=0; i<this.sunLights.length; i++)
-		{
-			this.sunLights[i].position.copy( this.sunPosition ).setLength( GROUND_SIZE );
 		}
 
 		// request regeneration of shadows
@@ -244,36 +196,13 @@ class Sky
 		{	
 			renderer.shadowMap.needsUpdate = true;
 		}
+		if( DEBUG_SUN_POSITION_GUI && SHADOWS==FULL_SHADOWS )
+		{
+			renderer.shadowMap.needsUpdate = true;
+		}
 
 		
 	} // Sky.update
-	
-	
-	// calculate sun position at given time of the day
-	getSunAngularPosition()
-	{
-		var t = (SUN==STATIC_SUN) ? STATIC_SUN_POSITION_MS : dayTimeMs;
-		
-		if( DEBUG_SUN_POSITION_GUI )
-		{
-			t = timeMs(guiObject.sunPos);
-			renderer.shadowMap.needsUpdate = true;
-		}
-		
-		// check relative time position rT in respect to sunrise(rT=0) and sunset(rT=1)
-		var rT = THREE.Math.mapLinear( t, SUNRISE_MS, SUNSET_MS, 0, 1 );
-
-		if( rT<0 || rT>1)
-		{
-			// it is nighttime, calculate how much of the night has passed
-			if( dayTimeMs<SUNRISE_MS ) t += HOURS_24_MS;
-			rT = THREE.Math.mapLinear( t, SUNSET_MS, SUNRISE_MS+HOURS_24_MS, 1, 2 );
-		}
-		
-		return rT*Math.PI;
-	} // Sky.getSunAngularPosition
-	
-	
 
 } // Sky
 
