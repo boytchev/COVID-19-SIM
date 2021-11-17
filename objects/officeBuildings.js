@@ -395,7 +395,7 @@ export class OfficeBuildings
 					vec2 texPos = vUv*vTextureScale+vTextureOffset;
 					vec4 texelColor = texture2D( map, texPos );
 					texelColor = mapTexelToLinear( texelColor );
-					isWindow = pow(texelColor.b,2.0);
+					isWindow = pow(texelColor.b,4.0);
 					texelColor = vec4(texelColor.r,texelColor.r,texelColor.r,1);
 					diffuseColor *= texelColor;
 				  `
