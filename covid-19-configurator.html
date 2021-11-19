@@ -31,7 +31,7 @@
 		
 		<h2 class="header">COVID-19 Configurator
 			<div class="info">The <b>COVID-19 Simulation</b> is controlled by
-				<span id="param_count"></span> configuration parameters. Click on the
+				<span id="param_count"></span> primary and <span id="param_count_internal"></span> internal configuration parameters. Click on the
 				name of often used parameters to add them to your favourite parameters.
 			</div>
 		</h2>		
@@ -43,13 +43,13 @@
 			<br>
 			<button id="fav" class="filter">My</button>
 			<button id="all" class="filter">All</button>
-			<button id="map" class="filter">Map</button>
-			<button id="building" class="filter">Buildings</button>
-			<button id="people" class="filter">People</button>
-			<button id="daynight" class="filter">Day & night</button>
-			<button id="health" class="filter">Health</button>
-			<button id="misc" class="filter">Misc</button>
-			<select id="tags" class="filter"></select>
+			<button id="map" class="filter internal">Map</button>
+			<button id="building" class="filter internal">Buildings</button>
+			<button id="people" class="filter internal">People</button>
+			<button id="daynight" class="filter internal">Day & night</button>
+			<button id="health" class="filter internal">Health</button>
+			<button id="misc" class="filter internal">Misc</button>
+			<select id="tags" class="filter internal"></select>
 		</div>
 
 	
@@ -86,7 +86,8 @@
 		
 		toggleFav = CFG.toggleFav;
 
-		document.getElementById( 'param_count' ).innerHTML = CFG.ids.length;
+		document.getElementById( 'param_count' ).innerHTML = CFG.id_count-CFG.internal_id_count;
+		document.getElementById( 'param_count_internal' ).innerHTML = CFG.internal_id_count;
 		document.getElementById( 'reset_button' ).onclick = CFG.resetConfigurator;
 		document.getElementById( 'debug_button' ).onclick = CFG.debugConfigurator;
 		document.getElementById( 'share_button' ).onclick = CFG.shareConfigurator;
@@ -123,6 +124,17 @@
 			document.querySelector( '#cfg-si' ).checked = false;
 			
 			for( var elem of document.querySelectorAll( '.info' ) )
+				elem.style.display = 'none';	
+		}
+		
+		// configurator show all
+		if( localStorage.getItem( 'covid-19-cfg-all' ) != '0' )
+		{
+			document.querySelector( '#cfg-all' ).checked = true;
+		}
+		else
+		{
+			for( var elem of document.querySelectorAll( '.internal' ) )
 				elem.style.display = 'none';	
 		}
 		

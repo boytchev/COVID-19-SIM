@@ -94,12 +94,12 @@ CFG.addHeader(
 			'health,infection,time' );
 
 		CFG.addNumeric(
-			'ipc', 'Infection patterns count', 10, {min:2, max:21, step:1},
+			'ipc', 'Infection patterns count', 10, {min:2, max:21, step:1, internal:true},
 			'The number of infection patterns. Each pattern has a viral shedding curve with specific position of the peak value. Currently the infection pattern is picked individually for each person from the first half of available patterns (i.e. the infection peak is near the beginning of the illness.',
 			'health,infection' );
 	
 		CFG.addNumeric(
-			'is', 'Infection step', 200, {min:1, max:1000, step:10},
+			'is', 'Infection step', 200, {min:1, max:1000, step:10, internal:true},
 			'The number of animation frames needed to check the whole population. If the value is 1, then all people are checked every frame. This may affect the performance badly in case of large but concentrated population. Distributing the check over higher number of frames, keeps the performance at the cost of some inaccuracy in infection &ndash; if two people meet and go away between their checks, they will not infect each other.',
 			'health,infection' );
 
@@ -140,17 +140,17 @@ CFG.addHeader(
 			'health,people,debug' );
 			
 		CFG.addBoolean(
-			'dsvs', 'Viral diagram', false, {},
+			'dsvs', 'Viral diagram', false, {internal:true},
 			'If checked, shows a diagram of the viral shedding (infection level per time period). Higher values indicate higher probability of infecting nearby people. Vertical lines split the diagram into periods. Curves indicate different infection patterns. Click on the diagram to hide it.',
 			'health' );
 
 		CFG.addBoolean(
-			'dah', 'Population health', false, {},
+			'dah', 'Population health', false, {internal:true},
 			'If checked, once per second prints in the JS console the number of infected people split into three health categories &ndash; asymptotic (infection level under 20%), medium (between 20% and 60%) and severe (above 60%).',
 			'health,people' );
 
 		CFG.addNumeric(
-			'dfah', 'Follow person health', -1, {min:-1, max:50000, step:1},
+			'dfah', 'Follow person health', -1, {min:-1, max:50000, step:1, internal:true},
 			'If this parameter cointains an existing person id, then the health status of this person is printed in the JS console. If the value is -1, such printing is turned off.',
 			'health,people,tracking' );
 

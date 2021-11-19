@@ -43,6 +43,8 @@ const configParams = new URLSearchParams(
 
 
 export var ids = [];
+export var id_count = 0;
+export var internal_id_count = 0;
 
 var allTags = [],
 	data = {};
@@ -55,8 +57,9 @@ if( predefinedFavs !== null )
 
 
 export var configInfo = param( 'cfg-si', true );
+export var configAllParams = param( 'cfg-all', true );
 
-console.log('configInfo',configInfo)
+//console.log('configInfo',configInfo)
 
 export function timeMs( hours, minutes=0, seconds=0 )
 {
@@ -139,6 +142,9 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 
 	ids.push( id );
 	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
 	// set default values for missing options
 
 	options.min = options.min||0;
@@ -163,7 +169,7 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 	
 	// construct the html
 	var html =`
-		<table id="block-${id}" class="block">
+		<table id="block-${id}" class="block ${options.internal?'internal':''}">
 			<tr>
 				<td id="name-${id}"
 					width="1%"
@@ -223,6 +229,9 @@ export function addPercentage( id, name, defaultValue, options, info='', tags=''
 
 	ids.push( id );
 	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
 	// set default values for missing options
 
 	options.min = options.min||0;
@@ -248,7 +257,7 @@ export function addPercentage( id, name, defaultValue, options, info='', tags=''
 	// construct the html
 		
 	var html =`
-		<table id="block-${id}" class="block">
+		<table id="block-${id}"  class="block ${options.internal?'internal':''}">
 			<tr>
 				<td id="name-${id}"
 					width="1%"
@@ -297,6 +306,9 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 
 	ids.push( id );
 	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
 	// set default values for missing options
 	
 	options.value = param( id, defaultValue );
@@ -311,7 +323,7 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 	// construct the html
 	
 	var html =`
-		<table id="block-${id}" class="block">
+		<table id="block-${id}"  class="block ${options.internal?'internal':''}">
 			<tr>
 				<td id="name-${id}"
 					width="1%"
@@ -348,12 +360,31 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 	
 	if( options.config )
 	{
+		// save configuration parameter
 		data[id].value.addEventListener( 'change', event =>
 			{
 				localStorage.setItem( 'covid-19-'+id, event.target.checked?'1':'0' );
-				for( var elem of document.querySelectorAll( '.info' ) )
-					elem.style.display = event.target.checked?'':'none';
 			} );
+
+		// process SHOW INFO parameter
+		if( id == 'cfg-si' )
+		{
+			data[id].value.addEventListener( 'change', event =>
+				{
+					for( var elem of document.querySelectorAll( '.info' ) )
+						elem.style.display = event.target.checked?'':'none';
+				} );
+		}
+
+		// process SHOW ALL parameter
+		if( id == 'cfg-all' )
+		{
+			data[id].value.addEventListener( 'change', event =>
+				{
+					for( var elem of document.querySelectorAll( '.internal' ) )
+						elem.style.display = event.target.checked?'':'none';
+				} );
+		}
 	}
 }
 
@@ -386,6 +417,7 @@ export function resetConfigurator()
 	localStorage.removeItem( LOCAL_STORAGE_FILTER );
 
 	localStorage.removeItem( 'covid-19-cfg-si' );
+	localStorage.removeItem( 'covid-19-cfg-all' );
 	
 	// reload page
 	
@@ -423,23 +455,37 @@ export function toggleFilter( event )
 
 	localStorage.setItem( LOCAL_STORAGE_FILTER, filter );
 
+	var hideInternal = localStorage.getItem( 'covid-19-cfg-all' ) == '0';
+//console.log('### hideInternal =',hideInternal);
+	
 	switch( filter )
 	{
 		case 'fav':
 			for( var id in data )
-				data[id].block.style.display = data[id].options?.fav ? 'block' : 'none';
+			{
+				var show = data[id].options?.fav;
+				if( hideInternal && data[id].options.internal ) show = false;
+				data[id].block.style.display = show ? 'block' : 'none';
+			}
 			break;
 			
 		case '':
 		case 'all':
 			for( var id in data )
-				data[id].block.style.display = 'block';
+			{
+				var show = true;
+				if( hideInternal && data[id].options.internal ) show = false;
+				data[id].block.style.display = show ? 'block' : 'none';
+			}
 			break;
 			
 		default:
 			for( var id in data )
 			{
-				data[id].block.style.display = (data[id].options.tags.indexOf(filter)>=0) ? 'block' : 'none';
+//console.log(data[id].options);
+				var show = (data[id].options.tags.indexOf(filter)>=0);
+				if( hideInternal && data[id].options.internal ) show = false;
+				data[id].block.style.display = show ? 'block' : 'none';
 //				console.log(id,data[id].options.tags,filter,data[id].options.tags.indexOf(filter));
 			}
 	}
@@ -543,6 +589,9 @@ export function addTime( id, name, defaultValue, options, info='', tags='' )
 
 	ids.push( id );
 	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
 	// set default values for missing options
 
 	options.min = msToString(options.min||0);
@@ -560,7 +609,7 @@ export function addTime( id, name, defaultValue, options, info='', tags='' )
 	// construct the html
 	
 	var html =`
-		<table id="block-${id}" class="block">
+		<table id="block-${id}"  class="block ${options.internal?'internal':''}">
 			<tr>
 				<td id="name-${id}"
 					width="1%"
@@ -606,14 +655,14 @@ export function addTime( id, name, defaultValue, options, info='', tags='' )
 
 var ID = 1;
 
-export function addHeader( level, name, logo='', info='', tags='' )
+export function addHeader( level, name, logo='', info='', tags='', options={} )
 {
 
 	// construct the html
 	var tag = 'h'+Math.round(level+1),
 		id = 'id'+(ID++);
 
-	var options = {tags: tags.split(',')};
+	options.tags = tags.split(',');
 	
 	if( logo )
 	{
@@ -621,7 +670,7 @@ export function addHeader( level, name, logo='', info='', tags='' )
 	}
 	
 	var html =`
-		<div id="block-${id}" class="header">
+		<div id="block-${id}" class="header ${options.internal?'internal':''}">
 			<${tag} class="caption">${logo}${name}</${tag}>
 			<div class="info">${info}</div>
 			<div class="tags">${tags.split(',')}</div>
@@ -655,6 +704,9 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 
 	ids.push( id );
 	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
 	// set default values for missing options
 
 	options.min = options.min||0;
@@ -678,7 +730,7 @@ export function addNumericRange( id, name, defaultValueA, defaultValueB, options
 	
 	// construct the html
 	var html =`
-		<table id="block-${id}" class="block">
+		<table id="block-${id}"  class="block ${options.internal?'internal':''}">
 			<tr>
 				<td id="name-${id}"
 					width="1%"
@@ -750,6 +802,9 @@ export function addNumericList( id, name, defaultValue, options, info='', tags='
 
 	ids.push( id );
 	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
 	// set default values for missing options
 
 	options.value = param( id, defaultValue );
@@ -767,7 +822,7 @@ export function addNumericList( id, name, defaultValue, options, info='', tags='
 	
 	// construct the html
 	var html =`
-		<table id="block-${id}" class="block">
+		<table id="block-${id}" class="block ${options.internal?'internal':''}">
 			<tr>
 				<td id="name-${id}"
 					width="1%"
@@ -825,6 +880,9 @@ export function addTimeRange( id, name, defaultValueA, defaultValueB, options, i
 
 	ids.push( id );
 	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
 	// set default values for missing options
 
 	options.min = msToString(options.min||0);
@@ -842,7 +900,7 @@ export function addTimeRange( id, name, defaultValueA, defaultValueB, options, i
 	
 	// construct the html
 	var html =`
-		<table id="block-${id}" class="block">
+		<table id="block-${id}" class="block ${options.internal?'internal':''}">
 			<tr>
 				<td id="name-${id}"
 					width="1%"
