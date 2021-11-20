@@ -386,6 +386,9 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 					configAllParams = event.target.checked;
 					for( var elem of document.querySelectorAll( '.internal' ) )
 						elem.style.display = event.target.checked?'':'none';
+					// switching from all params to primary params
+					// shoudl automaticaly set filter to all
+					document.getElementById( 'all' ).click();
 				} );
 		}
 	}
