@@ -29,7 +29,7 @@ CFG.addHeader(
 	'daynight,sun,moon,light,morning,evening' );
 
 		CFG.addNumericList(
-			'su', 'Sun', 0, {fav:true, values:[0,'no',1,'static',2,'dynamic']},
+			'su', 'Sun', 0, {values:[0,'no',1,'static',2,'dynamic']},
 			'The motion of sun. <em>No</em> indicates there is no sun and light comes from everywhere. <em>Static</em> means the sun does not move, but stays at a position in the sky, defined by <em>STATIC SUN POSITION</em>. When the sun is <em>Dynamic</em>, it moves around the city, simulating day-night cycles.',
 			'daynight,sun,light,debug' );
 
@@ -63,7 +63,7 @@ CFG.addHeader(
 	'daynight,shadow,people' );
 	
 		CFG.addNumericList(
-			'sh', 'Shadows', 0, {fav:true, values:[0,'no',1,'top',2,'full']},
+			'sh', 'Shadows', 0, {values:[0,'no',1,'top',2,'full']},
 			'The type of shadows. This parameter is affective only when <em>sun = static</em> or <em>dynamic</em>. Value <em>No</em> indicates there are no shadows, this has highest performance. <em>Top</em> shadows are static as if the sun light comes from above. <em>Full</em> shadows are generated depending on the sun position. If the <em>sun = dynamic</em> then shadows are continuously recalculated, which negatively impacts performance.',
 			'daynight,shadow,debug' );
 

@@ -125,6 +125,6 @@ CFG.addHeader(
 			'misc,config' );
 
 		CFG.addBoolean(
-			'cfg-all', 'Show all', false, {config: true},
+			'cfg-all', 'Show all parameters', false, {config: true},
 			'If checked, show all configuration parameters, even those, that affect the internal behaviour and layout of the simulation engine. If unchecked, keep visible only the important parameters.',
 			'misc,config' );

@@ -57,9 +57,10 @@ if( predefinedFavs !== null )
 
 
 export var configInfo = param( 'cfg-si', true );
-export var configAllParams = param( 'cfg-all', true );
+export var configAllParams = param( 'cfg-all', false );
 
-//console.log('configInfo',configInfo)
+console.log('configInfo',configInfo)
+console.log('configAllParams',configAllParams)
 
 export function timeMs( hours, minutes=0, seconds=0 )
 {
@@ -109,7 +110,7 @@ function param( id, defaultValue )
 	if( value=='false' ) value = false;
 	if( !isNaN(parseFloat(value)) ) value = parseFloat(value);	
 	
-	if( LOCALHOST ) console.log(id,'=',value,configParams.get( id ));
+//	if( LOCALHOST ) console.log(id,'=',value,configParams.get( id ));
 	
 	return value;
 }
@@ -128,7 +129,7 @@ function param2( id, defaultValueA, defaultValueB )
 		return [parseFloat(value[0]), parseFloat(value[1])];
 	}
 
-	console.log(id,'=',value,configParams.get( id ));
+//	console.log(id,'=',value,configParams.get( id ));
 //console.log('a',id,	[defaultValueA,defaultValueB]);
 	return [defaultValueA,defaultValueB];
 }
@@ -310,7 +311,6 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 	if( options.internal ) internal_id_count++;
 	
 	// set default values for missing options
-	
 	options.value = param( id, defaultValue );
 	options.defaultValue = defaultValue;
 	options.tags = tags.split( ',' );
@@ -364,6 +364,7 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 		data[id].value.addEventListener( 'change', event =>
 			{
 				localStorage.setItem( 'covid-19-'+id, event.target.checked?'1':'0' );
+				console.log('covid-19-'+id, event.target.checked?'1':'0' );
 			} );
 
 		// process SHOW INFO parameter
@@ -371,6 +372,7 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 		{
 			data[id].value.addEventListener( 'change', event =>
 				{
+					configInfo = event.target.checked;					
 					for( var elem of document.querySelectorAll( '.info' ) )
 						elem.style.display = event.target.checked?'':'none';
 				} );
@@ -381,6 +383,7 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 		{
 			data[id].value.addEventListener( 'change', event =>
 				{
+					configAllParams = event.target.checked;
 					for( var elem of document.querySelectorAll( '.internal' ) )
 						elem.style.display = event.target.checked?'':'none';
 				} );
@@ -455,8 +458,7 @@ export function toggleFilter( event )
 
 	localStorage.setItem( LOCAL_STORAGE_FILTER, filter );
 
-	var hideInternal = localStorage.getItem( 'covid-19-cfg-all' ) == '0';
-//console.log('### hideInternal =',hideInternal);
+	var hideInternal = !configAllParams;
 	
 	switch( filter )
 	{
@@ -969,11 +971,11 @@ export function processTags()
 			allTags.splice( idx, 1 );
 	}
 	
-	console.log('original count',allTags.length);
+	//console.log('original count',allTags.length);
 	allTags = [...new Set(allTags)];
-	console.log('final count',allTags.length);
+	//console.log('final count',allTags.length);
 	allTags.sort();
-	console.log('tags',allTags);
+	//console.log('tags',allTags);
 	
 	var htmlOptions = '<option value="" disabled selected hidden>MORE...</option>';
 	

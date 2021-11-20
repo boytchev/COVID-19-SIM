@@ -13,12 +13,14 @@
 	<meta name="description" content="COVID-19 Configurator">
 	<meta name="keywords" content="COVID-19, Coronavirus, SARS-CoV-2, Coronavirus disease 2019, Configurator">
 	<meta name="author" content="Pavel Boytchev">
-	<meta name="version" content="1.0">
-	<meta name="date" content="2021.08.12">
+	<meta name="version" content="2.0">
+	<meta name="date" content="2021.11">
 	
+	<!--
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;500;700&display=swap" rel="stylesheet">
+	-->
 
 	<link title="config-css" rel="stylesheet" href="covid-19-configurator.css">
 
@@ -26,19 +28,20 @@
 </head>
 
 <body>
-
 	<div class="page">
 		
 		<h2 class="header">COVID-19 Configurator
-			<div class="info">The <b>COVID-19 Simulation</b> is controlled by
-				<span id="param_count"></span> primary and <span id="param_count_internal"></span> internal configuration parameters. Click on the
+			<div class="info-persistant">The <b>COVID-19 Simulator</b> is controlled by <span id="param_count"></span>
+				configuration parameters. <span class="internal">There are <span id="param_count_internal"></span>
+				additional internal configuration parameters.</span> Click on the
 				name of often used parameters to add them to your favourite parameters.
 			</div>
 		</h2>		
 		
 		<div class="start-block">
 			<a id="start_button_1" class="start" href="covid-19-simulator.html">Start simulation</a>
-			<button id="share_button" class="rightbutton"><img src="icons/sharelink.svg"> Share</button>
+			<!-- share_butto is missing "n" because of adblockers-->
+			<button id="share_butto" class="rightbutton"><img src="icons/sharelink.svg"> Share</button>
 			<br>
 			<br>
 			<button id="fav" class="filter">My</button>
@@ -90,7 +93,7 @@
 		document.getElementById( 'param_count_internal' ).innerHTML = CFG.internal_id_count;
 		document.getElementById( 'reset_button' ).onclick = CFG.resetConfigurator;
 		document.getElementById( 'debug_button' ).onclick = CFG.debugConfigurator;
-		document.getElementById( 'share_button' ).onclick = CFG.shareConfigurator;
+		document.getElementById( 'share_butto' ).onclick = CFG.shareConfigurator;
 		
 		var elems = document.querySelectorAll( 'button.filter' );
 		for( var elem of elems )
@@ -119,25 +122,18 @@
 		}
 		
 		// configurator show info
-		if( localStorage.getItem( 'covid-19-cfg-si' ) == '0' )
+		if( !CFG.configInfo )
 		{
-			document.querySelector( '#cfg-si' ).checked = false;
-			
 			for( var elem of document.querySelectorAll( '.info' ) )
 				elem.style.display = 'none';	
 		}
 		
 		// configurator show all
-		if( localStorage.getItem( 'covid-19-cfg-all' ) != '0' )
-		{
-			document.querySelector( '#cfg-all' ).checked = true;
-		}
-		else
+		if( !CFG.configAllParams )
 		{
 			for( var elem of document.querySelectorAll( '.internal' ) )
 				elem.style.display = 'none';	
 		}
-		
 		
 		if( !CFG.LOCALHOST ) document.getElementById( 'debug_button' ).style.display = 'none';
 		

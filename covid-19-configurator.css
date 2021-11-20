@@ -168,7 +168,7 @@ h4.caption ~ .info{
 	color: DimGray;
 }
 
-h2 .info {
+h2 .info-persistant {
 	display: block;
 	font-size: 0.6em;
 	font-weight: 300;
