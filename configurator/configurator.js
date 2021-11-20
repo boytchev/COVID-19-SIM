@@ -438,7 +438,7 @@ export function debugConfigurator()
 
 export function shareConfigurator()
 {
-	prepareValues( true );
+	prepareValues( true, true ); // only modified, skip configs
 	
 	var url = window.location.href,
 		path = url.substring(0, url.lastIndexOf('/')),
@@ -493,12 +493,14 @@ export function toggleFilter( event )
 	}
 }
 
-export function prepareValues( onlyModified = false )
+export function prepareValues( onlyModified = false, skipConfigs = false )
 {
 	var str = '';
 
 	for( var id in data )
 	{
+		if( skipConfigs && data[id].options.config ) continue;
+		
 		var cmd = null;
 
 		switch( data[id].type )
