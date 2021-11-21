@@ -11,7 +11,7 @@ The simulator is still not ready for a general use &ndash; it is still under hea
 
  
 ### Publications
-* Boytchev P., Boytcheva S. (2021) **Visual Educational Simulator of Pandemic: Work in Progress**. In: Lopata A., Gudonienė D., Butkienė R. (eds) Information and Software Technologies. ICIST 2021. Communications in Computer and Information Science, vol 1486. Springer, Cham. DOI: [10.1007/978-3-030-88304-1_26](https://doi.org/10.1007/978-3-030-88304-1_26), URL: [rdcu.be/czkc0](https://rdcu.be/czkc0), ISBN: 978-3-030-88303-4, SJR: 0.16 (2020, Q4, Computer Science (miscellaneous))
+* Boytchev P., Boytcheva S. (2021) **Visual Educational Simulator of Pandemic: Work in Progress**. In: Lopata A., Gudoniene D., Butkiene R. (eds) Information and Software Technologies. ICIST 2021. Communications in Computer and Information Science, vol 1486. Springer, Cham. DOI: [10.1007/978-3-030-88304-1_26](https://doi.org/10.1007/978-3-030-88304-1_26), URL: [rdcu.be/czkc0](https://rdcu.be/czkc0), ISBN: 978-3-030-88303-4, SJR: 0.16 (2020, Q4, Computer Science (miscellaneous))
 * Boytchev P., Boytcheva S. (2021) **Shader Injection for Instanced 3D Models**, In: Proceedings of the International IEEE Conference "Automatics and Informatics 2021" (ICAI'21)] (in print).
 
  
