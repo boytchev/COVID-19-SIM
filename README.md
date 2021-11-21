@@ -19,9 +19,9 @@ There is a configuration page, where you can tune most of the simulator's parame
 * **Shader Injection for Instanced 3D Models**, presented at the [International IEEE Conference "Automatics and Informatics 2021" (ICAI'21)](http://icai-conf.org/), track B, session B1 "Computer Science", 30.09.2021, Varna, Bulgaria, 30.09-1.10.2021.
 
 
-<header><ul>
+<ul>
 <li><a href="https://github.com/boytchev/COVID-19-SIM">View On <strong>GitHub</strong></a></li>
-</ul></header>
+</ul>
 		
 		
 November, 2021
