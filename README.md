@@ -18,5 +18,11 @@ There is a configuration page, where you can tune most of the simulator's parame
 * **Visual Educational Simulator of Pandemic: Work in Progress**, presented at the [International Conference on Information and Software Technologies (ICIST 2021)](https://icist.ktu.edu/), session 6: Information Technology Applications, special session on Smart e-Learning Technologies and Applications, Kaunas, Lithuania, 14/10/2021 - 16/10/2021
 * **Shader Injection for Instanced 3D Models**, presented at the [International IEEE Conference "Automatics and Informatics 2021" (ICAI'21)](http://icai-conf.org/), track B, session B1 "Computer Science", 30.09.2021, Varna, Bulgaria, 30.09-1.10.2021.
 
+
+<header><ul>
+<li><a href="https://github.com/boytchev/COVID-19-SIM">View On <strong>GitHub</strong></a></li>
+</ul></header>
+		
+		
 November, 2021
  
