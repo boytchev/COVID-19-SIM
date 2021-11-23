@@ -16,36 +16,15 @@ import {blocks, scene} from '../main.js';
 import {CARTOON_STYLE, TREE_HOUSES_RATIO, TREE_HEIGHT, TREE_PARK_RATIO, TREE_COMPLEXITY, DEBUG_BUILDINGS_OPACITY, DEBUG_ALL_WHITE} from '../config.js';
 
 
-class Tree
-{
-	
-	constructor( center )
-	{
-		this.sysType = 'Tree';
-
-		this.center = center;
-		this.height = TREE_HEIGHT.randFloat();
-		
-	} // Tree.constructor
-	
-} // Tree
-	
-	
-	
 export class Trees
 {
 	
 	constructor( )
 	{
-		this.sysType = 'Trees';
 
-		this.trees = [];
+		this.sysType = 'Trees';
 		
-		this.mesh = undefined;
-		
-		this.generate( );
-		
-		this.image( );
+		this.image( this.generate() );
 		
 	} // Trees.constructor
 	
@@ -190,6 +169,7 @@ export class Trees
 	
 	generate( )
 	{
+		var trees = [];
 		
 		// spread trees in parks and house areas inside the city 
 		for( var i=0; i<blocks.parks.length; i++)
@@ -207,7 +187,7 @@ export class Trees
 				{
 					var pos = zone.randomPos( );
 					if( !this.occupied( pos, park ) )
-						this.trees.push( new Tree( pos ) );	
+						trees.push( pos );	
 				}
 			}
 			else
@@ -215,20 +195,21 @@ export class Trees
 				if( park.outskirts ) continue; // not inside the city
 				for( var j=0; j<TREE_PARK_RATIO * density; j++ )
 				{
-					this.trees.push( new Tree( zone.randomPos( ) ) );
+					trees.push( zone.randomPos( ) );
 				}
 			}
 			
 		} // for i
 
+		return trees;
 	} // Trees.generate
 	
 	
 	
-	image( )
+	image( trees )
 	{
 		
-		var instances = this.trees.length;
+		var instances = trees.length;
 		
 		var geometry  = this.geometry(),
 			material  = this.material(),
@@ -238,20 +219,18 @@ export class Trees
 		var matrix = new THREE.Matrix4();
 		for( var i=0; i<instances; i++ )
 		{
-			var tree = this.trees[i];
-			matrix.makeScale( tree.height, tree.height, tree.height );
-			matrix.setPosition( tree.center.x, 0, tree.center.z );
+			var height = TREE_HEIGHT.randFloat();
+			
+			matrix.makeScale( height, height, height );
+			matrix.setPosition( trees[i].x, 0, trees[i].z );
 
 			mesh.setMatrixAt( i, matrix );
 		}
 		
 		mesh.receiveShadow = true;
 		mesh.castShadow = true;
-		//mesh.position.y = -0.2;
 		
 		scene.add( mesh );
-			
-		//this.mesh = mesh;
 		
 	} // Trees.image
 
