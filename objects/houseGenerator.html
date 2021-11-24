@@ -26,6 +26,8 @@
 	<div id="table"></div>
 	
 	<script>
+		console.time(1);
+		
 		var countAll = 0,
 			countFailed = 0;
 			
@@ -58,10 +60,9 @@
 						[px-3,pz-4,2]
 					];
 			}
-			return 'failed '+(10*sx+sz);
+			throw 'Wing size must be 4 or 8';
 		}
 			
-		console.log('sizeA sizeB posB\tdoors');
 		for( var faces=0; faces<4; faces++ )
 		for( var sizeAX=4; sizeAX<=8; sizeAX+=4 )
 		for( var sizeAZ=4; sizeAZ<=8; sizeAZ+=4 )
@@ -70,10 +71,6 @@
 		for( var posBX=-4; posBX<=4; posBX+=2 )
 		for( var posBZ=-4; posBZ<=4; posBZ+=2 )
 		{
-			
-			countAll++;
-			//var result = ` ${sizeAX}x${sizeAZ}   ${sizeBX}x${sizeBZ} `;
-			//result += `(${posBX},${posBZ})\t`;
 			
 			var minAX = -sizeAX/2,
 				minAZ = -sizeAZ/2,
@@ -87,36 +84,74 @@
 			
 			if( minAX==minBX || minAZ==minBZ || maxAX==maxBX || maxAZ==maxBZ || minAX==maxBX || minAZ==maxBZ || maxAX==minBX || maxAZ==minBZ )
 			{
-				countFailed++;
 				continue;
 			}
 			
-			var house = {sizeAX:sizeAX, sizeAZ:sizeAZ, sizeBX:sizeBX, sizeBZ:sizeBZ, posBX:posBX, posBZ:posBZ, dX:Math.max(maxAX,maxBX)/2+Math.min(minAX,minBX)/2, dZ:Math.max(maxAZ,maxBZ)/2+Math.min(minAZ,minBZ)/2 };
-
+			// doors of wings
 			var doorsA = wingDoors(0,0,sizeAX,sizeAZ),
 				doorsB = wingDoors(posBX,posBZ,sizeBX,sizeBZ);
-			//result += `${doorsA.length}+${doorsB.length}`;
-			
-			var doorsAB = [];
+
+			// doors of house
+			var doors = [];
 			
 			for( var door of doorsA )
 				if( door[0]<minBX || door[0]>maxBX || door[1]<minBZ || door[1]>maxBZ )
-					doorsAB.push( door );
+					doors.push( door );
 			for( var door of doorsB )
 				if( door[0]<minAX || door[0]>maxAX || door[1]<minAZ || door[1]>maxAZ )
-					doorsAB.push( door );
+					doors.push( door );
 					
-			house.doors = doorsAB;
-			house.faces = faces;
+			// finding the one door
+			var closestDoorIdx = 0;
+			switch( faces )
+			{
+				case 0:
+					for( var i = 1; i<doors.length; i++ )
+						if( doors[i][1] < doors[closestDoorIdx][1] )
+							closestDoorIdx = i;
+					break;
+				case 1:
+					for( var i = 1; i<doors.length; i++ )
+						if( doors[i][0] > doors[closestDoorIdx][0] )
+							closestDoorIdx = i;
+					break;
+				case 2:
+					for( var i = 1; i<doors.length; i++ )
+						if( doors[i][1] > doors[closestDoorIdx][1] )
+							closestDoorIdx = i;
+					break;
+				case 3:
+					for( var i = 1; i<doors.length; i++ )
+						if( doors[i][0] < doors[closestDoorIdx][0] )
+							closestDoorIdx = i;
+					break;
+			}
+
+			var dX = Math.max(maxAX,maxBX)/2+Math.min(minAX,minBX)/2,
+				dZ = Math.max(maxAZ,maxBZ)/2+Math.min(minAZ,minBZ)/2;
+				
+			var door = doors[closestDoorIdx];
+				door[0] -= dX;
+				door[1] -= dZ;
 			
-			//result += `->${doorsAB.length}`;
-					
+			var house = {
+				sizeAX:sizeAX, 
+				sizeAZ:sizeAZ, 
+				sizeBX:sizeBX, 
+				sizeBZ:sizeBZ,
+				posAX:-dX, 
+				posAZ:-dZ, 
+				posBX:posBX-dX, 
+				posBZ:posBZ-dZ, 
+				door: door,
+				faces: faces,
+			};
+
 			houses.push( house );
-			//console.log( result );
 		}
-		console.log('count all',countAll);
-		console.log('count failed',countFailed);
-		
+
+
+console.timeEnd(1);		
 		
 		// create images
 		var html = '';
@@ -152,24 +187,24 @@
 
 			// draw sidewalks
 			ctx.fillStyle = 'antiqueWhite';
-			ctx.fillRect(cx-s*house.sizeAX/2-house.dX*s-s, cz-s*house.sizeAZ/2-house.dZ*s-s, s*house.sizeAX+2*s, s*house.sizeAZ+2*s);
-			ctx.fillRect(cx-s*house.sizeBX/2+s*house.posBX-house.dX*s-s, cz-s*house.sizeBZ/2+s*house.posBZ-house.dZ*s-s, s*house.sizeBX+2*s, s*house.sizeBZ+2*s);
+			ctx.fillRect(cx-s*house.sizeAX/2+s*house.posAX-s, cz-s*house.sizeAZ/2+s*house.posAZ-s, s*house.sizeAX+2*s, s*house.sizeAZ+2*s);
+			ctx.fillRect(cx-s*house.sizeBX/2+s*house.posBX-s, cz-s*house.sizeBZ/2+s*house.posBZ-s, s*house.sizeBX+2*s, s*house.sizeBZ+2*s);
 
 
 			// draw wings
 			ctx.strokeStyle = 'black';
 			ctx.lineWidth = 3;
 			ctx.beginPath();
-				ctx.rect(cx-s*house.sizeAX/2-house.dX*s, cz-s*house.sizeAZ/2-house.dZ*s, s*house.sizeAX, s*house.sizeAZ);
+				ctx.rect(cx-s*house.sizeAX/2+s*house.posAX, cz-s*house.sizeAZ/2+s*house.posAZ, s*house.sizeAX, s*house.sizeAZ);
 			ctx.stroke();
 			ctx.beginPath();
-				ctx.rect(cx-s*house.sizeBX/2+s*house.posBX-house.dX*s, cz-s*house.sizeBZ/2+s*house.posBZ-house.dZ*s, s*house.sizeBX, s*house.sizeBZ);
+				ctx.rect(cx-s*house.sizeBX/2+s*house.posBX, cz-s*house.sizeBZ/2+s*house.posBZ, s*house.sizeBX, s*house.sizeBZ);
 			ctx.stroke();
 			ctx.lineWidth = 1;
 
 			ctx.fillStyle = 'white';
-			ctx.fillRect(cx-s*house.sizeAX/2-house.dX*s, cz-s*house.sizeAZ/2-house.dZ*s, s*house.sizeAX, s*house.sizeAZ);
-			ctx.fillRect(cx-s*house.sizeBX/2+s*house.posBX-house.dX*s, cz-s*house.sizeBZ/2+s*house.posBZ-house.dZ*s, s*house.sizeBX, s*house.sizeBZ);
+			ctx.fillRect(cx-s*house.sizeAX/2+s*house.posAX, cz-s*house.sizeAZ/2+s*house.posAZ, s*house.sizeAX, s*house.sizeAZ);
+			ctx.fillRect(cx-s*house.sizeBX/2+s*house.posBX, cz-s*house.sizeBZ/2+s*house.posBZ, s*house.sizeBX, s*house.sizeBZ);
 
 			// draw grid
 			ctx.strokeStyle = 'lightgray';
@@ -190,37 +225,6 @@
 				ctx.lineTo(200,cz);
 			ctx.stroke();
 
-			
-			// draw theoretical doors
-			/*
-			var doors = wingDoors(0,0,house.sizeAX,house.sizeAZ);
-			ctx.strokeStyle = 'black';
-			for( var i = 0; i<doors.length; i++ )
-			{
-				ctx.beginPath();
-					ctx.rect(cx+s*doors[i][0]-5-house.dX*s, cz+s*doors[i][1]-5-house.dZ*s, 10, 10);
-				ctx.stroke();
-			}
-			doors = wingDoors(house.posBX,house.posBZ,house.sizeBX,house.sizeBZ);
-			ctx.strokeStyle = 'red';
-			for( var i = 0; i<doors.length; i++ )
-			{
-				ctx.beginPath();
-					ctx.rect(cx+s*doors[i][0]-5-house.dX*s, cz+s*doors[i][1]-5-house.dZ*s, 10, 10);
-				ctx.stroke();
-			}
-			*/
-			
-			// draw practical doors
-			var doors = house.doors;
-			/*
-			ctx.fillStyle = 'yellow';
-			for( var i = 0; i<doors.length; i++ )
-			{
-				ctx.fillRect(cx+s*doors[i][0]-5-house.dX*s, cz+s*doors[i][1]-5-house.dZ*s, 10, 10);
-			}
-			*/
-			
 			// draw road
 			//
 			//			0
@@ -228,48 +232,33 @@
 			//			2
 			
 			ctx.fillStyle = 'rgba(0,0,0,0.25)';
-			var closestDoorIdx = 0;
 			switch( house.faces )
 			{
 				case 0:
 					ctx.fillRect(0,0,2*cx,s);
-					for( var i = 1; i<doors.length; i++ )
-						if( doors[i][1] < doors[closestDoorIdx][1] )
-							closestDoorIdx = i;
 					break;
 				case 1:
 					ctx.fillRect(2*cz-s,0,s,2*cz);
-					for( var i = 1; i<doors.length; i++ )
-						if( doors[i][0] > doors[closestDoorIdx][0] )
-							closestDoorIdx = i;
 					break;
 				case 2:
 					ctx.fillRect(0,2*cz-s,2*cx,s);
-					for( var i = 1; i<doors.length; i++ )
-						if( doors[i][1] > doors[closestDoorIdx][1] )
-							closestDoorIdx = i;
 					break;
 				case 3:
 					ctx.fillRect(0,0,s,2*cz);
-					for( var i = 1; i<doors.length; i++ )
-						if( doors[i][0] < doors[closestDoorIdx][0] )
-							closestDoorIdx = i;
 					break;
 			}
 
 			// draw final door
-			var theDoor = doors[closestDoorIdx];
 			ctx.fillStyle = 'red';
-			ctx.fillRect(cx+s*theDoor[0]-5-house.dX*s, cz+s*theDoor[1]-5-house.dZ*s, 10, 10);
-			//ctx.strokeRect(cx+s*theDoor[0]-6-house.dX*s, cz+s*theDoor[1]-6-house.dZ*s, 12, 12);
+			ctx.fillRect(cx+s*house.door[0]-5, cz+s*house.door[1]-5, 10, 10);
 
 			// draw outside
-			var x = theDoor[0]-house.dX, // position in door
-				z = theDoor[1]-house.dZ;
+			var x = house.door[0], // position in door
+				z = house.door[1];
 			
 			var x1 = x, // position out door
 				z1 = z;
-			switch( theDoor[2] )
+			switch( house.door[2] )
 			{
 				case 0: z-=0.5; z1+=0.5; break;
 				case 1: x-=0.5; x1+=0.5; break;
@@ -293,9 +282,9 @@
 				ctx.moveTo(cx+s*x,cz+s*z);
 				ctx.lineTo(cx+s*x1,cz+s*z1);
 				
-				if( house.faces==0 && theDoor[2]==0 )
+				if( house.faces==0 && house.door[2]==0 )
 				{
-					var span = 0.5+Math.max( house.sizeAX/2, house.posBX+house.sizeBX/2 ) - theDoor[0];
+					var span = 0.5+Math.max( house.posAX+house.sizeAX/2, house.posBX+house.sizeBX/2 ) - house.door[0];
 					ctx.lineTo(cx+s*x1+s*span,cz+s*z1);
 					x2 += span;
 					console.log('prob',idx);

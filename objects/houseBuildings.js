@@ -29,6 +29,21 @@
 //		house.ringIndex -- in the block ring
 
 
+// seed = 60944
+// ground size = 5000
+// people = 5000
+//											1door/house
+//					 size	count	  kB	kB
+//                  ------	------	----
+// HouseBuilding	 	48	 27238	1307  1307
+// HouseDoor			32	102133	3268   872
+// HouseWing		 	28	 54476	1525  1525
+// NavMeshHouseZone	 	36	 27238	 981   981
+// HouseSidewalkPath 	44	 27238	1198  1198
+//							------	---- -----
+//							238323	8280  5883
+
+
 
 import * as THREE from '../js/three.module.js';
 import {HouseSidewalks, HouseSidewalk, HouseSidewalkPath} from './houseSidewalks.js';
@@ -147,26 +162,60 @@ export class HouseBuilding
 		
 		this.wingA = wingA;
 		this.wingB = wingB;
-		
+
 		this.facing = facing;
 		
 		this.block = block;
 		
-		this.doors = [ ];
+		this.door = undefined;
 		this.ring = [ ];
 
 		// remove doors from wingA that are inside wingB
+		var doors = [];
 		var wingDoors = wingA.doors;
 		for( var i=wingDoors.length-1; i>=0; i-- )
 			if( !wingB.isInside( wingDoors[i].center ) )
-				this.doors.push( wingDoors[i] );
+				doors.push( wingDoors[i] );
 		
 		wingDoors = wingB.doors;
 		// remove doors from wingB that are inside wingA
 		for( var i=wingDoors.length-1; i>=0; i-- )
 			if( !wingA.isInside( wingDoors[i].center ) )
-				this.doors.push( wingDoors[i] );
-//		this.doors = [this.doors[0]];
+				doors.push( wingDoors[i] );
+			
+		// house facing
+		//
+		//       Z+
+		//	 	 1	
+		//	X- 2   0 X+
+		//       3
+		//       Z-
+		var idx = 0;
+		switch( facing )
+		{
+			case 0: // X+
+				for( var i=1; i<doors.length; i++ )
+					if( doors[i].center.x > doors[idx].center.x )
+						idx = i;
+				break;
+			case 1: // Z+
+				for( var i=1; i<doors.length; i++ )
+					if( doors[i].center.z > doors[idx].center.z )
+						idx = i;
+				break;
+			case 2: // X-
+				for( var i=1; i<doors.length; i++ )
+					if( doors[i].center.x < doors[idx].center.x )
+						idx = i;
+				break;
+			case 3: // Z-
+				for( var i=1; i<doors.length; i++ )
+					if( doors[i].center.z < doors[idx].center.z )
+						idx = i;
+				break;
+		}
+		
+		this.door = doors[idx];
 		
 		// prepare ring		
 		var pos,

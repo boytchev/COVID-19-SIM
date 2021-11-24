@@ -305,9 +305,9 @@ export class NavMesh
 		this.zones.push( zone );
 		
 		// house doors
-		for( var i=0; i<house.doors.length; i++ )
-		{
-			var door = house.doors[i];
+//		for( var i=0; i<house.doors.length; i++ )
+//		{
+			var door = house.door;//s[i];
 
 			var out = this.v[ door.rotation ];
 
@@ -319,7 +319,7 @@ export class NavMesh
 		
 			this.zones.push( door.insideZone, door.outsideZone );
 			house.ring.push( door.outsideZone );
-		}
+//		}
 		
 		// house sidewalk path
 		size = new Size( (house.path.rotation%2)?1/2:SIDEWALK_WIDTH-1, (house.path.rotation%2)?SIDEWALK_WIDTH-1:1/2 );
