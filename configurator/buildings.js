@@ -111,7 +111,7 @@ CFG.addHeader(
 	'building,house', {internal:true} );
 
 		CFG.addNumeric(
-			'hbr', 'House distance', 5, {min:4, max:20, step:1, internal:true},
+			'hbr', 'House distance', 6, {min:6, max:20, step:1, internal:true},
 			'The radius of invisible circle around a house. It determins how close are neghtbour houses and how it is positioned in a block. Larger radius makes sparser house distribution.',
 			'building,house' );
 

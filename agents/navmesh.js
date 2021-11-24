@@ -298,7 +298,7 @@ export class NavMesh
 		house.wingA.insideZone = zone;
 		this.zones.push( zone );
 		
-		// house floors of wingB
+		// house floor of wingB
 		size = house.wingB.size.shrink(1);
 		zone = new NavMeshRectZone( house.wingB.center, size, house.block );
 		house.wingB.insideZone = zone;

@@ -48,6 +48,9 @@ class HouseDoor
 		this.center = center;
 		this.rotation = rotation;
 		
+		this.outsideZone = undefined;
+		this.insideZone = undefined;
+		
 	} // HouseDoor.constructor
 	
 } // HouseDoor
@@ -163,7 +166,6 @@ export class HouseBuilding
 		for( var i=wingDoors.length-1; i>=0; i-- )
 			if( !wingA.isInside( wingDoors[i].center ) )
 				this.doors.push( wingDoors[i] );
-			
 //		this.doors = [this.doors[0]];
 		
 		// prepare ring		

@@ -152,7 +152,7 @@ export const URBAN_RURAL = Math.pow(param('urru',0.3),2);	// 0.0=megapolis 0.3=c
 export const SKYSCRAPERS = param('sks',0.2);				// -1.0=minimal number +1.0 almost all is skyscrapers
 export const FLOOR_HEIGHT = param('fh',2.5);				// in meters
 export const MAX_FLOORS = param('mf',120);					// maximal number of floors in a building
-export const HOUSE_BOUNDING_RADIUS = param('hbr',5);		// in meters, house bounding circle radius
+export const HOUSE_BOUNDING_RADIUS = param('hbr',6);		// in meters, house bounding circle radius
 
 
 // texture scaling factor (for ground and buildings) -- these are not user-configurable

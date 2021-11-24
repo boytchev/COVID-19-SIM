@@ -18,8 +18,8 @@ export class Room
 		this.center = center;
 		this.size = size;
 		
-		this.outsideZone = undefined;
-		this.insideZone = undefined;
+		this.outsideZone = undefined; // outside the room door
+		this.insideZone = undefined; // inside the room door
 
 		this.outerWall = [false, false, false, false]; // indices are TOP,LEFT,RIGHT,BOTTOM - true if room wall is building wall
 		
