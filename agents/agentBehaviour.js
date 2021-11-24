@@ -170,13 +170,12 @@ export class AgentBehaviour
 		// go to house center
 		this.addToRoute( house.randomPosAB() ); 
 		
-		// then go to a door and exit trough it
-		var door = house.door;//pick( house.doors );
-		this.addToRoute( door.insideZone ); 
-		this.addToRoute( door.outsideZone ); 
+		// then go to the door and exit trough it
+		this.addToRoute( house.door.insideZone ); 
+		this.addToRoute( house.door.outsideZone ); 
 		
 		// go around the house
-		this.addRingToRoute( house.ring, door.ringIndex, house.path.ringIndex );
+		this.addRingToRoute( house.ring, house.door.ringIndex, house.path.ringIndex );
 
 		// go to the street sidewalk
 		this.addToRoute( house.path.outsideZone ); 
@@ -211,12 +210,11 @@ export class AgentBehaviour
 		// go to the end of the path (it is next to the house)
 		this.addToRoute( house.path.insideZone ); 
 		
-		// pick a door and go round the house to that door
-		var door = house.door;//pick( house.doors );
-		this.addRingToRoute( house.ring, house.path.ringIndex, door.ringIndex );
+		// go round the house to the door
+		this.addRingToRoute( house.ring, house.path.ringIndex, house.door.ringIndex );
 
 		// go through the door
-		this.addToRoute( door.insideZone ); 
+		this.addToRoute( house.door.insideZone ); 
 		
 		// go to the central area
 		this.addToRoute( house.randomPosAB() ); 

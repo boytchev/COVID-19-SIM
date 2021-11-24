@@ -304,22 +304,17 @@ export class NavMesh
 		house.wingB.insideZone = zone;
 		this.zones.push( zone );
 		
-		// house doors
-//		for( var i=0; i<house.doors.length; i++ )
-//		{
-			var door = house.door;//s[i];
+		// house door
+		var out = this.v[ house.door.rotation ];
 
-			var out = this.v[ door.rotation ];
-
-			// set door outer navmesh
-			door.outsideZone = new NavMeshRectZone( door.center.add(out,+1/2), sizeHalf, house.block, door );
-			door.insideZone  = new NavMeshRectZone( door.center.add(out,-1/2), sizeHalf, house.block, door );
-			
-			this.pairZones( door.insideZone, door.outsideZone );
+		// set door outer navmesh
+		house.door.outsideZone = new NavMeshRectZone( house.door.center.add(out,+1/2), sizeHalf, house.block, house.door );
+		house.door.insideZone  = new NavMeshRectZone( house.door.center.add(out,-1/2), sizeHalf, house.block, house.door );
 		
-			this.zones.push( door.insideZone, door.outsideZone );
-			house.ring.push( door.outsideZone );
-//		}
+		this.pairZones( house.door.insideZone, house.door.outsideZone );
+	
+		this.zones.push( house.door.insideZone, house.door.outsideZone );
+		house.ring.push( house.door.outsideZone );
 		
 		// house sidewalk path
 		size = new Size( (house.path.rotation%2)?1/2:SIDEWALK_WIDTH-1, (house.path.rotation%2)?SIDEWALK_WIDTH-1:1/2 );
