@@ -17,7 +17,7 @@
 <body>
 	<div id="code"></div>
 	<script type="module">
-		var response = await fetch( './model/agent3d.ply' );
+		var response = await fetch( './model/agent3d-v2.ply' );
 		var obj = await response.text();
 			obj = obj.replace('element vertex', 'element_vertex');
 			obj = obj.replace('element face', 'element_face');
