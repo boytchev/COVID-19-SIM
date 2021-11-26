@@ -26,10 +26,10 @@
 	<div id="table"></div>
 	
 	<script>
-		console.time(1);
+		const SIZE = 200,
+			  GRID = SIZE/20;
 		
-		var countAll = 0,
-			countFailed = 0;
+		console.time(1);
 			
 		var houses = [];
 		
@@ -135,14 +135,10 @@
 				door[1] -= dZ;
 			
 			var house = {
-				sizeAX:sizeAX, 
-				sizeAZ:sizeAZ, 
-				sizeBX:sizeBX, 
-				sizeBZ:sizeBZ,
-				posAX:-dX, 
-				posAZ:-dZ, 
-				posBX:posBX-dX, 
-				posBZ:posBZ-dZ, 
+				posA:	{x:-dX,		z:-dZ}, 
+				sizeA:	{x:sizeAX,	z:sizeAZ}, 
+				posB:	{x:posBX-dX,z:posBZ-dZ}, 
+				sizeB:	{x:sizeBX,	z:sizeBZ},
 				door: door,
 				faces: faces,
 			};
@@ -159,7 +155,7 @@ console.timeEnd(1);
 		{
 			if(i && houses[i].faces!=houses[i-1].faces) html+='<hr>';
 			var house = houses[i];
-			html += '<canvas width="200" height="200" id="canvas'+i+'"></canvas>';
+			html += '<canvas width="'+SIZE+'" height="'+SIZE+'" id="canvas'+i+'"></canvas>';
 		}
 		
 		document.getElementById('table').innerHTML = html;
@@ -177,52 +173,68 @@ console.timeEnd(1);
 			var cvs = document.getElementById('canvas'+idx),
 				ctx = cvs.getContext("2d");
 			
+			function moveTo(x,z)
+			{
+				ctx.moveTo(c+s*x,c+s*z);
+			}
+
+			function lineTo(x,z)
+			{
+				ctx.lineTo(c+s*x,c+s*z);
+			}
+
+			function fillRect(cent,size,expand=0)
+			{
+				ctx.fillRect(c-s*size.x/2+s*cent.x-s*expand, c-s*size.z/2+s*cent.z-s*expand, s*size.x+2*s*expand, s*size.z+2*s*expand);
+			}
+
+			function strokeRect(cent,size,expand=0)
+			{
+				ctx.strokeRect(c-s*size.x/2+s*cent.x-s*expand, c-s*size.z/2+s*cent.z-s*expand, s*size.x+2*s*expand, s*size.z+2*s*expand);
+			}
+			
 			// write id
 			ctx.font = "12px Arial";
 			ctx.fillText(idx, 2, 12);
 
 			// canvas center
-			var cx = 100, cz = 100, s = 10;
+			var c = SIZE/2, s = GRID;
 			
 
 			// draw sidewalks
-			ctx.fillStyle = 'antiqueWhite';
-			ctx.fillRect(cx-s*house.sizeAX/2+s*house.posAX-s, cz-s*house.sizeAZ/2+s*house.posAZ-s, s*house.sizeAX+2*s, s*house.sizeAZ+2*s);
-			ctx.fillRect(cx-s*house.sizeBX/2+s*house.posBX-s, cz-s*house.sizeBZ/2+s*house.posBZ-s, s*house.sizeBX+2*s, s*house.sizeBZ+2*s);
+			ctx.fillStyle = 'orange';
+				fillRect( house.posA, house.sizeA, 1 );
+				fillRect( house.posB, house.sizeB, 1 );
 
 
 			// draw wings
 			ctx.strokeStyle = 'black';
 			ctx.lineWidth = 3;
-			ctx.beginPath();
-				ctx.rect(cx-s*house.sizeAX/2+s*house.posAX, cz-s*house.sizeAZ/2+s*house.posAZ, s*house.sizeAX, s*house.sizeAZ);
-			ctx.stroke();
-			ctx.beginPath();
-				ctx.rect(cx-s*house.sizeBX/2+s*house.posBX, cz-s*house.sizeBZ/2+s*house.posBZ, s*house.sizeBX, s*house.sizeBZ);
-			ctx.stroke();
+				strokeRect( house.posA, house.sizeA );
+				strokeRect( house.posB, house.sizeB );
 			ctx.lineWidth = 1;
 
 			ctx.fillStyle = 'white';
-			ctx.fillRect(cx-s*house.sizeAX/2+s*house.posAX, cz-s*house.sizeAZ/2+s*house.posAZ, s*house.sizeAX, s*house.sizeAZ);
-			ctx.fillRect(cx-s*house.sizeBX/2+s*house.posBX, cz-s*house.sizeBZ/2+s*house.posBZ, s*house.sizeBX, s*house.sizeBZ);
+				fillRect( house.posA, house.sizeA );
+				fillRect( house.posB, house.sizeB );
 
 			// draw grid
 			ctx.strokeStyle = 'lightgray';
 			ctx.beginPath();
 			for( var x=-10; x<10; x++ )
 			{
-				ctx.moveTo(cx+s*x,0);
-				ctx.lineTo(cx+s*x,200);
-				ctx.moveTo(0,cz+s*x);
-				ctx.lineTo(200,cz+s*x);
+				moveTo(x,-10);
+				lineTo(x,+10);
+				moveTo(-10,x);
+				lineTo(+10,x);
 			}
 			ctx.stroke();
 			ctx.strokeStyle = 'dimgray';
 			ctx.beginPath();
-				ctx.moveTo(cx,0);
-				ctx.lineTo(cx,200);
-				ctx.moveTo(0,cz);
-				ctx.lineTo(200,cz);
+				ctx.moveTo(0,-10);
+				ctx.lineTo(0,+10);
+				ctx.moveTo(-10,0);
+				ctx.lineTo(+10,0);
 			ctx.stroke();
 
 			// draw road
@@ -235,22 +247,22 @@ console.timeEnd(1);
 			switch( house.faces )
 			{
 				case 0:
-					ctx.fillRect(0,0,2*cx,s);
+					ctx.fillRect(0,0,SIZE,s);
 					break;
 				case 1:
-					ctx.fillRect(2*cz-s,0,s,2*cz);
+					ctx.fillRect(SIZE-s,0,s,SIZE);
 					break;
 				case 2:
-					ctx.fillRect(0,2*cz-s,2*cx,s);
+					ctx.fillRect(0,SIZE-s,SIZE,s);
 					break;
 				case 3:
-					ctx.fillRect(0,0,s,2*cz);
+					ctx.fillRect(0,0,s,SIZE);
 					break;
 			}
 
 			// draw final door
 			ctx.fillStyle = 'red';
-			ctx.fillRect(cx+s*house.door[0]-5, cz+s*house.door[1]-5, 10, 10);
+			ctx.fillRect(c+s*house.door[0]-5, c+s*house.door[1]-5, 10, 10);
 
 			// draw outside
 			var x = house.door[0], // position in door
@@ -279,18 +291,18 @@ console.timeEnd(1);
 			ctx.strokeStyle = 'cornflowerblue';
 			ctx.lineWidth = 3;
 			ctx.beginPath();
-				ctx.moveTo(cx+s*x,cz+s*z);
-				ctx.lineTo(cx+s*x1,cz+s*z1);
+				ctx.moveTo(c+s*x,c+s*z);
+				ctx.lineTo(c+s*x1,c+s*z1);
 				
 				if( house.faces==0 && house.door[2]==0 )
 				{
-					var span = 0.5+Math.max( house.posAX+house.sizeAX/2, house.posBX+house.sizeBX/2 ) - house.door[0];
-					ctx.lineTo(cx+s*x1+s*span,cz+s*z1);
+					var span = 0.5+Math.max( house.posA.x+house.sizeA.x/2, house.posB.x+house.sizeB.x/2 ) - house.door[0];
+					ctx.lineTo(c+s*x1+s*span,c+s*z1);
 					x2 += span;
 					console.log('prob',idx);
 				}
 				
-				ctx.lineTo(cx+s*x2,cz+s*z2);
+				ctx.lineTo(c+s*x2,c+s*z2);
 			ctx.stroke();
 			
 		}
