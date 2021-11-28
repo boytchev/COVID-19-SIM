@@ -5,7 +5,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {EARTH_SIZE, GROUND_EDGE, DEBUG_ALL_WHITE, SUN, STATIC_SUN, STATIC_SUN_POSITION_MS, GROUND_SIZE, SHADOWS, NO_SHADOWS, FULL_SHADOWS, SHADOWS_MAP_SIZE, SHADOWS_MAX_COUNT, AGENTS_CAST_SHADOWS, DEBUG_SUN_POSITION_GUI, SUN_HORIZONTAL_ANGLE } from '../config.js';
+import {EARTH_SIZE, GROUND_EDGE, DEBUG_ALL_WHITE, SUN, STATIC_SUN, STATIC_SUN_POSITION_MS, GROUND_SIZE, SHADOWS, NO_SHADOWS, FULL_SHADOWS, SHADOWS_MAP_SIZE, SHADOWS_MAX_COUNT, AGENTS_CAST_SHADOWS, DEBUG_SUN_POSITION_GUI, SUN_HORIZONTAL_ANGLE, SAFE_MODE } from '../config.js';
 import {NatureMaterial, dayTimeMs} from './nature.js';
 import {Sun} from './sun.js';
 import {/*MoonLight, */Moon} from './moon.js';
@@ -95,6 +95,15 @@ class Sky
 	constructor( )
 	{
 		this.sysType = 'Sky';
+
+
+		// in safe mode no sky is drawn
+		if( SAFE_MODE ) 
+		{
+			scene.background = new THREE.Color( 'red' );
+			return;
+		}
+
 		
 		this.sun = new Sun();
 		this.moon = new Moon();
@@ -159,6 +168,9 @@ class Sky
 	
 	update( )
 	{
+		// in safe mode no sky is drawn
+		if( SAFE_MODE ) return;
+
 		if( SUN )
 		{
 			// calculate sun position
