@@ -29,6 +29,7 @@ import * as THREE from './js/three.module.js';
 import * as dat from './js/dat.gui.module.js';
 import {OrbitControls} from './js/OrbitControls.js';
 import {PIXEL_ART_STYLE} from './config.js';
+import {deltaTimeReal} from './nature/nature.js';
 
 var container = document.getElementById( 'container' );
 
