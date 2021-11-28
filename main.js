@@ -200,14 +200,14 @@ function animate()
 	//statsTrigs.update( renderer.info.render.triangles, 460  );
 	// mesh.quaternion.copy(camera.quaternion);
 	//stats.update();
-/*temporary
+
 	if( simulationPlaying )
 	{
 		buildings.update();
 		nature.update();
 		agents.update();
 	}
-	*/
+
 	if( VR )
 	{
 		// in VR
