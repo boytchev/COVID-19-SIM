@@ -23,7 +23,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {textures, blocks, scene, navmesh} from '../main.js';
-import {MAX_FLOORS, SIDEWALK_WIDTH, OFFICE_TEXTURE_SCALE_U, FLOOR_HEIGHT, OFFICE_DOOR_WIDTH, OFFICE_DOOR_DISTANCE, OFFICE_ROOM_SIZE, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, OFFICE_CORRIDOR_WIDTH, OFFICE_ROOM_COUNT, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_HIDE_ROOFS} from '../config.js';
+import {MAX_FLOORS, SIDEWALK_WIDTH, OFFICE_TEXTURE_SCALE_U, FLOOR_HEIGHT, OFFICE_DOOR_WIDTH, OFFICE_DOOR_DISTANCE, OFFICE_ROOM_SIZE, BUILDING_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, OFFICE_CORRIDOR_WIDTH, OFFICE_ROOM_COUNT, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_HIDE_ROOFS, SAFE_MODE} from '../config.js';
 import {Size, round, TOP, RIGHT, LEFT, BOTTOM, Pos} from '../core.js';
 
 
@@ -453,6 +453,10 @@ export class OfficeBuildings
 	
 	static generate( offices, doors )
 	{
+		
+		// in safe mode no office buildings are generated
+		if( SAFE_MODE ) return;
+		
 		// create an office building occupying the square part
 		// of the block reduced by sidewalks from all directions
 		for( var i=0; i<blocks.offices.length; i++ )
@@ -487,6 +491,11 @@ export class OfficeBuildings
 	
 	static image( offices )
 	{
+		
+		// in safe mode no office buildings are generated
+		if( SAFE_MODE ) return;
+		
+		
 		var instances = offices.length;
 		
 		var geometry  = OfficeBuildings.geometry(),
