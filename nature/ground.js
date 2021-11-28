@@ -5,7 +5,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {EARTH_SIZE, GROUND_SIZE, BLOCK_PARK, DEBUG_ALL_WHITE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, DEBUG_SHOW_DIRECTIONS, DEBUG_RANDOM_SEED} from '../config.js';
+import {EARTH_SIZE, GROUND_SIZE, BLOCK_PARK, DEBUG_ALL_WHITE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, DEBUG_SHOW_DIRECTIONS, DEBUG_RANDOM_SEED, SAFE_MODE} from '../config.js';
 import {NatureMaterial} from './nature.js';
 import {scene, textures} from '../main.js';
 import {font} from '../font.js';
@@ -19,6 +19,10 @@ class Ground
 	{
 		
 		this.sysType = 'Ground';
+		
+		// in safe mode no ground is generated
+		if( SAFE_MODE ) return;
+
 		this.constructGroundImage( );
 		
 	} // constructor
