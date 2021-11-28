@@ -159,7 +159,7 @@ var snd = new  Audio("data:audio/wav;base64,//uQRAAAAWMSLwUIYAAsYkXgoQwAEaYLWfkW
 	
 function oncePerSecond()
 {
-if(VR && renderer.xr.isPresenting) snd.play();
+
 	currentTime_elem.innerHTML = msToString( currentTimeMs );
 	
 	if( oncePerSecond_frames )
@@ -202,6 +202,7 @@ function animate()
 	//statsTrigs.update( renderer.info.render.triangles, 460  );
 	// mesh.quaternion.copy(camera.quaternion);
 	//stats.update();
+if(VR && renderer.xr.isPresenting && (frame%60 == 0) ) snd.play();
 
 	if( simulationPlaying )
 	{
