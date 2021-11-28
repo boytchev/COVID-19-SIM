@@ -41,6 +41,11 @@ CFG.addHeader(
 			'If checked, shows renderer info (once per 10000 frames) in the JS console &ndash; number of geometries, textures, calls, lines, points and triangles.',
 			'misc,graphics' );
 
+		CFG.addBoolean(
+			'vr', 'Virtual reality mode', false, {internal:true},
+			'If checked, shows a VR button to enter a VR mode. This mode requires specific hardware (e.g. VR glasses) and a browser that can access them. If not checked, the simulation is tailored to a desktop computer or a smartphone sceen.',
+			'misc,graphics' );
+
 CFG.addHeader(
 	2, 'Rotation', '', '',
 	'misc,rotation', {internal:true} );

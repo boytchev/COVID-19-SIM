@@ -55,7 +55,7 @@ function param2( id, defaultValue )
 	return value;
 }
 
-export const VR = false;
+export const VR = param('vr', false);
 
 export const GROUND_SIZE = param('gs', 500);	// in meters
 export const GROUND_EDGE = GROUND_SIZE/2;
