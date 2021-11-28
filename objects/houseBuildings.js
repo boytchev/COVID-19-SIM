@@ -40,6 +40,7 @@
 // HouseWing		 	28	 54476	1525  1525
 // NavMeshHouseZone	 	36	 27238	 981   981
 // HouseSidewalkPath 	44	 27238	1198  1198
+// NavMeshRectZone			108953		  3922
 //							------	---- -----
 //							238323	8280  5883
 
