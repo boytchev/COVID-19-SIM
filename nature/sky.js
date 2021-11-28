@@ -100,7 +100,7 @@ class Sky
 		// in safe mode no sky is drawn
 		if( SAFE_MODE ) 
 		{
-			scene.background = new THREE.Color( 'red' );
+			scene.background = new THREE.Color( 'pink' );
 			return;
 		}
 
