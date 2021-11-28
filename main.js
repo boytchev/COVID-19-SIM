@@ -107,28 +107,14 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 export var navmesh = new NavMesh();		measure( 'navmesh' );
 export var textures = new Textures();	measure( 'textures' );
 export var blocks = new Blocks();		measure( 'blocks' );
-
-//console.log(blocks);
-
-//randomTarget = pick(blocks.allTrueBlocks).randomPos();
-//drawArrow( randomTarget, randomTarget.addY(30) );
-
 export var buildings = new Buildings();	measure( 'buildings' );
 var trees = new Trees();				measure( 'trees' );
 var crossings = new Crossings();		measure( 'crossings' );
 export var agents = new Agents();		measure( 'agents' );
 var nature = new Nature();				measure( 'nature' );
 
-agents_elem.innerHTML = agents.agents.length;
 
-//if( DEBUG_FOLLOW_AGENT>=0 && DEBUG_FOLLOW_AGENT<agents.agents.length )
-//{
-//	var agent = agents.agents[DEBUG_FOLLOW_AGENT];
-//	agent.mesh.material = agent.mesh.material.clone();
-//	agent.mesh.material.color = new THREE.Color('cornflowerblue');
-//
-//  note:- commented because agents has no individual colour since they are instanced and color is immune level
-//}
+agents_elem.innerHTML = agents.agents.length;
 
 if( DEBUG_NAVMESH_SHOW_MESHES )
 {
@@ -202,7 +188,7 @@ function animate()
 	//statsTrigs.update( renderer.info.render.triangles, 460  );
 	// mesh.quaternion.copy(camera.quaternion);
 	//stats.update();
-if(VR && renderer.xr.isPresenting && (frame%60 == 0) ) snd.play();
+if(renderer.xr.isPresenting && (frame%60 == 0) ) snd.play();
 
 	if( simulationPlaying )
 	{

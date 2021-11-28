@@ -13,7 +13,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {blocks, scene} from '../main.js';
-import {CARTOON_STYLE, TREE_HOUSES_RATIO, TREE_HEIGHT, TREE_PARK_RATIO, TREE_COMPLEXITY, DEBUG_BUILDINGS_OPACITY, DEBUG_ALL_WHITE} from '../config.js';
+import {CARTOON_STYLE, TREE_HOUSES_RATIO, TREE_HEIGHT, TREE_PARK_RATIO, TREE_COMPLEXITY, DEBUG_BUILDINGS_OPACITY, DEBUG_ALL_WHITE, SAFE_MODE} from '../config.js';
 
 
 export class Trees
@@ -23,6 +23,9 @@ export class Trees
 	{
 
 		this.sysType = 'Trees';
+		
+		// in safe mode no trees are generated
+		if( SAFE_MODE ) return;
 		
 		this.image( this.generate() );
 		
