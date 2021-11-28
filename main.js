@@ -28,7 +28,7 @@ measure( 'start' );
 import * as THREE from './js/three.module.js';
 import * as dat from './js/dat.gui.module.js';
 import {OrbitControls} from './js/OrbitControls.js';
-import {PIXEL_ART_STYLE} from './config.js';
+import {PIXEL_ART_STYLE, SAFE_MODE} from './config.js';
 import {deltaTimeReal} from './nature/nature.js';
 
 var container = document.getElementById( 'container' );
@@ -192,7 +192,7 @@ if(renderer.xr.isPresenting && (frame%60 == 0) ) snd.play();
 
 	if( simulationPlaying )
 	{
-		buildings.update();
+		if( !SAFE_MODE ) buildings.update();
 		nature.update();
 		agents.update();
 	}

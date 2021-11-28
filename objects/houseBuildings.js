@@ -51,7 +51,7 @@ import {HouseSidewalks, HouseSidewalk, HouseSidewalkPath} from './houseSidewalks
 import {blocks, navmesh, textures, scene} from '../main.js';
 import {round, Pos, Size, RectZone} from '../core.js';
 import {pick} from '../coreNav.js';
-import {CARTOON_STYLE, SIDEWALK_WIDTH, HOUSE_BOUNDING_RADIUS, FLOOR_HEIGHT, DEBUG_HIDE_ROOFS, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_BUILDINGS_OPACITY} from '../config.js';
+import {CARTOON_STYLE, SIDEWALK_WIDTH, HOUSE_BOUNDING_RADIUS, FLOOR_HEIGHT, DEBUG_HIDE_ROOFS, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_BUILDINGS_OPACITY, SAFE_MODE} from '../config.js';
 
 
 class HouseDoor
@@ -582,7 +582,9 @@ export class HouseBuildings
 	
 	static generate( houses, sidewalks )
 	{
-
+		// in safe mode no house buildings are generated
+		if( SAFE_MODE ) return;
+		
 		for( var i=0; i<blocks.houses.length; i++ )
 		{
 			var block = blocks.houses[i];
@@ -729,6 +731,8 @@ export class HouseBuildings
 	
 	static image( houses, sidewalks )
 	{
+		// in safe mode no house buildings are generated
+		if( SAFE_MODE ) return;
 		
 		var instances = 2*houses.length; // two wings in a house
 
