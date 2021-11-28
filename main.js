@@ -211,6 +211,7 @@ function animate()
 	if( VR )
 	{
 		// in VR
+/*temporary
 		if( move && rightController && user )
 		{
 			rightController.getWorldDirection( v );
@@ -220,7 +221,7 @@ function animate()
 			
 			user.position.addScaledVector( v, -10*deltaTimeReal );
 		}
-
+*/
 		renderer.render(scene, camera); // render all frames in VR mode
 	}
 	else
@@ -265,7 +266,7 @@ if( VR )
 	camera.position.set( 0, 0, 0 );
 
 	move = false;
-	
+/*temporary	
 	rightController = renderer.xr.getController( 0 );
 	rightController.addEventListener( 'selectstart', function(){ move = true; } );
 	rightController.addEventListener( 'selectend', function(){ move = false; } );
@@ -276,6 +277,7 @@ if( VR )
 	user.add( camera );
 	user.add( rightController );
 	scene.add( user );
+*/	
 }
 
 
