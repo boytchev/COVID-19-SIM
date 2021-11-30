@@ -194,7 +194,7 @@ function animate()
 
 	if( simulationPlaying )
 	{
-		if( !VR !! animateLoopCount%2 )
+		if( !VR || animateLoopCount%2 )
 		{
 			buildings.update();
 			nature.update();
