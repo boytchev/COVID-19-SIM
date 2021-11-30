@@ -14,7 +14,7 @@ import * as CFG from './configurator.js';
 CFG.addHeader(
 	1, 'Miscallaneous', 'misc',
 	'Prameters controlling the graphics and other miscallaneous features.',
-	'misc,route,tracking,home,house,apartment,office,people,navmesh,floor,route,elevator,rotation,graphics,debug' );
+	'misc,route,tracking,home,house,apartment,office,navmesh,floor,route,elevator,rotation,graphics,debug' );
 
 
 CFG.addHeader(
@@ -95,7 +95,7 @@ CFG.addHeader(
 
 CFG.addHeader(
 	2, 'Routes', '', '',
-	'misc,route,tracking,home,house,apartment,office,people', {internal:true} );
+	'misc,route,tracking,home,house,apartment,office', {internal:true} );
 
 		CFG.addBoolean(
 			'dsr', 'Show route', false, {internal:true},
@@ -120,7 +120,7 @@ CFG.addHeader(
 		CFG.addNumeric(
 			'drpa', 'Routes per person', 1, {min:1, max:200, step:1, internal:true},
 			'The number of routes generated for each person. Independent on the value, onle one of the routes is used. THe others only indicate what possibilities exists. This parameter is often used with <em>Show route</em> checked and <em>Agent count</em>=1.',
-			'misc,route,people' );
+			'misc,route' );
 
 
 

@@ -14,7 +14,7 @@ import * as CFG from './configurator.js';
 CFG.addHeader(
 	1, 'Health', 'health',
 	'Prameters for infection and people health.',
-	'health,infection,immunity,people,time,tracking' );
+	'health,infection,immunity,time,tracking' );
 
 // HEALTH.INFECTION ===================================
 
@@ -22,56 +22,56 @@ CFG.addHeader(
 
 CFG.addHeader(
 	2, 'Masks', '', '',
-	'health,people,mask,adult,child' );
+	'health,mask,adult,child' );
 
 CFG.addHeader(
 	3, 'Effectiveness', '', '',
-	'health,people,mask' );
+	'health,mask' );
 	
 		CFG.addPercentage(
 			'mie', 'Mask inhale effectiveness', 0.3, {min:0, max:1, step:0.1},
 			'Mask effectiveness for inhaled air &ndash i.e. how effective is the mask protecting a person from other people. The amount of incoming infectious particles is reduced by this factor.',
-			'health,people,mask' );
+			'health,mask' );
 	
 		CFG.addPercentage(
 			'mee', 'Mask exhale effectiveness', 0.9, {min:0, max:1, step:0.1},
 			'Mask effectiveness for exhaled air &ndash i.e. how effective is the mask protecting other people from this person. The amount of outgoing infectious particles is reduced by this factor.',
-			'health,people,mask' );
+			'health,mask' );
 	
 CFG.addHeader(
 	3, 'Behaviour', '',
 	'The mask behaviour parameters are intervals of infection levels from 0 (healthy) to 10 (most infected).',
-	'health,people,mask,adult,child' );
+	'health,mask,adult,child' );
 	
 		CFG.addNumericRange(
 			'amon', 'Adult mask on', 2, 4, {min:0, max:10, step:1},
 			'When an adult puts a mask on. For each adult the actual condition of putting mask on is randomly picked within the interval. The condition occurs when the infection level raises and goes above the picked value.',
-			'health,people,mask,adult' );
+			'health,mask,adult' );
 			
 		CFG.addNumericRange(
 			'amof', 'Adult mask off', 1, 5, {min:0, max:10, step:1},
 			'When an adult takes a mask off. For each adult the actual condition of taking mask off is randomly picked within the interval. The condition occurs when the infection level decreases and goes below the picked value.',
-			'health,people,mask,adult' );
+			'health,mask,adult' );
 			
 		CFG.addNumericRange(
 			'cmon', 'Child mask on', 2, 4, {min:0, max:10, step:1},
 			'When a child puts a mask on. For each child the actual condition of putting mask on is randomly picked within the interval. The condition occurs when the infection level raises and goes above the picked value.',
-			'health,people,mask,child' );
+			'health,mask,child' );
 			
 		CFG.addNumericRange(
 			'cmof', 'Child mask off', 1, 5, {min:0, max:10, step:1},
 			'When a child takes a mask off. For each child the actual condition of taking mask off is randomly picked within the interval. The condition occurs when the infection level decreases and goes below the picked value.',
-			'health,people,mask,child' );
+			'health,mask,child' );
 			
 			
 CFG.addHeader(
 	2, 'Infection', '', '',
-	'health,infection,people,time,debug' );
+	'health,infection,time,debug' );
 
 		CFG.addPercentage(
 			'pii', 'Initially infected', 0.05, {fav:true, min:0, max:1, step:0.05},
 			'Percentage of initially infected people. Although infected, the people will start with the asymptotic phase, so the infection will manifestated later on.',
-			'health,infection,people,debug' );
+			'health,infection,debug' );
 
 		CFG.addNumeric(
 			'id', 'Infection distance', 1, {fav:true, min:0.2, max:50, step:0.2, unit: 'm'},
@@ -127,17 +127,17 @@ CFG.addHeader(
 	
 CFG.addHeader(
 	2, 'Monitoring', '', '',
-	'health,people,tracking' );
+	'health,tracking' );
 
 		CFG.addBoolean(
 			'ioi', 'Health overhead indicator', false, {},
 			'If checked, there is overhead indicator showing the health status as colour and as numeric level from OK (no infection), then 1, 2, ... to 10 (higly infected person).',
-			'health,people,debug' );
+			'health,debug' );
 			
 		CFG.addBoolean(
 			'ici', 'Health color indicator', false, {},
 			'If checked, the skin color of infected people turn reddish depending on the level of the health status.',
-			'health,people,debug' );
+			'health,debug' );
 			
 		CFG.addBoolean(
 			'dsvs', 'Viral diagram', false, {internal:true},
@@ -147,10 +147,10 @@ CFG.addHeader(
 		CFG.addBoolean(
 			'dah', 'Population health', false, {internal:true},
 			'If checked, once per second prints in the JS console the number of infected people split into three health categories &ndash; asymptotic (infection level under 20%), medium (between 20% and 60%) and severe (above 60%).',
-			'health,people' );
+			'health' );
 
 		CFG.addNumeric(
 			'dfah', 'Follow person health', -1, {min:-1, max:50000, step:1, internal:true},
 			'If this parameter cointains an existing person id, then the health status of this person is printed in the JS console. If the value is -1, such printing is turned off.',
-			'health,people,tracking' );
+			'health,tracking' );
 

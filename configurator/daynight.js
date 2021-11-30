@@ -6,7 +6,7 @@ import * as CFG from './configurator.js';
 CFG.addHeader(
 	1, 'Day and night', 'daynight',
 	'Prameters for the day-night light cycle in the simulation.',
-	'daynight,time,sun,moon,shadow,light,morning,evening,house,apartment,office,people' );
+	'daynight,time,sun,moon,shadow,light,morning,evening,house,apartment,office' );
 		
 CFG.addHeader(
 	2, 'Time', '', '',
@@ -60,7 +60,7 @@ CFG.addHeader(
 	
 CFG.addHeader(
 	2, 'Shadows', '', '',
-	'daynight,shadow,people' );
+	'daynight,shadow' );
 	
 		CFG.addNumericList(
 			'sh', 'Shadows', 0, {values:[0,'no',1,'top',2,'full']},
@@ -80,7 +80,7 @@ CFG.addHeader(
 		CFG.addBoolean(
 			'acs', 'People shadows', false, {},
 			'If checked, people have shadows. The current implementation of shadows in walking people is static and does not depend on body posture.',
-			'daynight,shadow,people' );
+			'daynight,shadow' );
 
 
 	
