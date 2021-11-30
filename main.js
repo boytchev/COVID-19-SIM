@@ -190,6 +190,7 @@ function animate()
 //if(renderer.xr.isPresenting && (frame%60 == 0) ) snd.play();
 
 	if( simulationPlaying )
+	if( !VR || (frame%2 == 0) )
 	{
 		buildings.update();
 		nature.update();
@@ -199,7 +200,7 @@ function animate()
 	if( VR )
 	{
 		// in VR
-		if( move && rightController && user )
+		if( (frame%2 == 0) && move && rightController && user )
 		{
 			rightController.getWorldDirection( v );
 								
