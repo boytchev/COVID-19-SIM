@@ -52,7 +52,11 @@ uniform float opacity;
 	flat varying float vAge;
 	flat varying int vVertexTopology;
 	flat varying int vMask;
+	
 #endif
+
+varying vec3 vNormal;
+
 
 #ifdef COVID19SYM
 	// if INFECTION_OVERHEAD_INDICATOR is not set, then make OVERHEAD value invalid

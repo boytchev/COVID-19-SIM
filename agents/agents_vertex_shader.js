@@ -12,9 +12,7 @@ export default `
 
 #define PHONG
 varying vec3 vViewPosition;
-#ifndef FLAT_SHADED
-	varying vec3 vNormal;
-#endif
+varying vec3 vNormal;
 
 #ifdef COVID19SYM
 	uniform float uTime;
@@ -149,7 +147,7 @@ void main() {
 		vClothing = INTIMATE_CLOTHING;
 
 	// flatten the 3D effect
-	transformedNormal = mix(vec3(0,0,1),transformedNormal,0.7);
+	transformedNormal = mix(vec3(0,1,0),transformedNormal,0.9);
 
 	if( !man )
 	if( aVertexTopology == NIPS )
@@ -158,9 +156,8 @@ void main() {
 	}
 #endif
 
-#ifndef FLAT_SHADED
-	vNormal = normalize( transformedNormal );
-#endif
+vNormal = normalize( vec3(0,1,-1)+transformedNormal );
+
 	#include <begin_vertex>
 
 
