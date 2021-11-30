@@ -1,6 +1,6 @@
 // converted with http://gero3.github.io/facetype.js/
 
-import * as THREE from './js/three.module.js';
+import * as THREE from './js/FontLoader.js';
 
 var FONT_JSON = {
 	"glyphs": {

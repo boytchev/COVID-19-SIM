@@ -5,6 +5,7 @@
 
 
 import * as THREE from '../js/three.module.js';
+import {TextGeometry} from '../js/TextGeometry.js';
 import {EARTH_SIZE, GROUND_SIZE, BLOCK_PARK, DEBUG_ALL_WHITE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, DEBUG_SHOW_DIRECTIONS, DEBUG_RANDOM_SEED, SAFE_MODE} from '../config.js';
 import {NatureMaterial} from './nature.js';
 import {scene, textures} from '../main.js';
@@ -123,28 +124,28 @@ class Ground
 							bevelEnabled: false,
 						};
 						
-			var textGeometry = new THREE.TextGeometry( 'TOP / Z+', textStyle );
+			var textGeometry = new TextGeometry( 'TOP / Z+', textStyle );
 			var text = new THREE.Mesh( textGeometry, textMaterial );
 			text.position.x = -GROUND_SIZE/10;
 			text.position.z = GROUND_SIZE/2 + GROUND_SIZE/30;
 			text.rotation.x = -Math.PI/2;
 			scene.add( text );
 			
-			var textGeometry = new THREE.TextGeometry( 'BOTTOM / Z-', textStyle );
+			var textGeometry = new TextGeometry( 'BOTTOM / Z-', textStyle );
 			var text = new THREE.Mesh( textGeometry, textMaterial );
 			text.position.x = -GROUND_SIZE/8;
 			text.position.z = -GROUND_SIZE/2;
 			text.rotation.x = -Math.PI/2;
 			scene.add( text );
 			
-			var textGeometry = new THREE.TextGeometry( 'LEFT / X-', textStyle );
+			var textGeometry = new TextGeometry( 'LEFT / X-', textStyle );
 			var text = new THREE.Mesh( textGeometry, textMaterial );
 			text.position.x = -GROUND_SIZE/2;
 			text.position.z = GROUND_SIZE/20;
 			text.rotation.set(-Math.PI/2,Math.PI/2,0,'YXZ');
 			scene.add( text );
 			
-			var textGeometry = new THREE.TextGeometry( 'RIGHT / X+', textStyle );
+			var textGeometry = new TextGeometry( 'RIGHT / X+', textStyle );
 			var text = new THREE.Mesh( textGeometry, textMaterial );
 			text.position.x = GROUND_SIZE/2+GROUND_SIZE/30;
 			text.position.z = GROUND_SIZE/20;
