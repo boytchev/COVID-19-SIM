@@ -179,6 +179,7 @@ setInterval( oncePerSecond, 1000 );
 
 
 // main animation cycle
+var animateLoopCount = 0;
 function animate()
 {
 	//requestAnimationFrame( animate );
@@ -189,18 +190,22 @@ function animate()
 	//stats.update();
 //if(renderer.xr.isPresenting && (frame%60 == 0) ) snd.play();
 
+	animateLoopCount++;
+
 	if( simulationPlaying )
-	if( !VR || (frame%2 == 0) )
 	{
-		buildings.update();
-		nature.update();
-		agents.update();
+		if( !VR !! animateLoopCount%2 )
+		{
+			buildings.update();
+			nature.update();
+			agents.update();
+		}
 	}
 
 	if( VR )
 	{
 		// in VR
-		if( (frame%2 == 0) && move && rightController && user )
+		if( move && rightController && user )
 		{
 			rightController.getWorldDirection( v );
 								
