@@ -82,6 +82,15 @@ import {OfficeDoor} from './objects/officeDoors.js';
 import {scene} from './main.js';
 
 
+export class Pos2D
+{
+	constructor( x, z )
+	{
+		this.x = x;
+		this.z = z;
+	}
+}
+
 export class Pos 
 {
 	constructor( x = 0, z = 0, block = undefined, y = 0 )

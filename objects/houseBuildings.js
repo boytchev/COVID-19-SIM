@@ -29,7 +29,7 @@
 //		house.ringIndex -- in the block ring
 
 
-// seed = 60944
+// seed = 	
 // ground size = 5000
 // people = 5000
 //											1door/house
@@ -41,6 +41,7 @@
 // NavMeshHouseZone	 	36	 27238	 981   981
 // HouseSidewalkPath 	44	 27238	1198  1198
 // NavMeshRectZone			108953		  3922
+// time for houses						 3.271s
 //							------	---- -----
 //							238323	8280  5883
 

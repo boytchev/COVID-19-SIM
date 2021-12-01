@@ -25,226 +25,44 @@
 	This generator tries to pregenerate all types of two-wing houses.
 	<div id="table"></div>
 	
-	<script>
+	<script type="module">
+	
+		// run the house factory to create
+		// arrays of possible house templates
+		import * as Factory from './houseBuildingsFactory.js';
+
 		const SIZE = 400,
 			  GRID = SIZE/20;
 		
-		console.time(1);
+		var html = '',
+			id = '';
 			
-		var houses = [],
-			houseData = [[],[],[],[]];
-		
-		function generateHouses( )
+		// create canvases for template images
+		for( var dir = 0; dir<4; dir++ )
+		for( var i = 0; i<Factory.count(dir); i++ )
 		{
-			function wingDoors(px,pz,sx,sz)
-			{
-				switch( 10*sx+sz )
-				{
-					case 44:
-						return [
-							[px+1,pz+2,0]
-						];
-					case 48:
-						return [
-							[px+1,pz+4,0],
-							[px+2,pz-3,1],
-							[px-2,pz+3,3]
-						];
-					case 84:
-						return [
-							[px+1,pz+2,0],
-							[px-3,pz-2,2]
-						];
-					case 88:
-						return [
-							[px+1,pz+4,0],
-							[px+4,pz-3,1],
-							[px-4,pz+3,3],
-							[px-3,pz-4,2]
-						];
-				}
-				throw 'Wing size must be 4 or 8';
-			}
-
-			for( var faces=0; faces<4; faces++ )
-			for( var sizeAX=4; sizeAX<=8; sizeAX+=4 )
-			for( var sizeAZ=4; sizeAZ<=8; sizeAZ+=4 )
-			for( var sizeBX=4; sizeBX<=8; sizeBX+=4 )
-			for( var sizeBZ=4; sizeBZ<=8; sizeBZ+=4 )
-			for( var posBX=-4; posBX<=4; posBX+=2 )
-			for( var posBZ=-4; posBZ<=4; posBZ+=2 )
-			{
-				
-				var minAX = -sizeAX/2,
-					minAZ = -sizeAZ/2,
-					maxAX = +sizeAX/2,
-					maxAZ = +sizeAZ/2;
-
-				var minBX = posBX-sizeBX/2,
-					minBZ = posBZ-sizeBZ/2,
-					maxBX = posBX+sizeBX/2,
-					maxBZ = posBZ+sizeBZ/2;
-				
-				if( minAX==minBX || minAZ==minBZ || maxAX==maxBX || maxAZ==maxBZ || minAX==maxBX || minAZ==maxBZ || maxAX==minBX || maxAZ==minBZ )
-				{
-					continue;
-				}
-				
-				// doors of wings
-				var doorsA = wingDoors(0,0,sizeAX,sizeAZ),
-					doorsB = wingDoors(posBX,posBZ,sizeBX,sizeBZ);
-
-				// doors of house
-				var doors = [];
-				
-				for( var door of doorsA )
-					if( door[0]<minBX || door[0]>maxBX || door[1]<minBZ || door[1]>maxBZ )
-						doors.push( door );
-				for( var door of doorsB )
-					if( door[0]<minAX || door[0]>maxAX || door[1]<minAZ || door[1]>maxAZ )
-						doors.push( door );
-						
-				// finding the one door
-				var closestDoorIdx = 0;
-				switch( faces )
-				{
-					case 0:
-						outZ = -1;
-						for( var i = 1; i<doors.length; i++ )
-							if( doors[i][1] < doors[closestDoorIdx][1] )
-								closestDoorIdx = i;
-						break;
-					case 1:
-						outX = 1;
-						for( var i = 1; i<doors.length; i++ )
-							if( doors[i][0] > doors[closestDoorIdx][0] )
-								closestDoorIdx = i;
-						break;
-					case 2:
-						outZ = 1;
-						for( var i = 1; i<doors.length; i++ )
-							if( doors[i][1] > doors[closestDoorIdx][1] )
-								closestDoorIdx = i;
-						break;
-					case 3:
-						outX = -1;
-						for( var i = 1; i<doors.length; i++ )
-							if( doors[i][0] < doors[closestDoorIdx][0] )
-								closestDoorIdx = i;
-						break;
-				}
-
-				var dX = Math.max(maxAX,maxBX)/2+Math.min(minAX,minBX)/2,
-					dZ = Math.max(maxAZ,maxBZ)/2+Math.min(minAZ,minBZ)/2;
-					
-				var door = doors[closestDoorIdx];
-					door[0] -= dX;
-					door[1] -= dZ;
-				
-				var outX = 0, // out - vector pointing from inside the door to outside
-					outZ = 0;
-				switch( door[2] )
-				{
-					case 0:	outZ =  1; break;
-					case 1: outX =  1; break;
-					case 2: outZ = -1; break;
-					case 3: outX = -1; break;
-				}
-
-				var streetX = 0, // vector pointing toward street
-					streetZ = 0;
-				switch( faces )
-				{
-					case 0: streetZ = -1; break;
-					case 1: streetX = +1; break;
-					case 2: streetZ = +1; break;
-					case 3: streetX = -1; break;
-				}
-			
-				// route position inside door
-				var x = door[0]-outX/2,
-					z = door[1]-outZ/2;
-				var route = [x,z];
-				
-				// route position outside door
-				if( outX!=streetX || outZ!=streetZ )
-				{
-					x += outX;
-					z += outZ;
-					route.push( x, z );
-				}
-				
-				// route position path to street (optional)
-				if( faces==0 && door[2]==0 )
-				{
-					var span = 0.5+Math.max( -dX+sizeAX/2, -dX+posBX+sizeBX/2 ) - door[0];
-					x += span;
-					route.push( x, z );
-					console.log('path',houses.length);
-				}
-
-
-				// route position street
-				x += streetX;
-				z += streetZ;
-				route.push( x, z );
-
-				
-				var house = {
-						data: [ -dX,		-dZ, 		// posA(x,y)
-								sizeAX,		sizeAZ,		// sizeA(x,y)
-								posBX-dX,	posBZ-dZ,	// posB(x,y)
-								sizeBX,		sizeBZ,		// sizeB(x,y)
-								route					// route [inside, outside, ... street]
-							],
-						aux: [ 	faces,					// house facing
-							]
-				};
-
-				houses.push( house );
-				
-				houseData[faces].push( house.data );
-			}
+			id = dir+':'+i;
+			html += '<canvas width="'+SIZE+'" height="'+SIZE+'" id="canvas'+id+'"></canvas>';
 		}
-		
-		generateHouses();
-
-		console.log('var houseData=[' );
-		console.log('\t\t[['+houseData[0].join('], [')+']],' );
-		console.log('\t\t[['+houseData[1].join('], [')+']],' );
-		console.log('\t\t[['+houseData[2].join('], [')+']],' );
-		console.log('\t\t[['+houseData[3].join('], [')+']]' );
-		console.log('\t];' );
-
-console.timeEnd(1);		
-		
-		// create images
-		var html = '';
-		for( var i = 0; i<houses.length; i++ )
-		{
-			html += '<canvas width="'+SIZE+'" height="'+SIZE+'" id="canvas'+i+'"></canvas>';
-		}
-		
 		document.getElementById('table').innerHTML = html;
 		
-		for( var i = 0; i<houses.length; i++ )
+		// draw houses
+		for( var dir = 0; dir<4; dir++ )
+		for( var i = 0; i<Factory.count(dir); i++ )
 		{
-			draw(i);
+			id = dir+':'+i;
+			drawHouse( dir, Factory.get(dir,i), id );
 		}
-
-
-		function draw(idx)
+		
+		function drawHouse( houseDir, house, id )
 		{
-			var house = houses[idx];
-
-			var posA	= { x: house.data[0], z: house.data[1] },
-				sizeA	= { x: house.data[2], z: house.data[3] },
-				posB	= { x: house.data[4], z: house.data[5] },
-				sizeB	= { x: house.data[6], z: house.data[7] },
-				route	= house.data[8],
-				houseDir= house.aux[0];
+			var posA	= { x: house[0], z: house[1] },
+				sizeA	= { x: house[2], z: house[3] },
+				posB	= { x: house[4], z: house[5] },
+				sizeB	= { x: house[6], z: house[7] },
+				route	= house[8];
 			
-			var cvs = document.getElementById('canvas'+idx),
+			var cvs = document.getElementById('canvas'+id),
 				ctx = cvs.getContext("2d");
 			
 			function moveTo(x,z)
@@ -294,7 +112,7 @@ console.timeEnd(1);
 			// write id
 			ctx.fillStyle = 'black';
 			ctx.font = "16px Arial Black";
-			ctx.fillText(idx, 2, 16);
+			ctx.fillText(id, 2, 16);
 
 			// draw house floor
 			ctx.strokeStyle = 'black';
@@ -355,7 +173,7 @@ console.timeEnd(1);
 			}
 
 
-		}
+		} // drawHouse
 	</script>
 	
 </body>
