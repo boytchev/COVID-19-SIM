@@ -1,10 +1,5 @@
 //
 
-//import {Pos2D} from '../core.js';
-
-
-
-
 // return list of door positions and orientations
 // for a house wing at (px,pz) and size (sx,sz)
 function wingDoors( px, pz, sx, sz )
@@ -140,14 +135,14 @@ function houseTemplates( dir )
 		// route position inside door
 		var x = door[0]-outX/2,
 			z = door[1]-outZ/2;
-		var route = [x,z];
+		var route = [ {x:x,z:z} ];
 		
 		// route position outside door
 		if( outX!=streetX || outZ!=streetZ )
 		{
 			x += outX;
 			z += outZ;
-			route.push( x, z );
+			route.push( {x:x,z:z} );
 		}
 		
 		// route position path to street (optional)
@@ -155,22 +150,22 @@ function houseTemplates( dir )
 		{
 			var span = 0.5+Math.max( -dX+sizeAX/2, -dX+posBX+sizeBX/2 ) - door[0];
 			x += span;
-			route.push( x, z );
+			route.push( {x:x,z:z} );
 		}
 
 
 		// route position street
 		x += streetX;
 		z += streetZ;
-		route.push( x, z );
+		route.push( {x:x,z:z} );
 
-		var house = [
-			-dX,		-dZ, 		// posA(x,y)
-			sizeAX,		sizeAZ,		// sizeA(x,y)
-			posBX-dX,	posBZ-dZ,	// posB(x,y)
-			sizeBX,		sizeBZ,		// sizeB(x,y)
-			route					// route [inside, outside, ... street]
-		];
+		var house = {
+			posA:  {x:-dX,		z:-dZ}, 	// posA(x,y)
+			sizeA: {x:sizeAX,	z:sizeAZ},	// sizeA(x,y)
+			posB:  {x:posBX-dX,	z:posBZ-dZ},// posB(x,y)
+			sizeB: {x:sizeBX,	z:sizeBZ},	// sizeB(x,y)
+			route: route					// route [inside, outside, ... street]
+		};
 
 		houses.push( house );
 	}

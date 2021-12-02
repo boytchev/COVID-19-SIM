@@ -56,12 +56,6 @@
 		
 		function drawHouse( houseDir, house, id )
 		{
-			var posA	= { x: house[0], z: house[1] },
-				sizeA	= { x: house[2], z: house[3] },
-				posB	= { x: house[4], z: house[5] },
-				sizeB	= { x: house[6], z: house[7] },
-				route	= house[8];
-			
 			var cvs = document.getElementById('canvas'+id),
 				ctx = cvs.getContext("2d");
 			
@@ -90,8 +84,8 @@
 			
 			// draw sidewalks
 			ctx.fillStyle = 'coral';
-				fillRect( posA, sizeA, 1 );
-				fillRect( posB, sizeB, 1 );
+				fillRect( house.posA, house.sizeA, 1 );
+				fillRect( house.posB, house.sizeB, 1 );
 
 			switch( houseDir )
 			{
@@ -117,21 +111,23 @@
 			// draw house floor
 			ctx.strokeStyle = 'black';
 			ctx.lineWidth = 3;
-				strokeRect( posA, sizeA );
-				strokeRect( posB, sizeB );
+				strokeRect( house.posA, house.sizeA );
+				strokeRect( house.posB, house.sizeB );
 			ctx.lineWidth = 1;
 
 			ctx.fillStyle = 'white';
-				fillRect( posA, sizeA );
-				fillRect( posB, sizeB );
+				fillRect( house.posA, house.sizeA );
+				fillRect( house.posB, house.sizeB );
 
 			// draw path to street
 			ctx.strokeStyle = 'coral';
 			ctx.lineWidth = GRID;
-			var i = route.length-4;
+			var i = house.route.length-2;
 			ctx.beginPath();
-				moveTo( route[i], route[i+1] );
-				lineTo( route[i]+20*(route[i+2]-route[i]), route[i+1]+20*(route[i+3]-route[i+1]) );
+				moveTo( house.route[i].x, house.route[i].z );
+				lineTo(
+					house.route[i].x+20*(house.route[i+1].x-house.route[i].x),
+					house.route[i].z+20*(house.route[i+1].z-house.route[i].z) );
 			ctx.stroke();
 
 			// draw grid
@@ -158,18 +154,18 @@
 			ctx.strokeStyle = 'cornflowerblue';
 			ctx.lineWidth = GRID/4;
 			ctx.beginPath();
-				moveTo( route[0], route[1] );
-				for( var i=2; i<route.length; i+=2 )
+				moveTo( house.route[0].x, house.route[0].z );
+				for( var i=1; i<house.route.length; i++ )
 				{
-					lineTo( route[i], route[i+1] );
+					lineTo( house.route[i].x, house.route[i].z );
 				}
 			ctx.stroke();
 
 			// draw route dots
 			ctx.fillStyle = 'black';
-			for( var i=0; i<route.length; i+=2 )
+			for( var i=0; i<house.route.length; i++ )
 			{
-				fillRect( {x:route[i],z:route[i+1]}, {x:0.5,z:0.5} );
+				fillRect( house.route[i], {x:0.5,z:0.5} );
 			}
 
 
