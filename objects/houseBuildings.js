@@ -50,7 +50,7 @@
 import * as THREE from '../js/three.module.js';
 import {HouseSidewalks, HouseSidewalk, HouseSidewalkPath} from './houseSidewalks.js';
 import {blocks, navmesh, textures, scene} from '../main.js';
-import {round, Pos, Size, RectZone} from '../core.js';
+import {round, Pos, Size, RectZone, drawText} from '../core.js';
 import {pick} from '../coreNav.js';
 import {CARTOON_STYLE, SIDEWALK_WIDTH, HOUSE_BOUNDING_RADIUS, FLOOR_HEIGHT, DEBUG_HIDE_ROOFS, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_BUILDINGS_OPACITY, SAFE_MODE} from '../config.js';
 
@@ -593,6 +593,8 @@ export class HouseBuildings
 			
 			function addHouse( pos, facings )
 			{	// add a pair of two houses
+
+				//drawText( pos.addY(7), ''+facings, 'crimson', 1.5 )
 
 				// locations
 				var x1 = round( pos.x, 1 ),

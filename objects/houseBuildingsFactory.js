@@ -1,4 +1,4 @@
-//
+console.time( 'House Factory' );
 
 // return list of door positions and orientations
 // for a house wing at (px,pz) and size (sx,sz)
@@ -56,11 +56,30 @@ function houseTemplates( dir )
 			maxBX = posBX+sizeBX/2,
 			maxBZ = posBZ+sizeBZ/2;
 		
+		// check for coliding wallks
 		if( minAX==minBX || minAZ==minBZ || maxAX==maxBX || maxAZ==maxBZ || minAX==maxBX || minAZ==maxBZ || maxAX==minBX || maxAZ==minBZ )
 		{
 			continue;
 		}
 		
+		// check for nesting
+		if( minAX<minBX && minAZ<minBZ && maxAX>maxBX && maxAZ>maxBZ )
+		{
+			continue;
+		}
+		if( minAX>minBX && minAZ>minBZ && maxAX<maxBX && maxAZ<maxBZ )
+		{
+			continue;
+		}
+		
+		var dX = Math.round( Math.max(maxAX,maxBX)/2 + Math.min(minAX,minBX)/2 ),
+			dZ = Math.round( Math.max(maxAZ,maxBZ)/2 + Math.min(minAZ,minBZ)/2 );
+			
+		var posA  = {x:-dX,		z:-dZ},
+			sizeA = {x:sizeAX,	z:sizeAZ},
+			posB  = {x:posBX-dX,z:posBZ-dZ},
+			sizeB = {x:sizeBX,	z:sizeBZ};
+
 		// doors of wings
 		var doorsA = wingDoors( 0, 0, sizeAX, sizeAZ ),
 			doorsB = wingDoors( posBX, posBZ, sizeBX, sizeBZ );
@@ -79,25 +98,25 @@ function houseTemplates( dir )
 		var closestDoorIdx = 0;
 		switch( dir )
 		{
-			case 0:
+			case 1/**0**/:
 				outZ = -1;
 				for( var i = 1; i<doors.length; i++ )
 					if( doors[i][1] < doors[closestDoorIdx][1] )
 						closestDoorIdx = i;
 				break;
-			case 1:
+			case 0/**1**/:
 				outX = 1;
 				for( var i = 1; i<doors.length; i++ )
 					if( doors[i][0] > doors[closestDoorIdx][0] )
 						closestDoorIdx = i;
 				break;
-			case 2:
+			case 3/**2**/:
 				outZ = 1;
 				for( var i = 1; i<doors.length; i++ )
 					if( doors[i][1] > doors[closestDoorIdx][1] )
 						closestDoorIdx = i;
 				break;
-			case 3:
+			case 2/**3**/:
 				outX = -1;
 				for( var i = 1; i<doors.length; i++ )
 					if( doors[i][0] < doors[closestDoorIdx][0] )
@@ -105,9 +124,22 @@ function houseTemplates( dir )
 				break;
 		}
 
-		var dX = Math.max(maxAX,maxBX)/2 + Math.min(minAX,minBX)/2,
-			dZ = Math.max(maxAZ,maxBZ)/2 + Math.min(minAZ,minBZ)/2;
-			
+		// wing A and B should be sorted (to remove duplicates)
+		if( posA.x > posB.x ) continue; // skip this house
+		if( posA.x == posB.x )
+		{
+			if( posA.z > posB.z ) continue; // skip this house
+			if( posA.z == posB.z )
+			{
+				if( sizeA.x > sizeB.x ) continue; // skip this house
+				if( sizeA.x == sizeB.z )
+				{
+					if( sizeA.z > sizeB.z ) continue; // skip this house
+				}
+			}
+		}
+		
+		
 		var door = doors[closestDoorIdx];
 			door[0] -= dX;
 			door[1] -= dZ;
@@ -126,10 +158,10 @@ function houseTemplates( dir )
 			streetZ = 0;
 		switch( dir )
 		{
-			case 0: streetZ = -1; break;
-			case 1: streetX = +1; break;
-			case 2: streetZ = +1; break;
-			case 3: streetX = -1; break;
+			case 1/**0**/: streetZ = -1; break;
+			case 0/**1**/: streetX = +1; break;
+			case 3/**2**/: streetZ = +1; break;
+			case 2/**3**/: streetX = -1; break;
 		}
 	
 		// route position inside door
@@ -146,7 +178,7 @@ function houseTemplates( dir )
 		}
 		
 		// route position path to street (optional)
-		if( dir==0 && door[2]==0 )
+		if( dir==1/**0**/ && door[2]==0 )
 		{
 			var span = 0.5+Math.max( -dX+sizeAX/2, -dX+posBX+sizeBX/2 ) - door[0];
 			x += span;
@@ -160,11 +192,11 @@ function houseTemplates( dir )
 		route.push( {x:x,z:z} );
 
 		var house = {
-			posA:  {x:-dX,		z:-dZ}, 	// posA(x,y)
-			sizeA: {x:sizeAX,	z:sizeAZ},	// sizeA(x,y)
-			posB:  {x:posBX-dX,	z:posBZ-dZ},// posB(x,y)
-			sizeB: {x:sizeBX,	z:sizeBZ},	// sizeB(x,y)
-			route: route					// route [inside, outside, ... street]
+			posA:  posA,
+			sizeA: sizeA,
+			posB:  posB,
+			sizeB: sizeB,
+			route: route // [inside, outside, ... street]
 		};
 
 		houses.push( house );
@@ -195,3 +227,4 @@ export function get( dir, n )
 	return houses[dir][n];
 }
 
+console.timeEnd( 'House Factory' );

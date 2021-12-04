@@ -80,6 +80,8 @@ import * as THREE from './js/three.module.js';
 import {GROUND_SIZE, SKYSCRAPERS, GROUND_EDGE, DEBUG_NAVMESH_SHOW_LINES, HOURS_24_MS, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, FLOOR_HEIGHT} from './config.js';
 import {OfficeDoor} from './objects/officeDoors.js';
 import {scene} from './main.js';
+import {TextGeometry} from '../js/TextGeometry.js';
+import {font} from '../font.js';
 
 
 export class Pos2D
@@ -754,7 +756,7 @@ export function drawArrow( from, to, color = 'crimson' )
 }
 
 
-function drawText( pos, text, color = 'black' )
+export function drawText( pos, text, color = 'black', scale = 1 )
 {
 	var textMaterial = new THREE.MeshBasicMaterial({color:color}),
 		textStyle = {
@@ -764,12 +766,13 @@ function drawText( pos, text, color = 'black' )
 					curveSegments: 4,
 					bevelEnabled: false,
 				},
-		textGeometry = new THREE.TextGeometry( text, textStyle ),
+		textGeometry = new TextGeometry( text, textStyle ),
 		text = new THREE.Mesh( textGeometry, textMaterial );
 		
 	text.position.x = pos.x;
 	text.position.y = pos.y||2;
 	text.position.z = pos.z;
+	text.scale.set( scale, scale, scale );
 	text.rotation.set(-Math.PI/2,Math.PI/2,0,'YXZ');
 	scene.add( text );
 }
