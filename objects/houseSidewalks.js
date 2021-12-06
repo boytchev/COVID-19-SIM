@@ -15,7 +15,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {SIDEWALK_TEXTURE_SCALE,DEBUG_ALL_WHITE, SIDEWALK_WIDTH, DEBUG_BLOCKS_OPACITY} from '../config.js';
-import {RIGHT, TOP, LEFT, BOTTOM, Pos, Size} from '../core.js';
+import {RIGHT, TOP, LEFT, BOTTOM, Pos, Size, drawArrow} from '../core.js';
 import {NatureMaterial} from '../nature/nature.js';
 import {textures, scene} from '../main.js';
 
@@ -24,12 +24,12 @@ import {textures, scene} from '../main.js';
 export class HouseSidewalk
 {
 	
-	constructor( houseWing )
+	constructor( pos, size )
 	{
 		this.sysType = 'HouseSidewalk';
 		
-		this.center = houseWing.center;
-		this.size = houseWing.size.shrink( -2 ); // i.e. expand by 2
+		this.center = pos;
+		this.size = size.shrink( -2 ); // i.e. expand by 2
 		
 	} // HouseSidewalk.constructor
 	
@@ -40,55 +40,54 @@ export class HouseSidewalk
 // sidewalk from house to street
 export class HouseSidewalkPath
 {
-	
-	constructor(  house )
+	// the house's route latest two positions show the direction of the path
+	constructor(  house, facing )
 	{
 		this.sysType = 'HouseSidewalkPath';
 		
-		this.rotation = house.facing;
+		var route = house.factory.route,
+			lastPos = route[route.length-1];
 		
-		var zone, pos,
-			zoneA = house.wingA.zone,
-			zoneB = house.wingB.zone,
-			blockZone = house.block.zone;
+		house.streetPos.x += lastPos.x;
+		house.streetPos.z += lastPos.z;
 			
-		// find the wing more extended into the direction of facing
-		// and build a path from it to the street sidewalk
-		switch( house.facing )
+		this.center = house.center.add( lastPos );
+
+		var blockZone = house.center.block.zone;
+
+		// build a path from house sidewalk to the street sidewalk
+		// also move the last position to reach the street sidewalk
+		var length;
+		switch( facing )
 		{
 			case RIGHT:
-				zone = (zoneA.maxX() > zoneB.maxX()) ? zoneA : zoneB;
-				this.center = new Pos( zone.maxX()+0.5, zone.zRange.mid(), house.block );
-				this.length = this.distanceX( blockZone.b, blockZone.c );
-				this.size = new Size( this.length, 1 );
-				this.center.x += this.size.x/2;
+				length = this.distanceX( blockZone.b, blockZone.c );
+				this.size = new Size( length, 1 );
+				this.center.x += length/2;
+				house.streetPos.x += length;
 				break;
 			case TOP:
-				zone = (zoneA.maxZ() > zoneB.maxZ()) ? zoneA : zoneB;
-				this.center = new Pos( zone.xRange.mid(), zone.maxZ()+0.5, house.block );
-				this.length = this.distanceZ( blockZone.a, blockZone.b );
-				this.size = new Size( 1, this.length );
-				this.center.z += this.size.z/2;
+				length = this.distanceZ( blockZone.a, blockZone.b );
+				this.size = new Size( 1, length );
+				this.center.z += length/2;
+				house.streetPos.z += length;
 				break;
 			case LEFT:
-				zone = (zoneA.minX() < zoneB.minX()) ? zoneA : zoneB;
-				this.center = new Pos( zone.minX()-0.5, zone.zRange.mid(), house.block );
-				this.length = this.distanceX( blockZone.a, blockZone.d );
-				this.size = new Size( this.length, 1 );
-				this.center.x -= this.size.x/2;
+				length = this.distanceX( blockZone.a, blockZone.d );
+				this.size = new Size( length, 1 );
+				this.center.x -= length/2;
+				house.streetPos.x -= length;
 				break;
 			case BOTTOM:
-				zone = (zoneA.minZ() < zoneB.minZ()) ? zoneA : zoneB;
-				this.center = new Pos( zone.xRange.mid(), zone.minZ()-0.5, house.block );
-				this.length = this.distanceZ( blockZone.d, blockZone.c );
-				this.size = new Size( 1, this.length );
-				this.center.z -= this.size.z/2;
+				length = this.distanceZ( blockZone.d, blockZone.c );
+				this.size = new Size( 1, length );
+				this.center.z -= length/2;
+				house.streetPos.z -= length;
 				break;
 			default:
 				console.error( 'A house without array of possible facings. Should not happen. Code 1608.');
 				return;
 		}
-
 		house.path = this;
 
 	} // HouseSidewalkPath.constructor
@@ -97,11 +96,11 @@ export class HouseSidewalkPath
 	
 	distanceX( to1, to2 )
 	{
-		//               (to1)
-		//	             /
-		//  (center)----+
-		//             /
-		//          (to2)
+		//            (to1)
+		//	           /
+		//  (from)----+
+		//           /
+		//        (to2)
 		var from = this.center;
 		return Math.abs( THREE.Math.mapLinear( from.z, to1.z, to2.z, to1.x-from.x, to2.x-from.x ) ) - SIDEWALK_WIDTH/2;
 		
@@ -111,11 +110,13 @@ export class HouseSidewalkPath
 	
 	distanceZ( to1, to2 )
 	{
-		//  (to1)--,
-		//          --+--
-		//	          |  '--(to2)
-		//            |
-		//         (center)
+		//  (to1)
+		//       \
+		//	      +
+		//        |\
+		//		  | (to2)
+		//        |
+		//     (from)
 		var from = this.center;
 		return Math.abs( THREE.Math.mapLinear( from.x, to1.x, to2.x, to1.z-from.z, to2.z-from.z ) ) - SIDEWALK_WIDTH/2;
 		

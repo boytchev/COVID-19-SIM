@@ -170,15 +170,12 @@ export class AgentBehaviour
 		// go to house center
 		this.addToRoute( house.randomPosAB() ); 
 		
-		// then go to the door and exit trough it
-		this.addToRoute( house.door.insideZone ); 
-		this.addToRoute( house.door.outsideZone ); 
+		// then go to the door and exit
+		for( var i=0; i<house.factory.route.length-1; i++ )
+			this.addToRoute( house.center.add(house.factory.route[i]) ); 
 		
-		// go around the house
-		this.addRingToRoute( house.ring, house.door.ringIndex, house.path.ringIndex );
-
 		// go to the street sidewalk
-		this.addToRoute( house.path.outsideZone ); 
+		this.addToRoute( house.streetPos ); 
 		
 	} // AgentBehaviour.routerExitHouse
 
@@ -207,15 +204,10 @@ export class AgentBehaviour
 	routerEnterHouse( house )
 	{	// assume we are at the house
 		
-		// go to the end of the path (it is next to the house)
-		this.addToRoute( house.path.insideZone ); 
-		
-		// go round the house to the door
-		this.addRingToRoute( house.ring, house.path.ringIndex, house.door.ringIndex );
+		// then go to the door and enter
+		for( var i=house.factory.route.length-2; i>=0; i-- )
+			this.addToRoute( house.center.add(house.factory.route[i]) ); 
 
-		// go through the door
-		this.addToRoute( house.door.insideZone ); 
-		
 		// go to the central area
 		this.addToRoute( house.randomPosAB() ); 
 			
@@ -862,6 +854,8 @@ export class AgentBehaviour
 
 	addToRoute( pos, mark, submark )
 	{
+		if( !pos ) throw 'Undefined pos in addToRoute';
+
 		if( !this.gotoPosition )
 			this.gotoPosition = [];
 

@@ -84,14 +84,6 @@ import {TextGeometry} from '../js/TextGeometry.js';
 import {font} from '../font.js';
 
 
-export class Pos2D
-{
-	constructor( x, z )
-	{
-		this.x = x;
-		this.z = z;
-	}
-}
 
 export class Pos 
 {
@@ -649,6 +641,17 @@ export class RectZone
 	} // RectZone.shrinkBlock
 
 
+	isInside( position, margin = 0 ) // positive margin expands the zone
+	{
+		if( this.minX()-margin > position.x ) return false;
+		if( this.maxX()+margin < position.x ) return false;
+		if( this.minZ()-margin > position.z ) return false;
+		if( this.maxZ()+margin < position.z ) return false;
+		
+		return true;
+	}
+	
+	
 	minX( ) { return this.center.x - this.size.x/2; }
 	maxX( ) { return this.center.x + this.size.x/2; }
 	minZ( ) { return this.center.z - this.size.z/2; }

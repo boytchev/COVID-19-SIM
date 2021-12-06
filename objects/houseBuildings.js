@@ -1,14 +1,3 @@
-//
-//	class HouseDoor
-//		constructor( center, rotation )
-//		randomPos( )
-//		isInside( position )
-//
-//	class HouseWing
-//		constructor( center, size, floors )
-//		randomPos( )
-//		isInside( position, margin )
-//
 //	class HouseBuilding
 //		constructor( wingA, wingB, facing, block )
 //		randomPos( )
@@ -53,226 +42,78 @@ import {blocks, navmesh, textures, scene} from '../main.js';
 import {round, Pos, Size, RectZone, drawText} from '../core.js';
 import {pick} from '../coreNav.js';
 import {CARTOON_STYLE, SIDEWALK_WIDTH, HOUSE_BOUNDING_RADIUS, FLOOR_HEIGHT, DEBUG_HIDE_ROOFS, SHADOWS, NO_SHADOWS, DEBUG_ALL_WHITE, DEBUG_BUILDINGS_OPACITY, SAFE_MODE} from '../config.js';
-
-
-class HouseDoor
-{
-
-	constructor( center, rotation )
-	{
-		//this.sysType = 'HouseDoor';
-		
-		this.center = center;
-		this.rotation = rotation;
-		
-		this.outsideZone = undefined;
-		this.insideZone = undefined;
-		
-	} // HouseDoor.constructor
-	
-} // HouseDoor
-
-
-
-class HouseWing
-{
-	
-	constructor( center, size, floors )
-	{
-		
-		//this.sysType = 'HouseWing';
-		
-		this.size = size;
-		this.floors = floors;
-		this.zone = new RectZone( center, size );
-	} // HouseWing.constructor
-	
-	
-		
-	get doors( )
-	{
-		switch( 10*this.size.x + this.size.z )
-		{
-			case 44:
-				return [
-					new HouseDoor( this.center.addXZ(1,2), 0 ) 
-				];
-			case 48:
-				return [
-					new HouseDoor( this.center.addXZ(1,4), 0 ),
-					new HouseDoor( this.center.addXZ(2,-3), 1 ),
-					new HouseDoor( this.center.addXZ(-2,3), 3 )
-				];
-			case 84:
-				return [
-					new HouseDoor( this.center.addXZ(1,2), 0 ),
-					new HouseDoor( this.center.addXZ(-3,-2), 2 )
-				];
-			case 88:
-				return [
-					new HouseDoor( this.center.addXZ(1,4), 0 ),
-					new HouseDoor( this.center.addXZ(4,-3), 1 ),
-					new HouseDoor( this.center.addXZ(-4,3), 3 ),
-					new HouseDoor( this.center.addXZ(-3,-4), 2 )
-				];
-			default:
-				console.error( 'Unhandled situation with doors of a house wing.', this );
-		}
-	} // HouseWing.doors
-		
-	
-	
-	
-	get height( )
-	{
-		return this.floors * FLOOR_HEIGHT;
-	}
-
-
-	get center( )
-	{
-		return this.zone.center;
-	}
-
-
-	randomPos( )
-	{
-		return this.insideZone.randomPos( );
-		
-	} // HouseWing.randomPos
-	
-
-	
-	isInside( position, margin = 0 )
-	{
-		return this.zone.xRange.inside( position.x, margin ) && this.zone.zRange.inside( position.z, margin );
-				
-	} // HouseWing.isInside
-
-} // HouseWing
-
+import * as Factory from './houseBuildingsFactory.js';
 
 
 
 export class HouseBuilding
 {
 	
-	constructor( wingA, wingB, facing, block )
+	constructor( id, center, facing )
 	{
 		this.sysType = 'HouseBuilding';
-		this.id = undefined; //set in HouseBuildings.generate()
-		
-		this.wingA = wingA;
-		this.wingB = wingB;
+		this.id = id;
 
-		this.facing = facing;
+		this.floorsA = THREE.Math.randInt( 1, 2 );				// floors of wing A
+		this.floorsB = THREE.Math.randInt( 1, 3-this.floorsA ); // floors of wing B
 		
-		this.block = block;
-		
-		this.door = undefined;
-		this.ring = [ ];
+		center.x = round( center.x, 1 );
+		center.z = round( center.z, 1 );
 
-		// remove doors from wingA that are inside wingB
-		var doors = [];
-		var wingDoors = wingA.doors;
-		for( var i=wingDoors.length-1; i>=0; i-- )
-			if( !wingB.isInside( wingDoors[i].center ) )
-				doors.push( wingDoors[i] );
-		
-		wingDoors = wingB.doors;
-		// remove doors from wingB that are inside wingA
-		for( var i=wingDoors.length-1; i>=0; i-- )
-			if( !wingA.isInside( wingDoors[i].center ) )
-				doors.push( wingDoors[i] );
-			
-		// house facing
-		//
-		//       Z+
-		//	 	 1	
-		//	X- 2   0 X+
-		//       3
-		//       Z-
-		var idx = 0;
-		switch( facing )
-		{
-			case 0: // X+
-				for( var i=1; i<doors.length; i++ )
-					if( doors[i].center.x > doors[idx].center.x )
-						idx = i;
-				break;
-			case 1: // Z+
-				for( var i=1; i<doors.length; i++ )
-					if( doors[i].center.z > doors[idx].center.z )
-						idx = i;
-				break;
-			case 2: // X-
-				for( var i=1; i<doors.length; i++ )
-					if( doors[i].center.x < doors[idx].center.x )
-						idx = i;
-				break;
-			case 3: // Z-
-				for( var i=1; i<doors.length; i++ )
-					if( doors[i].center.z < doors[idx].center.z )
-						idx = i;
-				break;
-		}
-		
-		this.door = doors[idx];
-		
-		// prepare ring		
-		var pos,
-			size = new Size(1,1),
-			zoneA = wingA.zone.shrink(-0.5),
-			zoneB = wingB.zone.shrink(-0.5);
+		this.center = center; // center of the whole house
+		this.factory = Factory.get( facing ); // position in factory is relative to house center
+		this.streetPos = center.clone();
 
-		var x = [zoneA.minX(),zoneA.maxX(),zoneB.minX(),zoneB.maxX()];
-		var z = [zoneA.minZ(),zoneA.maxZ(),zoneB.minZ(),zoneB.maxZ()];
-
-		for( var ix=0; ix<4; ix++ )
-		for( var iz=0; iz<4; iz++ )
-		{
-			pos = new Pos(x[ix],z[iz],block);
-			if( wingA.isInside(pos) ) continue;
-			if( wingB.isInside(pos) ) continue;
-			if( !wingA.isInside(pos,-1) && !wingB.isInside(pos,-1) ) continue;
-			this.ring.push( new RectZone(pos,size) );
-		}
-
+		this.zoneA = undefined;
+		this.zoneB = undefined;
+		
 	} // HouseBuilding.constructor
-	
 	
 	
 	randomPos( )
 	{
-		// 50% chance to pick wingA or wingB
-		return pick( [this.wingA, this.wingB] ).randomPos( );
+		if( Math.random() > 0.5 )
+			return this.randomPosA( );
+		else
+			return this.randomPosB( );
 		
 	} // HouseBuilding.randomPos
 	
+	
+	randomPosA( )
+	{
+		return this.zoneA.randomPos();
+	} // HouseBuilding.randomPosA
+	
+	
+	randomPosB( )
+	{
+		return this.zoneB.randomPos();
+	} // HouseBuilding.randomPosB
 	
 	
 	// random pos inside the intersection of wingA and wingB
 	randomPosAB( )
 	{
 		var x = THREE.Math.randFloat( 
-					Math.max(this.wingA.insideZone.xRange.min,this.wingB.insideZone.xRange.min),
-					Math.min(this.wingA.insideZone.xRange.max,this.wingB.insideZone.xRange.max) );
+					Math.max(this.zoneA.xRange.min,this.zoneB.xRange.min),
+					Math.min(this.zoneA.xRange.max,this.zoneB.xRange.max) );
 		var z = THREE.Math.randFloat( 
-					Math.max(this.wingA.insideZone.zRange.min,this.wingB.insideZone.zRange.min),
-					Math.min(this.wingA.insideZone.zRange.max,this.wingB.insideZone.zRange.max) );
-		return new Pos( x, z, this.block, 0 );
+					Math.max(this.zoneA.zRange.min,this.zoneB.zRange.min),
+					Math.min(this.zoneA.zRange.max,this.zoneB.zRange.max) );
+		return new Pos(x,z,this.center.block);
 		
-	} // HouseWing.randomPos
-	
+	} // HouseBuilding.randomPos
 
 	
 	occupied( pos )
 	{
 		// check whether the position is forbidden for planting a tree
 	
-		if( this.wingA.isInside(pos, -2) ) return true; // no tree allowed
-		if( this.wingB.isInside(pos, -2) ) return true; // no tree allowed
-		if( this.path.isInside(pos, -2) ) return true; // no tree allowed
+		if( this.zoneA.isInside(pos, 2) ) return true; // no tree allowed
+		if( this.zoneB.isInside(pos, 2) ) return true; // no tree allowed
+		/*** to do if( this.path.isInside(pos, -2) ) return true; // no tree allowed
+		***/
 		
 		return false; // tree allowed
 		
@@ -589,67 +430,24 @@ export class HouseBuildings
 		for( var i=0; i<blocks.houses.length; i++ )
 		{
 			var block = blocks.houses[i];
-			//block.walkingAreas = [];
 			
 			function addHouse( pos, facings )
-			{	// add a pair of two houses
-
-				//drawText( pos.addY(7), ''+facings, 'crimson', 1.5 )
-
-				// locations
-				var x1 = round( pos.x, 1 ),
-					z1 = round( pos.z, 1 ),
-					x2 = round( pos.x+2*THREE.Math.randInt(-1,1), 1 ),
-					z2 = round( pos.z+2*THREE.Math.randInt(-1,1), 1 );
-					
-				// sizes
-				// 2021.08.22: HOUSE_BOUNDING_RADIUS replaced by 6, because the house
-				// wing sizes must be 4 or 8. This size (see 44, 48, 84 & 88) is important
-				// for wing placement
-				var sx1 = round( THREE.Math.randInt( 3, 2*6/*HOUSE_BOUNDING_RADIUS*/-4 ), 4),
-					sz1 = round( THREE.Math.randInt( 3, 2*6/*HOUSE_BOUNDING_RADIUS*/-4 ), 4),
-					sx2 = round( THREE.Math.randInt( 3, 2*6/*HOUSE_BOUNDING_RADIUS*/-4 ), 4),
-					sz2 = round( THREE.Math.randInt( 3, 2*6/*HOUSE_BOUNDING_RADIUS*/-4 ), 4);
-
-				// if there are matching X walls move the first house in the opposite direction
-				var dMin = (x1-sx1/2)-(x2-sx2/2),
-					dMax = (x1+sx1/2)-(x2+sx2/2);
-				if( dMin*dMax==0 )
-				{
-					x1 += Math.sign(dMin+dMax);
-					x2 -= Math.sign(dMin+dMax);
-					if( dMin==dMax ) x1++, x2--; // no opposite direction, just move
-				}
-
-				// if there are matching Z walls move the first house in the opposite direction
-				var dMin = (z1-sz1/2)-(z2-sz2/2),
-					dMax = (z1+sz1/2)-(z2+sz2/2);
-				if( dMin*dMax==0 )
-				{
-					z1 += Math.sign(dMin+dMax);
-					z2 -= Math.sign(dMin+dMax);
-					if( dMin==dMax ) z1++,z2--; // no opposite direction, just move
-				}
+			{	
+				//drawText( pos.addY(0.1), ''+houses.length, 'white', 1 );
+				pos.block = block;
+				var facing = pick(facings);
+				var house = new HouseBuilding( houses.length, pos, facing );
 				
-				var floors1 = THREE.Math.randInt( 1, 2 ),
-					floors2 = THREE.Math.randInt( 1, 3-floors1 );
-				
-				// pack the house
-				var wingA = new HouseWing( new Pos(x1,z1,block), new Size(sx1,sz1), floors1 );
-				var wingB = new HouseWing( new Pos(x2,z2,block), new Size(sx2,sz2), floors2 );
-				
-				var house = new HouseBuilding( wingA, wingB, pick(facings), block );
-				house.id = houses.length;
-				
-				block.buildings.push( house );
+				block.buildings.push( house ); // block's list of houses
 				houses.push( house ); // global list of all houses
 				
 				// sidewalks and path to the street
-				sidewalks.push( new HouseSidewalk( /*block,*/ wingA ) );
-				sidewalks.push( new HouseSidewalk( /*block,*/ wingB ) );
-				sidewalks.push( new HouseSidewalkPath( /*block,*/ house/*, facing*/ ) );
+				sidewalks.push( new HouseSidewalk( house.center.add(house.factory.posA), house.factory.sizeA ) );
+				sidewalks.push( new HouseSidewalk( house.center.add(house.factory.posB), house.factory.sizeB ) );
+				sidewalks.push( new HouseSidewalkPath( house, facing ) );
 
 				navmesh.addHouse( house );		
+				
 			} // HouseBuildings.generate.addHouse
 			
 			
@@ -772,13 +570,13 @@ export class HouseBuildings
 			var house = houses[h];
 			
 			// wing A
-			matrix.makeScale( house.wingA.size.x, house.wingA.height, house.wingA.size.z );
-			matrix.setPosition( house.wingA.center.x, 0, house.wingA.center.z );
+			matrix.makeScale( house.factory.sizeA.x, house.floorsA*FLOOR_HEIGHT, house.factory.sizeA.z );
+			matrix.setPosition( house.center.x+house.factory.posA.x, 0, house.center.z+house.factory.posA.z );
 			mesh.setMatrixAt( i, matrix );
 			
 			// wing B
-			matrix.makeScale( house.wingB.size.x, house.wingB.height, house.wingB.size.z );
-			matrix.setPosition( house.wingB.center.x, 0, house.wingB.center.z );
+			matrix.makeScale( house.factory.sizeB.x, house.floorsB*FLOOR_HEIGHT, house.factory.sizeB.z );
+			matrix.setPosition( house.center.x+house.factory.posB.x, 0, house.center.z+house.factory.posB.z );
 			mesh.setMatrixAt( i+1, matrix );
 		}
 
@@ -787,7 +585,7 @@ export class HouseBuildings
 		//mesh.position.y = 2;
 		
 		scene.add( mesh );
-		
+		/*** maybe unused?
 		if( SHADOWS != NO_SHADOWS )
 		{
 			var geometry  = HouseBuildings.geometry(),
@@ -803,18 +601,18 @@ export class HouseBuildings
 				var house = houses[h];
 				
 				// wing A
-				matrix.makeScale( house.wingA.size.x-0.2, house.wingA.height-0.1, house.wingA.size.z-0.2 );
-				matrix.setPosition( house.wingA.center.x, -0.1, house.wingA.center.z );
+				matrix.makeScale( house.factory.sizeA.x-0.2, house.floorsA*FLOOR_HEIGHT-0.1, house.factory.sizeA.z-0.2 );
+				matrix.setPosition( house.center.x+house.factory.posA.x, -0.1, house.center.z+house.factory.posA.z );
 				shadowMesh.setMatrixAt( i, matrix );
 				
 				// wing B
-				matrix.makeScale( house.wingB.size.x-0.2, house.wingB.height-0.1, house.wingB.size.z-0.2 );
-				matrix.setPosition( house.wingB.center.x, -0.1, house.wingB.center.z );
+				matrix.makeScale( house.factory.sizeB.x-0.2, house.floorsB*FLOOR_HEIGHT-0.1, house.factory.sizeB.z-0.2 );
+				matrix.setPosition( house.center.x+house.factory.posB.x, -0.1, house.center.z+house.factory.posB.z );
 				shadowMesh.setMatrixAt( i+1, matrix );
 			}
 			shadowMesh.castShadow = true;
 			//scene.add( shadowMesh );
-		}
+		} ***/
 		
 		HouseSidewalks.image( sidewalks );
 

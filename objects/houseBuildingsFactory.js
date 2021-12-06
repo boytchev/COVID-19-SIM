@@ -1,4 +1,25 @@
+//
+// House Factory
+//
+// Houses have 4 directions (0,1,2,3)
+//
+// House structure (two wings):
+//		posA{x,z}  - center of wing A
+//		sizeA{x,z} - size of wing A
+//		posB{x,z}  - center of wing B
+//		sizeB{x,z} - size of wing B
+//		route[ {x,z}, ...] - from from inside the house, to outside, to street
+//
+// Global methods:
+// 		count( dir )	- get the number of houses with given direction
+//	 	get( dir )		- get random house with direction dir
+//	 	get( dir, n )	- get house n with direction dir
+//
+
+
 console.time( 'House Factory' );
+
+import {Size} from '../core.js';
 
 // return list of door positions and orientations
 // for a house wing at (px,pz) and size (sx,sz)
@@ -76,9 +97,9 @@ function houseTemplates( dir )
 			dZ = Math.round( Math.max(maxAZ,maxBZ)/2 + Math.min(minAZ,minBZ)/2 );
 			
 		var posA  = {x:-dX,		z:-dZ},
-			sizeA = {x:sizeAX,	z:sizeAZ},
+			sizeA = new Size(sizeAX,sizeAZ),
 			posB  = {x:posBX-dX,z:posBZ-dZ},
-			sizeB = {x:sizeBX,	z:sizeBZ};
+			sizeB = new Size(sizeBX,sizeBZ);
 
 		// doors of wings
 		var doorsA = wingDoors( 0, 0, sizeAX, sizeAZ ),
@@ -98,7 +119,7 @@ function houseTemplates( dir )
 		var closestDoorIdx = 0;
 		switch( dir )
 		{
-			case 1/**0**/:
+			case 3/**0**/:
 				outZ = -1;
 				for( var i = 1; i<doors.length; i++ )
 					if( doors[i][1] < doors[closestDoorIdx][1] )
@@ -110,7 +131,7 @@ function houseTemplates( dir )
 					if( doors[i][0] > doors[closestDoorIdx][0] )
 						closestDoorIdx = i;
 				break;
-			case 3/**2**/:
+			case 1/**2**/:
 				outZ = 1;
 				for( var i = 1; i<doors.length; i++ )
 					if( doors[i][1] > doors[closestDoorIdx][1] )
@@ -158,9 +179,9 @@ function houseTemplates( dir )
 			streetZ = 0;
 		switch( dir )
 		{
-			case 1/**0**/: streetZ = -1; break;
+			case 3/**0**/: streetZ = -1; break;
 			case 0/**1**/: streetX = +1; break;
-			case 3/**2**/: streetZ = +1; break;
+			case 1/**2**/: streetZ = +1; break;
 			case 2/**3**/: streetX = -1; break;
 		}
 	
@@ -178,7 +199,7 @@ function houseTemplates( dir )
 		}
 		
 		// route position path to street (optional)
-		if( dir==1/**0**/ && door[2]==0 )
+		if( dir==3/**0**/ && door[2]==0 )
 		{
 			var span = 0.5+Math.max( -dX+sizeAX/2, -dX+posBX+sizeBX/2 ) - door[0];
 			x += span;
@@ -222,8 +243,13 @@ export function count( dir )
 }
 
 // return a house template by number and direction
-export function get( dir, n )
+export function get( dir, n=-1 )
 {
+	if( n<0 || n>=houses[dir].length )
+	{
+		n = Math.floor( houses[dir].length*Math.random() );
+	}
+	
 	return houses[dir][n];
 }
 

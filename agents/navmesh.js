@@ -289,21 +289,22 @@ export class NavMesh
 	addHouse( house )
 	{		
 		var zone,
-			sizeHalf = new Size( 1/2, 1/2 ),
+			//sizeHalf = new Size( 1/2, 1/2 ),
 			size;
 		
 		// house floor of wingA
-		size = house.wingA.size.shrink(1);
-		zone = new NavMeshRectZone( house.wingA.center, size, house.block );
-		house.wingA.insideZone = zone;
+		size = house.factory.sizeA.shrink(1);
+		zone = new NavMeshRectZone( house.center.add(house.factory.posA), size, house.center.block );
+		house.zoneA = zone;
 		this.zones.push( zone );
 		
 		// house floor of wingB
-		size = house.wingB.size.shrink(1);
-		zone = new NavMeshRectZone( house.wingB.center, size, house.block );
-		house.wingB.insideZone = zone;
+		size = house.factory.sizeB.shrink(1);
+		zone = new NavMeshRectZone( house.center.add(house.factory.posB), size, house.center.block );
+		house.zoneB = zone;
 		this.zones.push( zone );
 		
+/*** to do		
 		// house door
 		var out = this.v[ house.door.rotation ];
 
@@ -331,15 +332,14 @@ export class NavMesh
 	
 		this.zones.push( house.path.insideZone, house.path.outsideZone );
 
-		// sort house rings
-		var x = ( Math.max(house.wingA.zone.xRange.min,house.wingB.zone.xRange.min)
-				  + Math.min(house.wingA.zone.xRange.max,house.wingB.zone.xRange.max) ) / 2;
-		var z = ( Math.max(house.wingA.zone.zRange.min,house.wingB.zone.zRange.min)
-				  + Math.min(house.wingA.zone.zRange.max,house.wingB.zone.zRange.max) ) / 2;
-
-		sortRing( house.ring, new Pos(x,z) );
-
 //drawArrow( house.wingA.center, house.ring[house.path.ringIndex].center, 'navy');
+***/		
+
+		// add the house path outer point to the block ring
+		var route = house.factory.route,
+			pathZone = new NavMeshHouseZone( house.streetPos, new Size(2/3,2/3), house.center.block, house );
+		this.zones.push( zone );
+		house.center.block.ring.push( pathZone );
 		
 	} // NavMesh.addHouse
 

@@ -39,7 +39,7 @@ export class Address
 		{
 			if( this.building instanceof HouseBuilding )
 			{
-				this.center = this.building.wingA.center.clone();
+				this.center = this.building.center.clone();
 			}
 			
 			if( this.building instanceof ApartmentBuilding )
@@ -58,8 +58,8 @@ export class Address
 				this.center.y = this.floor * FLOOR_HEIGHT;
 			}
 			
-			this.block = this.building.block;
-			this.center.block = this.building.block;
+			this.block = this.building.block || this.building.center.block;
+			this.center.block = this.block;
 			this.position = exactPosition || this.center;
 		}
 		else
@@ -68,7 +68,6 @@ export class Address
 			this.center = exactPosition;
 			this.position = exactPosition;
 		}
-		
 		
 	} // Address.constructor
 	
@@ -84,15 +83,15 @@ export class Address
 			// for houses the available position depends on the current position
 			if( currentPosition )
 			{
-				var inWingA = this.building.wingA.isInside( currentPosition ),
-					inWingB = this.building.wingB.isInside( currentPosition );
+				var inWingA = this.building.zoneA.isInside( currentPosition ),
+					inWingB = this.building.zoneB.isInside( currentPosition );
 					
 				if( inWingA && inWingB )
 					position = this.building.randomPos();
 				else if( inWingA )
-					position = this.building.wingA.randomPos();
+					position = this.building.randomPosA();
 				else
-					position = this.building.wingB.randomPos();
+					position = this.building.randomPosB();
 			}
 			else
 				position = this.building.randomPos();
@@ -109,7 +108,7 @@ export class Address
 		}
 		
 		if( this.building )
-			position.block = this.building.block;
+			position.block = this.building.block || this.building.center.block;
 		
 		return position;
 		
