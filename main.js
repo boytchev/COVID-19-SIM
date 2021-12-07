@@ -101,7 +101,7 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.autoRotate = DEBUG_AUTOROTATE;
 	controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
 	controls.update();
-	controls.addEventListener( 'change', function(){renderer.render(scene, camera);} );
+//	controls.addEventListener( 'change', function(){renderer.render(scene, camera);} );
 
 export var navmesh = new NavMesh();		measure( 'navmesh' );
 export var textures = new Textures();	measure( 'textures' );

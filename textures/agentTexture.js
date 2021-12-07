@@ -415,6 +415,9 @@ export class AgentTexture extends ProceduralTexture
 /*30*/	colorIndex( 30 );
 		poly( [2.5, 11.5, 4, 9.5, 3+1/4, 11.5] );
 		
+/*50*/	colorIndex( 50, 0 );
+		fill( 1-e, 15-e, 2+e, 16 );
+
 /*99*/	colorIndex( 99, 7 ); // mask
 		poly( [5+e, 11, 3+3/4, 11, 3.5, 12, 4+1/4, 12+1/4, 5+e, 12+1/4] );
 

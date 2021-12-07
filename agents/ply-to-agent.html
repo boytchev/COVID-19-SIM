@@ -88,7 +88,7 @@
 		
 		function topology(v)
 		{
-			var codes = [	'---', 	// 0:UNDEFINED in vertex shader
+			var codes = [	'222', 	// 0:UNDEFINED in vertex shader
 							'220',	// 1:HEAD in vertex shader
 							'200',	// 2:HANDS in vertex shader
 							'020',	// 3:NIPS in vertex shader
@@ -98,6 +98,25 @@
 							'002',	// 7:LEGS in vertex shader
 							'202',	// 8:KNEES in vertex shader
 							'022',	// 9:FEET in vertex shader
+							
+							'121',	// 10:SKIRT LEVEL 0 & 1
+							'012',	// 11:SKIRT LEVEL 2
+							'021',	// 12:SKIRT LEVEL 3
+							'011',	// 13:SKIRT LEVEL 4
+
+							'001',	// 14---unused
+							'010',	// 15---unused
+							'101',	// 16---unused
+							'102',	// 17---unused
+							'110',	// 18---unused
+							'112',	// 19---unused
+							'120',	// 20---unused
+							'122',	// 21---unused
+							'201',	// 22---unused
+							'210',	// 23---unused
+							'211',	// 24---unused
+							'212',	// 25---unused
+							'221',	// 26---unused
 						],
 				rgb = ''+Math.floor(v.r/100)+Math.floor(v.g/100)+Math.floor(v.b/100);
 				

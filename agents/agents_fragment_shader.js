@@ -173,6 +173,25 @@ varying vec3 vNormal;
 		return vec4(r,g,b,1);
 	}
 	
+	vec4 colorSkirt( )
+	{
+		float r, g, b;
+		
+		if( vRandomId<0.7 )
+		{ // black-blue
+			r = vRandomId/10.0;
+			g = vRandomId/10.0;
+			b = vRandomId/2.0;
+		}
+		else
+		{ // bright color
+			r = 0.8+0.2*fract(2.0/vRandomId);
+			g = 0.8+0.2*fract(3.0/vRandomId);
+			b = 0.8+0.2*fract(2.5/vRandomId);
+		}
+		return vec4(r,g,b,1);
+	}
+	
 	vec4 colorBelt( )
 	{
 		return vec4(0.4*rand(),0,0,1);
@@ -325,6 +344,11 @@ varying vec3 vNormal;
 			if( from<=index && index<=to ) return colorSock();
 		}
 
+		if( index==50 )
+		{	// skirt
+			return colorSkirt();
+		}
+		
 		if( index>=23 )
 		{ // head
 			return recodeHead(index,index2);
@@ -388,6 +412,10 @@ varying vec3 vNormal;
 				color = colorHumanSkin();
 			}
 		}
+		else if( index==50 )
+		{	// skirt
+			color = colorSkirt();
+		}
 		else
 		{ // head
 			color = recodeHead(index,index2);
@@ -450,6 +478,10 @@ varying vec3 vNormal;
 					else
 				color = colorHumanSkin();
 			}
+		}
+		else if( index==50 )
+		{	// skirt
+			color = colorSkirt();
 		}
 		else
 		{ // head

@@ -118,6 +118,11 @@ void main() {
 	#define KNEES 8
 	#define FEET  9
 	
+	#define SKIRT1	10
+	#define SKIRT2	11
+	#define SKIRT3	12
+	#define SKIRT4	13
+							
 	#define FORMAL_CLOTHING 1
 	#define CASUAL_CLOTHING 2
 	#define INTIMATE_CLOTHING 3
@@ -268,7 +273,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 	{
 
 		// belly swing
-		if( aVertexTopology == BELLY )
+		if( aVertexTopology == BELLY || aVertexTopology == SKIRT1 )
 		{
 			float a = 0.25*baseAngle*sine*sign(0.5-transformed.y);
 			rot = rotY(a);
@@ -291,7 +296,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 		}
 
 		// knees
-		if( aVertexTopology >= KNEES )
+		if( FEET >= aVertexTopology && aVertexTopology >= KNEES )
 		{
 			float k = mirror*cosine,
 				  a = 1.2*baseAngle*k*(1.0-k);
@@ -301,7 +306,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 		}
 
 		// legs
-		if( aVertexTopology >= LEGS ) // includes knees and feet
+		if( FEET >= aVertexTopology && aVertexTopology >= LEGS ) // includes knees and feet
 		{
 			float a = -baseAngle * (-0.25 + mirror*sine);
 			
@@ -311,18 +316,31 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 
 			transformed.y -= 0.02*mirror*cosine;
 		}
+		
+		// skirt
+		if( SKIRT4 >= aVertexTopology && aVertexTopology >= SKIRT1 )
+		{
+			if( man )
+			{
+				transformed = vec3(0);
+			}
+			else
+			{
+				transformed.z -= 0.35;
+			}
+		}
 	}
 	else if( motionType == MOTION_TYPE_SLEEP )
 	{
 		// knees
-		if( aVertexTopology >= KNEES )
+		if( FEET >= aVertexTopology && aVertexTopology >= KNEES )
 		{
 			rot = rotX(-2.0);
 			apply(rot,0.3);
 		}
 
 		// legs
-		if( aVertexTopology >= LEGS )
+		if( FEET >= aVertexTopology && aVertexTopology >= LEGS )
 		{
 			rot = rotX(1.0);
 			apply(rot,0.50);
@@ -347,7 +365,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 		}
 
 		// feet must be horizontal
-		if( aVertexTopology >= FEET )
+		if( aVertexTopology == FEET )
 		{
 			rot = rotZ(-mirror*(man?0.08:0.18)); // woman 0.18, man = 0.08
 
@@ -355,13 +373,25 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 		}
 		
 		// closing legs depending on gender
-		if( aVertexTopology >= LEGS ) // includes knees and feet
+		if( FEET >= aVertexTopology && aVertexTopology >= LEGS ) // includes knees and feet
 		{
 			rot = rotZ(mirror*(man?0.08:0.18)); // woman 0.18, man = 0.08
 
 			apply(rot,0.5);
 		}
 
+		// skirt
+		if( SKIRT4 >= aVertexTopology && aVertexTopology >= SKIRT1 )
+		{
+			if( man )
+			{
+				transformed = vec3(0);
+			}
+			else
+			{
+				transformed.z -= 0.362;
+			}
+		}
 	}
 	
 	// rescale the head and the body (keeping the head
@@ -403,7 +433,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 	
 	if( motionType == MOTION_TYPE_WALK )
 	{
-		if( aVertexTopology <= LEGS )
+		if( aVertexTopology <= LEGS || aVertexTopology >= SKIRT1 )
 		{
 			// move body up-down (simulation)
 			transformed.y += 0.02*sin(time*2.0);
