@@ -407,7 +407,7 @@ export class ApartmentBuildings
 					
 					isWindow *= k;
 					
-					gl_FragColor += isWindow*(1.0-windowId)*newColor*uLampsIntensity;
+					gl_FragColor += float(${DEBUG_BUILDINGS_OPACITY})*isWindow*(1.0-windowId)*newColor*uLampsIntensity;
 				  `
 				);		
 				
