@@ -373,8 +373,8 @@ export class AgentBehaviour
 						
 						if( from.building === to.building )
 						{ // 1.3.1 - same house
-							var	fromInWingA  = house.wingA.isInside( from.position ),
-								toInWingA = house.wingA.isInside( to.position );
+							var	fromInWingA  = house.zoneA.isInside( from.position ),
+								toInWingA = house.zoneA.isInside( to.position );
 								
 							if( fromInWingA == toInWingA )
 							{ // 1.3.1.1 - same wings
