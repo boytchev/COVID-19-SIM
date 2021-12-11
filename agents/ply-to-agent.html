@@ -17,7 +17,7 @@
 <body>
 	<div id="code"></div>
 	<script type="module">
-		var response = await fetch( './model/agent3d-v2.ply' );
+		var response = await fetch( './model/agent3d-v3.ply' );  //  <- File name of PLY file
 		var obj = await response.text();
 			obj = obj.replace('element vertex', 'element_vertex');
 			obj = obj.replace('element face', 'element_face');
@@ -99,21 +99,21 @@
 							'202',	// 8:KNEES in vertex shader
 							'022',	// 9:FEET in vertex shader
 							
-							'121',	// 10:SKIRT LEVEL 0 & 1
-							'012',	// 11:SKIRT LEVEL 2
-							'021',	// 12:SKIRT LEVEL 3
-							'011',	// 13:SKIRT LEVEL 4
-
-							'001',	// 14---unused
-							'010',	// 15---unused
-							'101',	// 16---unused
-							'102',	// 17---unused
-							'110',	// 18---unused
-							'112',	// 19---unused
-							'120',	// 20---unused
-							'122',	// 21---unused
-							'201',	// 22---unused
-							'210',	// 23---unused
+							'012',	// 10:SKIRT LEVEL 1
+							'021',	// 11:SKIRT LEVEL 2
+							'210',	// 12:SKIRT LEVEL 3
+							
+							'121',	// 13---unused
+							'011',	// 14---unused
+							'001',	// 15---unused
+							'010',	// 16---unused
+							'101',	// 17---unused
+							'102',	// 18---unused
+							'110',	// 19---unused
+							'112',	// 20---unused
+							'120',	// 21---unused
+							'122',	// 22---unused
+							'201',	// 23---unused
 							'211',	// 24---unused
 							'212',	// 25---unused
 							'221',	// 26---unused

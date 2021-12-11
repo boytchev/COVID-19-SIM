@@ -844,7 +844,7 @@ export class AgentBehaviour
 		}
 		
 		// make one step to target
-		this.position = this.position.add( v, walkDistance/distance );		
+		this.position = this.position.add( v, walkDistance/distance );
 
 		return false;
 		

@@ -332,7 +332,7 @@ varying vec3 vNormal;
 		}
 		
 		// bottom
-		from = randInt(9,10); // all:[9..10]
+		from = min(randInt(9,16),10); // all:[9..10]
 		to   = randInt(10,12); // all:[10..12]
 		if( from<=index && index<=to ) return colorSock();
 		
