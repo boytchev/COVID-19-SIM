@@ -274,7 +274,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 	{
 
 		// belly swing
-		if( aVertexTopology == BELLY || aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM )
+		if( aVertexTopology == BELLY || ( (transformed.z>-0.01) && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM)) )
 		{
 			float a = 0.25*baseAngle*sine*sign(0.5-transformed.y);
 			rot = rotY(a);
@@ -282,7 +282,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 
 			transformed.y += - 0.005*mirror*cosine;
 		}
-	
+
 		// swing hands and move shoulder
 		if( aVertexTopology == HANDS )
 		{
