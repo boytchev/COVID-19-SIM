@@ -99,6 +99,8 @@ varying vec3 vNormal;
 
 	bool man;
 	bool resetColor;
+	bool hasSkirt;
+
 
 	float seed = 1.234;
 
@@ -177,18 +179,25 @@ varying vec3 vNormal;
 	{
 		float r, g, b;
 		
-		if( vRandomId<0.7 )
-		{ // black-blue
-			r = vRandomId/10.0;
-			g = vRandomId/10.0;
-			b = vRandomId/2.0;
-		}
-		else
-		{ // bright color
-			r = 0.8+0.2*fract(2.0/vRandomId);
-			g = 0.8+0.2*fract(3.0/vRandomId);
-			b = 0.8+0.2*fract(2.5/vRandomId);
-		}
+		r = vRandomId/4.0;
+		g = vRandomId/4.0;
+		b = vRandomId/4.0;
+
+		if( randBool(0.3) ) r = 0.3*r+0.7;
+		else if( randBool(0.3) ) b = 0.3*b+0.7;
+		else if( randBool(0.3) ) g = 0.3*g+0.7;
+
+		return vec4(r,g,b,1);
+	}
+	
+	vec4 colorSkirtFormal( )
+	{
+		float r, g, b;
+		
+		r = vRandomId/6.0;
+		g = r;
+		b = r;
+		
 		return vec4(r,g,b,1);
 	}
 	
@@ -331,6 +340,12 @@ varying vec3 vNormal;
 			if( index <= sockLevel ) return colorSock();
 		}
 		
+		if( index==11 )
+		{
+			if( hasSkirt )
+				return colorSock();
+		}
+
 		// bottom
 		from = min(randInt(9,16),10); // all:[9..10]
 		to   = randInt(10,12); // all:[10..12]
@@ -344,11 +359,6 @@ varying vec3 vNormal;
 			if( from<=index && index<=to ) return colorSock();
 		}
 
-		if( index==50 )
-		{	// skirt
-			return colorSkirt();
-		}
-		
 		if( index>=23 )
 		{ // head
 			return recodeHead(index,index2);
@@ -366,8 +376,8 @@ varying vec3 vNormal;
 		{
 			int shoeEnd = randInt(2,man?6:7); // man:[2..6] woman:[2..7]
 			int sockEnd = randInt(3,man?6:8); // man:[3..6] woman:[3..8]
-			int pantBeg = randInt(4,9); // all:[4..9]
-			int pantEnd = randInt(10,12); // all:[10..12]
+			int pantBeg = hasSkirt ? 10 : randInt(4,9); // all:[4..9]
+			int pantEnd = randInt(10,hasSkirt?10:12); // all:[10..12]
 
 			if( index==1 ) color = colorShoeSole();
 				else
@@ -377,9 +387,15 @@ varying vec3 vNormal;
 				else
 			if( index<pantBeg ) color = colorHumanSkin();
 				else
-			if( index<=pantEnd ) color = colorPants();
+			if( index<=pantEnd ) color = hasSkirt ? colorSock() : colorPantsFormal();
 				else
-			if( index==11 ) color = colorBelt();
+			if( index==11 )
+			{
+				if( hasSkirt )
+					color = colorSkirt();
+				else
+					color = colorBelt();
+			}
 				else
 			color = colorHumanSkin();
 		}
@@ -412,10 +428,6 @@ varying vec3 vNormal;
 				color = colorHumanSkin();
 			}
 		}
-		else if( index==50 )
-		{	// skirt
-			color = colorSkirt();
-		}
 		else
 		{ // head
 			color = recodeHead(index,index2);
@@ -433,7 +445,7 @@ varying vec3 vNormal;
 		{
 			int shoeEnd = randInt(2,3); // all:[2..3]
 			int sockEnd = man?0:4;
-			int pantBeg = man?4:randInt(7,9); // man:[4] woman:all:[7..9]
+			int pantBeg = man?4:(hasSkirt?10:randInt(7,9)); // man:[4] woman:all:[7..9]
 			int pantEnd = 10; // all:[10]
 
 			if( index==1 ) color = colorShoeSole();
@@ -444,9 +456,15 @@ varying vec3 vNormal;
 				else
 			if( index<pantBeg ) color = colorHumanSkin();
 				else
-			if( index<=pantEnd ) color = colorPantsFormal();
+			if( index<=pantEnd ) color = hasSkirt ? colorSock() : colorPantsFormal();
 				else
-			if( index==11 ) color = colorBeltFormal();
+			if( index==11 )
+			{
+				if( hasSkirt )
+					color = colorSkirtFormal();
+				else
+					color = colorBeltFormal();
+			}
 				else
 			color = colorHumanSkin();
 		}
@@ -478,10 +496,6 @@ varying vec3 vNormal;
 					else
 				color = colorHumanSkin();
 			}
-		}
-		else if( index==50 )
-		{	// skirt
-			color = colorSkirt();
 		}
 		else
 		{ // head
@@ -521,6 +535,8 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	#ifdef COVID19SYM
 		#ifdef COVID19SYM_RECOLOR
 			man = vRandomId<float( ${MALE_RATIO} );
+			hasSkirt = !man && (fract(2.901/vRandomId)<0.8);
+
 			resetColor = false;
 	
 			if( vVertexTopology==OVERHEAD )

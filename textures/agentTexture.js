@@ -303,7 +303,7 @@ export class AgentTexture extends ProceduralTexture
 			end( );
 			
 /*11*/	colorIndex( 11 );
-		fill( 10-e, 14+3/4, 16+e, 15 );
+		fill( 10-e, 14+3/4, 16+e, 15+1/16 );
 		
 /*12*/	colorIndex( 12 );
 		fill( 10-e, 14, 16+e, 14+3/4 );
@@ -502,7 +502,7 @@ export class AgentTexture extends ProceduralTexture
 		line( [10, 18, 16, 18] ); 		// 08-09
 
 		quad( 10, 17, 12, 17, 13, 15, 16, 17.1 );	// 09-10
-		line( [10, 15, 16, 15] ); 					// 10-11
+		line( [10, 15+1/16, 16, 15+1/16] ); 		// 10-11
 		line( [10, 14+3/4, 16, 14+3/4] ); 			// 11-12
 		line( [10, 14, 16, 14] ); 					// 12-13
 		

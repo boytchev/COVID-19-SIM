@@ -185,7 +185,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 	mat3 rot; // general purpose rotation matrix
 	
 
-	bool hasSkirt = !man && (fract(2.901/randomId)<0.8);
+	bool hasSkirt = !man && (fract(2.901/randomId)< (vClothing==INTIMATE_CLOTHING?0.3:0.8));
 	
 	float fat = (man?1.0:0.5)*pow(0.5+0.5*sin(1.234*agentId),2.0);
 
@@ -326,7 +326,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 
 			if( aVertexTopology == SKIRT_TOP )
 			{
-				transformed.x += 0.025*sign(transformed.x);
+				transformed.x += 0.030*sign(transformed.x);
 				transformed.y -= 0.04;
 				transformed.z += 0.02*sign(transformed.z)-0.005;
 			}
@@ -402,7 +402,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 
 			if( aVertexTopology == SKIRT_TOP )
 			{
-				transformed.x += 0.025*sign(transformed.x);
+				transformed.x += 0.030*sign(transformed.x);
 				transformed.y -= 0.04;
 				transformed.z += 0.02*sign(transformed.z)-0.005;
 			}
