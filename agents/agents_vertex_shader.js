@@ -121,7 +121,6 @@ void main() {
 	
 	#define SKIRT_TOP		10
 	#define SKIRT_BOTTOM	11
-	#define SKIRT_INNER		12
 							
 	#define FORMAL_CLOTHING 1
 	#define CASUAL_CLOTHING 2
@@ -186,22 +185,14 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 	mat3 rot; // general purpose rotation matrix
 	
 
-	bool hasSkirt = !man && (fract(2.901/randomId)<1.8);
+	bool hasSkirt = !man && (fract(2.901/randomId)<0.8);
 	
 	float fat = (man?1.0:0.5)*pow(0.5+0.5*sin(1.234*agentId),2.0);
 
-	// move SKIRT1 vertices down to the hip
-	if( hasSkirt && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM) )
-	{
-		transformed.x *= 1.1410;
-		transformed.y -= 0.06667;
-		transformed.z = transformed.z*1.06087-0.0066;
-	}
-	
 	float anthroScale = mapLinear( agentAge, 12.0, 50.0, 0.0, 1.0); // 1 = adult features; 0 = child features
 	
 	// belly - slim and fat people
-	if( aVertexTopology == BELLY || aVertexTopology == NIPS || aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM || aVertexTopology == SKIRT_INNER )
+	if( aVertexTopology == BELLY || aVertexTopology == NIPS || ((transformed.z>0.0) && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM)) )
 	{
 		transformed.x *= mapLinear( transformed.y, 0.43, 0.7, 1.0+fat*0.1, 1.0+fat*0.4);
 		transformed.z *= mapLinear( transformed.y, 0.43, 0.7, 1.0+fat*2.0, 1.0+fat*0.5);
@@ -213,11 +204,11 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 	float hipScale = 1.0;
 	if( !man )
 	{
-		if( (HIP_CENTER-HIP_SPAN)<transformed.y && transformed.y<(HIP_CENTER+HIP_SPAN) )
+		if( !hasSkirt && (HIP_CENTER-HIP_SPAN)<transformed.y && transformed.y<(HIP_CENTER+HIP_SPAN) )
 		{	// HIP_CENTER-HIP_SPAN <- HIP_CENTER -> HIP_CENTER+HIP_SPAN
 			float y = PI*(transformed.y-HIP_CENTER)/HIP_SPAN;
 			hipScale = 1.0 + anthroScale*(0.1+0.05*fract(3.2/randomId))*clamp(0.5+0.5*cos(y)-0.3*fat,0.0,1.0);
-			if( !hasSkirt ) transformed.x *= hipScale;
+			transformed.x *= hipScale;
 		}
 		
 		if( aVertexTopology == NIPS )
@@ -279,11 +270,11 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 		}
 	}
 
-	if( motionType == MOTION_TYPE_WALK )
+	if( motionType == MOTION_TYPE_WALK ) //--------------------------------- WALK
 	{
 
 		// belly swing
-		if( aVertexTopology == BELLY || aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM || aVertexTopology == SKIRT_INNER )
+		if( aVertexTopology == BELLY || aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM )
 		{
 			float a = 0.25*baseAngle*sine*sign(0.5-transformed.y);
 			rot = rotY(a);
@@ -328,39 +319,32 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 		}
 		
 		// skirt - extrude it 
-		if( hasSkirt && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM || aVertexTopology == SKIRT_INNER) )
+		if( hasSkirt && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM) )
 		{
-			float skirtLength = 0.15+0.23*fract(3.81/randomId);
-			float skirtWidth = 1.0+0.8*pow(fract(2.37/randomId),2.0);
+			float skirtLength = 0.15+0.20*fract(3.81/randomId);
+			float skirtWidth = 1.2+1.8*pow(fract(2.37/randomId),1.0)*(0.6-skirtLength);
 
 			if( aVertexTopology == SKIRT_TOP )
 			{
-				transformed.x += 0.015*sign(transformed.x);
-				if( transformed.z>0.0 ) transformed.z += 0.01;
+				transformed.x += 0.025*sign(transformed.x);
+				transformed.y -= 0.04;
+				transformed.z += 0.02*sign(transformed.z)-0.005;
 			}
 
 			if( aVertexTopology == SKIRT_BOTTOM )
 			{
 				transformed.x *= skirtWidth;
 				transformed.y -= skirtLength;
-				transformed.z += 0.02*sign(transformed.z)*skirtWidth;
+				transformed.z += 0.03*sign(transformed.z)*skirtWidth;
 				
 				// walking forward - skirt motion
-				if( transformed.z > 0.01) transformed.z += 0.1*max(0.0, -mirror*sine )/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.4,2.2);
-				if( transformed.z < -0.01) transformed.z -= 0.1*max(0.0, -mirror*cosine )/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.5,2.0);
-			}
-			
-			if( aVertexTopology == SKIRT_INNER )
-			{
-				//transformed.x += 0.001*sign(transformed.x);
-				//transformed.y -= 0.05;
-				transformed.y -= skirtLength/2.0;
-				//transformed.z *= 0.9;
+				transformed.z += -0.1*mirror*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.3,2.2);
+				transformed.x += -0.1*mirror*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.1,0.3);
 			}
 		}
 		
 	}
-	else if( motionType == MOTION_TYPE_SLEEP )
+	else if( motionType == MOTION_TYPE_SLEEP ) //--------------------------------- SLEEP
 	{
 		// knees
 		if( FEET >= aVertexTopology && aVertexTopology >= KNEES )
@@ -382,7 +366,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 			transformed.z *= 1.0+0.2*sin(0.2*rawTime);
 		}
 	}
-	else // catch section for all other motion types, including MOTION_TYPE_STAND
+	else if( motionType == MOTION_TYPE_STAND ) //--------------------------------- STAND
 	{
 		// swinging hand while standing
 		if( aVertexTopology == HANDS )
@@ -411,30 +395,23 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 		}
 
 		// skirt - extrude it 
-		if( hasSkirt && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM || aVertexTopology == SKIRT_INNER) )
+		if( hasSkirt && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM) )
 		{
-			float skirtLength = 0.15+0.23*fract(3.81/randomId);
-			float skirtWidth = 1.0+0.8*pow(fract(2.37/randomId),2.0);
+			float skirtLength = 0.15+0.20*fract(3.81/randomId);
+			float skirtWidth = 1.2+1.8*pow(fract(2.37/randomId),1.0)*(0.6-skirtLength);
 
 			if( aVertexTopology == SKIRT_TOP )
 			{
-				transformed.x += 0.015*sign(transformed.x);
-				if( transformed.z>0.0 ) transformed.z += 0.01;
+				transformed.x += 0.025*sign(transformed.x);
+				transformed.y -= 0.04;
+				transformed.z += 0.02*sign(transformed.z)-0.005;
 			}
 
 			if( aVertexTopology == SKIRT_BOTTOM )
 			{
 				transformed.x *= skirtWidth;
 				transformed.y -= skirtLength;
-				transformed.z += 0.02*sign(transformed.z)*skirtWidth;
-			}
-			
-			if( aVertexTopology == SKIRT_INNER )
-			{
-				//transformed.x += 0.001*sign(transformed.x);
-				//transformed.y -= 0.05;
-				transformed.y -= skirtLength/2.0;
-				//transformed.z *= 0.9;
+				transformed.z += 0.03*sign(transformed.z)*skirtWidth;
 			}
 		}
 
