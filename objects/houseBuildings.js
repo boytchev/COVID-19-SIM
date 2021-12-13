@@ -283,6 +283,7 @@ export class HouseBuildings
 				bumpMap: textures.houseBump.map(),
 				bumpScale: DEBUG_ALL_WHITE?0.1:1,
 				side: DEBUG_HIDE_ROOFS?THREE.DoubleSide:THREE.FrontSide,
+				//shadowSide: THREE.DoubleSide,
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
 				opacity:     DEBUG_BUILDINGS_OPACITY,
 				depthWrite:  DEBUG_BUILDINGS_OPACITY>0.9,

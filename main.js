@@ -28,6 +28,7 @@ measure( 'start' );
 import * as THREE from './js/three.module.js';
 import * as dat from './js/dat.gui.module.js';
 import {OrbitControls} from './js/OrbitControls.js';
+//import {FirstPersonControls} from './js/FirstPersonControls.js';
 import {PIXEL_ART_STYLE, SAFE_MODE} from './config.js';
 import {deltaTimeReal} from './nature/nature.js';
 
@@ -78,7 +79,7 @@ if( DEBUG_SUN_POSITION_GUI )
 		gui.add( guiObject, 'sunPos' ).min(0).max(24).step(0.01).name('Sun pos (h)');
 }
 
-export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, EARTH_SIZE );
+export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 0.1, EARTH_SIZE );
 	camera.position.set( 10*GROUND_SIZE, 3*GROUND_SIZE, 10*GROUND_SIZE );
 	camera.position.set( -GROUND_SIZE/6, GROUND_SIZE/15, -GROUND_SIZE/5 );
 	//camera.position.set( 0.01+0*GROUND_SIZE/0.8, GROUND_SIZE*2, 0 );
@@ -86,7 +87,6 @@ export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.
 		camera.position.set( 0, 4, GROUND_SIZE/3 );
 	else
 		camera.position.set( GROUND_SIZE*2, GROUND_SIZE/2, GROUND_SIZE/1 );
-	//camera.position.set( 15, 5, 0 );
 			
 export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.maxPolarAngle = Math.PI * 0.495;
@@ -97,11 +97,13 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.rotateSpeed = 0.3;
 	controls.panSpeed = 0.7;
 	controls.screenSpacePanning = false;
-	controls.target.set( 0, 0, 0 );
 	controls.autoRotate = DEBUG_AUTOROTATE;
 	controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
-	controls.update();
-//	controls.addEventListener( 'change', function(){renderer.render(scene, camera);} );
+
+
+//	controls.lookAt( 0, 12, 0 );
+	controls.update( deltaTimeReal );
+	//controls.addEventListener( 'change', function(){renderer.render(scene, camera);} );
 
 export var navmesh = new NavMesh();		measure( 'navmesh' );
 export var textures = new Textures();	measure( 'textures' );
@@ -220,8 +222,8 @@ function animate()
 	else
 	{
 		// not in VR
-		/*if( DEBUG_FOLLOW_AGENT<0 ) */controls.update();
-		if( frame%6 == 0 /*|| !simulationPlaying*/ ) renderer.render(scene, camera);
+		/*if( DEBUG_FOLLOW_AGENT<0 ) */controls.update( deltaTimeReal );
+		if( frame%6 == 0 || !simulationPlaying ) renderer.render(scene, camera);
 	}
 	
 	
