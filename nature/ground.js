@@ -67,7 +67,8 @@ class Ground
 		
 		// add mountains
 		var colors = [];
-		var pos = geometry.getAttribute( 'position' );
+		var pos = geometry.getAttribute( 'position' ),
+			uv  = geometry.getAttribute( 'uv' );
 		var limit = EARTH_SIZE*EARTH_SIZE/2/2;
 		const RND = (DEBUG_RANDOM_SEED/1000)%1;
 		for( var i=0; i<pos.count; i++ )
@@ -82,6 +83,8 @@ class Ground
 			{
 				var y = 120+70*Math.sin(x/21.232+RND)+60*Math.sin(z/213.912+RND);
 				pos.setXYZ( i, x, y*GROUND_SIZE/500, z );
+				uv.setXY( i, x/EARTH_SIZE, z/EARTH_SIZE );
+				
 				colors.push( 0.15, 0.3, 0.15 );
 			}
 			else
@@ -89,14 +92,17 @@ class Ground
 			{
 				var y = 120+70*Math.sin(z/121.232+RND)+60*Math.sin(x/73.912+RND);
 				pos.setXYZ( i, x*r, y*GROUND_SIZE/1000, z*r );
+				uv.setXY( i, x*r/EARTH_SIZE, z*r/EARTH_SIZE );
 				colors.push( 0.5, 0.8, 0.5 );
 			}
 			else
 			{
 				pos.setXYZ( i, x*r, 0, z*r );
+				uv.setXY( i, x*r/EARTH_SIZE, z*r/EARTH_SIZE );
 				colors.push( 1, 1, 1 );
 			}
-		}
+
+		} // for( var i=0; i<pos.count; i++ )
 		
 		
 		var colorAttribute = new THREE.BufferAttribute( new Float32Array(colors), 3, false );
