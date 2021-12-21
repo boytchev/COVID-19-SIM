@@ -42,7 +42,7 @@ CFG.addHeader(
 			'misc,graphics' );
 
 		CFG.addBoolean(
-			'vr', 'Virtual reality mode', false, {},
+			'vr', 'Virtual reality mode', false, {fav:true},
 			'If checked, shows a VR button to enter a VR mode. This mode requires specific hardware (e.g. VR glasses) and a browser that can access them. If not checked, the simulation is tailored to a desktop computer or a smartphone sceen.',
 			'misc,graphics' );
 
@@ -56,7 +56,7 @@ CFG.addHeader(
 	'misc,rotation', {internal:true} );
 
 		CFG.addBoolean(
-			'dar', 'Auto rotate', false, {fav:true},
+			'dar', 'Auto rotate', false, {},
 			'If checked, the scene rotates continuously with speed defined by <em>Auto rotate speed</em>. The user can still use the mouse to rotate manually. If not checked, the scene does not move by itself.',
 			'misc,rotation' );
 

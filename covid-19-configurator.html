@@ -14,7 +14,7 @@
 	<meta name="keywords" content="COVID-19, Coronavirus, SARS-CoV-2, Coronavirus disease 2019, Configurator">
 	<meta name="author" content="Pavel Boytchev">
 	<meta name="version" content="2.0">
-	<meta name="date" content="2021.11">
+	<meta name="date" content="2021.12">
 	
 	<!--
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,8 +32,8 @@
 		
 		<h2 class="header">COVID-19 Configurator
 			<div class="info-persistant">The <b>COVID-19 Simulator</b> is controlled by <span id="param_count"></span>
-				configuration parameters. <span class="internal">There are <span id="param_count_internal"></span>
-				additional internal configuration parameters.</span> Click on the
+				main configuration parameters and <span id="param_count_internal"></span>
+				secondary ones.</span> Click on the
 				name of often used parameters to add them to your favourite parameters.
 			</div>
 		</h2>		
@@ -45,11 +45,11 @@
 			<br>
 			<br>
 			<button id="fav" class="filter">My</button>
-			<button id="all" class="filter">All</button>
+			<!--button id="all" class="filter">All</button-->
 			<button id="map" class="filter ">Map</button>
 			<button id="building" class="filter ">Buildings</button>
 			<button id="people" class="filter ">People</button>
-			<button id="daynight" class="filter ">Day & night</button>
+			<button id="time" class="filter ">Time</button>
 			<button id="health" class="filter ">Health</button>
 			<button id="misc" class="filter ">Misc</button>
 			<select id="tags" class="filter "></select>
@@ -81,7 +81,7 @@
 		import './configurator/map.js';
 		import './configurator/buildings.js';
 		import './configurator/people.js';
-		import './configurator/daynight.js';
+		import './configurator/time.js';
 		import './configurator/health.js';
 		import './configurator/misc.js';
 	
