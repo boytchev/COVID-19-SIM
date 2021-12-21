@@ -590,7 +590,7 @@ vec4 diffuseColor = vec4( diffuse, opacity );
 	
 	#include <envmap_fragment>
 	
-	gl_FragColor = vec4( outgoingLight, diffuseColor.a );
+	gl_FragColor = vec4( pow(outgoingLight.r,0.75),pow(outgoingLight.g,0.75),pow(outgoingLight.b,0.75), diffuseColor.a );
 	
 	#include <tonemapping_fragment>
 	#include <encodings_fragment>

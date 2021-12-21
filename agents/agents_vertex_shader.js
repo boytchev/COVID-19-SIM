@@ -91,7 +91,8 @@ varying vec3 vNormal;
 					  0,  0,  1 );
 	}
 	
-	#define apply(matrix,offset) transformed.y -= offset; transformed *= matrix; vNormal *= matrix; transformed.y += offset;
+	//#define apply(matrix,offset) transformed.y -= offset; transformed *= matrix; vNormal *= matrix; transformed.y += offset;
+	#define apply(matrix,offset) transformed.y -= offset; transformed *= matrix; transformed.y += offset;
 	#define applyVertex(matrix) transformed *= matrix;;
 	
 #endif
@@ -159,8 +160,6 @@ void main() {
 		//transformedNormal.z *= 1.0+1.0*sin(40.0*abs(position.x));
 	}
 #endif
-
-vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 
 	#include <begin_vertex>
 
@@ -365,6 +364,37 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 		{
 			transformed.z *= 1.0+0.2*sin(0.2*rawTime);
 		}
+		
+		// skirt - extrude it 
+		if( hasSkirt && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM) )
+		{
+			float skirtLength = 0.15+0.20*fract(3.81/randomId);
+			float skirtWidth = 1.2+1.8*pow(fract(2.37/randomId),1.0)*(0.6-skirtLength);
+
+			if( aVertexTopology == SKIRT_TOP )
+			{
+				transformed.x += 0.030*sign(transformed.x);
+				transformed.y -= 0.04;
+				//transformed.z += 0.02*sign(transformed.z)-0.005;
+				if( transformed.z>0.0 ) transformed.z *= 1.0+0.2*sin(0.2*rawTime);
+			}
+
+			if( aVertexTopology == SKIRT_BOTTOM )
+			{
+				if( transformed.z<0.05 )
+				{
+					transformed.x *= skirtWidth;
+					transformed.y -= skirtLength;
+					transformed.z = -0.01;
+				}
+				else
+				{
+					transformed.x *= 2.0*skirtWidth;
+					transformed.y -= skirtLength/4.0;
+					transformed.z += skirtLength/3.0;
+				}
+			}
+		}
 	}
 	else if( motionType == MOTION_TYPE_STAND ) //--------------------------------- STAND
 	{
@@ -468,9 +498,14 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 		if( aVertexTopology != OVERHEAD )
 		{
 			rot = rotX(PI/2.0);
-			apply(rot,0.05);
+			apply(rot,0.04);
 		}
 	}
+
+//vNormal = normalize( vec3(0,1,-1)+transformedNormal );
+vNormal = normalize( transformedNormal );
+//vNormal = vec3(0,1,0);
+
 
 #endif
 
