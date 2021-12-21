@@ -71,7 +71,8 @@ export class Buildings
 	update()
 	{
 		// ask office buildings to update lamps
-		var userData = buildings.officesMesh.material.userData;
+
+		var userData = buildings.officesMesh?.material.userData;
 		if( userData )
 		{
 			var shader = userData.shader;
@@ -93,7 +94,7 @@ export class Buildings
 		}			
 		
 		// ask apartment buildings to update lamps
-		var userData = buildings.apartmentsMesh.material.userData;
+		var userData = buildings.apartmentsMesh?.material.userData;
 		if( userData )
 		{
 			var shader = userData.shader;
@@ -115,7 +116,7 @@ export class Buildings
 		}			
 		
 		// ask houses to update lamps
-		var userData = buildings.housesMesh.material.userData;
+		var userData = buildings.housesMesh?.material.userData;
 		if( userData )
 		{
 			var shader = userData.shader;

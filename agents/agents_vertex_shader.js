@@ -468,7 +468,7 @@ vNormal = normalize( vec3(0,1,-1)+transformedNormal );
 		if( aVertexTopology != OVERHEAD )
 		{
 			rot = rotX(PI/2.0);
-			apply(rot,0.0);
+			apply(rot,0.05);
 		}
 	}
 
