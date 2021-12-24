@@ -127,6 +127,11 @@ void main() {
 	#define CASUAL_CLOTHING 2
 	#define INTIMATE_CLOTHING 3
 	
+	
+	#define JOINT_HANDS_Y	0.815661
+	#define JOINT_NECK_Y	0.878985
+	
+	
 	#if (${INFECTION_COLOR_INDICATOR?1:0})
 		vVertexColor = vec3( 1.0, 1.0-infectionLevel, 1.0-infectionLevel );
 	#else
@@ -178,7 +183,7 @@ void main() {
 	
 	float sine = sin(time);
 	float cosine = cos(time);
-	float mirror = sign(transformed.x); // left or right
+	float leftRight = sign(transformed.x); // left or right
 	
 
 	mat3 rot; // general purpose rotation matrix
@@ -279,26 +284,26 @@ void main() {
 			rot = rotY(a);
 			apply(rot,0.0);
 
-			transformed.y += - 0.005*mirror*cosine;
+			transformed.y += - 0.005*leftRight*cosine;
 		}
 
 		// swing hands and move shoulder
 		if( aVertexTopology == HANDS )
 		{
-			float a = 1.25*baseAngle * (0.5*baseAngle + mirror*sine) * (0.8-transformed.y),
+			float a = 1.25*baseAngle * (0.5*baseAngle + leftRight*sine) * (0.8-transformed.y),
 				  b = -0.25*baseAngle*sine;
 
-			rot = rotX(a)*rotZ((0.27-0.05*fat)*mirror)*rotY(b);
+			rot = rotX(a)*rotZ((0.27-0.05*fat)*leftRight)*rotY(b);
 
 			apply(rot,0.79);
 			
-			transformed.y += 0.007*baseAngle*mirror*cosine; // shoulder up-down
+			transformed.y += 0.007*baseAngle*leftRight*cosine; // shoulder up-down
 		}
 
 		// knees
 		if( FEET >= aVertexTopology && aVertexTopology >= KNEES )
 		{
-			float k = mirror*cosine,
+			float k = leftRight*cosine,
 				  a = 1.2*baseAngle*k*(1.0-k);
 			rot = rotX(a);
 
@@ -308,13 +313,13 @@ void main() {
 		// legs
 		if( FEET >= aVertexTopology && aVertexTopology >= LEGS ) // includes knees and feet
 		{
-			float a = -baseAngle * (-0.25 + mirror*sine);
+			float a = -baseAngle * (-0.25 + leftRight*sine);
 			
-			rot = rotX(a) * rotZ(mirror*(man?0.08:0.18)); // woman 0.18, man = 0.08
+			rot = rotX(a) * rotZ(leftRight*(man?0.08:0.18)); // woman 0.18, man = 0.08
 
 			apply(rot,0.5);
 
-			transformed.y -= 0.02*mirror*cosine;
+			transformed.y -= 0.02*leftRight*cosine;
 		}
 		
 		// skirt - extrude it 
@@ -337,8 +342,8 @@ void main() {
 				transformed.z += 0.03*sign(transformed.z)*skirtWidth;
 				
 				// walking forward - skirt motion
-				transformed.z += -0.1*mirror*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.3,2.2);
-				transformed.x += -0.1*mirror*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.1,0.3);
+				transformed.z += -0.1*leftRight*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.3,2.2);
+				transformed.x += -0.1*leftRight*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.1,0.3);
 			}
 		}
 		
@@ -401,17 +406,29 @@ void main() {
 		// swinging hand while standing
 		if( aVertexTopology == HANDS )
 		{
-			float a = 0.25*baseAngle*mirror*sin(0.2*rawTime);
+			float a = 0.1*leftRight*sin(0.2*rawTime);	// swing forward/backward
+			float b = (0.27-0.05*fat)*leftRight;		// straddle towards body
 				  
-			rot = rotX(a)*rotZ((0.27-0.05*fat)*mirror);
+			rot = rotX(a)*rotZ(b);
 
-			apply(rot,0.79);
+			apply(rot,JOINT_HANDS_Y);
+		}
+
+		// moving head as if looking around
+		if( aVertexTopology == HEAD )
+		{
+			float a = 0.3*sin(0.1*rawTime);	// turn left/right
+			float b = 0.0;//-0.2+0.2*cos(0.04*rawTime);	// nodding
+				  
+			rot = rotY(a)*rotX(b);
+
+			apply(rot,JOINT_NECK_Y);
 		}
 
 		// feet must be horizontal
 		if( aVertexTopology == FEET )
 		{
-			rot = rotZ(-mirror*(man?0.08:0.18)); // woman 0.18, man = 0.08
+			rot = rotZ(-leftRight*(man?0.08:0.18)); // woman 0.18, man = 0.08
 
 			apply(rot,0.05);
 		}
@@ -419,7 +436,7 @@ void main() {
 		// closing legs depending on gender
 		if( FEET >= aVertexTopology && aVertexTopology >= LEGS ) // includes knees and feet
 		{
-			rot = rotZ(mirror*(man?0.08:0.18)); // woman 0.18, man = 0.08
+			rot = rotZ(leftRight*(man?0.08:0.18)); // woman 0.18, man = 0.08
 
 			apply(rot,0.5);
 		}

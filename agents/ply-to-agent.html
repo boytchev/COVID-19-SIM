@@ -17,7 +17,7 @@
 <body>
 	<div id="code"></div>
 	<script type="module">
-		var response = await fetch( './model/agent3d-v3.ply' );  //  <- File name of PLY file
+		var response = await fetch( './model/agent3d-v4.ply' );  //  <- File name of PLY file
 		var obj = await response.text();
 			obj = obj.replace('element vertex', 'element_vertex');
 			obj = obj.replace('element face', 'element_face');
@@ -88,7 +88,7 @@
 		
 		function topology(v)
 		{
-			var codes = [	'222', 	// 0:UNDEFINED in vertex shader
+			var codes = [	'222', 	// 0:UNDEFINED in vertex shader		white
 							'220',	// 1:HEAD in vertex shader
 							'200',	// 2:HANDS in vertex shader
 							'020',	// 3:NIPS in vertex shader
