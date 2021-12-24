@@ -93,6 +93,7 @@ varying vec3 vNormal;
 	
 	//#define apply(matrix,offset) transformed.y -= offset; transformed *= matrix; vNormal *= matrix; transformed.y += offset;
 	#define apply(matrix,offset) transformed.y -= offset; transformed *= matrix; transformed.y += offset;
+	#define applyMatrix(matrix,offset) transformed -= offset; transformed *= matrix; transformed += offset;
 	#define applyVertex(matrix) transformed *= matrix;;
 	
 #endif
@@ -128,8 +129,8 @@ void main() {
 	#define INTIMATE_CLOTHING 3
 	
 	
-	#define JOINT_HANDS_Y	0.815661
-	#define JOINT_NECK_Y	0.878985
+	#define JOINT_HANDS		vec3( 0.12, 0.78, 0)
+	#define JOINT_NECK		vec3(-0.03, 0.89, 0)
 	
 	
 	#if (${INFECTION_COLOR_INDICATOR?1:0})
@@ -184,6 +185,7 @@ void main() {
 	float sine = sin(time);
 	float cosine = cos(time);
 	float leftRight = sign(transformed.x); // left or right
+	vec3 LEFT_RIGHT = vec3(leftRight,1,1);
 	
 
 	mat3 rot; // general purpose rotation matrix
@@ -411,18 +413,18 @@ void main() {
 				  
 			rot = rotX(a)*rotZ(b);
 
-			apply(rot,JOINT_HANDS_Y);
+			applyMatrix(rot,JOINT_HANDS*LEFT_RIGHT);
 		}
 
 		// moving head as if looking around
 		if( aVertexTopology == HEAD )
 		{
 			float a = 0.3*sin(0.1*rawTime);	// turn left/right
-			float b = 0.0;//-0.2+0.2*cos(0.04*rawTime);	// nodding
+			float b = -0.1+0.1*cos(0.04*rawTime);	// nodding
 				  
 			rot = rotY(a)*rotX(b);
 
-			apply(rot,JOINT_NECK_Y);
+			applyMatrix(rot,JOINT_NECK);
 		}
 
 		// feet must be horizontal
