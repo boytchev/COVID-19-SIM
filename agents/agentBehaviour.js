@@ -781,9 +781,8 @@ export class AgentBehaviour
 			
 		var v = this.position.to( target ),
 			distance = v.distance( ), // distance to target
-			//walkDistance = this.walkingSpeed * deltaTime; // distance to be walked
-			//walkDistance = (1.8+0.8*Math.sin(this.id))*THREE.Math.mapLinear(this.height,0.35,2,0.03,0.82) * deltaTime; // distance to be walked
-			walkDistance = this.walkingSpeed*THREE.Math.mapLinear(this.height,0.35,2,0.03,0.82) * deltaTime; // distance to be walked
+			//walkDistance = this.walkingSpeed*THREE.Math.mapLinear(this.height,0.35,2,0.03,0.82) * deltaTime; // distance to be walked
+			walkDistance = this.walkingSpeed*(0.5*this.height/1.7) * deltaTime; // distance to be walked
 
 		agents.images.motionType.array[this.id] = MOTION_TYPE_WALK;
 

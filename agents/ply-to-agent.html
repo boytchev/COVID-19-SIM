@@ -17,7 +17,11 @@
 <body>
 	<div id="code"></div>
 	<script type="module">
-		var response = await fetch( './model/agent3d-v4.ply' );  //  <- File name of PLY file
+	
+		const PLY_FILE_NAME = 'agent3d-v5.ply';
+
+
+		var response = await fetch( './model/'+PLY_FILE_NAME );
 		var obj = await response.text();
 			obj = obj.replace('element vertex', 'element_vertex');
 			obj = obj.replace('element face', 'element_face');
@@ -158,7 +162,7 @@
 		textureData = textureData.slice(0, -2)+'];<br><br>';
 		topologyData = topologyData.slice(0, -2)+'];<br><br>';
 
-		document.getElementById('code').innerHTML = vertexData + normalData + textureData + topologyData;
+		document.getElementById('code').innerHTML = '// data from '+PLY_FILE_NAME+'<br><br>'+vertexData + normalData + textureData + topologyData;
 
 	</script>
 </body>
