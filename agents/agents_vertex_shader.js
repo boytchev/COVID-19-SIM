@@ -315,7 +315,7 @@ void main() {
 
 	if( motionType == MOTION_TYPE_WALK ) //--------------------------------- WALK
 	{
-		float walkingPhase = mod( rawTime*2.0/PI, 4.0 );
+//		float walkingPhase = mod( rawTime*2.0/PI, 4.0 );
 		
 		// head
 		if( aVertexTopology == HEAD )
@@ -365,7 +365,7 @@ void main() {
 		// feet
 		if( FEET == aVertexTopology )
 		{
-			float a = -0.2*pow(0.5+0.5*leftRight*sinTime(1.0),2.0);
+			float a = -0.2*pow(0.5+0.5*leftRight*sinTime(1.0),3.0);
 
 			rot = rotX(a);
 			applyMatrix ( rot, JOINT_ANKLE );
@@ -385,13 +385,23 @@ void main() {
 		if( FEET >= aVertexTopology && aVertexTopology >= LEGS )
 		{
 			
-			float a = 0.1+0.27*leftRight*(sine);
+			float a = 0.1+0.267*leftRight*(sine);
 			
 			rot = rotX(a);
 			applyMatrix( rot, JOINT_HIP );
 		}
 
 	transformed.z += 0.045*(0.5+0.7*cosTime2(2.0,-0.25));
+	
+	transformed.z += 0.01*pow(cosTime2(1.0,+1.23),4.0);
+	transformed.y -= 0.001;
+	
+	// upper body
+	if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
+	{
+		float a = 0.04*cosTime2(2.0,-0.25);
+		applyMatrix( rotX(a), JOINT_WAIST );
+	}
 		
 /**********************
 		float MAX_ALPHA_1_F0 = 0.2;
