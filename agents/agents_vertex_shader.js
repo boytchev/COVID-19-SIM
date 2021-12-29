@@ -137,9 +137,10 @@ void main() {
 	#define LEGS  7
 	#define KNEES 8
 	#define FEET  9
+	#define TOES  10
 	
-	#define SKIRT_TOP		10
-	#define SKIRT_BOTTOM	11
+	#define SKIRT_TOP		11
+	#define SKIRT_BOTTOM	12
 							
 	#define FORMAL_CLOTHING 1
 	#define CASUAL_CLOTHING 2
@@ -186,8 +187,9 @@ void main() {
 #ifdef COVID19SYM
 	
 
-	rawTime = 1.05*agentSpeed*uTime; // [0,inf]
- 
+	rawTime = 1.04*agentSpeed*uTime; // [0,inf]
+
+	
 	float sine = sinTime(1.0);
 	float cosine = cosTime(1.0);
 	float leftRight = sign(transformed.x);	// left(+1) or right(-1)
@@ -196,6 +198,7 @@ void main() {
 	#define JOINT_NECK		vec3( 0.0,             0.88,   0.04  )
 	#define JOINT_SUBNECK	vec3( 0.0,             0.78,   0.04  )
 	#define JOINT_TIPTOE	vec3( 0.0,             0.0,    0.112 )
+	#define JOINT_TOE		vec3( 0.07*leftRight,  0.000,  0.050 )
 	#define JOINT_HEEL		vec3( 0.0,             0.048, -0.015 )
 	#define JOINT_ANKLE		vec3( 0.0,             0.018,  0.015 )
 	#define JOINT_WAIST		vec3( 0.0,             0.5,    0.11  )
@@ -362,17 +365,26 @@ void main() {
 		}
 
 
-		// feet
-		if( FEET == aVertexTopology )
+		// toes
+		if( TOES == aVertexTopology )
 		{
-			float a = -0.2*pow(0.5+0.5*leftRight*sinTime(1.0),3.0);
+			float a = 0.3*pow(0.5+0.5*leftRight*cosTime2(1.0,0.95),5.0);
+
+			rot = rotX(a);
+			applyMatrix ( rot, JOINT_TOE );
+		}
+
+		// feet
+		if( FEET == aVertexTopology || TOES == aVertexTopology )
+		{
+			float a = -0.2*pow(0.5+0.5*leftRight*sine,3.0);
 
 			rot = rotX(a);
 			applyMatrix ( rot, JOINT_ANKLE );
 		}
 
 		// knees
-		if( FEET >= aVertexTopology && aVertexTopology >= KNEES )
+		if( TOES >= aVertexTopology && aVertexTopology >= KNEES )
 		{
 			float k = -leftRight*cosine,
 			      a = 0.5*k*(1.0-k);
@@ -382,25 +394,32 @@ void main() {
 		}
 
 		// legs
-		if( FEET >= aVertexTopology && aVertexTopology >= LEGS )
+		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
 		{
 			
-			float a = 0.1+0.267*leftRight*(sine);
+			float a = 0.1+0.267*leftRight*sine;
 			
 			rot = rotX(a);
 			applyMatrix( rot, JOINT_HIP );
 		}
 
-// best so far
-	transformed.z += 0.046*(0.5+0.7*cosTime2(2.0,-0.25));	
-	transformed.z += 0.015*pow(cosTime2(1.0,+1.23),6.0);
-	
-	
-//	transformed.z += 0.009*(0.5+0.5*cosTime2(2.0,+1.25));
-//	transformed.y -= 0.001;
 
-
-//transformed.z += 0.0017*cosTime2(2.75,-3.05);
+	// adjust sliding feet
+	transformed.z += 0.046*(0.5+0.7*cosTime2(2.0,-0.25));
+	transformed.z += 0.020*pow(cosTime2(1.0,+1.23),6.0);
+	transformed.y -= 0.002*pow(0.5+0.5*cosTime2(2.0,0.025),2.0);
+	
+	float t = mod(rawTime, PI)/PI,
+	   from = 0.4,
+	   to = 0.9;
+	if( from<=t && t<=to)
+	{
+		float span = (to-from)/2.0,
+		      halfSpan = (to+from)/2.0,
+			cospan = 0.5+0.5*cos(PI*(t-halfSpan)/span);
+		transformed.z += 0.01*cospan;
+		transformed.y -= 0.005*cospan;
+	}
 	
 	// upper body
 	if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
@@ -408,6 +427,7 @@ void main() {
 		float a = 0.04*cosTime2(2.0,-0.25);
 		applyMatrix( rotX(a), JOINT_WAIST );
 	}
+
 		
 /**********************
 		float MAX_ALPHA_1_F0 = 0.2;
@@ -685,7 +705,7 @@ alpha_6 -= 0.3*(0.5+0.5*cos(2.0*PI*(phase-0.5)));
 		}
 
 		// waist
-		if( aVertexTopology < LEGS || aVertexTopology > FEET )
+		if( aVertexTopology < LEGS || aVertexTopology > TOES )
 		{
 			rot = rotX(-0.8);
 			applyMatrix( rot, JOINT_HIP );
@@ -694,14 +714,14 @@ alpha_6 -= 0.3*(0.5+0.5*cos(2.0*PI*(phase-0.5)));
 		}
 
 		// knees
-		if( aVertexTopology < KNEES || aVertexTopology > FEET )
+		if( aVertexTopology < KNEES || aVertexTopology > TOES )
 		{
 			rot = rotX(1.55);
 			applyMatrix( rot, JOINT_KNEE );
 		}
 
 		// legs
-		if( aVertexTopology != FEET )
+		if( aVertexTopology != FEET && aVertexTopology != TOES )
 		{
 			rot = rotX(0.8);
 			applyMatrix( rot, JOINT_ANKLE );
@@ -748,12 +768,12 @@ alpha_6 -= 0.3*(0.5+0.5*cos(2.0*PI*(phase-0.5)));
 
 
 		// closing legs for women
-		if( !man && FEET >= aVertexTopology && aVertexTopology >= LEGS )
+		if( !man && TOES >= aVertexTopology && aVertexTopology >= LEGS )
 		{
 			float a = 0.09*leftRight;
 			
 			// feet must be horizontal
-			if( aVertexTopology == FEET )
+			if( aVertexTopology == FEET && aVertexTopology == TOES )
 			{
 				rot = rotZ(-a);
 				applyMatrix( rot, JOINT_ANKLE );
