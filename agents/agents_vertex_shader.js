@@ -186,7 +186,7 @@ void main() {
 #ifdef COVID19SYM
 	
 
-	rawTime = agentSpeed*uTime; // [0,inf]
+	rawTime = 1.05*agentSpeed*uTime; // [0,inf]
  
 	float sine = sinTime(1.0);
 	float cosine = cosTime(1.0);
@@ -391,10 +391,16 @@ void main() {
 			applyMatrix( rot, JOINT_HIP );
 		}
 
-	transformed.z += 0.045*(0.5+0.7*cosTime2(2.0,-0.25));
+// best so far
+	transformed.z += 0.046*(0.5+0.7*cosTime2(2.0,-0.25));	
+	transformed.z += 0.015*pow(cosTime2(1.0,+1.23),6.0);
 	
-	transformed.z += 0.01*pow(cosTime2(1.0,+1.23),4.0);
-	transformed.y -= 0.001;
+	
+//	transformed.z += 0.009*(0.5+0.5*cosTime2(2.0,+1.25));
+//	transformed.y -= 0.001;
+
+
+//transformed.z += 0.0017*cosTime2(2.75,-3.05);
 	
 	// upper body
 	if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
