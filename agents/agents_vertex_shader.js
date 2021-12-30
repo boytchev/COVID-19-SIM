@@ -41,15 +41,15 @@ varying vec3 vNormal;
 #include <common>
 #include <uv_pars_vertex>
 #include <uv2_pars_vertex>
-#include <displacementmap_pars_vertex>
-#include <envmap_pars_vertex>
+//#include <displacementmap_pars_vertex>
+//#include <envmap_pars_vertex>
 #include <color_pars_vertex>
-#include <fog_pars_vertex>
-#include <morphtarget_pars_vertex>
-#include <skinning_pars_vertex>
+//#include <fog_pars_vertex>
+//#include <morphtarget_pars_vertex>
+//#include <skinning_pars_vertex>
 #include <shadowmap_pars_vertex>
 #include <logdepthbuf_pars_vertex>
-#include <clipping_planes_pars_vertex>
+//#include <clipping_planes_pars_vertex>
 
 #ifdef COVID19SYM
 	#define MOTION_TYPE_STAND 0
@@ -108,11 +108,8 @@ varying vec3 vNormal;
 					  0,  0,  1 );
 	}
 	
-	//#define apply(matrix,offset) transformed.y -= offset; transformed *= matrix; vNormal *= matrix; transformed.y += offset;
-	#define apply(matrix,offset) transformed.y -= offset; transformed *= matrix; transformed.y += offset;
 	#define applyMatrix(matrix,offset) transformed -= offset; transformed *= matrix; transformed += offset;
-	#define applyVertex(matrix) transformed *= matrix;;
-	
+
 #endif
 
 void main() {
@@ -153,6 +150,12 @@ void main() {
 		vVertexColor = vec3( 1 );
 	#endif
 
+
+//float dist = distance(instanceMatrix[3].xyz,cameraPosition);
+//vVertexColor = vec3( dist>30.0?0:1, dist>60.0?0:1, dist>60.0?0:1 );
+
+
+
 	vAgentId = agentId;
 	vRandomId = randomId;
 	vAge = agentAge;
@@ -177,7 +180,7 @@ void main() {
 	if( !man )
 	if( aVertexTopology == NIPS )
 	{
-		//transformedNormal.z *= 1.0+1.0*sin(40.0*abs(position.x));
+		transformedNormal.z *= 1.0+1.0*sin(40.0*abs(position.x));
 	}
 #endif
 
@@ -205,7 +208,7 @@ void main() {
 	#define JOINT_HIP		vec3( 0.096*leftRight, 0.495,  0.026 )
 	#define JOINT_OTHER_HIP	vec3(-0.096*leftRight, 0.495,  0.026 )
 	#define JOINT_KNEE		vec3( 0.0,             0.27,   0.025 )
-	#define JOINT_OVERHEAD	vec3( 0.0,             1.09,   0.046 )
+	#define JOINT_OVERHEAD	vec3( 0.0,             1.09-0.35,   0.046 )
 	#define JOINT_OH_SLEEP	vec3( 0.0,             0.8,    0.006 )
 	
 	
@@ -303,9 +306,11 @@ void main() {
 				rot = rotX( PI/2.0-uViewBeta ) * rotY( uViewAlpha-normalAngle );
 				
 				applyMatrix( rot, JOINT_OVERHEAD );
+				transformed.y += 0.35;
 
 				if( motionType == MOTION_TYPE_SLEEP )
 				{
+					transformed.y -= 0.10;
 					rot = rotX( -PI/2.0 );
 					applyMatrix( rot, JOINT_OH_SLEEP );
 				}
@@ -404,253 +409,29 @@ void main() {
 		}
 
 
-	// adjust sliding feet
-	transformed.z += 0.046*(0.5+0.7*cosTime2(2.0,-0.25));
-	transformed.z += 0.020*pow(cosTime2(1.0,+1.23),6.0);
-	transformed.y -= 0.002*pow(0.5+0.5*cosTime2(2.0,0.025),2.0);
-	
-	float t = mod(rawTime, PI)/PI,
-	   from = 0.4,
-	   to = 0.9;
-	if( from<=t && t<=to)
-	{
-		float span = (to-from)/2.0,
-		      halfSpan = (to+from)/2.0,
-			cospan = 0.5+0.5*cos(PI*(t-halfSpan)/span);
-		transformed.z += 0.01*cospan;
-		transformed.y -= 0.005*cospan;
-	}
-	
-	// upper body
-	if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
-	{
-		float a = 0.04*cosTime2(2.0,-0.25);
-		applyMatrix( rotX(a), JOINT_WAIST );
-	}
-
+		// adjust sliding feet
+		transformed.z += 0.046*(0.5+0.7*cosTime2(2.0,-0.25));
+		transformed.z += 0.020*pow(cosTime2(1.0,+1.23),6.0);
+		transformed.y -= 0.002*pow(0.5+0.5*cosTime2(2.0,0.025),2.0);
 		
-/**********************
-		float MAX_ALPHA_1_F0 = 0.2;
-		float MAX_ALPHA_2_F0 = 0.2;
-		float MAX_ALPHA_3_F0 = 0.2;
-		float MAX_ALPHA_4_F0 = -0.50;
-		float MAX_ALPHA_5_F0 = 0.0;
-		float MAX_ALPHA_6_F0 = -0.7;
-		float MAX_ALPHA_7_F0 = 0.0;
-		
-		float MAX_ALPHA_1_F1 = 0.0;
-		float MAX_ALPHA_2_F1 = -0.2;
-		float MAX_ALPHA_3_F1 = 0.1;
-		float MAX_ALPHA_4_F1 = 0.0;
-		float MAX_ALPHA_5_F1 = 0.4;
-		float MAX_ALPHA_6_F1 = -1.2;
-		float MAX_ALPHA_7_F1 = 0.2;
-		
-		float MAX_ALPHA_1_F2 = -0.8;
-		float MAX_ALPHA_2_F2 = 0.0;
-		float MAX_ALPHA_3_F2 = 0.7;
-		float MAX_ALPHA_4_F2 = 0.0;
-		float MAX_ALPHA_5_F2 = 0.57;
-		float MAX_ALPHA_6_F2 = -0.2;
-		float MAX_ALPHA_7_F2 = 0.0;
-		
-		bool LEFT  = (leftRight > 0.0);
-		bool RIGHT = (leftRight < 0.0);
-		
-//if(walkingPhase>2.0) walkingPhase=4.0-walkingPhase;
-
-		float phase = fract( walkingPhase ); // phase [0,1) inside the current walking phase
-		//if( walkingPhase>0.9999 ) phase = 1.0;
-
-// if( sinTime(120.0)<0.0 )
-// {
-// walkingPhase=0.0;
-// phase=0.0;
-// }
-// else
-// {
-// walkingPhase=1.0;
-// phase=1.0;
-// }
-	
-if( walkingPhase>=2.0 )
-{
-	walkingPhase -= 2.0;
-	LEFT = !LEFT;
-	RIGHT = !RIGHT;
-}
-
-		// phase [0..1] weight on left foot, before midpoint
-		if( walkingPhase<1.0 )
+		float t = mod(rawTime, PI)/PI,
+		   from = 0.4,
+		   to = 0.9;
+		if( from<=t && t<=to)
 		{
-			float alpha_1  = max( MAX_ALPHA_1_F1, mapLinear( phase, 0.0, 0.3, MAX_ALPHA_1_F0, MAX_ALPHA_1_F1 ) );
-			float alpha_2  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_2_F0,  MAX_ALPHA_2_F1 );
-			float alpha_3  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_3_F0,  MAX_ALPHA_3_F1 );
-			float alpha_4  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_4_F0,  MAX_ALPHA_4_F1 );
-			float alpha_5  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_5_F0,  MAX_ALPHA_5_F1 );
-			float alpha_6  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_6_F0,  MAX_ALPHA_6_F1 );
-			float alpha_7  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_7_F0,  MAX_ALPHA_7_F1 );
-
-alpha_6 -= 0.3*(0.5+0.5*cos(2.0*PI*(phase-0.5)));
-
-			if( RIGHT )
-			{
-				// right knee
-				if( aVertexTopology == FEET && RIGHT )
-				{
-					applyMatrix( rotX(alpha_7), JOINT_ANKLE );
-					applyMatrix( rotX(alpha_6), JOINT_KNEE );
-					applyMatrix( rotX(alpha_5), JOINT_HIP );
-					applyMatrix( rotX(alpha_4), JOINT_HIP );
-					applyMatrix( rotX(alpha_3), JOINT_KNEE );
-					applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-				}
-
-				// right knee
-				if( aVertexTopology == KNEES )
-				{
-					applyMatrix( rotX(alpha_6), JOINT_KNEE );
-					applyMatrix( rotX(alpha_5), JOINT_HIP );
-					applyMatrix( rotX(alpha_4), JOINT_HIP );
-					applyMatrix( rotX(alpha_3), JOINT_KNEE );
-					applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-				}
-
-				// right leg
-				if( aVertexTopology == LEGS )
-				{
-					applyMatrix( rotX(alpha_5), JOINT_HIP );
-					applyMatrix( rotX(alpha_4), JOINT_HIP );
-					applyMatrix( rotX(alpha_3), JOINT_KNEE );
-					applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-				}
-			} // RIGHT
-			
-			// upper body
-			if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
-			{
-				applyMatrix( rotX(alpha_4), JOINT_HIP );
-				applyMatrix( rotX(alpha_3), JOINT_KNEE );
-				applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-			}
-
-			if( LEFT )
-			{
-				// left knee
-				if( aVertexTopology == LEGS )
-				{
-					applyMatrix( rotX(alpha_3), JOINT_KNEE );
-					applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-				}
-
-				// left ankle
-				if( aVertexTopology == KNEES )
-				{
-					applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-				}
-
-				// left foot
-				if( aVertexTopology == FEET )
-				{
-					applyMatrix( rotX(alpha_1), JOINT_HEEL );
-				}
-			} // LEFT
+			float span = (to-from)/2.0,
+				  halfSpan = (to+from)/2.0,
+				cospan = 0.5+0.5*cos(PI*(t-halfSpan)/span);
+			transformed.z += 0.01*cospan;
+			transformed.y -= 0.005*cospan;
 		}
-
-		else
-			
-		if( walkingPhase<=2.0 )
+		
+		// upper body
+		if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
 		{
-			// phase [1..2] weight on left foot, after midpoint
-
-			float alpha_1  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_1_F1,  MAX_ALPHA_1_F2 );
-			float alpha_2  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_2_F1,  MAX_ALPHA_2_F2 );
-			float alpha_3  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_3_F1,  MAX_ALPHA_3_F2 );
-			float alpha_4  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_4_F1,  MAX_ALPHA_4_F2 );
-			float alpha_5  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_5_F1,  MAX_ALPHA_5_F2 );
-			float alpha_6  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_6_F1,  MAX_ALPHA_6_F2 );
-			float alpha_7  = mapLinear( phase, 0.0, 1.0, MAX_ALPHA_7_F1,  MAX_ALPHA_7_F2 );
-			
-			if( RIGHT )
-			{
-				// right knee
-				if( aVertexTopology == FEET && RIGHT )
-				{
-					applyMatrix( rotX(alpha_7), JOINT_ANKLE );
-					applyMatrix( rotX(alpha_6), JOINT_KNEE );
-					applyMatrix( rotX(alpha_5), JOINT_HIP );
-					applyMatrix( rotX(alpha_4), JOINT_HIP );
-					applyMatrix( rotX(alpha_3), JOINT_KNEE );
-					applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-					applyMatrix( rotX(alpha_1), JOINT_TIPTOE );
-				}
-
-				// right knee
-				if( aVertexTopology == KNEES )
-				{
-					applyMatrix( rotX(alpha_6), JOINT_KNEE );
-					applyMatrix( rotX(alpha_5), JOINT_HIP );
-					applyMatrix( rotX(alpha_4), JOINT_HIP );
-					applyMatrix( rotX(alpha_3), JOINT_KNEE );
-					applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-					applyMatrix( rotX(alpha_1), JOINT_TIPTOE );
-				}
-
-				// right leg
-				if( aVertexTopology == LEGS )
-				{
-					applyMatrix( rotX(alpha_5), JOINT_HIP );
-					applyMatrix( rotX(alpha_4), JOINT_HIP );
-					applyMatrix( rotX(alpha_3), JOINT_KNEE );
-					applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-					applyMatrix( rotX(alpha_1), JOINT_TIPTOE );
-				}
-			} // RIGHT
-
-
-			// upper body
-			if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
-			{
-				applyMatrix( rotX(alpha_4), JOINT_HIP );
-				applyMatrix( rotX(alpha_3), JOINT_KNEE );
-				applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-				applyMatrix( rotX(alpha_1), JOINT_TIPTOE );
-			}
-
-			if( LEFT )
-			{
-				// left knee
-				if( aVertexTopology == LEGS )
-				{
-					applyMatrix( rotX(alpha_3), JOINT_KNEE );
-					applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-					applyMatrix( rotX(alpha_1), JOINT_TIPTOE );
-				}
-
-				// left ankle
-				if( aVertexTopology == KNEES )
-				{
-					applyMatrix( rotX(alpha_2), JOINT_ANKLE );
-					applyMatrix( rotX(alpha_1), JOINT_TIPTOE );
-				}
-
-				// left foot
-				if( aVertexTopology == FEET )
-				{
-					applyMatrix( rotX(alpha_1), JOINT_TIPTOE );
-				}
-			} // LEFT
+			float a = 0.04*cosTime2(2.0,-0.25);
+			applyMatrix( rotX(a), JOINT_WAIST );
 		}
-
-
-// if( sinTime(120.0)<0.0 )
-// {
-// transformed.z += 0.38;
-// transformed.x += 0.13;
-// }
-***************************************/
-
-
 
 		
 	}
@@ -824,16 +605,16 @@ vNormal = normalize( transformedNormal );
 
 #endif
 
-	#include <morphtarget_vertex>
-	#include <skinning_vertex>
-	#include <displacementmap_vertex>
+//	#include <morphtarget_vertex>		-- not neede for agents
+//	#include <skinning_vertex>			-- not neede for agents
+//	#include <displacementmap_vertex>	-- not neede for agents
 	#include <project_vertex>
 	#include <logdepthbuf_vertex>
-	#include <clipping_planes_vertex>
+//	#include <clipping_planes_vertex>	-- not neede for agents
 	vViewPosition = - mvPosition.xyz;
 	#include <worldpos_vertex>
-	#include <envmap_vertex>
+//	#include <envmap_vertex>			-- not neede for agents
 	#include <shadowmap_vertex>
-	#include <fog_vertex>
+//	#include <fog_vertex>				-- not neede for agents
 }
 `
