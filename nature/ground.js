@@ -56,7 +56,7 @@ class Ground
 		// add green ground around the city
 		var geometry = new THREE.RingGeometry( 0, EARTH_SIZE/2, 128, 5, true ).rotateX( -Math.PI/2 );
 		var material = new NatureMaterial( {
-				color: BLOCK_PARK.color,
+				color: DEBUG_ALL_WHITE?'lightgray':BLOCK_PARK.color,
 				//depthTest: false,
 				map: textures.grass.map( Math.round(EARTH_SIZE/GRASS_TEXTURE_SCALE), Math.round(EARTH_SIZE/GRASS_TEXTURE_SCALE) ),
 				transparent: DEBUG_BLOCKS_OPACITY<1,
@@ -85,7 +85,10 @@ class Ground
 				pos.setXYZ( i, x, y*GROUND_SIZE/500, z );
 				uv.setXY( i, x/EARTH_SIZE, z/EARTH_SIZE );
 				
-				colors.push( 0.15, 0.3, 0.15 );
+				if( DEBUG_ALL_WHITE )
+					colors.push( 0.3, 0.3, 0.3 );
+				else
+					colors.push( 0.15, 0.3, 0.15 );
 			}
 			else
 			if( dist > 0.1*limit )
@@ -93,7 +96,10 @@ class Ground
 				var y = 120+70*Math.sin(z/121.232+RND)+60*Math.sin(x/73.912+RND);
 				pos.setXYZ( i, x*r, y*GROUND_SIZE/1000, z*r );
 				uv.setXY( i, x*r/EARTH_SIZE, z*r/EARTH_SIZE );
-				colors.push( 0.5, 0.8, 0.5 );
+				if( DEBUG_ALL_WHITE )
+					colors.push( 0.8, 0.8, 0.8 );
+				else
+					colors.push( 0.5, 0.8, 0.5 );
 			}
 			else
 			{

@@ -57,7 +57,7 @@ import './font.js';
 
 import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, DEBUG_FOLLOW_AGENT_HEALTH, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH} from './config.js';
 import {msToString, round} from './core.js';
-import {Nature, currentTimeMs, frame, simulationPlaying, toggleSimulationPlayPause} from './nature/nature.js';
+import {Nature, currentTimeMs, simulationPlaying, toggleSimulationPlayPause} from './nature/nature.js';
 
 import {Textures} from './textures/textures.js';
 import {Blocks} from './objects/blocks.js';
@@ -103,8 +103,13 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 
 //	controls.lookAt( 0, 12, 0 );
 	controls.update( deltaTimeReal );
-	//controls.addEventListener( 'change', function(){renderer.render(scene, camera);} );
-
+/* 	controls.addEventListener( 'change', function(){
+		if( !simulationPlaying )
+		{
+			renderer.render(scene, camera);
+		}
+	} );
+ */
 export var navmesh = new NavMesh();		measure( 'navmesh' );
 export var textures = new Textures();	measure( 'textures' );
 export var blocks = new Blocks();		measure( 'blocks' );
@@ -150,7 +155,10 @@ function oncePerSecond()
 	currentTime_elem.innerHTML = msToString( currentTimeMs );
 	
 	if( oncePerSecond_frames )
-		currentFps_elem.innerHTML = /*'<b>fps</b>='+*/  '='+round(1000*DEBUG_TIME_SPEED*(frame-oncePerSecond_frames)/(currentTimeMs-oncePerSecond_timeMs),1);
+		if( simulationPlaying )
+			currentFps_elem.innerHTML = '='+round(1000*DEBUG_TIME_SPEED*(frame-oncePerSecond_frames)/(currentTimeMs-oncePerSecond_timeMs),1);
+		else
+			currentFps_elem.innerHTML = ' N/A';
 	
 	oncePerSecond_timeMs = currentTimeMs;
 	oncePerSecond_frames = frame;
@@ -181,8 +189,8 @@ setInterval( oncePerSecond, 1000 );
 
 
 // main animation cycle
-var animateLoopCount = 0;
-function animate()
+export var frame = 0;
+export function animate()
 {
 	//requestAnimationFrame( animate );
 
@@ -192,17 +200,17 @@ function animate()
 	//stats.update();
 //if(renderer.xr.isPresenting && (frame%60 == 0) ) snd.play();
 
-	animateLoopCount++;
+	frame++;
 
-	if( simulationPlaying )
-	{
-		if( !VR || animateLoopCount%2 )
+	// if( simulationPlaying )
+	 // {
+		if( !VR || frame%2 )
 		{
-			buildings.update();
 			nature.update();
+			buildings.update();
 			agents.update();
 		}
-	}
+	// }
 
 	if( VR )
 	{
@@ -222,8 +230,8 @@ function animate()
 	else
 	{
 		// not in VR
-		/*if( DEBUG_FOLLOW_AGENT<0 ) */controls.update( deltaTimeReal );
-		if( frame%6 == 0 || !simulationPlaying ) renderer.render(scene, camera);
+		//controls.update( deltaTimeReal );
+		if( frame%6 == 0 ) renderer.render(scene, camera);
 	}
 	
 	
@@ -237,17 +245,6 @@ function animate()
 		console.log( '\tpoints',renderer.info.render.points );
 		console.log( '\ttriangles',renderer.info.render.triangles );
 	}
-	/*
-	if( frame%60 == 0 )
-	{
-		var c = d = 0;
-		for( var i in blocks.allTrueBlocks )
-		{
-			d += blocks.allTrueBlocks[i].agents.length;
-			c += blocks.allTrueBlocks[i].agents.length * blocks.allTrueBlocks[i].agents.length;
-		}
-		console.log(c,'of',d*d,'i.e.', (100*c/d/d).toFixed(1)+'%' );
-	}*/
 } //animate
 renderer.setAnimationLoop( animate );
 

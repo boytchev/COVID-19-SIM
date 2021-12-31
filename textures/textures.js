@@ -48,6 +48,7 @@ export class Textures
 		this.sun = new SunTexture( 1, 1024, 'white' );
 		this.moon = new MoonTexture( 1, 1024, 'white' );
 		
+		//this.grass.debugShow( '128px' );
 		//this.agent.debugShow( '128px' );
 		//this.apartment.debugShow( );
 		//this.houseBump.debugShow( '256px' );

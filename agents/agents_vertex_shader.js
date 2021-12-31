@@ -55,7 +55,7 @@ varying vec3 vNormal;
 	#define MOTION_TYPE_STAND 0
 	#define MOTION_TYPE_WALK  1
 	#define MOTION_TYPE_SLEEP 2
-
+	
 	bool man;
 	
 	float rawTime;
@@ -108,7 +108,7 @@ varying vec3 vNormal;
 					  0,  0,  1 );
 	}
 	
-	#define applyMatrix(matrix,offset) transformed -= offset; transformed *= matrix; transformed += offset;
+	#define applyMatrix(matrix,offset) transformed = (transformed-offset)*matrix+offset
 
 #endif
 
@@ -151,8 +151,7 @@ void main() {
 	#endif
 
 
-//float dist = distance(instanceMatrix[3].xyz,cameraPosition);
-//vVertexColor = vec3( dist>30.0?0:1, dist>60.0?0:1, dist>60.0?0:1 );
+	bool showAnimation = 10.0 < distance(instanceMatrix[3].xyz/instanceMatrix[3].w,cameraPosition);
 
 
 

@@ -11,6 +11,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {INFECTION_PATTERNS_COUNT, DEBUG_TIME_SPEED, START_TIME, HOURS_24_MS, DEBUG_SHOW_VIRAL_SHEDDING} from '../config.js';
+import {animate, renderer} from '../main.js';
 import {Ground} from './ground.js';
 import {Sky} from './sky.js';
 
@@ -18,7 +19,6 @@ import {Sky} from './sky.js';
 var clock = new THREE.Clock();
 export var deltaTimeReal = clock.getDelta();
 export var deltaTime = DEBUG_TIME_SPEED*deltaTimeReal;
-export var	frame = 0;
 
 
 export var currentTimeMs = START_TIME;
@@ -51,16 +51,14 @@ export class Nature
 	update()
 	{		
 		// update time markers
-		deltaTimeReal = clock.getDelta(),
+		deltaTimeReal = (simulationPlaying?1:0) * clock.getDelta(),
 		deltaTime = DEBUG_TIME_SPEED*deltaTimeReal;
 		trueCurrentTimeMs += 1000*deltaTime;
 		currentTimeMs = THREE.Math.lerp( currentTimeMs, trueCurrentTimeMs, 0.1 );
 		previousDayTimeMs = dayTimeMs;
 		dayTimeMs = currentTimeMs % HOURS_24_MS;
-		frame++;
 
 		this.sky.update();
-		
 	} // Nature.update
 	
 	
@@ -189,7 +187,7 @@ export function toggleSimulationPlayPause()
 	document.getElementById('play').style.display = simulationPlaying ? 'inline' : 'none';
 	document.getElementById('pause').style.display = simulationPlaying ? 'none' : 'inline';
 
-	if( simulationPlaying )
+ 	if( simulationPlaying )
 	{
 		// consume elapsed time during a pause
 		clock.getDelta();
