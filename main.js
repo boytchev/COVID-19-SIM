@@ -99,7 +99,7 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.screenSpacePanning = false;
 	controls.autoRotate = DEBUG_AUTOROTATE;
 	controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
-
+	controls.listenToKeyEvents( window );
 
 //	controls.lookAt( 0, 12, 0 );
 	controls.update( deltaTimeReal );
