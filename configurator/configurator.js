@@ -38,8 +38,8 @@ const configParams = new URLSearchParams(
 		window.location.search ||
 		localStorage.getItem( LOCAL_STORAGE_PARAMS ) );
 
-//console.log('URL',window.location.search);
-//console.log('STO',localStorage.getItem( LOCAL_STORAGE_PARAMS ));
+console.log('URL',window.location.search);
+console.log('STO',localStorage.getItem( LOCAL_STORAGE_PARAMS ));
 
 
 export var ids = [];
@@ -388,7 +388,7 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 						elem.style.display = event.target.checked?'':'none';
 					// switching from all params to primary params
 					// shoudl automaticaly set filter to all
-					document.getElementById( 'all' ).click();
+					//document.getElementById( 'all' ).click();
 				} );
 		}
 	}
@@ -513,7 +513,7 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 					cmd = data[id].value.value;
 				break;
 			case BOOLEAN:
-				if( (!onlyModified) || (data[id].value.checked != (data[id].defaultValue=='true')) )
+				if( (!onlyModified) || (data[id].value.checked != data[id].defaultValue) )
 					cmd = data[id].value.checked?'true':'false';
 				break;
 			case TEMPORAL:
