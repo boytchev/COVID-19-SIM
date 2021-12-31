@@ -144,14 +144,15 @@ void main() {
 	#define INTIMATE_CLOTHING 3
 	
 	
-	#if (${INFECTION_COLOR_INDICATOR?1:0})
-		vVertexColor = vec3( 1.0, 1.0-infectionLevel, 1.0-infectionLevel );
+	#if ( ${INFECTION_COLOR_INDICATOR?1:0} )
+		vVertexColor = infectionLevel>0.0 ? vec3( infectionLevel, 1.0-pow(infectionLevel,10.0), 1.0-infectionLevel ) : vec3(1);
 	#else
 		vVertexColor = vec3( 1 );
 	#endif
 
 
-	bool showAnimation = 10.0 < distance(instanceMatrix[3].xyz/instanceMatrix[3].w,cameraPosition);
+	// skip some vertex modificationa if the object is too far away
+	bool CLOSE_UP = 10.0 < distance(instanceMatrix[3].xyz/instanceMatrix[3].w,cameraPosition);
 
 
 
