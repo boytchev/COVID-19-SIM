@@ -87,6 +87,8 @@ export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.
 		camera.position.set( 0, 4, GROUND_SIZE/3 );
 	else
 		camera.position.set( GROUND_SIZE*2, GROUND_SIZE/2, GROUND_SIZE/1 );
+	
+	camera.position.set( 0, 60, 60 );
 			
 export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.maxPolarAngle = Math.PI * 0.495;
