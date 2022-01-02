@@ -20,6 +20,7 @@
 //
 //	User interaction
 //		toggleFav( id )
+//		infoConfigurator()
 //		resetConfigurator()
 //		debugConfigurator()
 //		shareConfigurator()
@@ -413,6 +414,11 @@ export function toggleFav( id )
 	localStorage.setItem( LOCAL_STORAGE_FAVS, favs.join(' ') );
 }
 
+
+export function infoConfigurator()
+{
+	var elem = document.getElementById( 'cfg-si' ).click();
+}
 
 export function resetConfigurator()
 {

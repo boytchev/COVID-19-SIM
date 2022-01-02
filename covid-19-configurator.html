@@ -39,6 +39,7 @@
 		</h2>		
 		
 		<div class="start-block">
+			<button id="info_button" class="leftbutton"><img src="icons/info.svg"> Info</button>
 			<a id="start_button_1" class="start" href="covid-19-simulator.html">Start simulation</a>
 			<!-- share_butto is missing "n" because of adblockers-->
 			<button id="share_butto" class="rightbutton"><img src="icons/sharelink.svg"> Share</button>
@@ -94,6 +95,7 @@
 		document.getElementById( 'reset_button' ).onclick = CFG.resetConfigurator;
 		document.getElementById( 'debug_button' ).onclick = CFG.debugConfigurator;
 		document.getElementById( 'share_butto' ).onclick = CFG.shareConfigurator;
+		document.getElementById( 'info_button' ).onclick = CFG.infoConfigurator;
 		
 		var elems = document.querySelectorAll( 'button.filter' );
 		for( var elem of elems )

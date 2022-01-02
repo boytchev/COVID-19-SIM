@@ -331,7 +331,9 @@ td {
 	border-bottom: 0.2em cornflowerblue solid;
 }
 
-.rightbutton img {
+.leftbutton img, .rightbutton img {
+	position: relative;
+	top: 0.1em;
 	height: 1em;
 }
 
