@@ -256,6 +256,18 @@ h2 .info-persistant {
 	border-bottom: 0.2em solid black;
 }
 
+.toggle-link {
+	color: CornflowerBlue;
+	text-decoration: none;
+	/*text-transform: uppercase;*/
+	border-bottom: 0.1em solid white;
+	cursor: pointer;
+}
+
+.toggle-link:hover {
+	border-bottom: 0.1em solid CornflowerBlue;
+}
+
 table {
 	border-collapse: collapse;
 	padding: 0;

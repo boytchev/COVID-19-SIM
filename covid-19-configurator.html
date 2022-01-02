@@ -31,10 +31,10 @@
 	<div class="page">
 		
 		<h2 class="header">COVID-19 Configurator
-			<div class="info-persistant">The <b>COVID-19 Simulator</b> is controlled by <span id="param_count"></span>
-				main configuration parameters and <span id="param_count_internal"></span>
-				secondary ones.</span> Click on the
-				name of often used parameters to add them to your favourite parameters.
+			<div class="info-persistant">The simulator is controlled by <span id="param_count"></span>
+				parameters and <span id="param_count_internal"></span> additional parameters
+				<span id="show_or_hide" style="display:none;">(<span id="show_them" class="toggle-link">show them</span><span id="hide_them" class="toggle-link">hide them</span>)</span>.</span>
+				Click on the name of often used parameters to add them to your list of favourite parameters.
 			</div>
 		</h2>		
 		
@@ -96,6 +96,8 @@
 		document.getElementById( 'debug_button' ).onclick = CFG.debugConfigurator;
 		document.getElementById( 'share_butto' ).onclick = CFG.shareConfigurator;
 		document.getElementById( 'info_button' ).onclick = CFG.infoConfigurator;
+		document.getElementById( 'show_them' ).onclick = CFG.showAllConfigurator;
+		document.getElementById( 'hide_them' ).onclick = CFG.showAllConfigurator;
 		
 		var elems = document.querySelectorAll( 'button.filter' );
 		for( var elem of elems )
@@ -131,11 +133,17 @@
 		}
 		
 		// configurator show all
-		if( !CFG.configAllParams )
+		if( CFG.configAllParams )
 		{
+			document.getElementById( 'show_them' ).style.display = 'none';
+		}
+		else
+		{
+			document.getElementById( 'hide_them' ).style.display = 'none';
 			for( var elem of document.querySelectorAll( '.internal' ) )
 				elem.style.display = 'none';	
 		}
+		document.getElementById( 'show_or_hide' ).style.display = 'inline';
 		
 		if( !CFG.LOCALHOST ) document.getElementById( 'debug_button' ).style.display = 'none';
 		

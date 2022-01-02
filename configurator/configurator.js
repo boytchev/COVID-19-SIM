@@ -21,6 +21,7 @@
 //	User interaction
 //		toggleFav( id )
 //		infoConfigurator()
+//		showAllConfigurator()
 //		resetConfigurator()
 //		debugConfigurator()
 //		shareConfigurator()
@@ -390,6 +391,10 @@ export function addBoolean( id, name, defaultValue, options, info='', tags='' )
 					// switching from all params to primary params
 					// shoudl automaticaly set filter to all
 					//document.getElementById( 'all' ).click();
+
+					document.getElementById( 'hide_them' ).style.display = configAllParams?'inline':'none';
+					document.getElementById( 'show_them' ).style.display = configAllParams?'none':'inline';
+					
 				} );
 		}
 	}
@@ -418,6 +423,11 @@ export function toggleFav( id )
 export function infoConfigurator()
 {
 	var elem = document.getElementById( 'cfg-si' ).click();
+}
+
+export function showAllConfigurator()
+{
+	var elem = document.getElementById( 'cfg-all' ).click();
 }
 
 export function resetConfigurator()
