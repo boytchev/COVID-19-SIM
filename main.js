@@ -55,7 +55,7 @@ var currentTime_elem = document.getElementById('time'),
 
 import './font.js';
 
-import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, DEBUG_FOLLOW_AGENT_HEALTH, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH} from './config.js';
+import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, DEBUG_FOLLOW_AGENT_HEALTH, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_ALLOW_UNDERGROUND} from './config.js';
 import {msToString, round} from './core.js';
 import {Nature, currentTimeMs, simulationPlaying, toggleSimulationPlayPause} from './nature/nature.js';
 
@@ -91,7 +91,7 @@ export var camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.
 	camera.position.set( 0, 60, 60 );
 			
 export var controls = new OrbitControls( camera, renderer.domElement );
-	controls.maxPolarAngle = Math.PI * 0.495;
+	if( !DEBUG_ALLOW_UNDERGROUND ) controls.maxPolarAngle = Math.PI * 0.495;
 	controls.minDistance = 2;
 	controls.maxDistance = 1.5*GROUND_SIZE;
 	controls.enableDamping = true;

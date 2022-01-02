@@ -52,7 +52,7 @@ CFG.addHeader(
 			'misc,graphics' );
 
 CFG.addHeader(
-	2, 'Rotation', '', '',
+	2, 'Rotation and motion', '', '',
 	'misc,rotation', {internal:true} );
 
 		CFG.addBoolean(
@@ -64,6 +64,11 @@ CFG.addHeader(
 			'dars', 'Auto rotate speed', 0.3, {min:0, max:1, step:0.1, unit:'rad/s', offset: 7},
 			'The speed of automatic rotation measure in radians per second. The value is effective only if <em>Auto rotate</em> is checked, otherwise it has no effect.',
 			'misc,rotation' );
+
+		CFG.addBoolean(
+			'dau', 'Allow underground', false, {},
+			'If checked, allowes the viewer to go underground in non VR mode. If not checked, the viewer vertical position is restricted by the ground.',
+			'misc' );
 
 
 CFG.addHeader(
