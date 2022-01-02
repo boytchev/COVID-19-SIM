@@ -228,11 +228,12 @@ void main() {
 	{
 		if( aVertexTopology == HEAD || aVertexTopology == HAIR )
 		{
-			float headScale = clamp( 1.7/agentHeight, 1.00, 1.60 );
+			float headScale = clamp( 1.7/agentHeight, 1.00, 2.00 );
 			
 			transformed -= JOINT_SUBNECK;
 			transformed *= headScale;
 			transformed += JOINT_SUBNECK;
+			transformed.y -= (headScale-1.0)/10.0;
 		}
 		
 		// belly - slim and fat people
