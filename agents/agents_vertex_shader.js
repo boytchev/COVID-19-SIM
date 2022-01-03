@@ -3,7 +3,7 @@
 // Modified code is in COVID19SYM
 
 
-import {INFECTION_OVERHEAD_INDICATOR, MALE_RATIO, INFECTION_COLOR_INDICATOR, FORMAL_CLOTHING_RATIO, CASUAL_CLOTHING_RATIO} from '../config.js';
+import {INFECTION_OVERHEAD_INDICATOR, MALE_RATIO, INFECTION_COLOR_INDICATOR, FORMAL_CLOTHING_RATIO, CASUAL_CLOTHING_RATIO, DEBUG_LEVEL_OF_DETAIL_DISTANCE} from '../config.js';
 
 export default `
 
@@ -152,7 +152,7 @@ void main() {
 
 
 	// skip some vertex modificationa if the object is too far away
-	bool CLOSEUP = 10.0 > distance(instanceMatrix[3].xyz/instanceMatrix[3].w,cameraPosition);
+	bool CLOSEUP = float(${DEBUG_LEVEL_OF_DETAIL_DISTANCE}) > distance(instanceMatrix[3].xyz/instanceMatrix[3].w,cameraPosition);
 
 
 

@@ -106,6 +106,11 @@ CFG.addHeader(
 			'people,motion,debug' );
 
 		CFG.addNumeric(
+			'dlodd', 'Level of detail distance', 100, {min:10, max:1000, step:10, internal:true, unit: 'm'},
+			'Distance (measured in meters) where the level of details is activated. People closer to the viewer than this distance are shown with full motion and body transformation. People beyond this distance have only basic motion and body transformations, thus reducing required processing power.',
+			'people,motion,debug' );
+
+		CFG.addNumeric(
 			'dfa', 'Follow person', -1, {min:-1, max:50000, step:1, internal:true},
 			'Each person has an id number starting from 0. If this parameter cointains an existing person id, then the view point automatically follows this person as if spied from a drone. If the value is -1, such following is turned off.',
 			'people,motion,tracking' );

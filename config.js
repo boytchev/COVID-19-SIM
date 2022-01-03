@@ -73,6 +73,7 @@ console.log('seed=',DEBUG_RANDOM_SEED);
 
 export const DEBUG_AGENT_MAX_COUNT = param('damc', 100);
 export const DEBUG_RANDOM_WANDERING = param('drw',false);
+export const DEBUG_LEVEL_OF_DETAIL_DISTANCE = param('dlodd', 100);
 
 var formation = param('dfal',0);
 export const DEBUG_FORM_A_LINE = formation==1;
