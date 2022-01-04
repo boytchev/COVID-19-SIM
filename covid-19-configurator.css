@@ -104,15 +104,24 @@ h4.caption ~ .info{
 	background-repeat: repeat-x;
 }
 
-.block input, .block select {
+.block input, .block select, .block span.value {
 	font-weight: bold;
 	position: relative;
 	top: -0.1em;
 	border: none;
+	#border: solid 1px red;
 	background: none;
 	text-align: right;
 	font-size: 1.2em;
 }
+
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+	opacity: 1;
+}
+
+
 
 .block select {
 	text-transform: uppercase;
@@ -124,8 +133,10 @@ h4.caption ~ .info{
 }
 
 .block select option {
-	font-size: 75%;
+	font-family: 'Roboto', sans-serif;
+	font-size: 90%;
 	text-transform: uppercase;
+	color: cornflowerblue;
 	direction: rtl;
 	border: none;
 	outline: none;
@@ -278,7 +289,7 @@ tr {
 	}
 	
 td {
-	/*border: solid 1px red;*/
+	border: dashed 1px red;
 }
 
 .mainsyslink { /* buttons that must look like links */
@@ -361,3 +372,57 @@ input {
 	border: solid 1px red !important;
 }
 */
+
+
+
+/* based on https://www.w3schools.com/howto/howto_js_rangeslider.asp */
+input.slider {
+	width: 100%;
+	padding-left: 0;
+	position: relative;
+	top: -0.3em;
+	-webkit-appearance: none;
+	height: 0.3em;
+	background: gray;
+	outline: none;
+	opacity: 0;
+}
+
+table:hover input.slider {
+	opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 23px;
+  height: 23px;
+  border-radius: 50%; 
+  background: white;
+  border: gray solid 4px;
+  cursor: pointer;
+}
+
+.slider:hover::-webkit-slider-thumb, .slider::-webkit-slider-thumb:hover {
+	#background: lightgray;
+}
+
+.slider::-moz-range-thumb {
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: white;
+  border: gray solid 4px;
+  cursor: pointer;
+}
+
+.slider:hover::-moz-range-thumb, .slider::-moz-range-thumb:hover {
+	#background: lightgray;
+}
+
+canvas {
+	position: absolute;
+	width: 100%;
+	height: 1em;
+	border: solid 1px red;
+}

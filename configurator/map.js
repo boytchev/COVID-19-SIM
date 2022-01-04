@@ -9,6 +9,19 @@
 import * as CFG from './configurator.js';
 
 
+CFG.addHeader( 1, 'Test', '', 'Testing custom input elements.', 'map' );
+
+CFG.addNumericSlider(
+	'test-ns', 'Numeric Slider', 50, {min:10, max:1100, step:10, unit:'m/s'},
+	'This is a dummy parameter.',
+	'map' );
+	
+CFG.addNumericSliderList(
+	'test-nsl', 'Numeric Slider List', 10, {values: [1,2,10,100,500,1000,10000], unit: 'deg'},
+	'This is a dummy parameter.',
+	'map' );
+	
+
 // MAP ===================================
 
 CFG.addHeader( 1, 'Map', 'map', 'A general map of the city and its areas.', 'map,ground,block,office,residential,park,plaza,house,apartment,avenue,street,sidewalk,crossing,tree' );
@@ -16,11 +29,16 @@ CFG.addHeader( 1, 'Map', 'map', 'A general map of the city and its areas.', 'map
 
 CFG.addHeader( 2, 'Dimensions', '', '', 'map,ground', {internal:true} );
 
-		CFG.addNumeric(
-			'gs', 'Ground size', 500, {min:10, max:10000, step:10, fav:true, unit:'m'},
+		// CFG.addNumeric(
+			// 'gs', 'Ground size', 500, {min:10, max:10000, step:10, fav:true, unit:'m'},
+			// 'The active area of the simulation in meters. Buildings and people will be bound to a square of this size.',
+			// 'map,ground,debug' );
+			
+		CFG.addNumericList(
+			'gs', 'Ground size', 500, {values: [10,'10',20,20,50,50,100,100,200,200,500,500,1000,1000,2000,2000,5000,5000,10000,10000], unit:'m', fav:true},
 			'The active area of the simulation in meters. Buildings and people will be bound to a square of this size.',
 			'map,ground,debug' );
-
+			
 		//CFG.addNumeric(
 		//	'es', 'Earth size', 50000, {min:1000, max:100000, step:1000, unit:'m', offset: 7.4},
 		//	'The area surrounding the simulation area. Its edge makes the horizon.',

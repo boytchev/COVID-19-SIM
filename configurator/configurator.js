@@ -11,6 +11,7 @@
 //	Generate HTML representation of parameter
 //		addHeader( level, name, logo='', info='', tags='' )
 //		addNumeric( id, name, defaultValue, options, info='', tags='' )
+//		addNumericSlider( id, name, defaultValue, options, info='', tags='' )
 //		addNumericRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
 //		addNumericList( id, name, defaultValue, options, info='', tags='' )
 //		addPercentage( id, name, defaultValue, options, info='', tags='' )
@@ -93,7 +94,9 @@ const
 	HEADER = 5,
 	NUMERIC_RANGE = 6,
 	NUMERIC_LIST = 7,
-	TEMPORAL_RANGE = 8;
+	TEMPORAL_RANGE = 8,
+	NUMERIC_SLIDER = 9,
+	NUMERIC_SLIDER_LIST = 10;
 
 // get a parameter
 function param( id, defaultValue )
@@ -126,12 +129,12 @@ function param2( id, defaultValueA, defaultValueB )
 	if( configParams.has(id) )
 	{
 		value = configParams.get( id ).split('~');
-		console.log(id,'=',value,configParams.get( id ));
+//console.log(id,'=',value,configParams.get( id ));
 //console.log('a',id,	[parseFloat(value[0]), parseFloat(value[1])]);
 		return [parseFloat(value[0]), parseFloat(value[1])];
 	}
 
-//	console.log(id,'=',value,configParams.get( id ));
+//console.log(id,'=',value,configParams.get( id ));
 //console.log('a',id,	[defaultValueA,defaultValueB]);
 	return [defaultValueA,defaultValueB];
 }
@@ -590,6 +593,14 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 					cmd = min+'~'+max;
 				}
 				break;
+			case NUMERIC_SLIDER:
+				if( (!onlyModified) || (data[id].value.value != data[id].defaultValue) )
+					cmd = data[id].value.value;
+				break;
+			case NUMERIC_SLIDER_LIST:
+				if( (!onlyModified) || (data[id].options.values[data[id].value.value] != data[id].defaultValue) )
+					cmd = data[id].options.values[data[id].value.value];
+				break;
 			default:
 				throw 'Invalid configuration parameter type "'+id+'"';
 		}
@@ -1006,3 +1017,217 @@ export function processTags()
 	document.getElementById( 'tags' ).innerHTML = htmlOptions;
 
 }
+
+
+export function addNumericSlider( id, name, defaultValue, options, info='', tags='' )
+{
+	// check id
+	
+	if( ids.indexOf(id) > -1 )
+		throw `error: Element with id="${id}" is already decalred.`;
+
+	ids.push( id );
+	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
+	// set default values for missing options
+
+	options.min = options.min||0;
+	options.max = options.max||100;
+	options.step = options.step||1;
+	options.value = param( id, defaultValue ) || 0;
+	options.tags = tags.split( ',' );
+	options.unit = options.unit||'';
+	
+	allTags.push( ...options.tags );
+	
+	if( predefinedFavs )
+		options.fav = predefinedFavs.indexOf(id)>=0;
+
+	// calculate width of field
+	var testVal = parseFloat(options.max)+parseFloat(options.step),
+		testVal = Math.round( 1000000*testVal )/1000000;
+	
+	var width = Math.max( (testVal+'').length*0.58, 1.5 );
+
+
+	// construct the html
+	var html =`
+		<table id="block-${id}" class="block ${options.internal?'internal':''}" style="position: relative;">
+			<tr>
+				<td id="name-${id}"
+					width="1%"
+					class="name ${options.fav?'fav':''}"
+					onclick="toggleFav('${id}')">
+					${name} 
+				</td>
+				<td class="valuerow" style="min-width:10em;">
+					<input id="${id}"
+						class="slider"
+						type="range"
+						name="${id}"
+						min="${options.min}"
+						max="${options.max}"
+						value="${options.value}"
+						step="${options.step}">
+				</td>
+				<td class="valuerow" style="width:1%;">
+					<span id="display-${id}"
+						class="value"
+						style="display:inline-block; width:${width}em;">
+					</span>
+				</td>
+				<td class="unit" width="1%">${options.unit}</td>
+			</tr>
+			<tr class="info"><td colspan="4">
+				${info} Range is from ${options.min} to ${options.max}. Default value is ${defaultValue}.
+				<div class="tags">${tags.split(',')}</div>
+			</td></tr>
+		</table>`;
+
+			
+
+
+	// create a new dom element
+	
+	var block = document.createElement('div');
+		block.innerHTML = html;
+	
+	// insert in dom 
+	
+	document.getElementById("blocks").appendChild( block );
+	
+	data[id] = {
+		type:	NUMERIC_SLIDER,
+		block:	document.getElementById('block-'+id),
+		name:	document.getElementById('name-'+id),
+		value:	document.getElementById(id),
+		display:document.getElementById('display-'+id),
+		defaultValue: defaultValue,
+		options: options,
+	}
+	
+}
+
+
+	
+export function addNumericSliderList( id, name, defaultValue, options, info='', tags='' )
+{
+	// check id
+	
+	if( ids.indexOf(id) > -1 )
+		throw `error: Element with id="${id}" is already decalred.`;
+
+	ids.push( id );
+	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
+	// set default values for missing options
+
+	options.min = Math.min(...options.values)||0;
+	options.max = Math.max(...options.values)||100;
+	options.step = options.step||1;
+
+	// get the index of the value
+	var v = param( id, defaultValue ) || 0,
+		vidx = options.values.indexOf( v );
+	if( vidx<0 ) for( vidx=options.values.length-1; vidx>=0; vidx-- ) if( options.values[vidx]<v ) break;
+	
+	options.value = vidx;
+	options.tags = tags.split( ',' );
+	options.unit = options.unit||'';
+	
+	allTags.push( ...options.tags );
+	
+	if( predefinedFavs )
+		options.fav = predefinedFavs.indexOf(id)>=0;
+
+	// calculate width of field
+	var testVal = parseFloat( options.max ),
+		testVal = Math.round( 1000000*testVal )/1000000;
+	
+	var width = Math.max( (testVal+'').length*0.58, 1.5 );
+	
+	
+	// construct the html
+	var html =`
+		<table id="block-${id}" class="block ${options.internal?'internal':''}" style="position: relative;">
+			<tr>
+				<td id="name-${id}"
+					width="1%"
+					class="name ${options.fav?'fav':''}"
+					onclick="toggleFav('${id}')">
+					${name} 
+				</td>
+				<td class="valuerow" style="min-width:10em;">
+					<input id="${id}"
+						class="slider"
+						type="range"
+						name="${id}"
+						min="0"
+						max="${options.values.length-1}"
+						value="${options.value}"
+						step="1">
+				</td>
+				<td class="valuerow" style="width:1%;">
+					<span id="display-${id}"
+						class="value"
+						style="display:inline-block; width:${width}em;">
+					</span>
+				</td>
+				<td class="unit" width="1%">${options.unit}</td>
+			</tr>
+			<tr class="info"><td colspan="4">
+				${info} Range is from ${Math.min(...options.values)} to ${Math.max(...options.values)}. Default value is ${defaultValue}.
+				<div class="tags">${tags.split(',')}</div>
+			</td></tr>
+		</table>`;
+
+			
+
+
+	// create a new dom element
+	
+	var block = document.createElement('div');
+		block.innerHTML = html;
+	
+	// insert in dom 
+	
+	document.getElementById("blocks").appendChild( block );
+	
+	data[id] = {
+		type:	NUMERIC_SLIDER_LIST,
+		block:	document.getElementById('block-'+id),
+		name:	document.getElementById('name-'+id),
+		value:	document.getElementById(id),
+		display:document.getElementById('display-'+id),
+		defaultValue: defaultValue,
+		options: options,
+	}
+	
+}
+
+
+	
+export function onInputNumericSlider( event )
+{
+	var id = event.target.getAttribute( 'id' );
+	
+	switch(	data[id].type )
+	{
+		case NUMERIC_SLIDER:
+				data[id].display.innerHTML = event.target.value;
+				break;
+				
+		case NUMERIC_SLIDER_LIST:
+				data[id].display.innerHTML = data[id].options.values[event.target.value];
+				break;
+				
+		default:
+			throw 'Invalid configuration parameter type "'+id+'"';
+	}
+}
+
+
