@@ -16,8 +16,13 @@ CFG.addNumericSlider(
 	'This is a dummy parameter.',
 	'map' );
 	
+CFG.addNumericSlider(
+	'test-ns2', 'Numeric Slider', 50, {min:2, max:8, step:0.25, grid: 1, unit:'m'},
+	'This is a dummy parameter.',
+	'map' );
+	
 CFG.addNumericSliderList(
-	'test-nsl', 'Numeric Slider List', 10, {values: [1,2,10,100,500,1000,10000], unit: 'deg'},
+	'test-nsl', 'Numeric Slider List', 10, {values: [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000], unit: 'deg'},
 	'This is a dummy parameter.',
 	'map' );
 	

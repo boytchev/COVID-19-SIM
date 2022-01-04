@@ -1078,7 +1078,7 @@ export function addNumericSlider( id, name, defaultValue, options, info='', tags
 						style="display:inline-block; width:${width}em;">
 					</span>
 				</td>
-				<td class="unit" width="1%">${options.unit}</td>
+				<td class="unit" style="width:3em;">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="4">
 				${info} Range is from ${options.min} to ${options.max}. Default value is ${defaultValue}.
@@ -1178,7 +1178,7 @@ export function addNumericSliderList( id, name, defaultValue, options, info='', 
 						style="display:inline-block; width:${width}em;">
 					</span>
 				</td>
-				<td class="unit" width="1%">${options.unit}</td>
+				<td class="unit" style="width:3em;">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="4">
 				${info} Range is from ${Math.min(...options.values)} to ${Math.max(...options.values)}. Default value is ${defaultValue}.
@@ -1265,7 +1265,7 @@ export function onMouseOver( event )
 		ctx.clearRect( 0, 0, width, 30 );
 		ctx.font = '10px Roboto';
 		ctx.textAlign = 'center';
-		ctx.fillStyle = 'cornflowerblue';
+		ctx.fillStyle = 'black';
 	
 	if( data[id].type == NUMERIC_SLIDER )
 	{
@@ -1275,10 +1275,10 @@ export function onMouseOver( event )
 		
 		for( var i=max; i>min; i-=grid )
 		{
-			var x = EXT/2+9+Math.round((i-min)/(max-min) * (width-22));
+			var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
 			ctx.fillText( i, x, 13);
 
-			var x = EXT/2+9+Math.round((i-min-grid/2)/(max-min) * (width-22));
+			var x = EXT/2+11+Math.round((i-min-grid/2)/(max-min) * (width-22));
 			ctx.fillText( '.', x, 10);
 		}
 
@@ -1291,7 +1291,7 @@ export function onMouseOver( event )
 		
 		for( var i=0; i<=n; i++ )
 		{
-			var x = EXT/2+9+Math.round(i/n * (width-22));
+			var x = EXT/2+11+Math.round(i/n * (width-22));
 			ctx.fillText( data[id].options.values[i], x, 13);
 		}
 	}

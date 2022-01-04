@@ -383,9 +383,11 @@ input.slider {
 	position: relative;
 	top: -0.2em;
 	-webkit-appearance: none;
-	height: 0.3em;
+	height: 0.2em;
 	background: gray;
-	border-radius: 0.3em;
+	border-top: solid 8px white;
+	border-bottom: solid 8px white;
+	border-radius: 0.4em;
 	outline: none;
 	opacity: 0;
 }
@@ -397,8 +399,8 @@ table:hover input.slider {
 .slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%; 
   background: white;
   border: gray solid 4px;
@@ -410,8 +412,8 @@ table:hover input.slider {
 }
 
 .slider::-moz-range-thumb {
-  width: 15px;
-  height: 15px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
   background: white;
   border: gray solid 4px;
