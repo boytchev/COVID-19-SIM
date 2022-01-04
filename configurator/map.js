@@ -12,7 +12,7 @@ import * as CFG from './configurator.js';
 CFG.addHeader( 1, 'Test', '', 'Testing custom input elements.', 'map' );
 
 CFG.addNumericSlider(
-	'test-ns', 'Numeric Slider', 50, {min:10, max:1100, step:10, unit:'m/s'},
+	'test-ns', 'Numeric Slider', 50, {min:10, max:1100, step:10, grid: 100, unit:'m/s'},
 	'This is a dummy parameter.',
 	'map' );
 	

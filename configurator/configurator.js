@@ -1108,6 +1108,7 @@ export function addNumericSlider( id, name, defaultValue, options, info='', tags
 		options: options,
 	}
 	
+	console.log('id->',id);
 }
 
 
@@ -1231,3 +1232,73 @@ export function onInputNumericSlider( event )
 }
 
 
+export function onMouseOver( event )
+{
+	var id = event.target.getAttribute( 'id' );
+
+		if( id.indexOf('block-')==0 )
+			id = id.substring(6);
+		else
+			return;
+
+	if( data[id].type != NUMERIC_SLIDER && data[id].type != NUMERIC_SLIDER_LIST )
+		return;
+	
+	var rect = data[id].value.getBoundingClientRect(),
+		leftPos = Math.round(rect.left + window.scrollX),
+		width = Math.round(rect.right-rect.left);
+
+	var rect = data[id].block.getBoundingClientRect(),
+		topPos  = rect.top + window.scrollY;
+
+	var EXT = 100;
+	
+	var ruler = document.getElementById( 'ruler' );
+		ruler.style.display = 'block';
+		ruler.style.left = (leftPos-EXT/2)+'px';
+		ruler.style.top = `calc(${topPos}px - 2em)`;
+		ruler.style.width = (width+EXT)+'px';
+	ruler.width = width+EXT;
+	ruler.height = 30;
+
+	var ctx = ruler.getContext("2d");
+		ctx.clearRect( 0, 0, width, 30 );
+		ctx.font = '10px Roboto';
+		ctx.textAlign = 'center';
+		ctx.fillStyle = 'cornflowerblue';
+	
+	if( data[id].type == NUMERIC_SLIDER )
+	{
+		var max = data[id].options.max,
+			min = data[id].options.min,
+			grid = data[id].options.grid;
+		
+		for( var i=max; i>min; i-=grid )
+		{
+			var x = EXT/2+9+Math.round((i-min)/(max-min) * (width-22));
+			ctx.fillText( i, x, 13);
+
+			var x = EXT/2+9+Math.round((i-min-grid/2)/(max-min) * (width-22));
+			ctx.fillText( '.', x, 10);
+		}
+
+		ctx.fillText( min, EXT/2+9, 13);
+	}
+
+	if( data[id].type == NUMERIC_SLIDER_LIST )
+	{
+		var n = data[id].options.values.length-1;
+		
+		for( var i=0; i<=n; i++ )
+		{
+			var x = EXT/2+9+Math.round(i/n * (width-22));
+			ctx.fillText( data[id].options.values[i], x, 13);
+		}
+	}
+}
+
+export function onMouseOut( event )
+{
+	var ruler = document.getElementById( 'ruler' );
+	ruler.style.display = 'none';
+}

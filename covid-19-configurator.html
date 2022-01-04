@@ -64,6 +64,7 @@
 		</div>
 	
 		
+		<canvas id="ruler"></canvas>
 		<div class="start-block end">
 			<a id="start_button_2" class="start" href="covid-19-simulator.html">Start simulation</a>
 			<button id="reset_button" class="rightbutton"><img src="icons/reset.svg"> Reset</button>
@@ -119,6 +120,13 @@
 			var id = elem.getAttribute( 'id' );
 			elem.addEventListener( 'input', CFG.onInputNumericSlider );			
 			elem.dispatchEvent( new Event('input',{bubbles: true}) );
+		}
+			
+		var elems = document.querySelectorAll( 'table' );
+		for( var elem of elems )
+		{
+			elem.addEventListener( 'mouseenter', CFG.onMouseOver );			
+			elem.addEventListener( 'mouseleave', CFG.onMouseOut );
 		}
 			
 		document.getElementById( 'start_button_1' ).onclick = CFG.prepareValues;
