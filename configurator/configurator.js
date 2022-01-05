@@ -1253,17 +1253,24 @@ export function onMouseOver( event )
 
 	var EXT = 100;
 	
+	
+	var ratio = 1.25*window.devicePixelRatio;
+	
 	var ruler = document.getElementById( 'ruler' );
 		ruler.style.display = 'block';
 		ruler.style.left = (leftPos-EXT/2)+'px';
 		ruler.style.top = `calc(${topPos}px - 2em)`;
 		ruler.style.width = (width+EXT)+'px';
-	ruler.width = width+EXT;
-	ruler.height = 30;
+	ruler.width = (width+EXT)*ratio;
+	ruler.height = (40)*ratio;
+	
+	const DOT_Y_POS = 29;
+	const DOT_SIZE = 2;	
 
 	var ctx = ruler.getContext("2d");
-		ctx.clearRect( 0, 0, width, 30 );
-		ctx.font = '10px Roboto';
+		ctx.scale(ratio,ratio);
+		ctx.clearRect( 0, 0, width, 40 );
+		ctx.font = '12px Roboto';
 		ctx.textAlign = 'center';
 		ctx.fillStyle = 'black';
 	
@@ -1271,29 +1278,56 @@ export function onMouseOver( event )
 	{
 		var max = data[id].options.max,
 			min = data[id].options.min,
-			grid = data[id].options.grid;
-		
-		for( var i=max; i>min; i-=grid )
+			labelStep = data[id].options.labelStep;
+
+		ctx.beginPath();
+		if( data[id].options.labels )
 		{
-			var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
-			ctx.fillText( i, x, 13);
+			var labels = data[id].options.labels;
+			for( var i=0; i<labels.length; i+=2 )
+			{
+				var x = EXT/2+11+Math.round((labels[i]-min)/(max-min) * (width-22));
+				ctx.fillText( labels[i+1], x, 15);
+				ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
+			}
 
-			var x = EXT/2+11+Math.round((i-min-grid/2)/(max-min) * (width-22));
-			ctx.fillText( '.', x, 10);
+			for( var i=max; i>min; i-=labelStep )
+			{
+				var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
+				ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
+			}
+			ctx.arc( EXT/2+9, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
 		}
+		else
+		{
+			for( var i=max; i>min; i-=labelStep )
+			{
+				var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
+				ctx.fillText( i, x, 15);
+				ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
+			}
 
-		ctx.fillText( min, EXT/2+9, 13);
+			ctx.fillText( min, EXT/2+9, 15);
+			ctx.arc( EXT/2+9, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
+		}
+		ctx.fillStyle = 'gray';
+		ctx.fill();
 	}
-
+	else
 	if( data[id].type == NUMERIC_SLIDER_LIST )
 	{
 		var n = data[id].options.values.length-1;
-		
+
+		ctx.beginPath();
 		for( var i=0; i<=n; i++ )
 		{
 			var x = EXT/2+11+Math.round(i/n * (width-22));
-			ctx.fillText( data[id].options.values[i], x, 13);
+			ctx.fillText( data[id].options.values[i], x, 15);
+			
+			ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
 		}
+		ctx.fillStyle = 'gray';
+		ctx.fill();
 	}
 }
 

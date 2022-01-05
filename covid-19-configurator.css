@@ -381,30 +381,38 @@ input.slider {
 	width: 100%;
 	padding-left: 0;
 	position: relative;
-	top: -0.2em;
+	top: -0.25em;
 	-webkit-appearance: none;
-	height: 0.2em;
+	height: 0.01em;
 	background: gray;
 	border-top: solid 8px white;
-	border-bottom: solid 8px white;
+	border-bottom: solid 1px gray;
 	border-radius: 0.4em;
 	outline: none;
 	opacity: 0;
 }
+
+@supports (-moz-appearance:none) {
+	input.slider {
+		top: -0.13em;
+	}
+}
+
 
 table:hover input.slider {
 	opacity: 1;
 }
 
 .slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%; 
-  background: white;
-  border: gray solid 4px;
-  cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background: gray;
+	#background: gray;
+	border: gray solid 4px;
+	cursor: pointer;
 }
 
 .slider:hover::-webkit-slider-thumb, .slider::-webkit-slider-thumb:hover {
@@ -412,12 +420,12 @@ table:hover input.slider {
 }
 
 .slider::-moz-range-thumb {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: white;
-  border: gray solid 4px;
-  cursor: pointer;
+	width: 13px;
+	height: 13px;
+	border-radius: 50%;
+	background: gray;
+	border: gray solid 4px;
+	cursor: pointer;
 }
 
 .slider:hover::-moz-range-thumb, .slider::-moz-range-thumb:hover {
@@ -427,9 +435,8 @@ table:hover input.slider {
 canvas {
 	position: absolute;
 	width: 10em;
-	height: 30px;
+	height: 40px;
 	#border: solid 1px orange;
 	z-index: 1;
 	pointer-events: none;
-	#image-rendering: pixelated; 
 }

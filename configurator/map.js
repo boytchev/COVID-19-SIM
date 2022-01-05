@@ -12,20 +12,24 @@ import * as CFG from './configurator.js';
 CFG.addHeader( 1, 'Test', '', 'Testing custom input elements.', 'map' );
 
 CFG.addNumericSlider(
-	'test-ns', 'Numeric Slider', 50, {min:10, max:1100, step:10, grid: 100, unit:'m/s'},
+	'test-ns', 'Numeric Slider', 50, {min:10, max:1100, step:10, labelStep: 100, unit:'m/s'},
 	'This is a dummy parameter.',
 	'map' );
 	
 CFG.addNumericSlider(
-	'test-ns2', 'Numeric Slider', 50, {min:2, max:8, step:0.25, grid: 1, unit:'m'},
+	'test-ns2', 'Numeric Slider', 50, {min:2, max:8, step:0.25, labelStep: 1, unit:'m'},
 	'This is a dummy parameter.',
 	'map' );
 	
 CFG.addNumericSliderList(
-	'test-nsl', 'Numeric Slider List', 10, {values: [1,2,5,10,20,50,100,200,500,1000,2000,5000,10000], unit: 'deg'},
+	'test-nsl', 'Numeric Slider List', 10, {values: [5,10,20,50,100,200,500,1000,2000,5000,10000], unit: 'deg'},
 	'This is a dummy parameter.',
 	'map' );
 	
+CFG.addNumericSlider(
+	'test-nslab', 'Numeric Slider', 50, {min:0, max:100, step:10, labelStep: 10, unit:'m/s', labels:[0,'megalopolis',30,'city',70,'town',100,'village']},
+	'This is a dummy parameter.',
+	'map' );
 
 // MAP ===================================
 
