@@ -74,7 +74,7 @@ const SECONDS_IN_DAY = 24*60*60;
 const SECONDS_IN_HOUR = 60*60;
 const SECONDS_IN_MINUTE = 60;
 
-function msToString( ms )
+function msToString( ms, showSeconds=true, showMinutes=true )
 {
 	var seconds = Math.floor( ms/1000 ) % SECONDS_IN_DAY;
 	
@@ -82,7 +82,12 @@ function msToString( ms )
 		minutes = Math.floor( (seconds%SECONDS_IN_HOUR) / SECONDS_IN_MINUTE ),
 		seconds = seconds % SECONDS_IN_MINUTE;
 	
-	return (hours<10?'0':'')+hours+(minutes<10?':0':':')+minutes+(seconds<10?':0':':')+seconds;
+	var str = (hours<10?'0':'')+hours;
+	if( showMinutes ) str += (minutes<10?':0':':')+minutes;
+	if( showSeconds) str += (seconds<10?':0':':')+seconds;
+
+	return str;
+	
 } // msToString
 
 
@@ -96,7 +101,8 @@ const
 	NUMERIC_LIST = 7,
 	TEMPORAL_RANGE = 8,
 	NUMERIC_SLIDER = 9,
-	NUMERIC_SLIDER_LIST = 10;
+	NUMERIC_SLIDER_LIST = 10,
+	TEMPORAL_SLIDER = 11;
 
 // get a parameter
 function param( id, defaultValue )
@@ -594,6 +600,7 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 				}
 				break;
 			case NUMERIC_SLIDER:
+			case TEMPORAL_SLIDER:
 				if( (!onlyModified) || (data[id].value.value != data[id].defaultValue) )
 					cmd = data[id].value.value;
 				break;
@@ -1108,7 +1115,6 @@ export function addNumericSlider( id, name, defaultValue, options, info='', tags
 		options: options,
 	}
 	
-	console.log('id->',id);
 }
 
 
@@ -1116,7 +1122,6 @@ export function addNumericSlider( id, name, defaultValue, options, info='', tags
 export function addNumericSliderList( id, name, defaultValue, options, info='', tags='' )
 {
 	// check id
-	
 	if( ids.indexOf(id) > -1 )
 		throw `error: Element with id="${id}" is already decalred.`;
 
@@ -1150,7 +1155,6 @@ export function addNumericSliderList( id, name, defaultValue, options, info='', 
 		testVal = Math.round( 1000000*testVal )/1000000;
 	
 	var width = Math.max( (testVal+'').length*0.58, 1.5 );
-	
 	
 	// construct the html
 	var html =`
@@ -1193,7 +1197,7 @@ export function addNumericSliderList( id, name, defaultValue, options, info='', 
 	
 	var block = document.createElement('div');
 		block.innerHTML = html;
-	
+
 	// insert in dom 
 	
 	document.getElementById("blocks").appendChild( block );
@@ -1212,6 +1216,96 @@ export function addNumericSliderList( id, name, defaultValue, options, info='', 
 
 
 	
+export function addTimeSlider( id, name, defaultValue, options, info='', tags='' )
+{
+	// check id
+	
+	if( ids.indexOf(id) > -1 )
+		throw `error: Element with id="${id}" is already decalred.`;
+
+	ids.push( id );
+	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
+	// set default values for missing options
+
+	options.min = options.min||0;
+	options.max = options.max||100;
+	options.step = options.step||1;
+	options.value = param( id, defaultValue ) || 0;
+	options.tags = tags.split( ',' );
+	options.unit = options.unit||'';
+	
+	allTags.push( ...options.tags );
+	
+	if( predefinedFavs )
+		options.fav = predefinedFavs.indexOf(id)>=0;
+
+	// calculate width of field
+	var width = options.seconds ? 4.2 : 3;
+
+	// construct the html
+	var html =`
+		<table id="block-${id}" class="block ${options.internal?'internal':''}" style="position: relative;">
+			<tr>
+				<td id="name-${id}"
+					width="1%"
+					class="name ${options.fav?'fav':''}"
+					onclick="toggleFav('${id}')">
+					${name} 
+				</td>
+				<td class="valuerow" style="min-width:10em;">
+					<input id="${id}"
+						class="slider"
+						type="range"
+						name="${id}"
+						min="${options.min}"
+						max="${options.max}"
+						value="${options.value}"
+						step="${options.step}">
+				</td>
+				<td class="valuerow" style="width:1%;">
+					<span id="display-${id}"
+						class="value"
+						style="display:inline-block; width:${width}em;">
+					</span>
+				</td>
+				<td class="unit" style="width:3em;">${options.unit}</td>
+			</tr>
+			<tr class="info"><td colspan="4">
+				${info} Range is from ${msToString(options.min,options.seconds)} to ${msToString(options.max,options.seconds)}. Default value is ${msToString(defaultValue,options.seconds)}.
+				<div class="tags">${tags.split(',')}</div>
+			</td></tr>
+		</table>`;
+
+			
+
+
+	// create a new dom element
+	
+	var block = document.createElement('div');
+		block.innerHTML = html;
+	
+	// insert in dom 
+	
+	document.getElementById("blocks").appendChild( block );
+	
+	data[id] = {
+		type:	TEMPORAL_SLIDER,
+		block:	document.getElementById('block-'+id),
+		name:	document.getElementById('name-'+id),
+		value:	document.getElementById(id),
+		display:document.getElementById('display-'+id),
+		defaultValue: defaultValue,
+		options: options,
+	}
+	
+}
+
+
+	
+
 export function onInputNumericSlider( event )
 {
 	var id = event.target.getAttribute( 'id' );
@@ -1224,6 +1318,10 @@ export function onInputNumericSlider( event )
 				
 		case NUMERIC_SLIDER_LIST:
 				data[id].display.innerHTML = data[id].options.values[event.target.value];
+				break;
+				
+		case TEMPORAL_SLIDER:
+				data[id].display.innerHTML = msToString( event.target.value, data[id].options.seconds );
 				break;
 				
 		default:
@@ -1241,7 +1339,7 @@ export function onMouseOver( event )
 		else
 			return;
 
-	if( data[id].type != NUMERIC_SLIDER && data[id].type != NUMERIC_SLIDER_LIST )
+	if( data[id].type != NUMERIC_SLIDER && data[id].type != NUMERIC_SLIDER_LIST && data[id].type != TEMPORAL_SLIDER )
 		return;
 	
 	var rect = data[id].value.getBoundingClientRect(),
@@ -1273,12 +1371,13 @@ export function onMouseOver( event )
 		ctx.font = '12px Roboto';
 		ctx.textAlign = 'center';
 		ctx.fillStyle = 'black';
-	
+
 	if( data[id].type == NUMERIC_SLIDER )
 	{
 		var max = data[id].options.max,
 			min = data[id].options.min,
-			labelStep = data[id].options.labelStep;
+			labelStep = data[id].options.labelStep,
+			dotStep = data[id].options.dotStep || data[id].options.labelStep || 1;
 
 		ctx.beginPath();
 		if( data[id].options.labels )
@@ -1304,6 +1403,10 @@ export function onMouseOver( event )
 			{
 				var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
 				ctx.fillText( i, x, 15);
+			}
+			for( var i=max; i>min; i-=dotStep )
+			{
+				var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
 				ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
 			}
 
@@ -1326,6 +1429,33 @@ export function onMouseOver( event )
 			
 			ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
 		}
+		ctx.fillStyle = 'gray';
+		ctx.fill();
+	}
+	else
+	if( data[id].type == TEMPORAL_SLIDER )
+	{
+		var max = data[id].options.max,
+			min = data[id].options.min,
+			labelStep = data[id].options.labelStep||timeMs(1),
+			dotStep = data[id].options.dotStep||timeMs(1);
+
+		ctx.beginPath();
+
+		for( var i=max; i>min; i-=labelStep )
+		{
+			var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
+			ctx.fillText( msToString(i,data[id].options.labelSeconds,data[id].options.labelMinutes), x, 15);
+		}
+		for( var i=max; i>min; i-=dotStep )
+		{
+			var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
+			ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
+		}
+
+		ctx.fillText( msToString(min,data[id].options.labelSeconds,data[id].options.labelMinutes), EXT/2+9, 15);
+		ctx.arc( EXT/2+9, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
+
 		ctx.fillStyle = 'gray';
 		ctx.fill();
 	}

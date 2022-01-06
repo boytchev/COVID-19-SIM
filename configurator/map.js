@@ -11,23 +11,29 @@ import * as CFG from './configurator.js';
 
 CFG.addHeader( 1, 'Test', '', 'Testing custom input elements.', 'map' );
 
+CFG.addTimeSlider(
+	'test-ntm', '1. Numeric Slider Time', CFG.timeMs(6), {min:CFG.timeMs(0), max:CFG.timeMs(12), step:CFG.timeMs(0,30), seconds: false, labelStep:CFG.timeMs(1), dotStep:CFG.timeMs(1), labelSeconds:false, labelMinutes:false},
+	'This is a dummy parameter.',
+	'map' );
+			
+			
 CFG.addNumericSlider(
-	'test-ns', 'Numeric Slider', 50, {min:10, max:1100, step:10, labelStep: 100, unit:'m/s'},
+	'test-ns', '2. Numeric Slider', 50, {min:10, max:1100, step:10, labelStep: 100, unit:'m/s'},
 	'This is a dummy parameter.',
 	'map' );
 	
 CFG.addNumericSlider(
-	'test-ns2', 'Numeric Slider', 50, {min:2, max:8, step:0.25, labelStep: 1, unit:'m'},
+	'test-ns2', '3. Numeric Slider', 50, {min:2, max:8, step:0.25, labelStep: 1, unit:'m', dotStep: 0.5},
 	'This is a dummy parameter.',
 	'map' );
 	
 CFG.addNumericSliderList(
-	'test-nsl', 'Numeric Slider List', 10, {values: [5,10,20,50,100,200,500,1000,2000,5000,10000], unit: 'deg'},
+	'test-nsl', '4. Numeric Slider List', 10, {values: [5,10,20,50,100,200,500,1000,2000,5000,10000], unit: 'deg'},
 	'This is a dummy parameter.',
 	'map' );
 	
 CFG.addNumericSlider(
-	'test-nslab', 'Numeric Slider', 50, {min:0, max:100, step:10, labelStep: 10, unit:'m/s', labels:[0,'megalopolis',30,'city',70,'town',100,'village']},
+	'test-nslab', '5. Numeric Slider', 50, {min:0, max:100, step:10, labelStep: 10, unit:'m/s', labels:[0,'megalopolis',30,'city',70,'town',100,'village']},
 	'This is a dummy parameter.',
 	'map' );
 

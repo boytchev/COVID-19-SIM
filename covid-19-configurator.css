@@ -383,10 +383,10 @@ input.slider {
 	position: relative;
 	top: -0.25em;
 	-webkit-appearance: none;
-	height: 0.01em;
+	height: 1px;
 	background: gray;
 	border-top: solid 8px white;
-	border-bottom: solid 1px gray;
+	border-bottom: none;
 	border-radius: 0.4em;
 	outline: none;
 	opacity: 0;
