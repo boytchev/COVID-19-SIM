@@ -11,6 +11,64 @@ import * as CFG from './configurator.js';
 
 CFG.addHeader( 1, 'Test', '', 'Testing custom input elements.', 'map' );
 
+CFG.addNumericRangeSlider(
+	'test-nrs', '5. Numeric Range Slider', 250, 450, {
+		min: 10,
+		max: 1100,
+		step: 50,
+		labelStep: 200,
+		unit:'m/s'
+	},
+	'Test with double numeric slider.',
+	'map' );
+
+CFG.addNumericSlider(
+	'test-ns', '1. Numeric Slider', 350, {
+			min: 10,
+			max: 1100,
+			step: 10,
+			dotStep: 50,
+			labelStep: 100,
+			unit: 'm/s'
+		},
+	'Singe number in a range.',
+	'map' );
+	
+CFG.addNumericSlider(
+	'test-nslab', '2. Numeric Labels Slider', 50, {
+			min: 0,
+			max: 100,
+			step:10,
+			labelStep: 10,
+			labels:[0,'megapolis',30,'city',70,'town',100,'village'],
+			unit: '%',
+			percentage: true,
+		},
+	'Single number with predefined labels.',
+	'map' );
+
+CFG.addNumericListSlider(
+	'test-nsl', '3. Numeric List Slider', 50, {values: [5,10,20,50,100,200,500,1000,2000,5000,10000], unit: 'm'},
+	'This is a dummy parameter.',
+	'map' );
+
+CFG.addNumericSlider(
+	'test-nperslab', '4. Numeric Percentage Slider', 55, {
+			min: 30,
+			max: 70,
+			step:5,
+			labelStep: 10,
+			unit: '%',
+			percentage: true,
+		},
+	'Single number with predefined labels.',
+	'map' );
+
+
+	
+/*
+
+	
 CFG.addTimeSlider(
 	'test-ntm', '1. Numeric Slider Time', CFG.timeMs(6), {min:CFG.timeMs(0), max:CFG.timeMs(12), step:CFG.timeMs(0,30), seconds: false, labelStep:CFG.timeMs(1), dotStep:CFG.timeMs(1), labelSeconds:false, labelMinutes:false},
 	'This is a dummy parameter.',
@@ -18,24 +76,13 @@ CFG.addTimeSlider(
 			
 			
 CFG.addNumericSlider(
-	'test-ns', '2. Numeric Slider', 50, {min:10, max:1100, step:10, labelStep: 100, unit:'m/s'},
-	'This is a dummy parameter.',
-	'map' );
-	
-CFG.addNumericSlider(
 	'test-ns2', '3. Numeric Slider', 50, {min:2, max:8, step:0.25, labelStep: 1, unit:'m', dotStep: 0.5},
 	'This is a dummy parameter.',
 	'map' );
 	
-CFG.addNumericSliderList(
-	'test-nsl', '4. Numeric Slider List', 10, {values: [5,10,20,50,100,200,500,1000,2000,5000,10000], unit: 'deg'},
-	'This is a dummy parameter.',
-	'map' );
+
 	
-CFG.addNumericSlider(
-	'test-nslab', '5. Numeric Slider', 50, {min:0, max:100, step:10, labelStep: 10, unit:'m/s', labels:[0,'megalopolis',30,'city',70,'town',100,'village']},
-	'This is a dummy parameter.',
-	'map' );
+*/
 
 // MAP ===================================
 

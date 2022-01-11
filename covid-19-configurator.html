@@ -24,7 +24,6 @@
 
 	<link title="config-css" rel="stylesheet" href="covid-19-configurator.css">
 
-	
 </head>
 
 <body>
@@ -64,7 +63,7 @@
 		</div>
 	
 		
-		<canvas id="ruler"></canvas>
+		<canvas id="ruler" draggable="true"></canvas>
 		<div class="start-block end">
 			<a id="start_button_2" class="start" href="covid-19-simulator.html">Start simulation</a>
 			<button id="reset_button" class="rightbutton"><img src="icons/reset.svg"> Reset</button>
@@ -80,6 +79,7 @@
 	
 	<script type="module">
 		import * as CFG from './configurator/configurator.js';
+		import * as RULER from './configurator/ruler.js';
 		import './configurator/map.js';
 		import './configurator/buildings.js';
 		import './configurator/people.js';
@@ -125,10 +125,9 @@
 		var elems = document.querySelectorAll( 'table' );
 		for( var elem of elems )
 		{
-			elem.addEventListener( 'mouseenter', CFG.onMouseOver );			
-			elem.addEventListener( 'mouseleave', CFG.onMouseOut );
+			elem.addEventListener( 'mouseenter', RULER.onMouseOver );
 		}
-			
+
 		document.getElementById( 'start_button_1' ).onclick = CFG.prepareValues;
 		document.getElementById( 'start_button_2' ).onclick = CFG.prepareValues;
 
@@ -170,6 +169,7 @@
 		if( !CFG.LOCALHOST ) document.getElementById( 'debug_button' ).style.display = 'none';
 		
 		document.getElementsByClassName( 'wait' )[0].style.display = 'none';
+
 	</script>
 	
 </body>

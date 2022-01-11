@@ -44,13 +44,14 @@ const configParams = new URLSearchParams(
 console.log('URL',window.location.search);
 console.log('STO',localStorage.getItem( LOCAL_STORAGE_PARAMS ));
 
+import * as ruler from './ruler.js';
 
 export var ids = [];
 export var id_count = 0;
 export var internal_id_count = 0;
 
-var allTags = [],
-	data = {};
+var allTags = [];
+export var data = {};
 
 
 	
@@ -62,8 +63,8 @@ if( predefinedFavs !== null )
 export var configInfo = param( 'cfg-si', true );
 export var configAllParams = param( 'cfg-all', false );
 
-console.log('configInfo',configInfo)
-console.log('configAllParams',configAllParams)
+//console.log('configInfo',configInfo)
+//console.log('configAllParams',configAllParams)
 
 export function timeMs( hours, minutes=0, seconds=0 )
 {
@@ -101,8 +102,10 @@ const
 	NUMERIC_LIST = 7,
 	TEMPORAL_RANGE = 8,
 	NUMERIC_SLIDER = 9,
-	NUMERIC_SLIDER_LIST = 10,
-	TEMPORAL_SLIDER = 11;
+	NUMERIC_LIST_SLIDER = 10,
+	TEMPORAL_SLIDER = 11,
+	NUMERIC_RANGE_SLIDER = 12;
+export {NUMERIC_SLIDER,NUMERIC_LIST_SLIDER,NUMERIC_RANGE_SLIDER};
 
 // get a parameter
 function param( id, defaultValue )
@@ -560,17 +563,8 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 			case NUMERIC_RANGE:
 				if( (!onlyModified) || (data[id].valueA.value != data[id].defaultValueA) || (data[id].valueB.value != data[id].defaultValueB) )
 				{
-					var min, max;
-					if( data[id].options.noswap )
-					{
-						min = data[id].valueA.value;
-						max = data[id].valueB.value;
-					}
-					else
-					{
-						min = Math.min( data[id].valueA.value, data[id].valueB.value );
-						max = Math.max( data[id].valueA.value, data[id].valueB.value );
-					}
+					var min = Math.min( data[id].valueA.value, data[id].valueB.value );
+					var max = Math.max( data[id].valueA.value, data[id].valueB.value );
 					cmd = min+'~'+max;
 				}
 				break;
@@ -585,28 +579,28 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 					valueB = 1000*(parseInt(arrMax[0])*SECONDS_IN_HOUR + parseInt(arrMax[1])*SECONDS_IN_MINUTE + parseInt(arrMax[2]));
 				if( (!onlyModified) || (valueA != data[id].defaultValueA) || (valueB != data[id].defaultValueB) )
 				{
-					var min, max;
-					if( data[id].options.noswap )
-					{
-						min = valueA;
-						max = valueB;
-					}
-					else
-					{
-						min = Math.min( valueA, valueB );
-						max = Math.max( valueA, valueB );
-					}
+					var min = Math.min( valueA, valueB );
+					var max = Math.max( valueA, valueB );
 					cmd = min+'~'+max;
 				}
 				break;
+
 			case NUMERIC_SLIDER:
 			case TEMPORAL_SLIDER:
-				if( (!onlyModified) || (data[id].value.value != data[id].defaultValue) )
-					cmd = data[id].value.value;
+				if( (!onlyModified) || (data[id].options.value != data[id].defaultValue) )
+					cmd = data[id].options.percentage ? data[id].options.value/100 : data[id].options.value;
 				break;
-			case NUMERIC_SLIDER_LIST:
-				if( (!onlyModified) || (data[id].options.values[data[id].value.value] != data[id].defaultValue) )
-					cmd = data[id].options.values[data[id].value.value];
+			case NUMERIC_LIST_SLIDER:
+				if( (!onlyModified) || (data[id].options.values[data[id].options.value] != data[id].defaultValue) )
+					cmd = data[id].options.values[data[id].options.value];
+				break;
+			case NUMERIC_RANGE_SLIDER:
+				if( (!onlyModified) || (data[id].options.valueA != data[id].defaultValueA) || (data[id].options.valueB != data[id].defaultValueB) )
+				{
+					var min = Math.min( data[id].options.valueA, data[id].options.valueB ),
+						max = Math.max( data[id].options.valueA, data[id].options.valueB );
+					cmd = min+'~'+max;
+				}
 				break;
 			default:
 				throw 'Invalid configuration parameter type "'+id+'"';
@@ -1043,7 +1037,11 @@ export function addNumericSlider( id, name, defaultValue, options, info='', tags
 	options.min = options.min||0;
 	options.max = options.max||100;
 	options.step = options.step||1;
-	options.value = param( id, defaultValue ) || 0;
+	if( options.percentage )
+		options.value = Math.round(100*param( id, defaultValue/100 )) || 0;
+	else
+		options.value = param( id, defaultValue ) || 0;
+	
 	options.tags = tags.split( ',' );
 	options.unit = options.unit||'';
 	
@@ -1069,20 +1067,12 @@ export function addNumericSlider( id, name, defaultValue, options, info='', tags
 					onclick="toggleFav('${id}')">
 					${name} 
 				</td>
-				<td class="valuerow" style="min-width:10em;">
-					<input id="${id}"
-						class="slider"
-						type="range"
-						name="${id}"
-						min="${options.min}"
-						max="${options.max}"
-						value="${options.value}"
-						step="${options.step}">
-				</td>
+				<td class="valuerow" style="min-width:10em;" id="${id}"></td>
 				<td class="valuerow" style="width:1%;">
 					<span id="display-${id}"
 						class="value"
 						style="display:inline-block; width:${width}em;">
+						${options.value}
 					</span>
 				</td>
 				<td class="unit" style="width:3em;">${options.unit}</td>
@@ -1114,12 +1104,11 @@ export function addNumericSlider( id, name, defaultValue, options, info='', tags
 		defaultValue: defaultValue,
 		options: options,
 	}
-	
 }
 
 
 	
-export function addNumericSliderList( id, name, defaultValue, options, info='', tags='' )
+export function addNumericListSlider( id, name, defaultValue, options, info='', tags='' )
 {
 	// check id
 	if( ids.indexOf(id) > -1 )
@@ -1166,20 +1155,12 @@ export function addNumericSliderList( id, name, defaultValue, options, info='', 
 					onclick="toggleFav('${id}')">
 					${name} 
 				</td>
-				<td class="valuerow" style="min-width:10em;">
-					<input id="${id}"
-						class="slider"
-						type="range"
-						name="${id}"
-						min="0"
-						max="${options.values.length-1}"
-						value="${options.value}"
-						step="1">
-				</td>
+				<td class="valuerow" style="min-width:10em;" id="${id}"></td>
 				<td class="valuerow" style="width:1%;">
 					<span id="display-${id}"
 						class="value"
 						style="display:inline-block; width:${width}em;">
+						${options.values[options.value]}
 					</span>
 				</td>
 				<td class="unit" style="width:3em;">${options.unit}</td>
@@ -1203,7 +1184,7 @@ export function addNumericSliderList( id, name, defaultValue, options, info='', 
 	document.getElementById("blocks").appendChild( block );
 	
 	data[id] = {
-		type:	NUMERIC_SLIDER_LIST,
+		type:	NUMERIC_LIST_SLIDER,
 		block:	document.getElementById('block-'+id),
 		name:	document.getElementById('name-'+id),
 		value:	document.getElementById(id),
@@ -1305,18 +1286,107 @@ export function addTimeSlider( id, name, defaultValue, options, info='', tags=''
 
 
 	
+export function addNumericRangeSlider( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
+{
+	// check id
+	
+	if( ids.indexOf(id) > -1 )
+		throw `error: Element with id="${id}" is already decalred.`;
+
+	ids.push( id );
+	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
+	// set default values for missing options
+
+	options.min = options.min||0;
+	options.max = options.max||100;
+	options.step = options.step||1;
+	options.valueA = param2( id, defaultValueA, defaultValueB )[0];
+	options.valueB = param2( id, defaultValueA, defaultValueB )[1];
+	options.tags = tags.split( ',' );
+	options.unit = options.unit||'';
+	
+	allTags.push( ...options.tags );
+	
+	if( predefinedFavs )
+		options.fav = predefinedFavs.indexOf(id)>=0;
+
+	// calculate width of field
+	var testVal = parseFloat(options.max)+parseFloat(options.step),
+		testVal = Math.round( 1000000*testVal )/1000000;
+	
+	var width = 2*Math.max( (testVal+'').length*0.58, 1.5 )+0.25;
+
+	// construct the html
+	var html =`
+		<table id="block-${id}" class="block ${options.internal?'internal':''}" style="position: relative;">
+			<tr>
+				<td id="name-${id}"
+					width="1%"
+					class="name ${options.fav?'fav':''}"
+					onclick="toggleFav('${id}')">
+					${name} 
+				</td>
+				<td class="valuerow" style="min-width:10em;" id="${id}"></td>
+				<td class="valuerow" style="width:1%;">
+					<span id="display-${id}"
+						class="value"
+						style="display:inline-block; width:${width}em;">
+						${options.valueA}~${options.valueB}
+					</span>
+				</td>
+				<td class="unit" style="width:3em;">${options.unit}</td>
+			</tr>
+			<tr class="info"><td colspan="4">
+				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${defaultValueA} to ${defaultValueB}.
+				<div class="tags">${tags.split(',')}</div>
+			</td></tr>
+		</table>`;
+
+			
+
+
+	// create a new dom element
+	
+	var block = document.createElement('div');
+		block.innerHTML = html;
+	
+	// insert in dom 
+	
+	document.getElementById("blocks").appendChild( block );
+
+	data[id] = {
+		type:	NUMERIC_RANGE_SLIDER,
+		block:	document.getElementById('block-'+id),
+		name:	document.getElementById('name-'+id),
+		value:	document.getElementById(id),
+		display:document.getElementById('display-'+id),
+		defaultValueA: defaultValueA,
+		defaultValueB: defaultValueB,
+		options: options,
+	}
+	
+}
+
+
+	
 
 export function onInputNumericSlider( event )
 {
 	var id = event.target.getAttribute( 'id' );
-	
+
+	if( id.substring(id.length-4) == '-max' || id.substring(id.length-4) == '-min' )
+		id = id.substring(0,id.length-4);
+		
 	switch(	data[id].type )
 	{
 		case NUMERIC_SLIDER:
 				data[id].display.innerHTML = event.target.value;
 				break;
 				
-		case NUMERIC_SLIDER_LIST:
+		case NUMERIC_LIST_SLIDER:
 				data[id].display.innerHTML = data[id].options.values[event.target.value];
 				break;
 				
@@ -1324,145 +1394,11 @@ export function onInputNumericSlider( event )
 				data[id].display.innerHTML = msToString( event.target.value, data[id].options.seconds );
 				break;
 				
+		case NUMERIC_RANGE_SLIDER:
+				data[id].display.innerHTML = data[id].valueA.value+'..'+data[id].valueB.value;
+				break;
+		
 		default:
 			throw 'Invalid configuration parameter type "'+id+'"';
 	}
-}
-
-
-export function onMouseOver( event )
-{
-	var id = event.target.getAttribute( 'id' );
-
-		if( id.indexOf('block-')==0 )
-			id = id.substring(6);
-		else
-			return;
-
-	if( data[id].type != NUMERIC_SLIDER && data[id].type != NUMERIC_SLIDER_LIST && data[id].type != TEMPORAL_SLIDER )
-		return;
-	
-	var rect = data[id].value.getBoundingClientRect(),
-		leftPos = Math.round(rect.left + window.scrollX),
-		width = Math.round(rect.right-rect.left);
-
-	var rect = data[id].block.getBoundingClientRect(),
-		topPos  = rect.top + window.scrollY;
-
-	var EXT = 100;
-	
-	
-	var ratio = 1.25*window.devicePixelRatio;
-	
-	var ruler = document.getElementById( 'ruler' );
-		ruler.style.display = 'block';
-		ruler.style.left = (leftPos-EXT/2)+'px';
-		ruler.style.top = `calc(${topPos}px - 2em)`;
-		ruler.style.width = (width+EXT)+'px';
-	ruler.width = (width+EXT)*ratio;
-	ruler.height = (40)*ratio;
-	
-	const DOT_Y_POS = 29;
-	const DOT_SIZE = 2;	
-
-	var ctx = ruler.getContext("2d");
-		ctx.scale(ratio,ratio);
-		ctx.clearRect( 0, 0, width, 40 );
-		ctx.font = '12px Roboto';
-		ctx.textAlign = 'center';
-		ctx.fillStyle = 'black';
-
-	if( data[id].type == NUMERIC_SLIDER )
-	{
-		var max = data[id].options.max,
-			min = data[id].options.min,
-			labelStep = data[id].options.labelStep,
-			dotStep = data[id].options.dotStep || data[id].options.labelStep || 1;
-
-		ctx.beginPath();
-		if( data[id].options.labels )
-		{
-			var labels = data[id].options.labels;
-			for( var i=0; i<labels.length; i+=2 )
-			{
-				var x = EXT/2+11+Math.round((labels[i]-min)/(max-min) * (width-22));
-				ctx.fillText( labels[i+1], x, 15);
-				ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
-			}
-
-			for( var i=max; i>min; i-=labelStep )
-			{
-				var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
-				ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
-			}
-			ctx.arc( EXT/2+9, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
-		}
-		else
-		{
-			for( var i=max; i>min; i-=labelStep )
-			{
-				var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
-				ctx.fillText( i, x, 15);
-			}
-			for( var i=max; i>min; i-=dotStep )
-			{
-				var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
-				ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
-			}
-
-			ctx.fillText( min, EXT/2+9, 15);
-			ctx.arc( EXT/2+9, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
-		}
-		ctx.fillStyle = 'gray';
-		ctx.fill();
-	}
-	else
-	if( data[id].type == NUMERIC_SLIDER_LIST )
-	{
-		var n = data[id].options.values.length-1;
-
-		ctx.beginPath();
-		for( var i=0; i<=n; i++ )
-		{
-			var x = EXT/2+11+Math.round(i/n * (width-22));
-			ctx.fillText( data[id].options.values[i], x, 15);
-			
-			ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
-		}
-		ctx.fillStyle = 'gray';
-		ctx.fill();
-	}
-	else
-	if( data[id].type == TEMPORAL_SLIDER )
-	{
-		var max = data[id].options.max,
-			min = data[id].options.min,
-			labelStep = data[id].options.labelStep||timeMs(1),
-			dotStep = data[id].options.dotStep||timeMs(1);
-
-		ctx.beginPath();
-
-		for( var i=max; i>min; i-=labelStep )
-		{
-			var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
-			ctx.fillText( msToString(i,data[id].options.labelSeconds,data[id].options.labelMinutes), x, 15);
-		}
-		for( var i=max; i>min; i-=dotStep )
-		{
-			var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
-			ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
-		}
-
-		ctx.fillText( msToString(min,data[id].options.labelSeconds,data[id].options.labelMinutes), EXT/2+9, 15);
-		ctx.arc( EXT/2+9, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
-
-		ctx.fillStyle = 'gray';
-		ctx.fill();
-	}
-}
-
-export function onMouseOut( event )
-{
-	var ruler = document.getElementById( 'ruler' );
-	ruler.style.display = 'none';
 }

@@ -100,6 +100,7 @@ h4.caption ~ .info{
 }
 
 .block .valuerow {
+	position: relative;
 	text-align: right;
 	background-image: url(icons/dot.svg);
 	background-repeat: repeat-x;
@@ -375,13 +376,14 @@ input {
 */
 
 
-
 /* based on https://www.w3schools.com/howto/howto_js_rangeslider.asp */
+
 input.slider {
-	width: 100%;
+	width: calc(100% - 0.1em);
 	padding-left: 0;
-	position: relative;
-	top: -0.25em;
+	position: absolute;
+	top: 0.15em;
+	left: 0em;
 	-webkit-appearance: none;
 	height: 1px;
 	background: gray;
@@ -392,6 +394,14 @@ input.slider {
 	opacity: 0;
 }
 
+input.second-slider {
+	background: transparent;
+	border-top: solid 8px transparent;
+	border-bottom: none;
+	pointer-events: none;
+	z-index: 10;
+}
+
 @supports (-moz-appearance:none) {
 	input.slider {
 		top: -0.13em;
@@ -400,6 +410,10 @@ input.slider {
 
 
 table:hover input.slider {
+	opacity: 1;
+}
+
+table:hover input.second-slider {
 	opacity: 1;
 }
 
@@ -415,10 +429,6 @@ table:hover input.slider {
 	cursor: pointer;
 }
 
-.slider:hover::-webkit-slider-thumb, .slider::-webkit-slider-thumb:hover {
-	#background: lightgray;
-}
-
 .slider::-moz-range-thumb {
 	width: 13px;
 	height: 13px;
@@ -428,9 +438,6 @@ table:hover input.slider {
 	cursor: pointer;
 }
 
-.slider:hover::-moz-range-thumb, .slider::-moz-range-thumb:hover {
-	#background: lightgray;
-}
 
 canvas {
 	position: absolute;
@@ -438,5 +445,5 @@ canvas {
 	height: 40px;
 	#border: solid 1px orange;
 	z-index: 1;
-	pointer-events: none;
+	#pointer-events: none;
 }
