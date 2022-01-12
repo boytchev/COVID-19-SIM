@@ -15,7 +15,7 @@ const DOT_SIZE = 3;
 const THUMB_SIZE = 9;
 const ratio = 1.25*window.devicePixelRatio;
 
-import {data as allData, msToString, NUMERIC_SLIDER, NUMERIC_LIST_SLIDER, NUMERIC_RANGE_SLIDER, TEMPORAL_SLIDER } from './configurator.js';
+import {data as allData, msToString, NUMERIC_SLIDER, NUMERIC_LIST_SLIDER, NUMERIC_RANGE_SLIDER, TEMPORAL_SLIDER, TEMPORAL_RANGE_SLIDER } from './configurator.js';
 
 var canvas = document.getElementById( 'ruler' ),
 	ctx = canvas.getContext("2d"),
@@ -88,7 +88,8 @@ export function onMouseOver( event )
 	if( data.type != NUMERIC_SLIDER && 
 		data.type != NUMERIC_LIST_SLIDER  && 
 		data.type != NUMERIC_RANGE_SLIDER &&
-		data.type != TEMPORAL_SLIDER )
+		data.type != TEMPORAL_SLIDER &&
+		data.type != TEMPORAL_RANGE_SLIDER )
 		return;
 	
 	show( );
@@ -104,6 +105,7 @@ function pos( value )
 		case NUMERIC_SLIDER:
 		case NUMERIC_RANGE_SLIDER:
 		case TEMPORAL_SLIDER:
+		case TEMPORAL_RANGE_SLIDER:
 			var max = data.options.max,
 				min = data.options.min;
 			return EXT/2+11+Math.round((value-min)/(max-min) * (width-22));
@@ -130,6 +132,7 @@ function unpos( x )
 		case NUMERIC_SLIDER:
 		case NUMERIC_RANGE_SLIDER:
 		case TEMPORAL_SLIDER:
+		case TEMPORAL_RANGE_SLIDER:
 			var max = data.options.max,
 				min = data.options.min,
 				step = data.options.step||1,
@@ -226,6 +229,20 @@ function onClick( event )
 				data.display.innerHTML = Math.min(data.options.valueA,data.options.valueB)+'~'+Math.max(data.options.valueA,data.options.valueB);
 				break;
 		
+		case TEMPORAL_RANGE_SLIDER:
+				var value = unpos( event.offsetX);
+
+				if( currentThumb < -0.5 )
+					currentThumb = (Math.abs(value-data.options.valueA) < Math.abs(value-data.options.valueB)) ? 0 : 1;
+			
+				if( currentThumb == 0 )
+					data.options.valueA = value;
+				else
+					data.options.valueB = value;
+
+				data.display.innerHTML = msToString(Math.min(data.options.valueA,data.options.valueB),data.options.seconds)+'~'+msToString(Math.max(data.options.valueA,data.options.valueB),data.options.seconds);
+				break;
+		
 		default:
 			throw 'Invalid configuration parameter type "'+id+'"';
 	}
@@ -313,7 +330,7 @@ function draw()
 		thumb( data.options.value );
 	}
 	else
-	if( data.type == TEMPORAL_SLIDER )
+	if( data.type == TEMPORAL_SLIDER || data.type == TEMPORAL_RANGE_SLIDER)
 	{
 		var max = data.options.max,
 			min = data.options.min,
@@ -333,7 +350,15 @@ function draw()
 			dot( i );
 
 		// thumb
-		thumb( data.options.value );
+		if( data.type == TEMPORAL_SLIDER )
+			thumb( data.options.value );
+		
+		if( data.type == TEMPORAL_RANGE_SLIDER )
+		{
+			bar( data.options.valueA, data.options.valueB );
+			thumb( data.options.valueA );
+			thumb( data.options.valueB );
+		}
 	}
 	
 	ctx.fillStyle = 'gray';

@@ -11,6 +11,12 @@ import * as CFG from './configurator.js';
 
 CFG.addHeader( 1, 'Test', '', 'Testing custom input elements.', 'map' );
 
+CFG.addTimeRangeSlider(
+	'test-ntrsam', '7. Time Range Slider', CFG.timeMs(6), CFG.timeMs(9,45), {min:CFG.timeMs(0), max:CFG.timeMs(12), step:CFG.timeMs(0,10), seconds: false, labelStep:CFG.timeMs(2), dotStep:CFG.timeMs(1), labelSeconds:false, labelMinutes:true},
+	'This is a dummy parameter.',
+	'map' );
+
+
 CFG.addTimeSlider(
 	'test-ntm', '6. Time Slider', CFG.timeMs(6), {min:CFG.timeMs(0), max:CFG.timeMs(12), step:CFG.timeMs(0,30), seconds: false, labelStep:CFG.timeMs(2), dotStep:CFG.timeMs(1), labelSeconds:false, labelMinutes:true},
 	'This is a dummy parameter.',

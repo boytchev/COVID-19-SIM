@@ -104,8 +104,9 @@ const
 	NUMERIC_SLIDER = 9,
 	NUMERIC_LIST_SLIDER = 10,
 	TEMPORAL_SLIDER = 11,
-	NUMERIC_RANGE_SLIDER = 12;
-export {NUMERIC_SLIDER,NUMERIC_LIST_SLIDER,NUMERIC_RANGE_SLIDER,TEMPORAL_SLIDER};
+	NUMERIC_RANGE_SLIDER = 12,
+	TEMPORAL_RANGE_SLIDER = 13;
+export {NUMERIC_SLIDER,NUMERIC_LIST_SLIDER,NUMERIC_RANGE_SLIDER,TEMPORAL_SLIDER,TEMPORAL_RANGE_SLIDER};
 
 // get a parameter
 function param( id, defaultValue )
@@ -595,6 +596,7 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 					cmd = data[id].options.values[data[id].options.value];
 				break;
 			case NUMERIC_RANGE_SLIDER:
+			case TEMPORAL_RANGE_SLIDER:
 				if( (!onlyModified) || (data[id].options.valueA != data[id].defaultValueA) || (data[id].options.valueB != data[id].defaultValueB) )
 				{
 					var min = Math.min( data[id].options.valueA, data[id].options.valueB ),
@@ -1017,6 +1019,13 @@ export function processTags()
 
 	document.getElementById( 'tags' ).innerHTML = htmlOptions;
 
+
+
+console.log('statistics');
+var cnt = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+for(var id in data) cnt[data[id].type]++;
+for(var i=0; i<14; i++) console.log(i+'\t',cnt[i]);
+
 }
 
 
@@ -1365,6 +1374,89 @@ export function addNumericRangeSlider( id, name, defaultValueA, defaultValueB, o
 
 
 	
+export function addTimeRangeSlider( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
+{
+	// check id
+	
+	if( ids.indexOf(id) > -1 )
+		throw `error: Element with id="${id}" is already decalred.`;
+
+	ids.push( id );
+	
+	id_count++;
+	if( options.internal ) internal_id_count++;
+	
+	// set default values for missing options
+
+	options.min = options.min||0;
+	options.max = options.max||100;
+	options.step = options.step||1;
+	options.valueA = param2( id, defaultValueA, defaultValueB )[0];
+	options.valueB = param2( id, defaultValueA, defaultValueB )[1];
+	options.tags = tags.split( ',' );
+	options.unit = options.unit||'';
+	
+	allTags.push( ...options.tags );
+	
+	if( predefinedFavs )
+		options.fav = predefinedFavs.indexOf(id)>=0;
+
+	// calculate width of field
+	var width = options.seconds ? 9 : 6.5;
+
+	// construct the html
+	var html =`
+		<table id="block-${id}" class="block ${options.internal?'internal':''}" style="position: relative;">
+			<tr>
+				<td id="name-${id}"
+					width="1%"
+					class="name ${options.fav?'fav':''}"
+					onclick="toggleFav('${id}')">
+					${name} 
+				</td>
+				<td class="valuerow" style="min-width:10em;" id="${id}"></td>
+				<td class="valuerow" style="width:1%;">
+					<span id="display-${id}"
+						class="value"
+						style="display:inline-block; width:${width}em;">
+						${msToString(options.valueA,options.seconds)}~${msToString(options.valueB,options.seconds)}
+					</span>
+				</td>
+				<td class="unit" style="width:3em;">${options.unit}</td>
+			</tr>
+			<tr class="info"><td colspan="4">
+				${info} Range for each bound is from ${msToString(options.min,options.seconds)} to ${msToString(options.max,options.seconds)}. Default value is ${msToString(defaultValueA,options.seconds)} to ${msToString(defaultValueB,options.seconds)}.
+				<div class="tags">${tags.split(',')}</div>
+			</td></tr>
+		</table>`;
+
+			
+
+
+	// create a new dom element
+	
+	var block = document.createElement('div');
+		block.innerHTML = html;
+	
+	// insert in dom 
+	
+	document.getElementById("blocks").appendChild( block );
+
+	data[id] = {
+		type:	TEMPORAL_RANGE_SLIDER,
+		block:	document.getElementById('block-'+id),
+		name:	document.getElementById('name-'+id),
+		value:	document.getElementById(id),
+		display:document.getElementById('display-'+id),
+		defaultValueA: defaultValueA,
+		defaultValueB: defaultValueB,
+		options: options,
+	}
+	
+}
+
+
+
 
 export function onInputNumericSlider( event )
 {
