@@ -11,16 +11,11 @@ import * as CFG from './configurator.js';
 
 CFG.addHeader( 1, 'Test', '', 'Testing custom input elements.', 'map' );
 
-CFG.addNumericRangeSlider(
-	'test-nrs', '5. Numeric Range Slider', 250, 450, {
-		min: 10,
-		max: 1100,
-		step: 50,
-		labelStep: 200,
-		unit:'m/s'
-	},
-	'Test with double numeric slider.',
+CFG.addTimeSlider(
+	'test-ntm', '6. Time Slider', CFG.timeMs(6), {min:CFG.timeMs(0), max:CFG.timeMs(12), step:CFG.timeMs(0,30), seconds: false, labelStep:CFG.timeMs(2), dotStep:CFG.timeMs(1), labelSeconds:false, labelMinutes:true},
+	'This is a dummy parameter.',
 	'map' );
+
 
 CFG.addNumericSlider(
 	'test-ns', '1. Numeric Slider', 350, {
@@ -64,25 +59,19 @@ CFG.addNumericSlider(
 	'Single number with predefined labels.',
 	'map' );
 
-
-	
-/*
-
-	
-CFG.addTimeSlider(
-	'test-ntm', '1. Numeric Slider Time', CFG.timeMs(6), {min:CFG.timeMs(0), max:CFG.timeMs(12), step:CFG.timeMs(0,30), seconds: false, labelStep:CFG.timeMs(1), dotStep:CFG.timeMs(1), labelSeconds:false, labelMinutes:false},
-	'This is a dummy parameter.',
+CFG.addNumericRangeSlider(
+	'test-nrs', '5. Numeric Range Slider', 250, 450, {
+		min: 10,
+		max: 1100,
+		step: 50,
+		labelStep: 200,
+		unit:'m/s'
+	},
+	'Test with double numeric slider.',
 	'map' );
-			
-			
-CFG.addNumericSlider(
-	'test-ns2', '3. Numeric Slider', 50, {min:2, max:8, step:0.25, labelStep: 1, unit:'m', dotStep: 0.5},
-	'This is a dummy parameter.',
-	'map' );
-	
+
 
 	
-*/
 
 // MAP ===================================
 

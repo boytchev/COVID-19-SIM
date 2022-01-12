@@ -15,7 +15,7 @@ const DOT_SIZE = 3;
 const THUMB_SIZE = 9;
 const ratio = 1.25*window.devicePixelRatio;
 
-import {data as allData, NUMERIC_SLIDER, NUMERIC_LIST_SLIDER, NUMERIC_RANGE_SLIDER } from './configurator.js';
+import {data as allData, msToString, NUMERIC_SLIDER, NUMERIC_LIST_SLIDER, NUMERIC_RANGE_SLIDER, TEMPORAL_SLIDER } from './configurator.js';
 
 var canvas = document.getElementById( 'ruler' ),
 	ctx = canvas.getContext("2d"),
@@ -87,7 +87,8 @@ export function onMouseOver( event )
 
 	if( data.type != NUMERIC_SLIDER && 
 		data.type != NUMERIC_LIST_SLIDER  && 
-		data.type != NUMERIC_RANGE_SLIDER /*&& data.type != TEMPORAL_SLIDER*/ )
+		data.type != NUMERIC_RANGE_SLIDER &&
+		data.type != TEMPORAL_SLIDER )
 		return;
 	
 	show( );
@@ -102,6 +103,7 @@ function pos( value )
 	{
 		case NUMERIC_SLIDER:
 		case NUMERIC_RANGE_SLIDER:
+		case TEMPORAL_SLIDER:
 			var max = data.options.max,
 				min = data.options.min;
 			return EXT/2+11+Math.round((value-min)/(max-min) * (width-22));
@@ -127,6 +129,7 @@ function unpos( x )
 	{
 		case NUMERIC_SLIDER:
 		case NUMERIC_RANGE_SLIDER:
+		case TEMPORAL_SLIDER:
 			var max = data.options.max,
 				min = data.options.min,
 				step = data.options.step||1,
@@ -204,9 +207,10 @@ function onClick( event )
 				data.display.innerHTML = data.options.values[data.options.value];
 				break;
 				
-		// case TEMPORAL_SLIDER:
-				// data[id].display.innerHTML = msToString( event.target.value, data[id].options.seconds );
-				// break;
+		case TEMPORAL_SLIDER:
+				data.options.value = unpos( event.offsetX);
+				data.display.innerHTML = msToString( data.options.value, data.options.seconds );
+				break;
 				
 		case NUMERIC_RANGE_SLIDER:
 				var value = unpos( event.offsetX);
@@ -233,6 +237,7 @@ function onClick( event )
 function onMouseDown( event )
 {
 	mouseDown = true;
+	onClick( event );
 }
 
 
@@ -241,7 +246,7 @@ function onMouseUp( event )
 {
 	mouseDown = false;
 	currentThumb = -1;
-	console.log('now\t',currentThumb);
+//	console.log('now\t',currentThumb);
 }
 
 
@@ -291,9 +296,6 @@ function draw()
 			thumb( data.options.valueA );
 			thumb( data.options.valueB );
 		}
-
-		ctx.fillStyle = 'gray';
-		ctx.fill();
 	}
 	else
 	if( data.type == NUMERIC_LIST_SLIDER )
@@ -309,41 +311,33 @@ function draw()
 
 		// thumb
 		thumb( data.options.value );
-
-		ctx.fillStyle = 'gray';
-		ctx.fill();
 	}
-	
-	
-	/*
 	else
-	if( data[id].type == TEMPORAL_SLIDER )
+	if( data.type == TEMPORAL_SLIDER )
 	{
-		var max = data[id].options.max,
-			min = data[id].options.min,
-			labelStep = data[id].options.labelStep||timeMs(1),
-			dotStep = data[id].options.dotStep||timeMs(1);
+		var max = data.options.max,
+			min = data.options.min,
+			labelStep = data.options.labelStep||timeMs(1),
+			dotStep = data.options.dotStep||timeMs(1);
 
 		ctx.beginPath();
 
+		// labels
+		label( msToString(min,data.options.labelSeconds,data.options.labelMinutes), min );
 		for( var i=max; i>min; i-=labelStep )
-		{
-			var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
-			ctx.fillText( msToString(i,data[id].options.labelSeconds,data[id].options.labelMinutes), x, 15);
-		}
+			label( msToString(i,data.options.labelSeconds,data.options.labelMinutes), i );
+
+		// dots
+		dot( min );
 		for( var i=max; i>min; i-=dotStep )
-		{
-			var x = EXT/2+11+Math.round((i-min)/(max-min) * (width-22));
-			ctx.arc( x, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
-		}
+			dot( i );
 
-		ctx.fillText( msToString(min,data[id].options.labelSeconds,data[id].options.labelMinutes), EXT/2+9, 15);
-		ctx.arc( EXT/2+9, DOT_Y_POS, DOT_SIZE, 0, 2*Math.PI );
-
-		ctx.fillStyle = 'gray';
-		ctx.fill();
+		// thumb
+		thumb( data.options.value );
 	}
-	*/
+	
+	ctx.fillStyle = 'gray';
+	ctx.fill();
 }
 
 

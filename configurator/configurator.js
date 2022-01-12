@@ -75,7 +75,7 @@ const SECONDS_IN_DAY = 24*60*60;
 const SECONDS_IN_HOUR = 60*60;
 const SECONDS_IN_MINUTE = 60;
 
-function msToString( ms, showSeconds=true, showMinutes=true )
+export function msToString( ms, showSeconds=true, showMinutes=true )
 {
 	var seconds = Math.floor( ms/1000 ) % SECONDS_IN_DAY;
 	
@@ -105,7 +105,7 @@ const
 	NUMERIC_LIST_SLIDER = 10,
 	TEMPORAL_SLIDER = 11,
 	NUMERIC_RANGE_SLIDER = 12;
-export {NUMERIC_SLIDER,NUMERIC_LIST_SLIDER,NUMERIC_RANGE_SLIDER};
+export {NUMERIC_SLIDER,NUMERIC_LIST_SLIDER,NUMERIC_RANGE_SLIDER,TEMPORAL_SLIDER};
 
 // get a parameter
 function param( id, defaultValue )
@@ -1236,20 +1236,13 @@ export function addTimeSlider( id, name, defaultValue, options, info='', tags=''
 					onclick="toggleFav('${id}')">
 					${name} 
 				</td>
-				<td class="valuerow" style="min-width:10em;">
-					<input id="${id}"
-						class="slider"
-						type="range"
-						name="${id}"
-						min="${options.min}"
-						max="${options.max}"
-						value="${options.value}"
-						step="${options.step}">
-				</td>
+				<td class="valuerow" style="min-width:10em;" id="${id}"></td>
 				<td class="valuerow" style="width:1%;">
 					<span id="display-${id}"
 						class="value"
-						style="display:inline-block; width:${width}em;">
+						style="display:inline-block;
+						width:${width}em;">
+						${msToString(options.value,options.seconds)}
 					</span>
 				</td>
 				<td class="unit" style="width:3em;">${options.unit}</td>
