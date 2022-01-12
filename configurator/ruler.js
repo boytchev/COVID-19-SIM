@@ -23,6 +23,7 @@ var canvas = document.getElementById( 'ruler' ),
 	data = null,
 	width,
 	thumbX,
+	currentThumb = -1,
 	mouseDown = false;
 
 canvas.addEventListener( 'mousemove', onMouseMove );
@@ -189,6 +190,8 @@ function onMouseMove( event )
 
 function onClick( event )
 {
+	if( !mouseDown ) return;
+	
 	switch(	data.type )
 	{
 		case NUMERIC_SLIDER:
@@ -207,11 +210,16 @@ function onClick( event )
 				
 		case NUMERIC_RANGE_SLIDER:
 				var value = unpos( event.offsetX);
-				if( Math.abs(value-data.options.valueA) < Math.abs(value-data.options.valueB) )
+
+				if( currentThumb < -0.5 )
+					currentThumb = (Math.abs(value-data.options.valueA) < Math.abs(value-data.options.valueB)) ? 0 : 1;
+			
+				if( currentThumb == 0 )
 					data.options.valueA = value;
 				else
 					data.options.valueB = value;
-				data.display.innerHTML = data.options.valueA+'~'+data.options.valueB;
+
+				data.display.innerHTML = Math.min(data.options.valueA,data.options.valueB)+'~'+Math.max(data.options.valueA,data.options.valueB);
 				break;
 		
 		default:
@@ -232,6 +240,8 @@ function onMouseDown( event )
 function onMouseUp( event )
 {
 	mouseDown = false;
+	currentThumb = -1;
+	console.log('now\t',currentThumb);
 }
 
 
