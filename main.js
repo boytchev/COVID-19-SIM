@@ -55,7 +55,7 @@ var currentTime_elem = document.getElementById('time'),
 
 import './font.js';
 
-import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_AUTOROTATE_SPEED, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, DEBUG_FOLLOW_AGENT_HEALTH, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_ALLOW_UNDERGROUND} from './config.js';
+import {DEBUG_FORM_A_LINE, DEBUG_RANDOM_SEED, DEBUG_SUN_POSITION_GUI, EARTH_SIZE, GROUND_SIZE, DEBUG_AUTOROTATE, DEBUG_FOLLOW_AGENT, DEBUG_NAVMESH_SHOW_MESHES, VR, DEBUG_TIME_SPEED, DEBUG_RENDERER_INFO, DEBUG_FOLLOW_AGENT_HEALTH, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_ALLOW_UNDERGROUND} from './config.js';
 import {msToString, round} from './core.js';
 import {Nature, currentTimeMs, simulationPlaying, toggleSimulationPlayPause} from './nature/nature.js';
 
@@ -99,8 +99,8 @@ export var controls = new OrbitControls( camera, renderer.domElement );
 	controls.rotateSpeed = 0.3;
 	controls.panSpeed = 0.7;
 	controls.screenSpacePanning = false;
-	controls.autoRotate = DEBUG_AUTOROTATE;
-	controls.autoRotateSpeed = DEBUG_AUTOROTATE_SPEED;
+	controls.autoRotate = (DEBUG_AUTOROTATE != 0);
+	controls.autoRotateSpeed = DEBUG_AUTOROTATE;
 	controls.listenToKeyEvents( window );
 
 //	controls.lookAt( 0, 12, 0 );
@@ -232,7 +232,7 @@ export function animate()
 	else
 	{
 		// not in VR
-		//controls.update( deltaTimeReal );
+		if( controls.autoRotate ) controls.update( deltaTimeReal );
 		if( frame%6 == 0 ) renderer.render(scene, camera);
 	}
 	

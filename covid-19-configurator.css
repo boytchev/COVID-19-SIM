@@ -146,7 +146,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .block input[type="checkbox"] {
 	position: relative;
-	right: 0.5em;
+	right: 0em;
 	width: 0.8em;
 	height: 0.8em;
 }
@@ -161,19 +161,22 @@ input[type=number]::-webkit-outer-spin-button {
  
 .block .info {
 	position: relative;
-	top: -0.3em;
+	top: -0.1em;
 	font-size: 90%;
 	font-weight: 300;
 	padding-left: 1.2em;
 	color: DimGray;
+	text-align: justify;
 }
 
 .block .unit {
 	display: table-cell;
 	position: relative;
-	top: -0.1em;
+	padding-bottom: 0.1em;
 	font-weight: 300;
 	color: DimGray;
+	background-image: url(icons/dot.svg);
+	background-repeat: repeat-x;
 }
 
 .block .from-to {

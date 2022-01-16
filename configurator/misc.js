@@ -55,16 +55,11 @@ CFG.addHeader(
 	2, 'Rotation and motion', '', '',
 	'misc,rotation', {internal:true} );
 
-		CFG.addBoolean(
-			'dar', 'Auto rotate', false, {},
-			'If checked, the scene rotates continuously with speed defined by <em>Auto rotate speed</em>. The user can still use the mouse to rotate manually. If not checked, the scene does not move by itself.',
+		CFG.addNumericListSlider(
+			'dar', 'Auto rotate', 0, {unit:'°/df', values:[0,0.1,0.2,0.3,0.5,1,2]},
+			'The speed of automatic rotation of the scene measured in degrees per decaframe (degrees per 10 frames). The actual speed depends on the rendering speed (frames per second, fps). Speed 1°/df means a full revolution is completed in 60 seconds (at 60fps) or 25 seconds (at 144fps). The user can still use the mouse to rotate manually.',
 			'misc,rotation' );
-
-		CFG.addNumeric(
-			'dars', 'Auto rotate speed', 0.3, {min:0, max:1, step:0.1, unit:'rad/s', offset: 7},
-			'The speed of automatic rotation measure in radians per second. The value is effective only if <em>Auto rotate</em> is checked, otherwise it has no effect.',
-			'misc,rotation' );
-
+	
 		CFG.addBoolean(
 			'dau', 'Allow underground', false, {},
 			'If checked, allowes the viewer to go underground in non VR mode. If not checked, the viewer vertical position is restricted by the ground.',
@@ -76,11 +71,12 @@ CFG.addHeader(
 	'A navigational mesh (navmesh) is a structure defining locations and paths where people can walk. These parameters are used to visualize the navmesh.',
 	'misc,navmesh,floor,route,elevator,debug', {internal:true} );
 
-		CFG.addPercentage(
-			'dnmo', 'Navmesh opacity', 0, {min:0, max:1, step:0.25, internal:true},
+		CFG.addNumericSlider(
+			'dnmo', 'Navmesh opacity', 0, {min:0, max:100, step:25, unit: "%", percentage: true, internal:true},
 			'Percentage of opacity of the navmesh &ndash; crimson and orange areas showing locations of rooms, elevators, checkpoints, etc. At 100% the navmesh is fully opaque, while at 0% it is fully transparent. Navmeshes are shown on top of buildings and other 3D objects.',
 			'misc,navmesh,debug' );
-			
+
+	
 		CFG.addBoolean(
 			'dnmsf', 'Navmesh floors', false, {internal:true},
 			'If checked, generates images of navmesh rooms at the floor level. However, they are shown only if <em>Navmesh opacity</em> is not 0%.',
@@ -122,8 +118,8 @@ CFG.addHeader(
 			'If checked, an arrow is generated for each person pointing from home to office location.',
 			'misc,home,house,apartment,office,route,tracking' );
 
-		CFG.addNumeric(
-			'drpa', 'Routes per person', 1, {min:1, max:200, step:1, internal:true},
+		CFG.addNumericListSlider(
+			'drpa', 'Routes per person', 1, {values: [1, 5, 10, 20], internal:true},
 			'The number of routes generated for each person. Independent on the value, onle one of the routes is used. THe others only indicate what possibilities exists. This parameter is often used with <em>Show route</em> checked and <em>Agent count</em>=1.',
 			'misc,route' );
 

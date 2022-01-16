@@ -26,6 +26,9 @@ var canvas = document.getElementById( 'ruler' ),
 	currentThumb = -1,
 	mouseDown = false;
 
+canvas.addEventListener( 'touchmove', onMouseMove );
+canvas.addEventListener( 'touchstart', onMouseDown );
+canvas.addEventListener( 'touchend', onMouseUp );
 canvas.addEventListener( 'mousemove', onMouseMove );
 canvas.addEventListener( 'mousedown', onMouseDown );
 canvas.addEventListener( 'mouseup', onMouseUp );
@@ -185,12 +188,13 @@ function label( label, value )
 
 function onMouseMove( event )
 {
-	if( Math.abs(event.offsetX-thumbX) < THUMB_SIZE )
+	var x = (event.clientX || event.touches[0].clientX) - canvas.offsetLeft;
+	if( Math.abs(x-thumbX) < THUMB_SIZE )
 		event.target.style.cursor = 'pointer';
 	else
 		event.target.style.cursor = 'default';
 	
-	if( mouseDown ) onClick( event );
+	onClick( event );
 }
 
 
@@ -198,26 +202,27 @@ function onClick( event )
 {
 	if( !mouseDown ) return;
 	
+	var x = (event.clientX || event.touches[0].clientX) - canvas.offsetLeft,
+		value = unpos( x );
+
 	switch(	data.type )
 	{
 		case NUMERIC_SLIDER:
-				data.options.value = unpos( event.offsetX);
-				data.display.innerHTML = data.options.value;
+				data.options.value = value;
+				data.display.innerHTML = Math.round(100*value)/100;
 				break;
 				
 		case NUMERIC_LIST_SLIDER:
-				data.options.value = unpos( event.offsetX);
-				data.display.innerHTML = data.options.values[data.options.value];
+				data.options.value = value;
+				data.display.innerHTML = data.options.values[value];
 				break;
 				
 		case TEMPORAL_SLIDER:
-				data.options.value = unpos( event.offsetX);
-				data.display.innerHTML = msToString( data.options.value, data.options.seconds );
+				data.options.value = value;
+				data.display.innerHTML = msToString( value, data.options.seconds );
 				break;
 				
 		case NUMERIC_RANGE_SLIDER:
-				var value = unpos( event.offsetX);
-
 				if( currentThumb < -0.5 )
 					currentThumb = (Math.abs(value-data.options.valueA) < Math.abs(value-data.options.valueB)) ? 0 : 1;
 			
@@ -230,8 +235,6 @@ function onClick( event )
 				break;
 		
 		case TEMPORAL_RANGE_SLIDER:
-				var value = unpos( event.offsetX);
-
 				if( currentThumb < -0.5 )
 					currentThumb = (Math.abs(value-data.options.valueA) < Math.abs(value-data.options.valueB)) ? 0 : 1;
 			
@@ -263,7 +266,6 @@ function onMouseUp( event )
 {
 	mouseDown = false;
 	currentThumb = -1;
-//	console.log('now\t',currentThumb);
 }
 
 
@@ -282,8 +284,8 @@ function draw()
 	{
 		var max = data.options.max,
 			min = data.options.min,
-			labelStep = data.options.labelStep,
-			dotStep = data.options.dotStep || data.options.labelStep || 1;
+			labelStep = data.options.labelStep || data.options.step || 1,
+			dotStep = data.options.dotStep || labelStep || 1;
 
 		ctx.beginPath();
 		if( data.options.labels )

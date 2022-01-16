@@ -589,7 +589,7 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 			case NUMERIC_SLIDER:
 			case TEMPORAL_SLIDER:
 				if( (!onlyModified) || (data[id].options.value != data[id].defaultValue) )
-					cmd = data[id].options.percentage ? data[id].options.value/100 : data[id].options.value;
+					cmd = data[id].options.percentage ? data[id].options.value/100 : Math.round(100*data[id].options.value)/100;
 				break;
 			case NUMERIC_LIST_SLIDER:
 				if( (!onlyModified) || (data[id].options.values[data[id].options.value] != data[id].defaultValue) )
@@ -1081,10 +1081,10 @@ export function addNumericSlider( id, name, defaultValue, options, info='', tags
 					<span id="display-${id}"
 						class="value"
 						style="display:inline-block; width:${width}em;">
-						${options.value}
+						${Math.round(100*options.value)/100}
 					</span>
 				</td>
-				<td class="unit" style="width:3em;">${options.unit}</td>
+				<td class="unit" style="width:1%;">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="4">
 				${info} Range is from ${options.min} to ${options.max}. Default value is ${defaultValue}.
@@ -1172,7 +1172,7 @@ export function addNumericListSlider( id, name, defaultValue, options, info='', 
 						${options.values[options.value]}
 					</span>
 				</td>
-				<td class="unit" style="width:3em;">${options.unit}</td>
+				<td class="unit" style="width:1%">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="4">
 				${info} Range is from ${Math.min(...options.values)} to ${Math.max(...options.values)}. Default value is ${defaultValue}.
@@ -1424,10 +1424,10 @@ export function addTimeRangeSlider( id, name, defaultValueA, defaultValueB, opti
 				</td>
 				<td class="unit" style="width:3em;">${options.unit}</td>
 			</tr>
-			<tr class="info"><td colspan="4">
+			<tr class="info"><td colspan="3">
 				${info} Range for each bound is from ${msToString(options.min,options.seconds)} to ${msToString(options.max,options.seconds)}. Default value is ${msToString(defaultValueA,options.seconds)} to ${msToString(defaultValueB,options.seconds)}.
 				<div class="tags">${tags.split(',')}</div>
-			</td></tr>
+			</td><td></td></tr>
 		</table>`;
 
 			
