@@ -147,7 +147,7 @@ class Agent extends AgentBehaviour
 			// agent is not infected
 
 			// recovery of immune system
-			this.currentImmuneStrength = Math.min( this.currentImmuneStrength * (1+IMMUNE_RECOVERY_FACTOR*deltaTime), this.generalImmuneStrength );
+			this.currentImmuneStrength = Math.min( this.currentImmuneStrength * (1+IMMUNE_RECOVERY_FACTOR/3600*deltaTime), this.generalImmuneStrength );
 			
 			// get a list of agents in the same block
 			var otherAgents = this.position.block.agents;

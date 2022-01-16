@@ -10,7 +10,7 @@
 //
 
 const EXT = 100; // total gaps from left and right
-const DOT_Y_POS = 26;
+const DOT_Y_POS = 31;
 const DOT_SIZE = 3;	
 const THUMB_SIZE = 9;
 const ratio = 1.25*window.devicePixelRatio;
@@ -55,7 +55,7 @@ function show( )
 		
 	canvas.style.display = 'block';
 	canvas.style.left = (leftPos-EXT/2)+'px';
-	canvas.style.top = `calc(${topPos}px - 2em)`;
+	canvas.style.top = `calc(${topPos}px - 2em - 7px)`;
 	canvas.style.width = (width+EXT)+'px';
 	canvas.width = (width+EXT)*ratio;
 	canvas.height = (40)*ratio;
@@ -182,7 +182,13 @@ function thumb( value )
 
 function label( label, value )
 {
-	ctx.fillText( label, pos(value), 15);
+	var lines = (label+'').split( "|" ),
+		y = 20;
+	for( var i = lines.length-1; i>=0; i-- )
+	{
+		ctx.fillText( lines[i], pos(value), y);
+		y -= 10;
+	}
 }
 
 
@@ -214,7 +220,10 @@ function onClick( event )
 				
 		case NUMERIC_LIST_SLIDER:
 				data.options.value = value;
-				data.display.innerHTML = data.options.values[value];
+				if( data.options.display )
+					data.display.innerHTML = data.options.display(data.options.values[value]);
+				else
+					data.display.innerHTML = data.options.values[value];
 				break;
 				
 		case TEMPORAL_SLIDER:
@@ -231,7 +240,7 @@ function onClick( event )
 				else
 					data.options.valueB = value;
 
-				data.display.innerHTML = Math.min(data.options.valueA,data.options.valueB)+'~'+Math.max(data.options.valueA,data.options.valueB);
+				data.display.innerHTML = Math.round(100*Math.min(data.options.valueA,data.options.valueB))/100+'~'+Math.round(100*Math.max(data.options.valueA,data.options.valueB))/100;
 				break;
 		
 		case TEMPORAL_RANGE_SLIDER:
@@ -298,7 +307,7 @@ function draw()
 		{
 			// default labels
 			label( min, min );
-			for( var i=max; i>min; i-=labelStep ) label( i, i );
+			for( var i=max; i>min; i-=labelStep ) label( Math.round(100*i)/100, i );
 		}
 
 		// dots
@@ -324,7 +333,11 @@ function draw()
 		ctx.beginPath();
 		for( var i=0; i<=n; i++ )
 		{
-			label( data.options.values[i], i );
+			if( data.options.labels )
+				label( data.options.labels[i], i );
+			else
+				label( data.options.values[i], i );
+
 			dot( i );
 		}
 

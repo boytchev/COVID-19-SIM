@@ -40,6 +40,7 @@ h2.caption ~ .info{
 	font-weight: normal;
 	padding-left: 0em;
 	#color: DimGray;
+	text-align: justify;
 }
 
 h2.caption .logo {
@@ -62,6 +63,7 @@ h3.caption ~ .info{
 	font-weight: 300;
 	padding-left: 0em;
 	#color: DimGray;
+	text-align: justify;
 }
 
 h4.caption ~ .info{
@@ -72,6 +74,7 @@ h4.caption ~ .info{
 	padding-left: 0em;
 	top: -1em;
 	#color: DimGray;
+	text-align: justify;
 }
 
 /*.block:hover {
@@ -445,7 +448,7 @@ table:hover input.second-slider {
 canvas {
 	position: absolute;
 	width: 10em;
-	height: 40px;
+	height: 45px;
 	#border: solid 1px orange;
 	z-index: 1;
 	#pointer-events: none;

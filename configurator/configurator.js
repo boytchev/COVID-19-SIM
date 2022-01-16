@@ -71,19 +71,38 @@ export function timeMs( hours, minutes=0, seconds=0 )
 	return 1000*(seconds + 60*minutes + 60*60*hours);
 } // timeMs
 
+
+export function dayMs( days, hours=0, minutes=0, seconds=0 )
+{
+	return 1000*(seconds + 60*minutes + 60*60*hours + 60*60*24*days);
+} // dayMs
+
+
+
+
 const SECONDS_IN_DAY = 24*60*60;
 const SECONDS_IN_HOUR = 60*60;
 const SECONDS_IN_MINUTE = 60;
 
 export function msToString( ms, showSeconds=true, showMinutes=true )
 {
-	var seconds = Math.floor( ms/1000 ) % SECONDS_IN_DAY;
+	var seconds = Math.floor( ms/1000 );
 	
-	var hours = Math.floor( seconds / SECONDS_IN_HOUR ),
+	var days = Math.floor( seconds / SECONDS_IN_DAY );
+		seconds = seconds % SECONDS_IN_DAY;
+	
+	if( !seconds )
+	{
+		if( days == 1 ) return days+' day';
+		if( days ) return days+' days';
+	}
+	
+	var	hours = Math.floor( seconds / SECONDS_IN_HOUR ),
 		minutes = Math.floor( (seconds%SECONDS_IN_HOUR) / SECONDS_IN_MINUTE ),
 		seconds = seconds % SECONDS_IN_MINUTE;
-	
-	var str = (hours<10?'0':'')+hours;
+
+	var str = days?days+'d ':'';
+	str += (hours<10?'0':'')+hours;
 	if( showMinutes ) str += (minutes<10?':0':':')+minutes;
 	if( showSeconds) str += (seconds<10?':0':':')+seconds;
 
@@ -599,8 +618,8 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 			case TEMPORAL_RANGE_SLIDER:
 				if( (!onlyModified) || (data[id].options.valueA != data[id].defaultValueA) || (data[id].options.valueB != data[id].defaultValueB) )
 				{
-					var min = Math.min( data[id].options.valueA, data[id].options.valueB ),
-						max = Math.max( data[id].options.valueA, data[id].options.valueB );
+					var min = Math.round(100*Math.min( data[id].options.valueA, data[id].options.valueB ))/100,
+						max = Math.round(100*Math.max( data[id].options.valueA, data[id].options.valueB ))/100;
 					cmd = min+'~'+max;
 				}
 				break;
@@ -1024,7 +1043,12 @@ export function processTags()
 console.log('statistics');
 var cnt = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 for(var id in data) cnt[data[id].type]++;
-for(var i=0; i<14; i++) console.log(i+'\t',cnt[i]);
+for(var i=1; i<14; i++)
+{
+	if( i==NUMERIC_SLIDER )
+		console.log('\t-----');
+	console.log(i+'\t',cnt[i]);
+}
 
 }
 
@@ -1154,6 +1178,16 @@ export function addNumericListSlider( id, name, defaultValue, options, info='', 
 	
 	var width = Math.max( (testVal+'').length*0.58, 1.5 );
 	
+	if( options.displayWidth ) width = options.displayWidth;
+	
+	function display(x)
+	{
+		if( options.display )
+			return options.display( x );
+		else
+			return x;
+	}
+	
 	// construct the html
 	var html =`
 		<table id="block-${id}" class="block ${options.internal?'internal':''}" style="position: relative;">
@@ -1169,13 +1203,13 @@ export function addNumericListSlider( id, name, defaultValue, options, info='', 
 					<span id="display-${id}"
 						class="value"
 						style="display:inline-block; width:${width}em;">
-						${options.values[options.value]}
+						${display(options.values[options.value])}
 					</span>
 				</td>
 				<td class="unit" style="width:1%">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="4">
-				${info} Range is from ${Math.min(...options.values)} to ${Math.max(...options.values)}. Default value is ${defaultValue}.
+				${info} Range is from ${display(Math.min(...options.values))} to ${display(Math.max(...options.values))}. Default value is ${display(defaultValue)}.
 				<div class="tags">${tags.split(',')}</div>
 			</td></tr>
 		</table>`;
@@ -1339,7 +1373,7 @@ export function addNumericRangeSlider( id, name, defaultValueA, defaultValueB, o
 						${options.valueA}~${options.valueB}
 					</span>
 				</td>
-				<td class="unit" style="width:3em;">${options.unit}</td>
+				<td class="unit" style="width:1%;">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="4">
 				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${defaultValueA} to ${defaultValueB}.
