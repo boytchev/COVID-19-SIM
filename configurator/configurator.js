@@ -16,8 +16,8 @@
 //		addNumericList( id, name, defaultValue, options, info='', tags='' )
 //		addPercentage( id, name, defaultValue, options, info='', tags='' )
 //		addBoolean( id, name, defaultValue, options, info='', tags='' )
-//		addTime( id, name, defaultValue, options, info='', tags='' )
-//		addTimeRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
+//		addTimeSlider( id, name, defaultValue, options, info='', tags='' )
+//		addTimeRangeSlider( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
 //
 //	User interaction
 //		toggleFav( id )
@@ -84,12 +84,16 @@ const SECONDS_IN_DAY = 24*60*60;
 const SECONDS_IN_HOUR = 60*60;
 const SECONDS_IN_MINUTE = 60;
 
-export function msToString( ms, showSeconds=true, showMinutes=true )
+export function msToString( ms, showSeconds=true, showMinutes=true, showDays=true )
 {
 	var seconds = Math.floor( ms/1000 );
 	
-	var days = Math.floor( seconds / SECONDS_IN_DAY );
+	var days = 0;
+	if( showDays )
+	{
+		days = Math.floor( seconds / SECONDS_IN_DAY );
 		seconds = seconds % SECONDS_IN_DAY;
+	}
 	
 	if( !seconds )
 	{
@@ -114,17 +118,16 @@ export function msToString( ms, showSeconds=true, showMinutes=true )
 const
 	NUMERIC = 1,
 	BOOLEAN = 2,
-	TEMPORAL = 3,
-	PERCENTAGE = 4,
-	HEADER = 5,
-	NUMERIC_RANGE = 6,
-	NUMERIC_LIST = 7,
-	TEMPORAL_RANGE = 8,
-	NUMERIC_SLIDER = 9,
-	NUMERIC_LIST_SLIDER = 10,
-	TEMPORAL_SLIDER = 11,
-	NUMERIC_RANGE_SLIDER = 12,
-	TEMPORAL_RANGE_SLIDER = 13;
+	PERCENTAGE = 3,
+	HEADER = 4,
+	NUMERIC_RANGE = 5,
+	NUMERIC_LIST = 6,
+	NUMERIC_SLIDER = 7,
+	NUMERIC_LIST_SLIDER = 8,
+	TEMPORAL_SLIDER = 9,
+	NUMERIC_RANGE_SLIDER = 10,
+	TEMPORAL_RANGE_SLIDER = 11;
+	
 export {NUMERIC_SLIDER,NUMERIC_LIST_SLIDER,NUMERIC_RANGE_SLIDER,TEMPORAL_SLIDER,TEMPORAL_RANGE_SLIDER};
 
 // get a parameter
@@ -564,14 +567,6 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 				if( (!onlyModified) || (data[id].value.checked != data[id].defaultValue) )
 					cmd = data[id].value.checked?'true':'false';
 				break;
-			case TEMPORAL:
-				var arr = (data[id].value.value+':00:00').split(':'),
-					value = 1000*(parseInt(arr[0])*SECONDS_IN_HOUR + parseInt(arr[1])*SECONDS_IN_MINUTE + parseInt(arr[2]));
-				if( (!onlyModified) || (value != data[id].defaultValue) )
-				{
-					cmd = value;
-				}
-				break;
 			case PERCENTAGE:
 				if( (!onlyModified) || (data[id].value.value != Math.round(100*data[id].defaultValue)) )
 				{
@@ -591,18 +586,6 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 			case NUMERIC_LIST:
 				if( (!onlyModified) || (data[id].value.value != data[id].defaultValue) )
 					cmd = data[id].value.value;
-				break;
-			case TEMPORAL_RANGE:
-				var arrMin = (data[id].valueA.value+':00:00').split(':'),
-					arrMax = (data[id].valueB.value+':00:00').split(':'),
-					valueA = 1000*(parseInt(arrMin[0])*SECONDS_IN_HOUR + parseInt(arrMin[1])*SECONDS_IN_MINUTE + parseInt(arrMin[2])),
-					valueB = 1000*(parseInt(arrMax[0])*SECONDS_IN_HOUR + parseInt(arrMax[1])*SECONDS_IN_MINUTE + parseInt(arrMax[2]));
-				if( (!onlyModified) || (valueA != data[id].defaultValueA) || (valueB != data[id].defaultValueB) )
-				{
-					var min = Math.min( valueA, valueB );
-					var max = Math.max( valueA, valueB );
-					cmd = min+'~'+max;
-				}
 				break;
 
 			case NUMERIC_SLIDER:
@@ -636,78 +619,7 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 	return str;
 }
 
-export function addTime( id, name, defaultValue, options, info='', tags='' )
-{
-	// check id
-	
-	if( ids.indexOf(id) > -1 )
-		throw `error: Element with id="${id}" is already decalred.`;
 
-	ids.push( id );
-	
-	id_count++;
-	if( options.internal ) internal_id_count++;
-	
-	// set default values for missing options
-
-	options.min = msToString(options.min||0);
-	options.max = msToString(options.max||1000);
-	options.step = options.step||1;
-	options.value = msToString(param( id, defaultValue ));
-	options.tags = tags.split( ',' );
-	
-	allTags.push( ...options.tags );
-
-//console.log('reading',param( id, defaultValue ),'as', options.value);
-	if( predefinedFavs )
-		options.fav = predefinedFavs.indexOf(id)>=0;
-	
-	// construct the html
-	
-	var html =`
-		<table id="block-${id}"  class="block ${options.internal?'internal':''}">
-			<tr>
-				<td id="name-${id}"
-					width="1%"
-					class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">
-					${name} 
-				</td>
-				<td class="valuerow">
-					<input id="${id}"
-						class="value"
-						type="time"
-						name="${id}"
-						value="${options.value}"
-						min="${options.min}"
-						max="${options.max}"
-						${options.value?'checked':''}>
-				</td>
-			</tr>
-			<tr class="info"><td colspan="2">
-				${info} Range is from ${options.min} to ${options.max}. Default value is ${msToString(defaultValue)}.
-				<div class="tags">${tags.split(',')}</div>
-			</td></tr>
-		</table>`;
-
-	// create a new dom element
-	
-	var block = document.createElement('div');
-		block.innerHTML = html;
-	
-	// insert in dom 
-	
-	document.getElementById("blocks").appendChild( block );
-	
-	data[id] = {
-		type:	TEMPORAL,
-		block:	document.getElementById('block-'+id),
-		name:	document.getElementById('name-'+id),
-		value:	document.getElementById(id),
-		defaultValue: defaultValue,
-		options: options,
-	}
-	
-}
 
 var ID = 1;
 
@@ -925,95 +837,6 @@ export function addNumericList( id, name, defaultValue, options, info='', tags='
 	data[id].value.value = options.value;
 }
 
-
-
-export function addTimeRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
-{
-	// check id
-	
-	if( ids.indexOf(id) > -1 )
-		throw `error: Element with id="${id}" is already decalred.`;
-
-	ids.push( id );
-	
-	id_count++;
-	if( options.internal ) internal_id_count++;
-	
-	// set default values for missing options
-
-	options.min = msToString(options.min||0);
-	options.max = msToString(options.max||1000);
-	options.step = options.step||1;
-	options.valueA = msToString(param2( id, defaultValueA, defaultValueB )[0]);
-	options.valueB = msToString(param2( id, defaultValueA, defaultValueB )[1]);
-	options.tags = tags.split( ',' );
-	options.unit = options.unit||'';
-	
-	allTags.push( ...options.tags );
-	
-	if( predefinedFavs )
-		options.fav = predefinedFavs.indexOf(id)>=0;
-	
-	// construct the html
-	var html =`
-		<table id="block-${id}" class="block ${options.internal?'internal':''}">
-			<tr>
-				<td id="name-${id}"
-					width="1%"
-					class="name ${options.fav?'fav':''}"
-					onclick="toggleFav('${id}')">
-					${name}
-				</td>
-				<td class="valuerow">
-					<input id="${id}-min"
-						class="value"
-						type="time"
-						name="${id}"
-						min="${options.min}"
-						max="${options.max}"
-						value="${options.valueA}"
-						step="${options.step}">
-					<span class="from-to">&#x223C;</span>	
-					<input id="${id}-max"
-						class="value"
-						type="time"
-						name="${id}"
-						min="${options.min}"
-						max="${options.max}"
-						value="${options.valueB}"
-						step="${options.step}">
-				</td>
-			</tr>
-			<tr class="info"><td colspan="2">
-				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${msToString(defaultValueA)} to ${msToString(defaultValueB)}.
-				<div class="tags">${tags.split(',')}</div>
-			</td></tr>
-		</table>`;
-
-			
-
-
-	// create a new dom element
-	
-	var block = document.createElement('div');
-		block.innerHTML = html;
-	
-	// insert in dom 
-	
-	document.getElementById("blocks").appendChild( block );
-	
-	data[id] = {
-		type:	TEMPORAL_RANGE,
-		block:	document.getElementById('block-'+id),
-		name:	document.getElementById('name-'+id),
-		valueA:	document.getElementById(id+'-min'),
-		valueB:	document.getElementById(id+'-max'),
-		defaultValueA: defaultValueA,
-		defaultValueB: defaultValueB,
-		options: options,
-	}
-	
-}
 
 
 export function processTags()
@@ -1285,13 +1108,13 @@ export function addTimeSlider( id, name, defaultValue, options, info='', tags=''
 						class="value"
 						style="display:inline-block;
 						width:${width}em;">
-						${msToString(options.value,options.seconds)}
+						${msToString(options.value,options.seconds,options.minutes,options.days)}
 					</span>
 				</td>
-				<td class="unit" style="width:3em;">${options.unit}</td>
+				<td class="unit" style="width:1%;">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="4">
-				${info} Range is from ${msToString(options.min,options.seconds)} to ${msToString(options.max,options.seconds)}. Default value is ${msToString(defaultValue,options.seconds)}.
+				${info} Range is from ${msToString(options.min,options.seconds,options.minutes,options.days)} to ${msToString(options.max,options.seconds,options.minutes,options.days)}. Default value is ${msToString(defaultValue,options.seconds,options.minutes,options.days)}.
 				<div class="tags">${tags.split(',')}</div>
 			</td></tr>
 		</table>`;
@@ -1436,7 +1259,7 @@ export function addTimeRangeSlider( id, name, defaultValueA, defaultValueB, opti
 		options.fav = predefinedFavs.indexOf(id)>=0;
 
 	// calculate width of field
-	var width = options.seconds ? 9 : 6.5;
+	var width = options.seconds ? 9 : 6;
 
 	// construct the html
 	var html =`
@@ -1456,7 +1279,7 @@ export function addTimeRangeSlider( id, name, defaultValueA, defaultValueB, opti
 						${msToString(options.valueA,options.seconds)}~${msToString(options.valueB,options.seconds)}
 					</span>
 				</td>
-				<td class="unit" style="width:3em;">${options.unit}</td>
+				<td class="unit" style="width:1%;">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="3">
 				${info} Range for each bound is from ${msToString(options.min,options.seconds)} to ${msToString(options.max,options.seconds)}. Default value is ${msToString(defaultValueA,options.seconds)} to ${msToString(defaultValueB,options.seconds)}.

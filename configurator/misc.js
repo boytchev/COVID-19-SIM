@@ -119,7 +119,7 @@ CFG.addHeader(
 			'misc,home,house,apartment,office,route,tracking' );
 
 		CFG.addNumericListSlider(
-			'drpa', 'Routes per person', 1, {values: [1, 5, 10, 20], internal:true},
+			'drpa', 'Routes per person', 1, {values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20], internal:true},
 			'The number of routes generated for each person. Independent on the value, onle one of the routes is used. THe others only indicate what possibilities exists. This parameter is often used with <em>Show route</em> checked and <em>Agent count</em>=1.',
 			'misc,route' );
 

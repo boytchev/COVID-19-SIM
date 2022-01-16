@@ -228,7 +228,7 @@ function onClick( event )
 				
 		case TEMPORAL_SLIDER:
 				data.options.value = value;
-				data.display.innerHTML = msToString( value, data.options.seconds );
+				data.display.innerHTML = msToString( value, data.options.seconds, data.options.minutes, data.options.days );
 				break;
 				
 		case NUMERIC_RANGE_SLIDER:
@@ -355,9 +355,9 @@ function draw()
 		ctx.beginPath();
 
 		// labels
-		label( msToString(min,data.options.labelSeconds,data.options.labelMinutes), min );
+		label( msToString(min,data.options.labelSeconds,data.options.labelMinutes,data.options.days), min );
 		for( var i=max; i>min; i-=labelStep )
-			label( msToString(i,data.options.labelSeconds,data.options.labelMinutes), i );
+			label( msToString(i,data.options.labelSeconds,data.options.labelMinutes,data.options.days), i );
 
 		// dots
 		dot( min );
