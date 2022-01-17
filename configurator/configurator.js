@@ -117,10 +117,11 @@ export function msToString( ms, showSeconds=true, showMinutes=true, showDays=tru
 
 const
 	NUMERIC = 1,
-	BOOLEAN = 2,
-	PERCENTAGE = 3,
-	HEADER = 4,
-	NUMERIC_RANGE = 5,
+	PERCENTAGE = 2,
+	NUMERIC_RANGE = 3,
+	
+	BOOLEAN = 4,
+	HEADER = 5,
 	NUMERIC_LIST = 6,
 	NUMERIC_SLIDER = 7,
 	NUMERIC_LIST_SLIDER = 8,
@@ -868,7 +869,7 @@ var cnt = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 for(var id in data) cnt[data[id].type]++;
 for(var i=1; i<=11; i++)
 {
-	if( i==NUMERIC_SLIDER )
+	if( i==BOOLEAN )
 		console.log('\t-----');
 	console.log(i+'\t',cnt[i]);
 }
@@ -911,6 +912,7 @@ export function addNumericSlider( id, name, defaultValue, options, info='', tags
 		testVal = Math.round( 1000000*testVal )/1000000;
 	
 	var width = Math.max( (testVal+'').length*0.58, 1.5 );
+	if( options.min < 0 ) width += 0.5;
 
 
 	// construct the html

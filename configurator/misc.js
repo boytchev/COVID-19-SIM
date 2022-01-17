@@ -72,7 +72,7 @@ CFG.addHeader(
 	'misc,navmesh,floor,route,elevator,debug', {internal:true} );
 
 		CFG.addNumericSlider(
-			'dnmo', 'Navmesh opacity', 0, {min:0, max:100, step:25, unit: "%", percentage: true, internal:true},
+			'dnmo', 'Navmesh opacity', 0, {min:0, max:100, step:25, unit: "%", percentage: true, labels:[0, 'transparent', 25, 25, 50, 50,75, 75, 100, 'opaque'], internal:true},
 			'Percentage of opacity of the navmesh &ndash; crimson and orange areas showing locations of rooms, elevators, checkpoints, etc. At 100% the navmesh is fully opaque, while at 0% it is fully transparent. Navmeshes are shown on top of buildings and other 3D objects.',
 			'misc,navmesh,debug' );
 
