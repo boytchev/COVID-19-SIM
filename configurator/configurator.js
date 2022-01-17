@@ -554,7 +554,7 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 	for( var id in data )
 	{
 		if( skipConfigs && data[id].options.config ) continue;
-		
+	
 		var cmd = null;
 
 		switch( data[id].type )
@@ -1233,6 +1233,7 @@ export function addNumericRangeSlider( id, name, defaultValueA, defaultValueB, o
 	
 export function addTimeRangeSlider( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
 {
+
 	// check id
 	
 	if( ids.indexOf(id) > -1 )
@@ -1344,3 +1345,5 @@ export function onInputNumericSlider( event )
 			throw 'Invalid configuration parameter type "'+id+'"';
 	}
 }
+
+

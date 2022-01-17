@@ -122,7 +122,7 @@ CFG.addHeader(
 var lightAM = {
 		min: CFG.timeMs(4),
 		max: CFG.timeMs(10),
-		step: CFG.timeMs(0,10),
+		step: CFG.timeMs(0,5),
 		seconds: false,
 		labelStep: CFG.timeMs(2),
 		dotStep: CFG.timeMs(1),
@@ -136,17 +136,17 @@ CFG.addHeader(
 	'time,morning,light,house', {internal:true} );
 
 		CFG.addTimeRangeSlider(
-			'lhan', 'House AM lights on', CFG.timeMs(4,30), CFG.timeMs(5,30), lightAM,
+			'lhan', 'House AM lights on', CFG.timeMs(4,30), CFG.timeMs(5,30), {...lightAM},
 			'Time interval in the morning when house lights are turned on.',
 			'time,morning,light,house' );
 
 		CFG.addTimeRangeSlider(
-			'lhaf', 'House AM lights off', CFG.timeMs(6,30), CFG.timeMs(7), lightAM,
+			'lhaf', 'House AM lights off', CFG.timeMs(6,30), CFG.timeMs(7), {...lightAM},
 			'Time interval in the morning when house lights are turned off.',
 			'time,morning,light,house' );
 
 		CFG.addTimeRangeSlider(
-			'lhai', 'House AM lights max', CFG.timeMs(4,40), CFG.timeMs(6,50), lightAM,
+			'lhai', 'House AM lights max', CFG.timeMs(4,40), CFG.timeMs(6,50), {...lightAM},
 			'Time interval in the morning when house lights are fully lit. This interval must be between the corresponding <em>Lights on</em> and <em>Lights off</em>. Lights outside this interval are faded.',
 			'time,morning,light,house' );
 
@@ -155,17 +155,17 @@ CFG.addHeader(
 	'time,morning,light,apartment', {internal:true} );
 
 		CFG.addTimeRangeSlider(
-			'laan', 'Apartment AM lights on', CFG.timeMs(4,30), CFG.timeMs(5,30), lightAM,
+			'laan', 'Apartment AM lights on', CFG.timeMs(4,30), CFG.timeMs(5,30), {...lightAM},
 			'Time interval in the morning when apartment lights are turned on.',
 			'time,morning,light,apartment' );
 
 		CFG.addTimeRangeSlider(
-			'laaf', 'Apartment AM lights off', CFG.timeMs(6,30), CFG.timeMs(7), lightAM,
+			'laaf', 'Apartment AM lights off', CFG.timeMs(6,30), CFG.timeMs(7), {...lightAM},
 			'Time interval in the morning when apartment lights are turned off.',
 			'time,morning,light,apartment' );
 
 		CFG.addTimeRangeSlider(
-			'laai', 'Apartment AM lights max', CFG.timeMs(4,40), CFG.timeMs(6,50), lightAM,
+			'laai', 'Apartment AM lights max', CFG.timeMs(4,40), CFG.timeMs(6,50), {...lightAM},
 			'Time interval in the morning when apartment lights are fully lit. This interval must be between the corresponding <em>Lights on</em> and <em>Lights off</em>. Lights outside this interval are faded.',
 			'time,morning,light,apartment' );
 
@@ -174,17 +174,17 @@ CFG.addHeader(
 	'time,morning,light,office', {internal:true} );
 
 		CFG.addTimeRangeSlider(
-			'loan', 'Office AM lights on', CFG.timeMs(5,30), CFG.timeMs(6,10), lightAM,
+			'loan', 'Office AM lights on', CFG.timeMs(5,30), CFG.timeMs(6,10), {...lightAM},
 			'Time interval in the morning when office lights are turned on.',
 			'time,morning,light,office' );
 
 		CFG.addTimeRangeSlider(
-			'loaf', 'Office AM lights off', CFG.timeMs(6,10), CFG.timeMs(6,30), lightAM,
+			'loaf', 'Office AM lights off', CFG.timeMs(6,10), CFG.timeMs(6,30), {...lightAM},
 			'Time interval in the morning when office lights are turned off.',
 			'time,morning,light,office' );
 
 		CFG.addTimeRangeSlider(
-			'loai', 'Office AM lights max', CFG.timeMs(5,40), CFG.timeMs(6), lightAM,
+			'loai', 'Office AM lights max', CFG.timeMs(5,40), CFG.timeMs(6), {...lightAM},
 			'Time interval in the morning, when office lights are fully lit. This interval must be between the corresponding <em>Lights on</em> and <em>Lights off</em>. Lights outside this interval are faded.',
 			'time,morning,light,office' );
 
@@ -199,7 +199,7 @@ CFG.addHeader(
 var lightPM = {
 		min: CFG.timeMs(17),
 		max: CFG.timeMs(23),
-		step: CFG.timeMs(0,10),
+		step: CFG.timeMs(0,5),
 		seconds: false,
 		labelStep: CFG.timeMs(2),
 		dotStep: CFG.timeMs(1),
@@ -213,17 +213,17 @@ CFG.addHeader(
 	'time,evening,light,house', {internal:true} );
 
 		CFG.addTimeRangeSlider(
-			'lhpn', 'House PM lights on', CFG.timeMs(17,45), CFG.timeMs(18,30), lightPM,
+			'lhpn', 'House PM lights on', CFG.timeMs(17,45), CFG.timeMs(18,30), {...lightPM},
 			'Time interval in the evening when house lights are turned on.',
 			'time,evening,light,house' );
 
 		CFG.addTimeRangeSlider(
-			'lhpf', 'House PM lights off', CFG.timeMs(21), CFG.timeMs(23), lightPM,
+			'lhpf', 'House PM lights off', CFG.timeMs(21), CFG.timeMs(23), {...lightPM},
 			'Time interval in the evening when house lights are turned off.',
 			'time,evening,light,house' );
 
 		CFG.addTimeRangeSlider(
-			'lhpi', 'House PM lights max', CFG.timeMs(17,55), CFG.timeMs(22,50), lightPM,
+			'lhpi', 'House PM lights max', CFG.timeMs(17,55), CFG.timeMs(22,50), {...lightPM},
 			'Time interval in the evening when house lights are fully lit. This interval must be between the corresponding <em>Lights on</em> and <em>Lights off</em>. Lights outside this interval are faded.',
 			'time,evening,light,house' );
 
@@ -232,17 +232,17 @@ CFG.addHeader(
 	'time,evening,light,apartment', {internal:true} );
 
 		CFG.addTimeRangeSlider(
-			'lapn', 'Apartment PM lights on', CFG.timeMs(17,45), CFG.timeMs(18,30), lightPM,
+			'lapn', 'Apartment PM lights on', CFG.timeMs(17,45), CFG.timeMs(18,30), {...lightPM},
 			'Time interval in the evening when apartment lights are turned on.',
 			'time,evening,light,apartment' );
 
 		CFG.addTimeRangeSlider(
-			'lapf', 'Apartment PM lights off', CFG.timeMs(21), CFG.timeMs(23), lightPM,
+			'lapf', 'Apartment PM lights off', CFG.timeMs(21), CFG.timeMs(23), {...lightPM},
 			'Time interval in the evening when apartment lights are turned off.',
 			'time,evening,light,apartment' );
 
 		CFG.addTimeRangeSlider(
-			'lapi', 'Apartment PM lights max', CFG.timeMs(17,55), CFG.timeMs(22,50), lightPM,
+			'lapi', 'Apartment PM lights max', CFG.timeMs(17,55), CFG.timeMs(22,50), {...lightPM},
 			'Time interval in the evening when apartment lights are fully lit. This interval must be between the corresponding <em>Lights on</em> and <em>Lights off</em>. Lights outside this interval are faded.',
 			'time,evening,light,apartment' );
 
@@ -251,16 +251,16 @@ CFG.addHeader(
 	'time,evening,light,office', {internal:true} );
 
 		CFG.addTimeRangeSlider(
-			'lopn', 'Office PM lights on', CFG.timeMs(17), CFG.timeMs(17,30), lightPM,
+			'lopn', 'Office PM lights on', CFG.timeMs(17), CFG.timeMs(17,30), {...lightPM},
 			'Time interval in the evening when office lights are turned on.',
 			'time,evening,light,office' );
 
 		CFG.addTimeRangeSlider(
-			'lopf', 'Office PM lights off', CFG.timeMs(18), CFG.timeMs(22), lightPM,
+			'lopf', 'Office PM lights off', CFG.timeMs(18), CFG.timeMs(22), {...lightPM},
 			'Time interval in the evening when office lights are turned off.',
 			'time,evening,light,office' );
 
 		CFG.addTimeRangeSlider(
-			'lopi', 'Office PM lights max', CFG.timeMs(18), CFG.timeMs(22,50), lightPM,
+			'lopi', 'Office PM lights max', CFG.timeMs(18), CFG.timeMs(21), {...lightPM},
 			'Time interval in the evening, when office lights are fully lit. This interval must be between the corresponding <em>Lights on</em> and <em>Lights off</em>. Lights outside this interval are faded.',
 			'time,evening,light,office' );

@@ -253,7 +253,7 @@ export const AGENTS_CAST_SHADOWS = param('acs',false);
 export const LAMP_OFFICE_AM_MS = new Range(
 				param2('loan',new Range( timeMs(5,30), timeMs(6,10) )),
 				param2('loaf',new Range( timeMs(6,10), timeMs(6,30) )) );
-var INTENSITY_MS = param2('loai',new Range( timeMs(5,50), timeMs(6) ));
+var INTENSITY_MS = param2('loai',new Range( timeMs(5,40), timeMs(6) ));
 export const LAMP_OFFICE_AM_INTENSITY_MS = new Range(
 				new Range( LAMP_OFFICE_AM_MS.min.min, INTENSITY_MS.min ),
 				new Range( INTENSITY_MS.max, LAMP_OFFICE_AM_MS.max.max ) );
@@ -277,7 +277,7 @@ export const LAMP_APARTMENT_AM_INTENSITY_MS = new Range(
 				
 export const LAMP_APARTMENT_PM_MS = new Range(
 				param2('lapn',new Range( timeMs(17,45), timeMs(18,30) )),
-				param2('lapf',new Range( timeMs(21), timeMs(23,30) )) );
+				param2('lapf',new Range( timeMs(21), timeMs(23) )) );
 var INTENSITY_MS = param2('lapi',new Range( timeMs(17,55), timeMs(22,50) ));
 export const LAMP_APARTMENT_PM_INTENSITY_MS = new Range(
 				new Range( LAMP_APARTMENT_PM_MS.min.min, INTENSITY_MS.min ),
@@ -293,7 +293,7 @@ export const LAMP_HOUSE_AM_INTENSITY_MS = new Range(
 				
 export const LAMP_HOUSE_PM_MS = new Range(
 				param2('lhpn',new Range( timeMs(17,45), timeMs(18,30) )),
-				param2('lhpf',new Range( timeMs(21), timeMs(23,30) )) );
+				param2('lhpf',new Range( timeMs(21), timeMs(23) )) );
 var INTENSITY_MS = param2('lhpi',new Range( timeMs(17,55), timeMs(22,50) ));
 export const LAMP_HOUSE_PM_INTENSITY_MS = new Range(
 				new Range( LAMP_HOUSE_PM_MS.min.min, INTENSITY_MS.min ),
