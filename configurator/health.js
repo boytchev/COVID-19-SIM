@@ -178,6 +178,6 @@ CFG.addHeader(
 
 		CFG.addNumericSlider(
 			'dfah', 'Follow person health', -1, {min:-1, max:20, step:1, internal:true, labels:[-1,"no|one",0,0,5,5,10,10,15,15,20,20]},
-			'If this parameter cointains an existing person id, then the health status of this person is printed in the JS console. If the value is -1, such printing is turned off. Note, that onlye one of the first 20 persons can be followed.',
+			'If this parameter cointains an existing person id, then the health status of this person is printed in the JS console. If the value is -1, such printing is turned off. Note, that only one of the first 20 persons can be followed.',
 			'health,tracking' );
 

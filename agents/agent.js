@@ -384,8 +384,7 @@ export class Adult extends Agent
 
 		this.sysType = 'Adult';
 
-		this.height = THREE.Math.mapLinear( this.age, 18, 100, AGENT_HEIGHT_ADULT.min, AGENT_HEIGHT_ADULT.max );
-		this.height = this.height * THREE.Math.randFloat( 0.9, 1.1 );
+		this.height = AGENT_HEIGHT_ADULT.randFloat();
 		
 	} // Adult.constructor
 } // Adult

@@ -208,7 +208,7 @@ export const AGENT_AGE_YEARS = param2('aay',new Range( 0, 100 ));			// in years
 
 //TODO-TEMP export const AGENT_WALKING_SPEED = new Range( 0.8, 2.0 );		// in meters/second
 export const AGENT_HEIGHT_CHILD = param2('ahc',new Range( 0.5, 1.7 ));		// in meters
-export const AGENT_HEIGHT_ADULT = param2('aha',new Range( 1.8, 1.4 ));		// in meters
+export const AGENT_HEIGHT_ADULT = param2('aha',new Range( 1.6, 1.9 ));		// in meters
 
 export const AGENT_ADULTS_PER_HOUSE 	= param2('aph',new Range( 1, 4 ));
 export const AGENT_CHILDREN_PER_HOUSE   = param2('cph',new Range( 0, 3 ));
@@ -333,18 +333,13 @@ export const AGENT_DRAW_MODE_CLOTHES	= 7; // shader-defined clothes
 
 export const AGENT_DRAW_MODE = param('adm',AGENT_DRAW_MODE_CLOTHES);
 
-var mr = param('mr',1), // male ratio
-	fr = param('fr',1); // female ration
-if( mr+fr<0.1 ) mr = fr = 1;
-export const MALE_RATIO = mr/(mr+fr); // 0.5=50%
+export const MALE_RATIO = param('fmr',0.5); // 0.5=50%
 
-var fcr = param('fcr',1), // formal ratio
-	ccr = param('ccr',1), // casual ratio
-	icr = param('icr',0); // intimate ratio
-if( fcr+ccr+icr<0.1 ) fcr = ccr = 1;
-export const FORMAL_CLOTHING_RATIO = fcr/(fcr+ccr+icr);
-export const CASUAL_CLOTHING_RATIO = (fcr+ccr)/(fcr+ccr+icr);
-
+var fcr = param('fcr',0.5), // casual/formal ratio
+	dur = param('dur',0);   // undressed/dressed ratio
+export const FORMAL_CLOTHING_RATIO = (1-fcr)*(1-dur);
+export const CASUAL_CLOTHING_RATIO = (1-dur);
+console.log(FORMAL_CLOTHING_RATIO,CASUAL_CLOTHING_RATIO,1-CASUAL_CLOTHING_RATIO);
 
 export const MASK_INHALE_EFFECTIVENESS = param( 'mie', 0.3 );
 export const MASK_EXHALE_EFFECTIVENESS = param( 'mee', 0.9 );

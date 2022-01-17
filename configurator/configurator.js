@@ -866,7 +866,7 @@ export function processTags()
 console.log('statistics');
 var cnt = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 for(var id in data) cnt[data[id].type]++;
-for(var i=1; i<14; i++)
+for(var i=1; i<=11; i++)
 {
 	if( i==NUMERIC_SLIDER )
 		console.log('\t-----');

@@ -10,7 +10,7 @@
 //
 
 const EXT = 100; // total gaps from left and right
-const DOT_Y_POS = 31;
+const DOT_Y_POS = 33;
 const DOT_SIZE = 3;	
 const THUMB_SIZE = 9;
 const ratio = 1.25*window.devicePixelRatio;
@@ -58,7 +58,7 @@ function show( )
 	canvas.style.top = `calc(${topPos}px - 2em - 7px)`;
 	canvas.style.width = (width+EXT)+'px';
 	canvas.width = (width+EXT)*ratio;
-	canvas.height = (40)*ratio;
+	canvas.height = (45)*ratio;
 	
 	ctx.scale( ratio, ratio );
 	ctx.font = '12px Roboto';
@@ -187,7 +187,7 @@ function label( label, value )
 	for( var i = lines.length-1; i>=0; i-- )
 	{
 		ctx.fillText( lines[i], pos(value), y);
-		y -= 10;
+		y -= 12;
 	}
 }
 
@@ -282,7 +282,7 @@ function onMouseUp( event )
 function draw()
 {
 	// clear
-	ctx.clearRect( 0, 0, width+EXT, 40 );
+	ctx.clearRect( 0, 0, width+EXT, 45 );
 	
 	// draw axis
 	ctx.fillStyle = 'lightgray';
@@ -334,7 +334,7 @@ function draw()
 		for( var i=0; i<=n; i++ )
 		{
 			if( data.options.labels )
-				label( data.options.labels[i], i );
+				label( data.options.labels[i]||data.options.values[i], i );
 			else
 				label( data.options.values[i], i );
 
