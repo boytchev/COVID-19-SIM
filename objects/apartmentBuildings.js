@@ -438,10 +438,13 @@ export class ApartmentBuildings
 				var z = (Math.max( c.z, d.z ) + Math.min( a.z, b.z ))/2;
 				var dX = Math.min( b.x, c.x ) - Math.max( a.x, d.x );
 
+				// is building too small
+				if( dX < APARTMENT_BUILDING_WIDTH.min ) return;
+				
 				var maxFloors = 2+MAX_APARTMENT_BUILDING_FLOORS*blocks.apartments[i].height,
 					floors = Math.max(2,Math.round( THREE.Math.randFloat(maxFloors/2,maxFloors) )),
 					width = round( APARTMENT_BUILDING_WIDTH.randInt(), 2 );
-			
+console.log(dX,width);	
 				var apartment = new ApartmentBuilding(
 									new Pos(x,z,block),
 									new Size(round(dX,2),round(width,2)),
@@ -472,10 +475,14 @@ export class ApartmentBuildings
 				var z = (Math.max( c.z, d.z ) + Math.min( a.z, b.z ))/2;
 				var dZ = Math.min( a.z, b.z ) - Math.max( d.z, c.z );
 
+				// is building too small
+				if( dZ < APARTMENT_BUILDING_WIDTH.min ) return;
+
 				var maxFloors = 2+MAX_APARTMENT_BUILDING_FLOORS*blocks.apartments[i].height,
 					floors = Math.max(2,Math.round( THREE.Math.randFloat(maxFloors/2,maxFloors) )),
 					width = round( APARTMENT_BUILDING_WIDTH.randInt(), 2 );
 
+console.log(width,dZ);	
 				var apartment = new ApartmentBuilding(
 									new Pos(x,z,block),
 									new Size(round(width,2),round(dZ,2)),

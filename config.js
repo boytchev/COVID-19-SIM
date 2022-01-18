@@ -306,7 +306,6 @@ export const INFECTION_PATTERNS_COUNT = param('ipc',10);
 var INFECTION_DURATION_MS = param('itm',timeMs(14*24));
 export const INFECTION_TOTAL_MS = new Range( 0.8*INFECTION_DURATION_MS, 1.2*INFECTION_DURATION_MS );
 
-console.log( msToString(INFECTION_TOTAL_MS.min), msToString(INFECTION_TOTAL_MS.max) );
 
 
 export const INFECTION_OVERHEAD_INDICATOR = param('ioi',false);
@@ -339,7 +338,6 @@ var fcr = param('fcr',0.5), // casual/formal ratio
 	dur = param('dur',0);   // undressed/dressed ratio
 export const FORMAL_CLOTHING_RATIO = (1-fcr)*(1-dur);
 export const CASUAL_CLOTHING_RATIO = (1-dur);
-console.log(FORMAL_CLOTHING_RATIO,CASUAL_CLOTHING_RATIO,1-CASUAL_CLOTHING_RATIO);
 
 export const MASK_INHALE_EFFECTIVENESS = param( 'mie', 0.3 );
 export const MASK_EXHALE_EFFECTIVENESS = param( 'mee', 0.9 );
