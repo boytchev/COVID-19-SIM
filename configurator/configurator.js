@@ -26,6 +26,7 @@
 //		debugConfigurator()
 //		shareConfigurator()
 //		toggleFilter( event )
+//		toggleLatestFilter( )
 //
 
 // templates
@@ -383,6 +384,7 @@ export function infoConfigurator()
 export function showAllConfigurator()
 {
 	var elem = document.getElementById( 'cfg-all' ).click();
+	toggleLatestFilter();
 }
 
 export function resetConfigurator()
@@ -420,6 +422,25 @@ export function shareConfigurator()
 	
 	prompt( 'Generating shareable URL is experimental feature. Grab the URL from below:', sharedURL );
 }
+
+export function toggleLatestFilter( )
+{
+	var filter = localStorage.getItem( LOCAL_STORAGE_FILTER ) || 'fav',
+		elem = document.getElementById( filter );
+		
+	if( elem )
+	{
+		toggleFilter( {target:elem} );
+	}
+	else
+	{
+		elem = document.getElementById( 'tags' );
+		elem.classList.toggle( 'selected', true );
+		elem.value = filter;
+		toggleFilter( {target:elem} );
+	}
+}
+
 
 export function toggleFilter( event )
 {

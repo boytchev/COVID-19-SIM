@@ -131,20 +131,7 @@
 		document.getElementById( 'start_button_1' ).onclick = CFG.prepareValues;
 		document.getElementById( 'start_button_2' ).onclick = CFG.prepareValues;
 
-		var filter = localStorage.getItem( CFG.LOCAL_STORAGE_FILTER ) || 'fav',
-			elem = document.getElementById( filter );
-			
-		if( elem )
-		{
-			CFG.toggleFilter( {target:elem} );
-		}
-		else
-		{
-			elem = document.getElementById( 'tags' );
-			elem.classList.toggle( 'selected', true );
-			elem.value = filter;
-			CFG.toggleFilter( {target:elem} );
-		}
+		CFG.toggleLatestFilter();
 		
 		// configurator show info
 		if( !CFG.configInfo )
