@@ -14,7 +14,6 @@
 //		addNumericSlider( id, name, defaultValue, options, info='', tags='' )
 //		addNumericRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
 //		addNumericList( id, name, defaultValue, options, info='', tags='' )
-//		addPercentage( id, name, defaultValue, options, info='', tags='' )
 //		addBoolean( id, name, defaultValue, options, info='', tags='' )
 //		addTimeSlider( id, name, defaultValue, options, info='', tags='' )
 //		addTimeRangeSlider( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
@@ -116,18 +115,15 @@ export function msToString( ms, showSeconds=true, showMinutes=true, showDays=tru
 
 
 const
-	NUMERIC = 1,
-	PERCENTAGE = 2,
-	NUMERIC_RANGE = 3,
-	
-	BOOLEAN = 4,
-	HEADER = 5,
-	NUMERIC_LIST = 6,
-	NUMERIC_SLIDER = 7,
-	NUMERIC_LIST_SLIDER = 8,
-	TEMPORAL_SLIDER = 9,
-	NUMERIC_RANGE_SLIDER = 10,
-	TEMPORAL_RANGE_SLIDER = 11;
+	NUMERIC = 1,	
+	BOOLEAN = 2,
+	HEADER = 3,
+	NUMERIC_LIST = 4,
+	NUMERIC_SLIDER = 5,
+	NUMERIC_LIST_SLIDER = 6,
+	TEMPORAL_SLIDER = 7,
+	NUMERIC_RANGE_SLIDER = 8,
+	TEMPORAL_RANGE_SLIDER = 9;
 	
 export {NUMERIC_SLIDER,NUMERIC_LIST_SLIDER,NUMERIC_RANGE_SLIDER,TEMPORAL_SLIDER,TEMPORAL_RANGE_SLIDER};
 
@@ -249,83 +245,6 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 	
 	data[id] = {
 		type:	NUMERIC,
-		block:	document.getElementById('block-'+id),
-		name:	document.getElementById('name-'+id),
-		value:	document.getElementById(id),
-		defaultValue: defaultValue,
-		options: options,
-	}
-	
-}
-
-
-export function addPercentage( id, name, defaultValue, options, info='', tags='' )
-{
-	// check id
-	
-	if( ids.indexOf(id) > -1 )
-		throw `error: Element with id="${id}" is already decalred.`;
-
-	ids.push( id );
-	
-	id_count++;
-	if( options.internal ) internal_id_count++;
-	
-	// set default values for missing options
-
-	options.min = options.min||0;
-	options.max = options.max||100;
-	options.step = options.step||1;
-	options.value = param( id, defaultValue );
-	options.tags = tags.split( ',' );
-
-	allTags.push( ...options.tags );
-	
-	if( predefinedFavs )
-		options.fav = predefinedFavs.indexOf(id)>=0;
-
-	function p( x ) { return Math.round(100*x); }
-	
-	// calculate width of field
-	var testVal = parseFloat(p(options.max))+parseFloat(p(options.step)),
-		testVal = Math.round( 1000000*testVal )/1000000;
-	
-	var width = Math.max( (testVal+'').length*0.9+0.5, 1.5 );
-
-
-	// construct the html
-		
-	var html =`
-		<table id="block-${id}"  class="block ${options.internal?'internal':''}">
-			<tr>
-				<td id="name-${id}"
-					width="1%"
-					class="name ${options.fav?'fav':''}" onclick="toggleFav('${id}')">
-					${name} 
-				</td>
-				<td class="valuerow">
-					<input id="${id}" class="value" type="number" name="${id}" min="${p(options.min)}" 	max="${p(options.max)}" value="${p(options.value)}" step="${p(options.step)}"
-					style="width: ${width}em;">				
-				</td>
-				<td class="unit" width="1%">%</td>
-			</tr>
-			<tr class="info"><td colspan="3">
-				${info} Range is from ${p(options.min)}% to ${p(options.max)}%. Default value is ${p(defaultValue)}%.
-				<div class="tags">${tags.split(',')}</div>
-			</td></tr>
-		</table>`;
-		
-	// create a new dom element
-	
-	var block = document.createElement('div');
-		block.innerHTML = html;
-	
-	// insert in dom 
-	
-	document.getElementById("blocks").appendChild( block );
-	
-	data[id] = {
-		type:	PERCENTAGE,
 		block:	document.getElementById('block-'+id),
 		name:	document.getElementById('name-'+id),
 		value:	document.getElementById(id),
@@ -568,21 +487,7 @@ export function prepareValues( onlyModified = false, skipConfigs = false )
 				if( (!onlyModified) || (data[id].value.checked != data[id].defaultValue) )
 					cmd = data[id].value.checked?'true':'false';
 				break;
-			case PERCENTAGE:
-				if( (!onlyModified) || (data[id].value.value != Math.round(100*data[id].defaultValue)) )
-				{
-					cmd = data[id].value.value/100;
-				}
-				break;
 			case HEADER:
-				break;
-			case NUMERIC_RANGE:
-				if( (!onlyModified) || (data[id].valueA.value != data[id].defaultValueA) || (data[id].valueB.value != data[id].defaultValueB) )
-				{
-					var min = Math.min( data[id].valueA.value, data[id].valueB.value );
-					var max = Math.max( data[id].valueA.value, data[id].valueB.value );
-					cmd = min+'~'+max;
-				}
 				break;
 			case NUMERIC_LIST:
 				if( (!onlyModified) || (data[id].value.value != data[id].defaultValue) )
@@ -664,102 +569,7 @@ export function addHeader( level, name, logo='', info='', tags='', options={} )
 }
 
 
-export function addNumericRange( id, name, defaultValueA, defaultValueB, options, info='', tags='' )
-{
-	// check id
-	
-	if( ids.indexOf(id) > -1 )
-		throw `error: Element with id="${id}" is already decalred.`;
 
-	ids.push( id );
-	
-	id_count++;
-	if( options.internal ) internal_id_count++;
-	
-	// set default values for missing options
-
-	options.min = options.min||0;
-	options.max = options.max||100;
-	options.step = options.step||1;
-	options.valueA = param2( id, defaultValueA, defaultValueB )[0];
-	options.valueB = param2( id, defaultValueA, defaultValueB )[1];
-	options.tags = tags.split( ',' );
-	options.unit = options.unit||'';
-	
-	allTags.push( ...options.tags );
-	
-	if( predefinedFavs )
-		options.fav = predefinedFavs.indexOf(id)>=0;
-	
-	// calculate width of field
-	var testVal = parseFloat(options.max)+parseFloat(options.step),
-		testVal = Math.round( 1000000*testVal )/1000000;
-	
-	var width = Math.max( (testVal+'').length*0.9+0.5, 1.5 );
-	
-	// construct the html
-	var html =`
-		<table id="block-${id}"  class="block ${options.internal?'internal':''}">
-			<tr>
-				<td id="name-${id}"
-					width="1%"
-					class="name ${options.fav?'fav':''}"
-					onclick="toggleFav('${id}')">
-					${name}
-				</td>
-				<td class="valuerow">
-					<input id="${id}-min"
-						class="value"
-						type="number"
-						name="${id}"
-						min="${options.min}"
-						max="${options.max}"
-						value="${options.valueA}"
-						step="${options.step}"
-						style="width: ${width}em;">
-					<span class="from-to">&#x223C;</span>	
-					<input id="${id}-max"
-						class="value"
-						type="number"
-						name="${id}"
-						min="${options.min}"
-						max="${options.max}"
-						value="${options.valueB}"
-						step="${options.step}"
-						style="width: ${width}em;">
-				</td>
-				<td class="unit" width="1%">${options.unit}</td>
-			</tr>
-			<tr class="info"><td colspan="3">
-				${info} Range for each bound is from ${options.min} to ${options.max}. Default value is ${defaultValueA} to ${defaultValueB}.
-				<div class="tags">${tags.split(',')}</div>
-			</td></tr>
-		</table>`;
-
-			
-
-
-	// create a new dom element
-	
-	var block = document.createElement('div');
-		block.innerHTML = html;
-	
-	// insert in dom 
-	
-	document.getElementById("blocks").appendChild( block );
-	
-	data[id] = {
-		type:	NUMERIC_RANGE,
-		block:	document.getElementById('block-'+id),
-		name:	document.getElementById('name-'+id),
-		valueA:	document.getElementById(id+'-min'),
-		valueB:	document.getElementById(id+'-max'),
-		defaultValueA: defaultValueA,
-		defaultValueB: defaultValueB,
-		options: options,
-	}
-	
-}
 
 
 export function addNumericList( id, name, defaultValue, options, info='', tags='' )
@@ -861,18 +671,6 @@ export function processTags()
 		htmlOptions += `<option value="${tag}">${tag.toUpperCase()}</option>`;
 
 	document.getElementById( 'tags' ).innerHTML = htmlOptions;
-
-
-
-console.log('statistics');
-var cnt = [0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-for(var id in data) cnt[data[id].type]++;
-for(var i=1; i<=11; i++)
-{
-	if( i==BOOLEAN )
-		console.log('\t-----');
-	console.log(i+'\t',cnt[i]);
-}
 
 }
 
