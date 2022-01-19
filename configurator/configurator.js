@@ -1098,13 +1098,13 @@ export function addTimeRangeSlider( id, name, defaultValueA, defaultValueB, opti
 					<span id="display-${id}"
 						class="value"
 						style="display:inline-block; width:${width}em;">
-						${msToString(options.valueA,options.seconds)}~${msToString(options.valueB,options.seconds)}
+						${msToString(options.valueA,options.seconds,options.minutes,options.days)}~${msToString(options.valueB,options.seconds,options.minutes,options.days)}
 					</span>
 				</td>
 				<td class="unit" style="width:1%;">${options.unit}</td>
 			</tr>
 			<tr class="info"><td colspan="3">
-				${info} Range for each bound is from ${msToString(options.min,options.seconds)} to ${msToString(options.max,options.seconds)}. Default value is ${msToString(defaultValueA,options.seconds)} to ${msToString(defaultValueB,options.seconds)}.
+				${info} Range for each bound is from ${msToString(options.min,options.seconds,options.minutes,options.days)} to ${msToString(options.max,options.seconds,options.minutes,options.days)}. Default value is ${msToString(defaultValueA,options.seconds,options.minutes,options.days)} to ${msToString(defaultValueB,options.seconds,options.minutes,options.days)}.
 				<div class="tags">${tags.split(',')}</div>
 			</td><td></td></tr>
 		</table>`;

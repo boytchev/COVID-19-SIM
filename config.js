@@ -346,3 +346,8 @@ export const ADULT_MASK_ON  = param2( 'amon',new Range( 2, 4 ));
 export const ADULT_MASK_OFF = param2( 'amof',new Range( 1, 5 ));
 export const CHILD_MASK_ON  = param2( 'cmon',new Range( 2, 4 ));
 export const CHILD_MASK_OFF = param2( 'cmof',new Range( 1, 5 ));
+
+export const ADULT_WAKE_UP_TIME_MS = param2('awu',new Range( timeMs(5,30), timeMs(7) ));
+export const ADULT_GO_TO_SLEEP_TIME_MS = param2('agts',new Range( timeMs(21), timeMs(23) ));
+export const CHILD_WAKE_UP_TIME_MS = param2('cwu',new Range( timeMs(6), timeMs(7,30) ));
+export const CHILD_GO_TO_SLEEP_TIME_MS = param2('cgts',new Range( timeMs(19), timeMs(21) ));

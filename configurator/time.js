@@ -53,6 +53,33 @@ CFG.addHeader(
 
 	
 CFG.addHeader(
+	2, 'Activities', '',
+	'These parameters define the timing of the major activities of virtual people.',
+	'time, people, adult, child' );
+	
+		CFG.addTimeRangeSlider(
+			'awu', 'Adult wake up', CFG.timeMs(5,30), CFG.timeMs(7), {min: CFG.timeMs(4),max: CFG.timeMs(8), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults wake up.',
+			'time,people,adult,morning' );
+
+		CFG.addTimeRangeSlider(
+			'agts', 'Adult go to sleep', CFG.timeMs(21), CFG.timeMs(23), {min: CFG.timeMs(20),max: CFG.timeMs(24), step: CFG.timeMs(0,5), seconds: false, days: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults go to bed.',
+			'time,people,adult,evening' );
+
+		CFG.addTimeRangeSlider(
+			'cwu', 'Child wake up', CFG.timeMs(6), CFG.timeMs(7,30), {min: CFG.timeMs(5),max: CFG.timeMs(9), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when children wake up.',
+			'time,people,child,morning' );
+
+		CFG.addTimeRangeSlider(
+			'cgts', 'Child go to sleep', CFG.timeMs(19), CFG.timeMs(21), {min: CFG.timeMs(17),max: CFG.timeMs(23), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when children go to bed.',
+			'time,people,child,evening' );
+
+
+
+CFG.addHeader(
 	2, 'Sun & moon', '',
 	'These parameters control the simulation of the sun and the moon. If they are present, they are always in opposite directions.',
 	'time,sun,moon,light,morning,evening' );

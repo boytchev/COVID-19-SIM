@@ -40,20 +40,16 @@
 
 import * as THREE from '../js/three.module.js';
 
-import {RectZone, BlockZone, timeMs, Pos, Range, almostEqual, drawArrow} from '../core.js';
+import {RectZone, BlockZone, timeMs, Pos, Range, almostEqual, drawArrow, msToString} from '../core.js';
 import {agents} from '../main.js';
 import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../coreNav.js';
 import {dayTimeMs, deltaTime} from '../nature/nature.js';
 import {Crossing} from '../objects/crossings.js';
 import {Elevator} from '../objects/elevators.js';
-import {DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE, FLOOR_HEIGHT} from '../config.js';
+import {DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE, FLOOR_HEIGHT, ADULT_WAKE_UP_TIME_MS, CHILD_WAKE_UP_TIME_MS, ADULT_GO_TO_SLEEP_TIME_MS, CHILD_GO_TO_SLEEP_TIME_MS} from '../config.js';
 
 
 
-const AGENT_CHILD_SLEEP_TIME_MS  = new Range( timeMs(19), timeMs(21) );		// in milliseconds (19:00-21:00)
-const AGENT_CHILD_WAKEUP_TIME_MS = new Range( timeMs(6), timeMs(7,30) );	// in milliseconds (06:00-07:30)
-const AGENT_ADULT_SLEEP_TIME_MS  = new Range( timeMs(21), timeMs(26) );		// in milliseconds (21:00-02:00)
-//const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(5,30), timeMs(7) );	// in milliseconds (05:30-07:00)
 //const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6), timeMs(8) );		// in milliseconds (06:00-08:00)
 const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(17), timeMs(20) );		// in milliseconds (17:00-20:00)
 
@@ -64,7 +60,6 @@ const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(0,10) );	// in millis
 
 
 
-const AGENT_ADULT_WAKEUP_TIME_MS = new Range( timeMs(6,0,1), timeMs(6,0,2) );	// in milliseconds (05:30-07:00)
 const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,0), timeMs(6,2,0) );		// in milliseconds (06:00-08:00)
 
 
@@ -95,15 +90,15 @@ class AgentDailySchedule
 	{
 		if( isAdult )
 		{
-			this.timeToWakeupMs = AGENT_ADULT_WAKEUP_TIME_MS.randTime( );
-			this.timeToSleepTimeMs = AGENT_ADULT_SLEEP_TIME_MS.randTime( );
+			this.timeToWakeupMs = ADULT_WAKE_UP_TIME_MS.randTime( );
+			this.timeToSleepTimeMs = ADULT_GO_TO_SLEEP_TIME_MS.randTime( );
 			this.timeToGoToWorkMs = AGENT_LEAVE_HOME_TIME_MS.randFloat( );
 			this.timeToGoToHomeMs = AGENT_LEAVE_WORK_TIME_MS.randFloat( );
 		}
 		else
 		{
-			this.timeToWakeupMs = AGENT_CHILD_WAKEUP_TIME_MS.randTime( );
-			this.timeToSleepTimeMs = AGENT_CHILD_SLEEP_TIME_MS.randTime( );
+			this.timeToWakeupMs = CHILD_WAKE_UP_TIME_MS.randTime( );
+			this.timeToSleepTimeMs = CHILD_GO_TO_SLEEP_TIME_MS.randTime( );
 			this.timeToGoToWorkMs = undefined;
 			this.timeToGoToHomeMs = undefined;
 			//this.timeToGoToWorkMs = AGENT_LEAVE_HOME_TIME_MS.randFloat( );// todo: temporary allow children to go to work
