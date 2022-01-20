@@ -55,7 +55,7 @@ CFG.addHeader(
 CFG.addHeader(
 	2, 'Activities', '',
 	'These parameters define the timing of the major activities of virtual people.',
-	'time, people, adult, child' );
+	'time, people, adult, child', {internal:true} );
 	
 		CFG.addTimeRangeSlider(
 			'awu', 'Adult wake up', CFG.timeMs(5,30), CFG.timeMs(7), {min: CFG.timeMs(4),max: CFG.timeMs(8), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
@@ -76,6 +76,16 @@ CFG.addHeader(
 			'cgts', 'Child go to sleep', CFG.timeMs(19), CFG.timeMs(21), {min: CFG.timeMs(17),max: CFG.timeMs(23), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
 			'Time interval when children go to bed.',
 			'time,people,child,evening' );
+
+		CFG.addTimeRangeSlider(
+			'alh', 'Adult leave home', CFG.timeMs(6), CFG.timeMs(8), {min: CFG.timeMs(4),max: CFG.timeMs(10), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults leave home and go to work.',
+			'time,people,adult,morning' );
+
+		CFG.addTimeRangeSlider(
+			'alw', 'Adult leave work', CFG.timeMs(17), CFG.timeMs(20), {min: CFG.timeMs(16),max: CFG.timeMs(22), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults leave work and return home.',
+			'time,people,adult,evening' );
 
 
 

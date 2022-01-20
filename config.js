@@ -351,3 +351,5 @@ export const ADULT_WAKE_UP_TIME_MS = param2('awu',new Range( timeMs(5,30), timeM
 export const ADULT_GO_TO_SLEEP_TIME_MS = param2('agts',new Range( timeMs(21), timeMs(23) ));
 export const CHILD_WAKE_UP_TIME_MS = param2('cwu',new Range( timeMs(6), timeMs(7,30) ));
 export const CHILD_GO_TO_SLEEP_TIME_MS = param2('cgts',new Range( timeMs(19), timeMs(21) ));
+export const AGENT_LEAVE_HOME_TIME_MS = param2('alh',new Range( timeMs(6), timeMs(8) ));
+export const AGENT_LEAVE_WORK_TIME_MS = param2('alw',new Range( timeMs(17), timeMs(20) ));

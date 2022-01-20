@@ -46,21 +46,15 @@ import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../
 import {dayTimeMs, deltaTime} from '../nature/nature.js';
 import {Crossing} from '../objects/crossings.js';
 import {Elevator} from '../objects/elevators.js';
-import {DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE, FLOOR_HEIGHT, ADULT_WAKE_UP_TIME_MS, CHILD_WAKE_UP_TIME_MS, ADULT_GO_TO_SLEEP_TIME_MS, CHILD_GO_TO_SLEEP_TIME_MS} from '../config.js';
+import {DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE, FLOOR_HEIGHT, ADULT_WAKE_UP_TIME_MS, CHILD_WAKE_UP_TIME_MS, ADULT_GO_TO_SLEEP_TIME_MS, CHILD_GO_TO_SLEEP_TIME_MS, AGENT_LEAVE_WORK_TIME_MS, AGENT_LEAVE_HOME_TIME_MS} from '../config.js';
 
 
-
-//const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6), timeMs(8) );		// in milliseconds (06:00-08:00)
-const AGENT_LEAVE_WORK_TIME_MS	 = new Range( timeMs(17), timeMs(20) );		// in milliseconds (17:00-20:00)
 
 //const AGENT_REST_TIME_AT_HOME_MS = new Range( 0, timeMs(0,5) );	// in milliseconds (0-5 min), time to rest between walkings at home
 //const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(1,0) );	// in milliseconds (0-5 min), time to work on one place in the office
 const AGENT_REST_TIME_AT_HOME_MS = new Range( 0, timeMs(0,5) );	// in milliseconds (0-5 min), time to rest between walkings at home
 const AGENT_STILL_TIME_AT_OFFICE_MS = new Range( 0, timeMs(0,10) );	// in milliseconds (0-5 min), time to work on one place in the office
 
-
-
-const AGENT_LEAVE_HOME_TIME_MS	 = new Range( timeMs(6,0,0), timeMs(6,2,0) );		// in milliseconds (06:00-08:00)
 
 
 const MOTION_TYPE_STAND = 0; // hardcoded in vertex shader
