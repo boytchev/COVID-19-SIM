@@ -86,6 +86,17 @@ CFG.addHeader(
 			'alw', 'Adult leave work', CFG.timeMs(17), CFG.timeMs(20), {min: CFG.timeMs(16),max: CFG.timeMs(22), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
 			'Time interval when adults leave work and return home.',
 			'time,people,adult,evening' );
+			
+		CFG.addTimeRangeSlider(
+			'apth', 'Adult pause at home', CFG.timeMs(0,0), CFG.timeMs(0,10), {min: CFG.timeMs(0), max: CFG.timeMs(2), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(0,30), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults stay in one place while at home. When this time elapses, the adult walks to another location in the house or the apartment.',
+			'time,people,adult' );
+
+		CFG.addTimeRangeSlider(
+			'aptw', 'Adult pause at work', CFG.timeMs(0,0), CFG.timeMs(0,20), {min: CFG.timeMs(0), max: CFG.timeMs(2), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(0,30), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults stay in one place while working. When this time elapses, the adult walks to another location in the office.',
+			'time,people,adult' );
+
 
 
 
