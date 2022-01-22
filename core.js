@@ -754,7 +754,7 @@ export function drawArrow( from, to, color = 'crimson' )
 		len = dir.length();
 	
 	
-	var arrowHelper = new THREE.ArrowHelper( dir.normalize(), from, len, color, 1, 1/2 );
+	var arrowHelper = new THREE.ArrowHelper( dir.normalize(), from, len, color, Math.min(len/4,1), Math.min(len/8,1/2) );
 	scene.add( arrowHelper );
 }
 

@@ -1116,9 +1116,44 @@ else
 			this.doing = this.AGENT_STAYING_AT_HOME;
 			return;
 		}
-		
+
+		// when an agent falls asleep, check whether his head
+		// goes outside the current zone; if yes, then turn the
+		// agent 90 degrees, check again, and so on; i honestly
+		// and naively hope that at least one of the four positions
+		// will be ok
+		if( agents.images.motionType.array[this.id] != MOTION_TYPE_SLEEP )
+		{
+			var dirX = agents.images.instanceMatrix.array[this.id*16+2],
+				dirZ = -agents.images.instanceMatrix.array[this.id*16+0],
+				zone = this.position.zone;
+			console.assert( zone )
+
+			if( !zone.isInside(this.position.addXZ(dirX,dirZ)) )
+			{
+				// make 4 rotations at pi/2 each
+				for( var i=0; i<4; i++ )
+				{
+					var temp = dirZ;
+					dirZ = dirX;
+					dirX = -temp;
+					if( zone.isInside(this.position.addXZ(dirX,dirZ)) )
+					{
+						break; // happy face here
+					}
+				}
+				
+				// update the agent matrix with the new direction
+				// the mapping is the same as in method turnTowards()
+				// from agentBehaviour.js
+				agents.images.instanceMatrix.array[this.id*16+0] = -dirZ;
+				agents.images.instanceMatrix.array[this.id*16+2] = dirX;
+				agents.images.instanceMatrix.array[this.id*16+8] = -dirX;
+				agents.images.instanceMatrix.array[this.id*16+10] = -dirZ;
+			}
+		}		
 		agents.images.motionType.array[this.id] = MOTION_TYPE_SLEEP;
-		
+
 	} // AgentBehaviour.AGENT_SLEEPING_AT_HOME
 	
 	
