@@ -10,7 +10,7 @@ import * as THREE from '../js/three.module.js';
 import {EARTH_SIZE, SUN, SHADOWS, FULL_SHADOWS, SUN_HORIZONTAL_ANGLE, SHADOWS_MAP_SIZE, GROUND_SIZE, STATIC_SUN, STATIC_SUN_POSITION_MS, DEBUG_SUN_POSITION_GUI, SUNRISE_MS, SUNSET_MS, HOURS_24_MS, DEBUG_ALL_WHITE, SHADOWS_MAX_COUNT} from '../config.js';
 import {scene, textures, guiObject} from '../main.js';
 import {dayTimeMs} from './nature.js';
-import {timeMs} from '../core.js';
+import {timeMs,msToString} from '../core.js';
 
 
 var sunIntensities = [
@@ -143,10 +143,10 @@ class Sun extends THREE.Group
 		if( rT<0 || rT>1)
 		{
 			// it is nighttime, calculate how much of the night has passed
-			if( dayTimeMs<SUNRISE_MS ) t += HOURS_24_MS;
+			if( t<SUNRISE_MS ) t += HOURS_24_MS;
 			rT = THREE.Math.mapLinear( t, SUNSET_MS, SUNRISE_MS+HOURS_24_MS, 1, 2 );
 		}
-		
+
 		return rT*Math.PI;
 		
 	} // Sky.getAngularPosition

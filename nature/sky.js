@@ -175,13 +175,12 @@ class Sky
 		{
 			// calculate sun position
 			var sunAngle = this.sun.getAngularPosition(),
-				phase = Math.cos( sunAngle );
-			
+				phase = Math.sin( sunAngle );
+
 			// set sun and moon positions
 			this.sun.update( phase );
 			this.moon.update( -phase );
 			this.skyDome.rotation.set( sunAngle+Math.PI, SUN_HORIZONTAL_ANGLE, 0, 'YXZ' );
-
 
 			// set ambient light
 			var hue = THREE.Math.clamp( phase, -0.5, 0.5 ); // 0=red, 0.2 = yellow

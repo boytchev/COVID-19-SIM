@@ -87,6 +87,60 @@ CFG.addHeader(
 			'people','tracking' );
 
 CFG.addHeader(
+	2, 'Daily schedule', '',
+	'These parameters define the timing of the major activities of virtual people.',
+	'people, time, adult, child', {internal:true} );
+	
+CFG.addHeader(
+	3, 'Adult\' schedule', '', '',
+	'people, time, adult', {internal:true} );
+	
+		CFG.addTimeRangeSlider(
+			'awu', 'Adult wake up', CFG.timeMs(5,30), CFG.timeMs(7), {min: CFG.timeMs(4),max: CFG.timeMs(8), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults wake up.',
+			'time,people,adult,morning' );
+
+		CFG.addTimeRangeSlider(
+			'agts', 'Adult go to sleep', CFG.timeMs(21), CFG.timeMs(23), {min: CFG.timeMs(20),max: CFG.timeMs(24), step: CFG.timeMs(0,5), seconds: false, days: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults go to bed.',
+			'time,people,adult,evening' );
+
+		CFG.addTimeRangeSlider(
+			'alh', 'Adult leave home', CFG.timeMs(6), CFG.timeMs(8), {min: CFG.timeMs(4),max: CFG.timeMs(10), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults leave home and go to work.',
+			'time,people,adult,morning' );
+
+		CFG.addTimeRangeSlider(
+			'alw', 'Adult leave work', CFG.timeMs(17), CFG.timeMs(20), {min: CFG.timeMs(16),max: CFG.timeMs(22), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults leave work and return home.',
+			'time,people,adult,evening' );
+			
+		CFG.addTimeRangeSlider(
+			'apth', 'Adult pause at home', CFG.timeMs(0,0), CFG.timeMs(0,10), {min: CFG.timeMs(0), max: CFG.timeMs(2), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(0,30), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults stay in one place while at home. When this time elapses, the adult walks to another location in the house or the apartment.',
+			'time,people,adult' );
+
+		CFG.addTimeRangeSlider(
+			'aptw', 'Adult pause at work', CFG.timeMs(0,0), CFG.timeMs(0,20), {min: CFG.timeMs(0), max: CFG.timeMs(2), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(0,30), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when adults stay in one place while working. When this time elapses, the adult walks to another location in the office.',
+			'time,people,adult' );
+
+CFG.addHeader(
+	3, 'Child\'s schedule', '', '',
+	'people, time, adult', {internal:true} );
+
+		CFG.addTimeRangeSlider(
+			'cwu', 'Child wake up', CFG.timeMs(6), CFG.timeMs(7,30), {min: CFG.timeMs(5),max: CFG.timeMs(9), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when children wake up.',
+			'time,people,child,morning' );
+
+		CFG.addTimeRangeSlider(
+			'cgts', 'Child go to sleep', CFG.timeMs(19), CFG.timeMs(21), {min: CFG.timeMs(17),max: CFG.timeMs(23), step: CFG.timeMs(0,5), seconds: false, labelStep: CFG.timeMs(1), dotStep: CFG.timeMs(0,30), labelSeconds: false,labelMinutes:true, internal:true },
+			'Time interval when children go to bed.',
+			'time,people,child,evening' );
+
+			
+CFG.addHeader(
 	2, 'MOTION', '', '',
 	'people,motion,tracking', {internal:true} );
 

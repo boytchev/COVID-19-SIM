@@ -1127,9 +1127,10 @@ else
 			var dirX = agents.images.instanceMatrix.array[this.id*16+2],
 				dirZ = -agents.images.instanceMatrix.array[this.id*16+0],
 				zone = this.position.zone;
-			console.assert( zone )
 
-			if( !zone.isInside(this.position.addXZ(dirX,dirZ)) )
+			console.assert( zone )
+			
+			if( zone && !zone.isInside(this.position.addXZ(dirX,dirZ)) )
 			{
 				// make 4 rotations at pi/2 each
 				for( var i=0; i<4; i++ )
