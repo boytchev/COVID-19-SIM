@@ -46,7 +46,7 @@ import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../
 import {dayTimeMs, deltaTime} from '../nature/nature.js';
 import {Crossing} from '../objects/crossings.js';
 import {Elevator} from '../objects/elevators.js';
-import {DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE, FLOOR_HEIGHT, ADULT_WAKE_UP_TIME_MS, CHILD_WAKE_UP_TIME_MS, ADULT_GO_TO_SLEEP_TIME_MS, CHILD_GO_TO_SLEEP_TIME_MS, ADULT_LEAVE_WORK_TIME_MS, ADULT_LEAVE_HOME_TIME_MS, AGENT_PAUSE_TIME_AT_HOME_MS, AGENT_PAUSE_TIME_AT_WORK_MS} from '../config.js';
+import {DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, DEBUG_RANDOM_WANDERING, DEBUG_ROUTES_PER_AGENT, BLOCK_PARK, BLOCK_PLAZA, BLOCK_HOUSES, BLOCK_APARTMENTS, BLOCK_OFFICE, DEBUG_SHOW_ROUTES, DEBUG_DUMP_ROUTES, ELEVATOR_SIZE, FLOOR_HEIGHT, ADULT_WAKE_UP_TIME_MS, CHILD_WAKE_UP_TIME_MS, ADULT_GO_TO_SLEEP_TIME_MS, CHILD_GO_TO_SLEEP_TIME_MS, ADULT_LEAVE_WORK_TIME_MS, ADULT_LEAVE_HOME_TIME_MS, AGENT_PAUSE_TIME_AT_HOME_MS, AGENT_PAUSE_TIME_AT_WORK_MS, DEBUG_TIME_SPEED, DEBUG_PEOPLE_TIME_SPEED} from '../config.js';
 
 
 
@@ -765,6 +765,9 @@ export class AgentBehaviour
 			distance = v.distance( ), // distance to target
 			//walkDistance = this.walkingSpeed*THREE.Math.mapLinear(this.height,0.35,2,0.03,0.82) * deltaTime; // distance to be walked
 			walkDistance = this.walkingSpeed*(0.5*this.height/1.7) * deltaTime; // distance to be walked
+			
+		if( !DEBUG_PEOPLE_TIME_SPEED )
+			walkDistance /= DEBUG_TIME_SPEED;
 
 		agents.images.motionType.array[this.id] = MOTION_TYPE_WALK;
 

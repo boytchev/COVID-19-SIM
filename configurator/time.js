@@ -25,7 +25,8 @@ CFG.addHeader(
 					CFG.timeMs(0,5),
 					CFG.timeMs(0,10),
 					CFG.timeMs(0,30),
-					CFG.timeMs(1)
+					CFG.timeMs(1),
+					CFG.timeMs(2),
 				],
 				labels: [
 					'1|second',
@@ -38,7 +39,8 @@ CFG.addHeader(
 					5,
 					10,
 					30,
-					'1|hour'
+					'1|hour',
+					'2|hours',
 				],
 				displayWidth: 4,
 				display: function(x){return CFG.msToString(x);},
@@ -46,6 +48,11 @@ CFG.addHeader(
 			'How much virtual time passes for 1 second of real time. For example, 00:00:01 is for realtime simulation, 00:00:05 is for simulation 5 times faster.',
 			'time,debug' );
 
+		CFG.addBoolean(
+			'dpts', 'People time speed', true, {internal:true},
+			'If checked, the motion of people adheres to the global time lapse set in <em>Time speed</em>. If unchecks, the motion of people is unaffected and they move normally, independed on the time lapse speed.',
+			'time,debug' );
+	
 		CFG.addTimeSlider(
 			'st', 'Start time', CFG.timeMs(6,20), {fav:true, min:CFG.timeMs(0,0,0), max:CFG.timeMs(24), step:CFG.timeMs(0,10,0), seconds: false, labelStep:CFG.timeMs(2), dotStep:CFG.timeMs(1), labelSeconds:false, labelMinutes:false, days: false },
 			'The virtual time at which the simulation starts.',

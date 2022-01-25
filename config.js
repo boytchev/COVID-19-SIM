@@ -80,7 +80,10 @@ export const DEBUG_FORM_A_LINE = formation==1;
 export const DEBUG_FORM_A_CIRCLE = formation==2;
 
 export const DEBUG_TIME_SPEED = param('dts',timeMs(0,0,1))/1000;	// time ellapsed for 1 second
+export const DEBUG_PEOPLE_TIME_SPEED = param('dpts',true);
 export const START_TIME = param('st',timeMs(6,20));			// start time
+
+console.log('DEBUG_PEOPLE_TIME_SPEED',DEBUG_PEOPLE_TIME_SPEED);
 
 export const DEBUG_BLOCK_WITH_ONLY_HOUSES = param('dbwoh',false);
 export const DEBUG_BLOCK_WITH_ONLY_APARTMENTS = param('dbwoa',false);

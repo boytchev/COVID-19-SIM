@@ -12,7 +12,7 @@ import {timeMs, Pos} from '../core.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
 import {dayTimeMs, currentTimeMs} from '../nature/nature.js';
-import {CARTOON_STYLE, GROUND_SIZE, GROUND_EDGE, DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED, AGENT_DRAW_MODE, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE_WHITE, AGENT_AGE_YEARS, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF, SAFE_MODE} from '../config.js';
+import {CARTOON_STYLE, GROUND_SIZE, GROUND_EDGE, DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED, AGENT_DRAW_MODE, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE_WHITE, AGENT_AGE_YEARS, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF, SAFE_MODE, DEBUG_PEOPLE_TIME_SPEED} from '../config.js';
 
 import vertexShader from './agents_vertex_shader.js';
 import fragmentShader from './agents_fragment_shader.js';
@@ -167,7 +167,12 @@ export class Agents
 		// in safe mode no agents are drawn
 		if( SAFE_MODE ) return;
 
-		this.images.material.uniforms.uTime.value = (dayTimeMs/400);
+		var agentTime = dayTimeMs/400;
+
+		if( !DEBUG_PEOPLE_TIME_SPEED )
+			agentTime /= DEBUG_TIME_SPEED;
+
+		this.images.material.uniforms.uTime.value = agentTime;
 		this.images.material.uniforms.uViewAlpha.value = controls.getAzimuthalAngle();
 		this.images.material.uniforms.uViewBeta.value = controls.getPolarAngle();
 
