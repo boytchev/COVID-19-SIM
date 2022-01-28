@@ -211,6 +211,8 @@ export class Trees
 	
 	image( trees )
 	{
+		// no trees if buildings are fully transparent
+		if( DEBUG_BUILDINGS_OPACITY < 0.01 ) return;
 		
 		var instances = trees.length;
 		

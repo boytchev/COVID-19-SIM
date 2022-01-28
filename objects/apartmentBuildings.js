@@ -578,6 +578,9 @@ export class ApartmentBuildings
 		// in safe mode no apartment buildings are generated
 		if( SAFE_MODE ) return;
 		
+		// no buildings if they are fully transparent
+		if( DEBUG_BUILDINGS_OPACITY < 0.01 ) return;
+
 		var instances = apartments.length;
 		
 		var geometry  = ApartmentBuildings.geometry(),

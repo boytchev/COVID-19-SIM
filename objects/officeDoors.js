@@ -140,6 +140,9 @@ export class OfficeDoors
 	
 	static image( doors )
 	{
+		// no doors if buildings are fully transparent
+		if( DEBUG_BUILDINGS_OPACITY < 0.01 ) return;
+
 		var instances = doors.length;
 		
 		var geometry  = OfficeDoors.geometry(),

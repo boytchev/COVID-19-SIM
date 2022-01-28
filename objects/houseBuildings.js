@@ -581,6 +581,8 @@ export class HouseBuildings
 			mesh.setMatrixAt( i+1, matrix );
 		}
 
+		mesh.visible = DEBUG_BUILDINGS_OPACITY > 0.01;
+
 		mesh.receiveShadow = true;
 		mesh.castShadow = true;
 		//mesh.position.y = 2;

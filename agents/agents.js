@@ -12,7 +12,7 @@ import {timeMs, Pos} from '../core.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
 import {dayTimeMs, currentTimeMs} from '../nature/nature.js';
-import {CARTOON_STYLE, GROUND_SIZE, GROUND_EDGE, DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, AGENT_ADULTS_PER_HOUSE, AGENT_MAX_COUNT, IMMUNE_STRENGTH, AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT, DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED, AGENT_DRAW_MODE, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE_WHITE, AGENT_AGE_YEARS, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF, SAFE_MODE, DEBUG_PEOPLE_TIME_SPEED} from '../config.js';
+import {CARTOON_STYLE, GROUND_SIZE, GROUND_EDGE, DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, /*AGENT_ADULTS_PER_HOUSE,*/ AGENT_MAX_COUNT, IMMUNE_STRENGTH, /*AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT,*/ DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED, AGENT_DRAW_MODE, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE_WHITE, AGENT_AGE_YEARS, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF, SAFE_MODE, DEBUG_PEOPLE_TIME_SPEED, AGENT_PEOPLE_PER_HOUSE, AGENT_PEOPLE_PER_APARTMENT} from '../config.js';
 
 import vertexShader from './agents_vertex_shader.js';
 import fragmentShader from './agents_fragment_shader.js';
@@ -54,6 +54,49 @@ export class Agents
 		// generate agents and set their homes
 		
 		
+		// first add agents to all houses
+	loopHouses:
+		for( var i=0; i<buildings.houses.length; i++ )
+		{
+
+			var agentHome = new Address( buildings.houses[i] ),
+				agentCount = AGENT_PEOPLE_PER_HOUSE.randInt();
+			
+			// create people in this house
+			for( var j=0; j<agentCount; j++ )
+			{
+				if( this.agents.length>=AGENT_MAX_COUNT ) break loopHouses;
+
+				var age = AGENT_AGE_YEARS.randInt()
+				if( age>17 )
+					this.agents.push( new Adult(agentHome) );
+				else
+					this.agents.push( new Child(agentHome) );
+			}
+		}
+	
+		// then add agents to all apartments
+	loopApartments:
+		for( var i=0; i<buildings.apartments.length; i++ )
+		for( var floor=buildings.apartments[i].floors-1; floor>=0; floor-- )
+		for( var room=0; room<buildings.apartments[i].rooms.length; room++ )
+		{
+			var agentHome = new Address( buildings.apartments[i], floor, room ),
+				agentCount = AGENT_PEOPLE_PER_HOUSE.randInt();
+			
+			// create people in this apartment
+			for( var j=0; j<agentCount; j++ )
+			{
+				if( this.agents.length>=AGENT_MAX_COUNT ) break loopApartments;
+
+				var age = AGENT_AGE_YEARS.randInt()
+				if( age>17 )
+					this.agents.push( new Adult(agentHome) );
+				else
+					this.agents.push( new Child(agentHome) );
+			}
+		}
+/*
 		// add agents to all houses
 		for( var i=0; i<buildings.houses.length; i++ )
 		{
@@ -78,7 +121,6 @@ export class Agents
 	
 		// add agents to all apartments
 		for( var i=0; i<buildings.apartments.length; i++ )
-		//for( var floor=0; floor<buildings.apartments[i].floors; floor++ )
 		for( var floor=buildings.apartments[i].floors-1; floor>=0; floor-- )
 		for( var room=0; room<buildings.apartments[i].rooms.length; room++ )
 		{
@@ -100,7 +142,7 @@ export class Agents
 
 			if( this.agents.length>=AGENT_MAX_COUNT ) break;
 		}
-					
+*/					
 		// if no agents are created, but there is request to create, create 100 in a random block
 		if( this.agents.length==0 && AGENT_MAX_COUNT )
 		{

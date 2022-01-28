@@ -187,8 +187,8 @@ export const APARTMENT_BUILDING_DISTANCE = Math.max( param('abd',24), round(APAR
 export const MAX_APARTMENT_BUILDING_FLOORS = param('mabf',30);				// maximal number of floors in an apartment building
 export const APARTMENT_ROOM_SIZE = param('ars',7);							// in meters (desired size)
 export const ELEVATOR_SIZE = param('elsz',2);					// in meters
-
 export const ELEVATOR_SPEED = param2('elsp',new Range( 0.8, 2.4 ) );			// in meters/second
+export const ELEVATOR_CAPACITY = param2('elca',new Range( 6, 20 ) );			// in number of people
 
 
 // trees
@@ -213,11 +213,14 @@ export const AGENT_AGE_YEARS = param2('aay',new Range( 0, 100 ));			// in years
 export const AGENT_HEIGHT_CHILD = param2('ahc',new Range( 0.5, 1.7 ));		// in meters
 export const AGENT_HEIGHT_ADULT = param2('aha',new Range( 1.6, 1.9 ));		// in meters
 
+export const AGENT_PEOPLE_PER_HOUSE   = param2('pph',new Range( 1, 6 ));
+export const AGENT_PEOPLE_PER_APARTMENT = param2('ppa',new Range( 1, 5 ));
+/*
 export const AGENT_ADULTS_PER_HOUSE 	= param2('aph',new Range( 1, 4 ));
 export const AGENT_CHILDREN_PER_HOUSE   = param2('cph',new Range( 0, 3 ));
 export const AGENT_ADULTS_PER_APARTMENT = param2('apa',new Range( 1, 3 ));
 export const AGENT_CHILDREN_PER_APARTMENT = param2('cpa',new Range( 0, 2 ));
-
+*/
 export const AGENT_WALKING_SPEED = param2('aws',new Range( 0.6, 2.6 ));		// in meters/second
 
 // nature

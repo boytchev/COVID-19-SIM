@@ -27,6 +27,7 @@ export class Elevator
 		this.timeOffset = THREE.Math.randFloat(0,this.timeSpan);
 		
 		this.speed = ELEVATOR_SPEED.randFloat( );	// in meters/second
+				
 	} // Elevator.constructor
 	
 	

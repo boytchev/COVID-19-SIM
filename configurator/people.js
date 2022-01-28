@@ -56,6 +56,16 @@ CFG.addHeader(
 	'people,home,tracking,adult,house,child,apartment', {internal:true} );
 
 		CFG.addNumericRangeSlider(
+			'pph', 'People per house', 1, 6, {min:1, max:10, step:1, internal:true},
+			'The number of people in a house. The actual number is randomly picked from this interval.',
+			'people,home,house' );
+
+		CFG.addNumericRangeSlider(
+			'ppa', 'People per apartment', 1, 5, {min:1, max:10, step:1, internal:true},
+			'The number of people in an apartment. The actual number is randomly picked from this interval.',
+			'people,home,apartment' );
+/*
+		CFG.addNumericRangeSlider(
 			'aph', 'Adults per house', 1, 4, {min:1, max:10, step:1, internal:true},
 			'The number of adults in a house. The actual number is randomly picked from this interval.',
 			'people,home,adult,house' );
@@ -75,7 +85,7 @@ CFG.addHeader(
 			'cpa', 'Children per apartment', 0, 2, {min:0, max:10, step:1, internal:true},
 			'The number of children in an apartment. The actual number is randomly picked from this interval.',
 			'people,home,child,apartment' );
-
+*/
 		CFG.addBoolean(
 			'dal', 'Population whereabouts', false, {internal:true},
 			'If checked, once per second prints in the JS console the number of people at home, commuting and at work.',
