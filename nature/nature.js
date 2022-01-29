@@ -67,14 +67,6 @@ export class Nature
 		var totalDays = INFECTION_PATTERNS_COUNT+1,
 			peakDay = Math.round(INFECTION_PATTERNS_COUNT/3);
 			
-		var viralShedding = new THREE.SplineCurve( [
-				new THREE.Vector2( 0, 0 ),
-				new THREE.Vector2( peakDay/2, 0.15 ),
-				new THREE.Vector2( peakDay, 1 ),
-				new THREE.Vector2( totalDays/2+peakDay/2, 0.15 ),
-				new THREE.Vector2( totalDays, 0 )
-			] );
-			
 		var W = window.innerWidth-100,
 			H = window.innerHeight-100;
 			

@@ -80,8 +80,7 @@ export class ApartmentBuilding
 			// rooms
 			for( var i=0; i<positions.length-1; i++ )
 			{
-				var length = positions[i+1]-positions[i]-4,
-					mid = (positions[i+1]+positions[i])/2;
+				var length = positions[i+1]-positions[i]-4;
 					
 				var roomCount = Math.max( 1, round( length / APARTMENT_ROOM_SIZE, 1 )),
 					roomSize = length/roomCount;
@@ -118,8 +117,7 @@ export class ApartmentBuilding
 			// rooms
 			for( var i=0; i<positions.length-1; i++ )
 			{
-				var length = positions[i+1]-positions[i]-4,
-					mid = (positions[i+1]+positions[i])/2;
+				var length = positions[i+1]-positions[i]-4;
 				
 				var roomCount = Math.max( 1, round( length / APARTMENT_ROOM_SIZE, 1 ) ),
 					roomSize = length/roomCount;
@@ -167,8 +165,7 @@ export class ApartmentBuilding
 	// defines allocation of doors on a wall
 	doorPositions( wallSize, doorWings )
 	{
-		var positions = [],
-			doorWidth = doorWings * OFFICE_DOOR_WIDTH;
+		var positions = [];
 			
 		// decide doors
 		var n = Math.max( 1, round( wallSize/APARTMENT_DOOR_DISTANCE, 1 ) );

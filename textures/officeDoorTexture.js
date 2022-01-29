@@ -29,7 +29,6 @@ export class OfficeDoorTexture extends ProceduralTexture
 			DL = Math.round( 0.8*W ),	// door left
 			DR = Math.round( 0.9*W ),	// door right
 			
-			GW = Math.round( 0.1*W/64 ),
 			GH = Math.round( 0.1*H/64 );
 			
 			

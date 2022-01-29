@@ -192,12 +192,6 @@ export class Pos
 	} // Pos.add
 	
 	
-	dot( b )
-	{
-		return new Pos( this.x*b.x, this.z*b.z, this.block, this.y*(b.y||0) );
-	} // Pos.dot
-	
-	
 	to( b )
 	{
 		return new Pos( b.x-this.x, b.z-this.z, this.block, b.y-this.y );

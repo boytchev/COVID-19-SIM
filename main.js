@@ -116,8 +116,8 @@ export var navmesh = new NavMesh();		measure( 'navmesh' );
 export var textures = new Textures();	measure( 'textures' );
 export var blocks = new Blocks();		measure( 'blocks' );
 export var buildings = new Buildings();	measure( 'buildings' );
-var trees = new Trees();				measure( 'trees' );
-var crossings = new Crossings();		measure( 'crossings' );
+/*var trees =*/ new Trees();			measure( 'trees' );
+/*var crossings =*/ new Crossings();	measure( 'crossings' );
 export var agents = new Agents();		measure( 'agents' );
 var nature = new Nature();				measure( 'nature' );
 

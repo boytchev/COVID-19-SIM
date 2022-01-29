@@ -404,8 +404,6 @@ export class NavMesh
 	addApartmentBuilding( apartmentBuilding )
 	{		
 		// corner zones
-		var center = apartmentBuilding.center;
-		
 		var zone;
 		
 		// rooms - draw floor map only
