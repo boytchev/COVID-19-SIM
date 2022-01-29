@@ -116,6 +116,8 @@ function houseTemplates( dir )
 				doors.push( door );
 				
 		// finding the one door -- closest to the street
+		var outX = 0, // out - vector pointing from inside the door to outside
+			outZ = 0;
 		var closestDoorIdx = 0;
 		switch( dir )
 		{
@@ -165,8 +167,8 @@ function houseTemplates( dir )
 			door[0] -= dX;
 			door[1] -= dZ;
 		
-		var outX = 0, // out - vector pointing from inside the door to outside
-			outZ = 0;
+		outX = 0, // out - vector pointing from inside the door to outside
+		outZ = 0;
 		switch( door[2] )
 		{
 			case 0:	outZ =  1; break;
