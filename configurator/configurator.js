@@ -44,8 +44,6 @@ const configParams = new URLSearchParams(
 console.log('URL',window.location.search);
 console.log('STO',localStorage.getItem( LOCAL_STORAGE_PARAMS ));
 
-import * as ruler from './ruler.js';
-
 export var ids = [];
 export var id_count = 0;
 export var internal_id_count = 0;
@@ -102,7 +100,7 @@ export function msToString( ms, showSeconds=true, showMinutes=true, showDays=tru
 	}
 	
 	var	hours = Math.floor( seconds / SECONDS_IN_HOUR ),
-		minutes = Math.floor( (seconds%SECONDS_IN_HOUR) / SECONDS_IN_MINUTE ),
+		minutes = Math.floor( (seconds%SECONDS_IN_HOUR) / SECONDS_IN_MINUTE );
 		seconds = seconds % SECONDS_IN_MINUTE;
 
 	var str = days?days+'d ':'';
@@ -197,7 +195,7 @@ export function addNumeric( id, name, defaultValue, options, info='', tags='' )
 
 
 	// calculate width of field
-	var testVal = parseFloat(options.max)+parseFloat(options.step),
+	var testVal = parseFloat(options.max)+parseFloat(options.step);
 		testVal = Math.round( 1000000*testVal )/1000000;
 	
 	var width = Math.max( (testVal+'').length*0.9+0.5, 1.5 );
@@ -378,12 +376,12 @@ export function toggleFav( id )
 
 export function infoConfigurator()
 {
-	var elem = document.getElementById( 'cfg-si' ).click();
+	document.getElementById( 'cfg-si' ).click();
 }
 
 export function showAllConfigurator()
 {
-	var elem = document.getElementById( 'cfg-all' ).click();
+	document.getElementById( 'cfg-all' ).click();
 	toggleLatestFilter();
 }
 
@@ -453,14 +451,15 @@ export function toggleFilter( event )
 
 	localStorage.setItem( LOCAL_STORAGE_FILTER, filter );
 
-	var hideInternal = !configAllParams;
+	var hideInternal = !configAllParams,
+		show;
 	
 	switch( filter )
 	{
 		case 'fav':
 			for( var id in data )
 			{
-				var show = data[id].options?.fav;
+				show = data[id].options?.fav;
 				if( hideInternal && data[id].options.internal ) show = false;
 				data[id].block.style.display = show ? 'block' : 'none';
 			}
@@ -470,7 +469,7 @@ export function toggleFilter( event )
 		case 'all':
 			for( var id in data )
 			{
-				var show = true;
+				show = true;
 				if( hideInternal && data[id].options.internal ) show = false;
 				data[id].block.style.display = show ? 'block' : 'none';
 			}
@@ -480,7 +479,7 @@ export function toggleFilter( event )
 			for( var id in data )
 			{
 //console.log(data[id].options);
-				var show = (data[id].options.tags.indexOf(filter)>=0);
+				show = (data[id].options.tags.indexOf(filter)>=0);
 				if( hideInternal && data[id].options.internal ) show = false;
 				data[id].block.style.display = show ? 'block' : 'none';
 //				console.log(id,data[id].options.tags,filter,data[id].options.tags.indexOf(filter));
@@ -727,7 +726,7 @@ export function addNumericSlider( id, name, defaultValue, options, info='', tags
 		options.fav = predefinedFavs.indexOf(id)>=0;
 
 	// calculate width of field
-	var testVal = parseFloat(options.max)+parseFloat(options.step),
+	var testVal = parseFloat(options.max)+parseFloat(options.step);
 		testVal = Math.round( 1000000*testVal )/1000000;
 	
 	var width = Math.max( (testVal+'').length*0.58, 1.5 );
@@ -817,7 +816,7 @@ export function addNumericListSlider( id, name, defaultValue, options, info='', 
 		options.fav = predefinedFavs.indexOf(id)>=0;
 
 	// calculate width of field
-	var testVal = parseFloat( options.max ),
+	var testVal = parseFloat( options.max );
 		testVal = Math.round( 1000000*testVal )/1000000;
 	
 	var width = Math.max( (testVal+'').length*0.58, 1.5 );
@@ -994,7 +993,7 @@ export function addNumericRangeSlider( id, name, defaultValueA, defaultValueB, o
 		options.fav = predefinedFavs.indexOf(id)>=0;
 
 	// calculate width of field
-	var testVal = parseFloat(options.max)+parseFloat(options.step),
+	var testVal = parseFloat(options.max)+parseFloat(options.step);
 		testVal = Math.round( 1000000*testVal )/1000000;
 	
 	var width = 2*Math.max( (testVal+'').length*0.58, 1.5 )+0.25;

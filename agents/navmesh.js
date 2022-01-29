@@ -24,10 +24,9 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {DEBUG_NAVMESH_SHOW_LINES, DEBUG_NAVMESH_SHOW_MESHES, DEBUG_NAVMESH_SHOW_FLOORS, SIDEWALK_WIDTH, DEBUG_NAVMESH_OPACITY, DEBUG_NAVMESH_SHOW_ELEVATORS, ELEVATOR_SIZE, FLOOR_HEIGHT} from '../config.js';
+import {DEBUG_NAVMESH_SHOW_LINES, DEBUG_NAVMESH_SHOW_MESHES, DEBUG_NAVMESH_SHOW_FLOORS, /*SIDEWALK_WIDTH,*/ DEBUG_NAVMESH_OPACITY, DEBUG_NAVMESH_SHOW_ELEVATORS, ELEVATOR_SIZE, FLOOR_HEIGHT} from '../config.js';
 import {scene, buildings, navmesh} from '../main.js';
 import {RectZone, BlockZone, Size, Pos, TOP, RIGHT, LEFT, BOTTOM} from '../core.js';
-import {sortRing} from '../coreNav.js';
 
 
 
@@ -336,8 +335,7 @@ export class NavMesh
 ***/		
 
 		// add the house path outer point to the block ring
-		var route = house.factory.route,
-			pathZone = new NavMeshHouseZone( house.streetPos, new Size(2/3,2/3), house.center.block, house );
+		var pathZone = new NavMeshHouseZone( house.streetPos, new Size(2/3,2/3), house.center.block, house );
 		this.zones.push( zone );
 		house.center.block.ring.push( pathZone );
 		
@@ -406,20 +404,9 @@ export class NavMesh
 	addApartmentBuilding( apartmentBuilding )
 	{		
 		// corner zones
-		var center = apartmentBuilding.center,
-			size = apartmentBuilding.size;
-			
-//		apartmentBuilding.cornerZones.a = new NavMeshBlockZone( center.addXZ(-size.x/2-1,+size.z/2+1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
-//		apartmentBuilding.cornerZones.b = new NavMeshBlockZone( center.addXZ(+size.x/2+1,+size.z/2+1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
-//		apartmentBuilding.cornerZones.c = new NavMeshBlockZone( center.addXZ(+size.x/2+1,-size.z/2-1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
-//		apartmentBuilding.cornerZones.d = new NavMeshBlockZone( center.addXZ(-size.x/2-1,-size.z/2-1), NavMesh.CORNER_SIZE, apartmentBuilding.block, apartmentBuilding );
+		var center = apartmentBuilding.center;
 		
-//		this.zones.push( apartmentBuilding.cornerZones.a,
-//						 apartmentBuilding.cornerZones.b,
-//						 apartmentBuilding.cornerZones.c,
-//						 apartmentBuilding.cornerZones.d );
-		
-		var zone, pos;
+		var zone;
 		
 		// rooms - draw floor map only
 		for( var i=0; i<apartmentBuilding.rooms.length; i++ )

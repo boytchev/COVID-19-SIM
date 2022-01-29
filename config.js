@@ -1,7 +1,6 @@
 // size of the simulated world
 
-import * as THREE from './js/three.module.js';
-import {msToString, timeMs, Size, Range, round} from './core.js';
+import {timeMs, Range, round} from './core.js';
 
 
 const LOCAL_STORAGE_PARAMS = 'covid-19-params'; // same name used in covid-19-configurator.js

@@ -16,7 +16,6 @@ import {HouseBuilding} from '../objects/houseBuildings.js';
 import {ApartmentBuilding} from '../objects/apartmentBuildings.js';
 import {OfficeBuilding} from '../objects/officeBuildings.js';
 import {buildings, blocks} from '../main.js';
-import {drawArrow} from '../core.js';
 import {pick} from '../coreNav.js';
 import {FLOOR_HEIGHT} from '../config.js';
 
@@ -116,7 +115,8 @@ export class Address
 } // Address
 	
 //var poss = -0.2;
-	
+
+/*	
 class SimpleWorkAddress extends Address
 {
 	constructor()
@@ -158,7 +158,7 @@ class SimpleWorkAddress extends Address
 	} // SimpleWorkAddress.constructor
 	
 } // SimpleWorkAddress
-
+*/
 
 
 export class WorkAddress extends Address

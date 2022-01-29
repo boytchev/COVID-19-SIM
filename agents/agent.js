@@ -29,34 +29,12 @@ var agent_id = 0;
 import * as THREE from '../js/three.module.js';
 
 import {AgentBehaviour} from './agentBehaviour.js';
-import {Agents} from './agents.js';
 import {WorkAddress} from './address.js';
 import {AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, INFECTION_STRENGTH, IMMUNE_CURE_FACTOR, INFECTION_STEP, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF, MASK_INHALE_EFFECTIVENESS, MASK_EXHALE_EFFECTIVENESS} from '../config.js';
-import {font} from '../font.js';
-import {scene, controls, agents, frame} from '../main.js';
+import {agents, frame} from '../main.js';
 import {round, Range, drawArrow, msToString} from '../core.js';
 import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs} from '../nature/nature.js';
 
-
-
-/*if( INFECTION_OVERHEAD_INDICATOR )
-{	
-	var labelGeometry = [];
-	for( var i=0; i<=100; i++ )
-	{
-		var fontGeometry = new THREE.TextBufferGeometry( ''+i+'%', {
-				font: font.font,
-				size: 0.5,
-				height: 0.03,
-				curveSegments: 4,
-				bevelEnabled: false,
-			} );
-		fontGeometry.computeBoundingBox();
-		fontGeometry.translate( (fontGeometry.boundingBox.min.x-fontGeometry.boundingBox.max.x)/2, 1.9, 0 );
-		labelGeometry.push( fontGeometry );
-	}
-} // if( INFECTION_OVERHEAD_INDICATOR )
-*/
 
 
 class Agent extends AgentBehaviour
@@ -258,7 +236,6 @@ class Agent extends AgentBehaviour
 		}
 		
 		var index = maxIndex,
-			step = round( (maxIndex-minIndex+1)/1.2, 1 ),
 			probe = THREE.Math.randFloat(Agent.census[minIndex-1],Agent.census[maxIndex]);
 	
 		var lowIndex = minIndex;
@@ -270,16 +247,6 @@ class Agent extends AgentBehaviour
 			else
 				index = mid;
 		}
-		
-/*	
-		step = 1;
-	
-		while( index>minIndex )
-		{
-			if( Agent.census[index-step] < probe ) break;
-			index -= step;
-		}
-*/		
 		
 
 //console.log('age ->',index);

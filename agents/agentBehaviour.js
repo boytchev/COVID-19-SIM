@@ -38,11 +38,11 @@
 //
 
 
-import * as THREE from '../js/three.module.js';
+//import * as THREE from '../js/three.module.js';
 
-import {RectZone, BlockZone, timeMs, Pos, Range, almostEqual, drawArrow, msToString} from '../core.js';
+import {RectZone, BlockZone, Pos, almostEqual, drawArrow/*, msToString*/} from '../core.js';
 import {agents} from '../main.js';
-import {pick, pickDirection, clipLineRoute, pickDistance, pickClosest} from '../coreNav.js';
+import {pickDirection, clipLineRoute, pickDistance, pickClosest} from '../coreNav.js';
 import {dayTimeMs, deltaTime} from '../nature/nature.js';
 import {Crossing} from '../objects/crossings.js';
 import {Elevator} from '../objects/elevators.js';
