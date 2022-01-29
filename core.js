@@ -78,7 +78,6 @@
 
 import * as THREE from './js/three.module.js';
 import {GROUND_SIZE, SKYSCRAPERS, GROUND_EDGE, DEBUG_NAVMESH_SHOW_LINES, HOURS_24_MS, SECONDS_IN_DAY, SECONDS_IN_HOUR, SECONDS_IN_MINUTE, FLOOR_HEIGHT} from './config.js';
-import {OfficeDoor} from './objects/officeDoors.js';
 import {scene} from './main.js';
 import {TextGeometry} from './js/TextGeometry.js';
 import {font} from './font.js';

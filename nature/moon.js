@@ -5,7 +5,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {SUN, EARTH_SIZE} from '../config.js';
+import {EARTH_SIZE} from '../config.js';
 import {scene,textures} from '../main.js';
 
 

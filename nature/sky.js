@@ -5,12 +5,10 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {EARTH_SIZE, GROUND_EDGE, DEBUG_ALL_WHITE, SUN, STATIC_SUN, STATIC_SUN_POSITION_MS, GROUND_SIZE, SHADOWS, NO_SHADOWS, FULL_SHADOWS, SHADOWS_MAP_SIZE, SHADOWS_MAX_COUNT, AGENTS_CAST_SHADOWS, DEBUG_SUN_POSITION_GUI, SUN_HORIZONTAL_ANGLE, SAFE_MODE } from '../config.js';
-import {NatureMaterial, dayTimeMs} from './nature.js';
+import {GROUND_EDGE, DEBUG_ALL_WHITE, SUN, STATIC_SUN, GROUND_SIZE, SHADOWS, NO_SHADOWS, FULL_SHADOWS, SHADOWS_MAP_SIZE, AGENTS_CAST_SHADOWS, DEBUG_SUN_POSITION_GUI, SUN_HORIZONTAL_ANGLE, SAFE_MODE } from '../config.js';
 import {Sun} from './sun.js';
 import {/*MoonLight, */Moon} from './moon.js';
-import {agents, scene, renderer, controls, camera, textures} from '../main.js';
-import {timeMs} from '../core.js';
+import {agents, scene, renderer} from '../main.js';
 
 
 /* Comments:

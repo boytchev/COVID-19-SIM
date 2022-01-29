@@ -29,7 +29,7 @@ import * as THREE from './js/three.module.js';
 import * as dat from './js/dat.gui.module.js';
 import {OrbitControls} from './js/OrbitControls.js';
 //import {FirstPersonControls} from './js/FirstPersonControls.js';
-import {PIXEL_ART_STYLE, SAFE_MODE} from './config.js';
+import {PIXEL_ART_STYLE} from './config.js';
 import {deltaTimeReal} from './nature/nature.js';
 
 var container = document.getElementById( 'container' );
@@ -62,7 +62,7 @@ import {Nature, currentTimeMs, simulationPlaying, toggleSimulationPlayPause} fro
 import {Textures} from './textures/textures.js';
 import {Blocks} from './objects/blocks.js';
 import {Trees} from './nature/trees.js';
-import {Crossing,Crossings} from './objects/crossings.js';
+import {Crossings} from './objects/crossings.js';
 import {Agents, agentsAtHome, agentsAtWork, agentsOutside, agentsInfected} from './agents/agents.js';
 import {NavMesh} from './agents/navmesh.js';
 import {Buildings} from './objects/buildings.js';

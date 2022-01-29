@@ -11,7 +11,6 @@
 
 import * as THREE from '../js/three.module.js';
 import {INFECTION_PATTERNS_COUNT, DEBUG_TIME_SPEED, START_TIME, HOURS_24_MS, DEBUG_SHOW_VIRAL_SHEDDING} from '../config.js';
-import {animate, renderer} from '../main.js';
 import {Ground} from './ground.js';
 import {Sky} from './sky.js';
 

@@ -80,12 +80,9 @@ export class OfficeBuilding
 		//console.log('roomCount=',roomCount);
 
 		// positions of elevators
-		var elevX = Math.floor( roomCount.x/3 ),
-			elevZ = Math.floor( roomCount.z/3 );
+		var elevX = Math.floor( THREE.Math.randInt(roomCount.x/4, roomCount.x/2-1) ),
+			elevZ = Math.floor( THREE.Math.randInt(roomCount.z/4, roomCount.z/2-1) );
 			
-		elevX = Math.floor( THREE.Math.randInt(roomCount.x/4, roomCount.x/2-1) );
-		elevZ = Math.floor( THREE.Math.randInt(roomCount.z/4, roomCount.z/2-1) );
-		
 		var room;
 		for( var x=0; x<roomCount.x; x++ )
 		for( var z=0; z<roomCount.z; z++ )
@@ -470,7 +467,7 @@ export class OfficeBuildings
 			
 			// avoid tall sheet-flat buildings
 			var minSize = Math.min( sizeX, sizeZ );
-			if( minSize<10 & floors>20 ) floors = THREE.Math.randInt(10,20);  
+			if( minSize<10 && floors>20 ) floors = THREE.Math.randInt(10,20);  
 
 			var office = new OfficeBuilding(
 								block.zone.center,

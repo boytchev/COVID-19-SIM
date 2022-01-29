@@ -32,7 +32,7 @@ import {AgentBehaviour} from './agentBehaviour.js';
 import {WorkAddress} from './address.js';
 import {AGENT_AGE_YEARS, AGENT_WALKING_SPEED, IMMUNE_STRENGTH, DEBUG_SHOW_HOME_TO_WORK_ARROW, PERCENTAGE_INITIAL_INFECTED, AGENT_HEIGHT_ADULT, DEBUG_FOLLOW_AGENT_HEALTH, AGENT_HEIGHT_CHILD, INFECTION_PATTERNS_COUNT, INFECTION_TOTAL_MS, IMMUNE_RECOVERY_FACTOR, INFECTION_COLOR_INDICATOR, INFECTION_DISTANCE, DEBUG_AGENT_ACTIONS, INFECTION_STRENGTH, IMMUNE_CURE_FACTOR, INFECTION_STEP, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF, MASK_INHALE_EFFECTIVENESS, MASK_EXHALE_EFFECTIVENESS} from '../config.js';
 import {agents, frame} from '../main.js';
-import {round, Range, drawArrow, msToString} from '../core.js';
+import {Range, drawArrow, msToString} from '../core.js';
 import {currentTimeMs, previousDayTimeMs, deltaTime, dayTimeMs} from '../nature/nature.js';
 
 

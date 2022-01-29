@@ -294,7 +294,7 @@ function draw()
 		var max = data.options.max,
 			min = data.options.min,
 			labelStep = data.options.labelStep || data.options.step || 1,
-			dotStep = data.options.dotStep || labelStep || 1;
+			dotStep = data.options.dotStep || labelStep;
 
 		ctx.beginPath();
 		if( data.options.labels )

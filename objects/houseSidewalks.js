@@ -15,7 +15,7 @@
 
 import * as THREE from '../js/three.module.js';
 import {SIDEWALK_TEXTURE_SCALE,DEBUG_ALL_WHITE, SIDEWALK_WIDTH, DEBUG_BLOCKS_OPACITY} from '../config.js';
-import {RIGHT, TOP, LEFT, BOTTOM, Pos, Size, drawArrow} from '../core.js';
+import {RIGHT, TOP, LEFT, BOTTOM, Size} from '../core.js';
 import {NatureMaterial} from '../nature/nature.js';
 import {textures, scene} from '../main.js';
 
