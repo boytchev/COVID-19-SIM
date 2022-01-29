@@ -711,12 +711,13 @@ export function almostEqual( x, y, epsilon = 0.0001 )
 } // almostEqual
 
 
-
+/*
 function distanceBetween( a, b )
 {
 	console.warn('function distanceBetween is deprecated, use pos.distanceTo');
 	return Math.sqrt( (a.x-b.x)*(a.x-b.x) + (a.z-b.z)*(a.z-b.z) );
 }
+
 
 function distanceManhattan( a, b )
 {
@@ -725,13 +726,12 @@ function distanceManhattan( a, b )
 }
 
 
-
 function midPointBetween( a, b )
 {
 	console.warn('function midPointBetween is deprecated, use pos.midPointTo');
 	return {x: (a.x+b.x)/2, z: (a.z+b.z)/2 };
 }
-
+*/
 
 
 

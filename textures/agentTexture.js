@@ -461,20 +461,20 @@ export class AgentTexture extends ProceduralTexture
 			ctx.bezierCurveTo( X(x2), Y(y2), X(x3), Y(y3), X(x4), Y(y4) );
 			ctx.stroke();
 		}
-		function path( x1, y1, width = 0.1 )
-		{
-			ctx.lineWidth = X(width);
-			ctx.beginPath();
-			ctx.moveTo( X(x1), Y(y1) );
-		}
-		function to( x1, y1 )
-		{
-			ctx.lineTo( X(x1), Y(y1) );
-		}
-		function end( )
-		{
-			ctx.stroke();
-		}
+		// function path( x1, y1, width = 0.1 )
+		// {
+			// ctx.lineWidth = X(width);
+			// ctx.beginPath();
+			// ctx.moveTo( X(x1), Y(y1) );
+		// }
+		// function to( x1, y1 )
+		// {
+			// ctx.lineTo( X(x1), Y(y1) );
+		// }
+		// function end( )
+		// {
+			// ctx.stroke();
+		// }
 		
 		var ctx = this.ctx,
 			W = this.width,

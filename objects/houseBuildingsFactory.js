@@ -19,7 +19,22 @@
 
 console.time( 'House Factory' );
 
-import {Size} from '../core.js';
+//import {Size} from '../core.js';
+class FactorySize
+{
+	constructor( x, z )
+	{
+		this.x = x;
+		this.z = z;
+	} // Size.constructor
+
+	shrink( margin )
+	{
+		return new FactorySize( this.x-margin, this.z-margin );
+	} // Size.constructor
+
+} // Size
+
 
 // return list of door positions and orientations
 // for a house wing at (px,pz) and size (sx,sz)
@@ -97,9 +112,9 @@ function houseTemplates( dir )
 			dZ = Math.round( Math.max(maxAZ,maxBZ)/2 + Math.min(minAZ,minBZ)/2 );
 			
 		var posA  = {x:-dX,		z:-dZ},
-			sizeA = new Size(sizeAX,sizeAZ),
+			sizeA = new FactorySize(sizeAX,sizeAZ),
 			posB  = {x:posBX-dX,z:posBZ-dZ},
-			sizeB = new Size(sizeBX,sizeBZ);
+			sizeB = new FactorySize(sizeBX,sizeBZ);
 
 		// doors of wings
 		var doorsA = wingDoors( 0, 0, sizeAX, sizeAZ ),

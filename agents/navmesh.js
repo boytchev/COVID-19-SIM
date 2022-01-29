@@ -345,7 +345,7 @@ export class NavMesh
 	
 	addOfficeBuilding( officeBuilding )
 	{		
-		var zone, pos;
+		var zone;
 
 		// office rooms - draw floor map only
 		for( var i=0; i<officeBuilding.rooms.length; i++ )
