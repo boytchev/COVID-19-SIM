@@ -668,7 +668,7 @@ export function msToString( ms )
 	
 	var days = Math.floor( totalSeconds / SECONDS_IN_DAY ),
 		hours = Math.floor( seconds / SECONDS_IN_HOUR ),
-		minutes = Math.floor( (seconds%SECONDS_IN_HOUR) / SECONDS_IN_MINUTE ),
+		minutes = Math.floor( (seconds%SECONDS_IN_HOUR) / SECONDS_IN_MINUTE );
 		seconds = seconds % SECONDS_IN_MINUTE;
 		
 	return (days?days+'d ':'')+(hours<10?'0':'')+hours+(minutes<10?':0':':')+minutes+(seconds<10?':0':':')+seconds;
@@ -697,10 +697,10 @@ function random()
 
 
 
-function gaussRandom()
-{
-	return (random()+random()+random()+random()+random())/5;
-} // gaussRandom
+// function gaussRandom()
+// {
+	// return (random()+random()+random()+random()+random())/5;
+// } // gaussRandom
 
 
 

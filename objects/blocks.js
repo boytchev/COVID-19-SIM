@@ -232,7 +232,7 @@ export class Blocks
 			if ( distanceToCityCenter > urbanRadius + suburbRadius)
 			{	
 				// this block is with vegetation
-				var block = new Block( zone, BLOCK_PARK, streets );
+				let block = new Block( zone, BLOCK_PARK, streets );
 				block.outskirts = true;
 				this.parks.push( block );
 				this.allTrueBlocks.push( block );
@@ -278,7 +278,7 @@ export class Blocks
 		var addVerticalStreet = dX*(0.7+Math.random()) > dZ*(0.7+Math.random()),
 			addHorizontalStreet = !addVerticalStreet;
 
-		var n,m,cn,qa,newStreets;
+		var n,m,newStreets;
 		if( addVerticalStreet && (dX >= tresholdFactor*BLOCK_SPLIT_TRESHOLD) )
 		{	// split left-right
 			//	A---M-------B
@@ -336,7 +336,7 @@ export class Blocks
 		}	
 		else
 		{	// no split
-			var block = new Block( zone, type, streets );
+			let block = new Block( zone, type, streets );
 			this[type.name].push( block );
 			this.allTrueBlocks.push( block );
 	

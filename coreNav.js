@@ -111,7 +111,9 @@ export function pickDirection( fromPosition, viaPositions, finalPosition, avoidP
 
 	// vector to the final position
 	var vecFinal = fromPosition.to( finalPosition ),
-		lenFinal = vecFinal.dot( vecFinal );
+		lenFinal = vecFinal.dot( vecFinal ),
+		cosine,
+		distance;
 	
 	for( var i=0; i<n; i++)
 	{	
@@ -120,14 +122,13 @@ export function pickDirection( fromPosition, viaPositions, finalPosition, avoidP
 		if( avoidPositions.indexOf(midPosition)<0 )
 		{
 			// distance to mid position and then to final position
-			var distance = fromPosition.distanceToSq( midPosition )+midPosition.distanceToSq( finalPosition );
+			distance = fromPosition.distanceToSq( midPosition )+midPosition.distanceToSq( finalPosition );
 			minDistance = Math.min( minDistance, distance );
 				
 			// vectors to a possible position
 			var vecPossible = fromPosition.to( midPosition ),
 				lenPossible = vecPossible.dot( vecPossible );
 
-			var cosine;
 			if( lenPossible<1 )
 				cosine = -1;
 			else
@@ -135,8 +136,8 @@ export function pickDirection( fromPosition, viaPositions, finalPosition, avoidP
 		}
 		else
 		{
-			var distance = 2*GROUND_SIZE;
-			var cosine = -1;
+			distance = 2*GROUND_SIZE;
+			cosine = -1;
 		}
 		
 		scores[i] = {index: i, cos: cosine, dist: distance};
@@ -361,13 +362,13 @@ export function sortRing( ring, center )
 
 
 
-function findRingIndex( ring, position, closeness = 1 )
-{
-	for( var i=0; i<ring.length; i++)
-	{
-		if( position.manhattanDistanceTo(ring[i].center) < closeness )
-			return i;
-	}
+// function findRingIndex( ring, position, closeness = 1 )
+// {
+	// for( var i=0; i<ring.length; i++)
+	// {
+		// if( position.manhattanDistanceTo(ring[i].center) < closeness )
+			// return i;
+	// }
 	
-	return -1;
-} // findRingIndex
+	// return -1;
+// } // findRingIndex

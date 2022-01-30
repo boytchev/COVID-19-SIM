@@ -157,17 +157,18 @@ export class OfficeBuilding
 			if( n==1 ) break;
 		}
 
+		var pos;
 		switch (n)
 		{
 			case 1:
 					positions.push( 0 );
 					break;
 			case 2:
-					var pos = THREE.Math.randFloat( 0.5*doorWidth+1, wallSize/2-doorWidth );	
+					pos = THREE.Math.randFloat( 0.5*doorWidth+1, wallSize/2-doorWidth );	
 					positions.push( pos, -pos );
 					break;
 			case 3:
-					var pos = THREE.Math.randFloat( 1.5*doorWidth, wallSize/2-doorWidth );	
+					pos = THREE.Math.randFloat( 1.5*doorWidth, wallSize/2-doorWidth );	
 					positions.push( pos, 0, -pos );
 					break;
 			default:
@@ -535,15 +536,16 @@ export class OfficeBuildings
 
 		if( SHADOWS != NO_SHADOWS )
 		{
-			var geometry  = OfficeBuildings.geometry(),
-				material  = new THREE.MeshBasicMaterial({
-					side: THREE.BackSide,
-					//color: 'black',
-					transparent: true,
-					opacity: 0,
-					depthWrite: false,
-				}),
-				shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
+			geometry  = OfficeBuildings.geometry();
+			material  = new THREE.MeshBasicMaterial({
+				side: THREE.BackSide,
+				//color: 'black',
+				transparent: true,
+				opacity: 0,
+				depthWrite: false,
+			});
+			shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
+			
 			for( var i=0; i<instances; i++ )
 			{
 				matrix.makeScale( offices[i].size.x-1, offices[i].height-0.1, offices[i].size.z-1 );
