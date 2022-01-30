@@ -526,13 +526,13 @@ export class NavMesh
 		scene.add(image);
 		
 		
-		var material = new THREE.MeshLambertMaterial({
-				side: THREE.FrontSide,
-				color: 'yellow',
-				transparent: DEBUG_NAVMESH_OPACITY<1,
-				opacity: DEBUG_NAVMESH_OPACITY
-			}),
-			geometry = new THREE.BoxGeometry( 1/5, 1/2, 1/5 );
+		material = new THREE.MeshLambertMaterial({
+			side: THREE.FrontSide,
+			color: 'yellow',
+			transparent: DEBUG_NAVMESH_OPACITY<1,
+			opacity: DEBUG_NAVMESH_OPACITY
+		});
+		geometry = new THREE.BoxGeometry( 1/5, 1/2, 1/5 );
 			
 		var instances = this.lines.length/3,
 			mesh = new THREE.InstancedMesh( geometry, material, instances ),
@@ -564,14 +564,16 @@ export class NavMesh
 				opacity: DEBUG_NAVMESH_OPACITY
 			});
 	
-		var geometry = new THREE.BoxGeometry( ELEVATOR_SIZE, 1, ELEVATOR_SIZE );
+		var geometry = new THREE.BoxGeometry( ELEVATOR_SIZE, 1, ELEVATOR_SIZE ),
+			mesh,
+			elevator;
 			
 		for( var j=0; j<buildings.offices.length; j++ )
 		for( var i=0; i<buildings.offices[j].elevators.length; i++ )
 		{
-			var elevator = buildings.offices[j].elevators[i]; 
+			elevator = buildings.offices[j].elevators[i]; 
 			
-			var mesh = new THREE.Mesh( geometry, material );
+			mesh = new THREE.Mesh( geometry, material );
 			mesh.scale.y = buildings.offices[j].floors * FLOOR_HEIGHT;
 			mesh.position.set( elevator.zone.center.x, mesh.scale.y/2, elevator.zone.center.z );
 
@@ -581,9 +583,9 @@ export class NavMesh
 		for( var j=0; j<buildings.apartments.length; j++ )
 		for( var i=0; i<buildings.apartments[j].elevators.length; i++ )
 		{
-			var elevator = buildings.apartments[j].elevators[i]; 
+			elevator = buildings.apartments[j].elevators[i]; 
 			
-			var mesh = new THREE.Mesh( geometry, material );
+			mesh = new THREE.Mesh( geometry, material );
 			mesh.scale.y = buildings.apartments[j].floors * FLOOR_HEIGHT;
 			mesh.position.set( elevator.zone.center.x, mesh.scale.y/2, elevator.zone.center.z );
 

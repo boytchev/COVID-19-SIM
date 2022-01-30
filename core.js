@@ -690,10 +690,10 @@ export function round( x, modulo = 0.1 )
 
 
 
-function random()
-{
-	return Math.random();
-} // random
+// function random()
+// {
+	// return Math.random();
+// } // random
 
 
 

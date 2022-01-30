@@ -61,7 +61,7 @@ export class ApartmentBuilding
 		if( size.z > size.x )
 		{
 			// decide doors on Z sides
-			var positions = this.doorPositions( size.z, doorWings );
+			let positions = this.doorPositions( size.z, doorWings );
 
 			for( var i=0; i<positions.length; i++ )
 			{
@@ -80,9 +80,9 @@ export class ApartmentBuilding
 			// rooms
 			for( var i=0; i<positions.length-1; i++ )
 			{
-				var length = positions[i+1]-positions[i]-4;
+				let length = positions[i+1]-positions[i]-4;
 					
-				var roomCount = Math.max( 1, round( length / APARTMENT_ROOM_SIZE, 1 )),
+				let roomCount = Math.max( 1, round( length / APARTMENT_ROOM_SIZE, 1 )),
 					roomSize = length/roomCount;
 
 				for( var j=0; j<roomCount; j++ )
@@ -98,7 +98,7 @@ export class ApartmentBuilding
 		else
 		{
 			// decide doors on X sides
-			var positions = this.doorPositions( size.x, doorWings );
+			let positions = this.doorPositions( size.x, doorWings );
 
 			for( var i=0; i<positions.length; i++ )
 			{
@@ -117,9 +117,9 @@ export class ApartmentBuilding
 			// rooms
 			for( var i=0; i<positions.length-1; i++ )
 			{
-				var length = positions[i+1]-positions[i]-4;
+				let length = positions[i+1]-positions[i]-4;
 				
-				var roomCount = Math.max( 1, round( length / APARTMENT_ROOM_SIZE, 1 ) ),
+				let roomCount = Math.max( 1, round( length / APARTMENT_ROOM_SIZE, 1 ) ),
 					roomSize = length/roomCount;
 
 				for( var j=0; j<roomCount; j++ )
@@ -517,11 +517,11 @@ export class ApartmentBuildings
 				// number of buildings
 				var toZ = Math.min(a.z,b.z),
 					fromZ = Math.max(c.z,d.z);
-				var slices = Math.round( (toZ-fromZ) / APARTMENT_BUILDING_DISTANCE );
+				let slices = Math.round( (toZ-fromZ) / APARTMENT_BUILDING_DISTANCE );
 
 				if (slices)
 				{
-					var sliceSize = (toZ-fromZ) / slices;
+					let sliceSize = (toZ-fromZ) / slices;
 					
 					for( var s = 0; s<slices; s++ )
 					{
@@ -546,11 +546,11 @@ export class ApartmentBuildings
 				// number of buildings
 				var toX = Math.min(b.x,c.x),
 					fromX = Math.max(a.x,d.x);
-				var slices = Math.round( (toX-fromX) / APARTMENT_BUILDING_DISTANCE );
+				let slices = Math.round( (toX-fromX) / APARTMENT_BUILDING_DISTANCE );
 
 				if (slices)
 				{
-					var sliceSize = (toX-fromX) / slices;
+					let sliceSize = (toX-fromX) / slices;
 					
 					for( var s = 0; s<slices; s++ )
 					{
@@ -623,15 +623,17 @@ export class ApartmentBuildings
 
 		if( SHADOWS != NO_SHADOWS )
 		{
-			var geometry  = ApartmentBuildings.geometry(),
-				material  = new THREE.MeshBasicMaterial({
-					side: THREE.BackSide,
-					//color: 'crimson',
-					transparent: true,
-					opacity: 0,
-					depthWrite: false,
-				}),
-				shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
+			geometry  = ApartmentBuildings.geometry(),
+			material  = new THREE.MeshBasicMaterial({
+				side: THREE.BackSide,
+				//color: 'crimson',
+				transparent: true,
+				opacity: 0,
+				depthWrite: false,
+			});
+				
+			var	shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
+			
 			for( var i=0; i<instances; i++ )
 			{
 				matrix.makeScale( apartments[i].size.x-1, apartments[i].height-0.1, apartments[i].size.z-1 );
