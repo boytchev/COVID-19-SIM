@@ -123,39 +123,39 @@ function houseTemplates( dir )
 		// doors of house
 		var doors = [];
 		
-		for( var door of doorsA )
+		for( let door of doorsA )
 			if( door[0]<minBX || door[0]>maxBX || door[1]<minBZ || door[1]>maxBZ )
 				doors.push( door );
-		for( var door of doorsB )
+		for( let door of doorsB )
 			if( door[0]<minAX || door[0]>maxAX || door[1]<minAZ || door[1]>maxAZ )
 				doors.push( door );
 				
 		// finding the one door -- closest to the street
-		var outX = 0, // out - vector pointing from inside the door to outside
-			outZ = 0;
+		//var outX = 0, // out - vector pointing from inside the door to outside
+		//	outZ = 0;
 		var closestDoorIdx = 0;
 		switch( dir )
 		{
 			case 3/**0**/:
-				outZ = -1;
+				//outZ = -1;
 				for( var i = 1; i<doors.length; i++ )
 					if( doors[i][1] < doors[closestDoorIdx][1] )
 						closestDoorIdx = i;
 				break;
 			case 0/**1**/:
-				outX = 1;
+				//outX = 1;
 				for( var i = 1; i<doors.length; i++ )
 					if( doors[i][0] > doors[closestDoorIdx][0] )
 						closestDoorIdx = i;
 				break;
 			case 1/**2**/:
-				outZ = 1;
+				//outZ = 1;
 				for( var i = 1; i<doors.length; i++ )
 					if( doors[i][1] > doors[closestDoorIdx][1] )
 						closestDoorIdx = i;
 				break;
 			case 2/**3**/:
-				outX = -1;
+				//outX = -1;
 				for( var i = 1; i<doors.length; i++ )
 					if( doors[i][0] < doors[closestDoorIdx][0] )
 						closestDoorIdx = i;
@@ -182,8 +182,8 @@ function houseTemplates( dir )
 			door[0] -= dX;
 			door[1] -= dZ;
 		
-		outX = 0, // out - vector pointing from inside the door to outside
-		outZ = 0;
+		var outX = 0, // out - vector pointing from inside the door to outside
+			outZ = 0;
 		switch( door[2] )
 		{
 			case 0:	outZ =  1; break;

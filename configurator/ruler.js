@@ -50,8 +50,8 @@ function show( )
 
 	width = Math.round( rect.right - rect.left );
 
-	var rect = data.block.getBoundingClientRect(),
-		topPos  = rect.top + window.scrollY;
+	rect = data.block.getBoundingClientRect();
+	var	topPos  = rect.top + window.scrollY;
 		
 	canvas.style.display = 'block';
 	canvas.style.left = (leftPos-EXT/2)+'px';
@@ -128,7 +128,7 @@ function pos( value )
 // get value from pixel position 
 function unpos( x )
 {
-	var value;
+	var max, min, value;
 	
 	switch( data.type )
 	{
@@ -136,16 +136,16 @@ function unpos( x )
 		case NUMERIC_RANGE_SLIDER:
 		case TEMPORAL_SLIDER:
 		case TEMPORAL_RANGE_SLIDER:
-			var max = data.options.max,
-				min = data.options.min,
-				step = data.options.step||1,
-				value = (x-EXT/2-11)/(width-22)*(max-min)+min;
+			max = data.options.max;
+			min = data.options.min;
+			var	step = data.options.step||1;
+			value = (x-EXT/2-11)/(width-22)*(max-min)+min;
 			return Math.max( Math.min( Math.round(value/step)*step, max ), min );	
 			
 		case NUMERIC_LIST_SLIDER:
-			var max = data.options.values.length-1,
-				min = 0,
-				value = (x-EXT/2-11)/(width-22)*(max-min)+min;
+			max = data.options.values.length-1;
+			min = 0;
+			value = (x-EXT/2-11)/(width-22)*(max-min)+min;
 			return Math.max( Math.min( Math.round(value), max ), min );	
 			
 		default:
@@ -289,12 +289,14 @@ function draw()
 	ctx.fillRect( EXT/2+11, DOT_Y_POS-0.5, width-22, 1 );
 	ctx.fillStyle = 'black';
 	
+	var max, min, labelStep, dotStep;
+	
 	if( data.type == NUMERIC_SLIDER || data.type == NUMERIC_RANGE_SLIDER)
 	{
-		var max = data.options.max,
-			min = data.options.min,
-			labelStep = data.options.labelStep || data.options.step || 1,
-			dotStep = data.options.dotStep || labelStep;
+		max = data.options.max;
+		min = data.options.min;
+		labelStep = data.options.labelStep || data.options.step || 1;
+		dotStep = data.options.dotStep || labelStep;
 
 		ctx.beginPath();
 		if( data.options.labels )
@@ -347,10 +349,10 @@ function draw()
 	else
 	if( data.type == TEMPORAL_SLIDER || data.type == TEMPORAL_RANGE_SLIDER)
 	{
-		var max = data.options.max,
-			min = data.options.min,
-			labelStep = data.options.labelStep||timeMs(1),
-			dotStep = data.options.dotStep||timeMs(1);
+		max = data.options.max;
+		min = data.options.min;
+		labelStep = data.options.labelStep||timeMs(1)
+		dotStep = data.options.dotStep||timeMs(1);
 
 		ctx.beginPath();
 

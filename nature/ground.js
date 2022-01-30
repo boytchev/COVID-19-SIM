@@ -54,16 +54,16 @@ class Ground
 		scene.add( image );
 
 		// add green ground around the city
-		var geometry = new THREE.RingGeometry( 0, EARTH_SIZE/2, 128, 5, true ).rotateX( -Math.PI/2 );
-		var material = new NatureMaterial( {
-				color: DEBUG_ALL_WHITE?'lightgray':BLOCK_PARK.color,
-				//depthTest: false,
-				map: textures.grass.map( Math.round(EARTH_SIZE/GRASS_TEXTURE_SCALE), Math.round(EARTH_SIZE/GRASS_TEXTURE_SCALE) ),
-				transparent: DEBUG_BLOCKS_OPACITY<1,
-				opacity: DEBUG_BLOCKS_OPACITY,
-				//wireframe: true,
-				vertexColors: true,
-			} );
+		geometry = new THREE.RingGeometry( 0, EARTH_SIZE/2, 128, 5, true ).rotateX( -Math.PI/2 );
+		material = new NatureMaterial( {
+			color: DEBUG_ALL_WHITE?'lightgray':BLOCK_PARK.color,
+			//depthTest: false,
+			map: textures.grass.map( Math.round(EARTH_SIZE/GRASS_TEXTURE_SCALE), Math.round(EARTH_SIZE/GRASS_TEXTURE_SCALE) ),
+			transparent: DEBUG_BLOCKS_OPACITY<1,
+			opacity: DEBUG_BLOCKS_OPACITY,
+			//wireframe: true,
+			vertexColors: true,
+		} );
 		
 		// add mountains
 		var colors = [];
@@ -115,12 +115,12 @@ class Ground
 		geometry.setAttribute( 'color', colorAttribute );
 
 
-		var image = new THREE.Mesh( geometry, material );
-			image.renderOrder = -110;
-			image.updateMatrix();
-			image.matrixAutoUpdate = false;
-			image.receiveShadow = true;
-			image.castShadow = true;
+		image = new THREE.Mesh( geometry, material );
+		image.renderOrder = -110;
+		image.updateMatrix();
+		image.matrixAutoUpdate = false;
+		image.receiveShadow = true;
+		image.castShadow = true;
 			
 		scene.add( image );
 	
@@ -143,22 +143,22 @@ class Ground
 			text.rotation.x = -Math.PI/2;
 			scene.add( text );
 			
-			var textGeometry = new TextGeometry( 'BOTTOM / Z-', textStyle );
-			var text = new THREE.Mesh( textGeometry, textMaterial );
+			textGeometry = new TextGeometry( 'BOTTOM / Z-', textStyle );
+			text = new THREE.Mesh( textGeometry, textMaterial );
 			text.position.x = -GROUND_SIZE/8;
 			text.position.z = -GROUND_SIZE/2;
 			text.rotation.x = -Math.PI/2;
 			scene.add( text );
 			
-			var textGeometry = new TextGeometry( 'LEFT / X-', textStyle );
-			var text = new THREE.Mesh( textGeometry, textMaterial );
+			textGeometry = new TextGeometry( 'LEFT / X-', textStyle );
+			text = new THREE.Mesh( textGeometry, textMaterial );
 			text.position.x = -GROUND_SIZE/2;
 			text.position.z = GROUND_SIZE/20;
 			text.rotation.set(-Math.PI/2,Math.PI/2,0,'YXZ');
 			scene.add( text );
 			
-			var textGeometry = new TextGeometry( 'RIGHT / X+', textStyle );
-			var text = new THREE.Mesh( textGeometry, textMaterial );
+			textGeometry = new TextGeometry( 'RIGHT / X+', textStyle );
+			text = new THREE.Mesh( textGeometry, textMaterial );
 			text.position.x = GROUND_SIZE/2+GROUND_SIZE/30;
 			text.position.z = GROUND_SIZE/20;
 			text.rotation.set(-Math.PI/2,Math.PI/2,0,'YXZ');
