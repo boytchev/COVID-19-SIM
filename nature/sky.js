@@ -151,11 +151,11 @@ class Sky
 		
 		// adjust light intensities total to be 1
 		var totalIntensity = 0;
-		for( var light of lights )
+		for( let light of lights )
 		{
 			totalIntensity += light.intensity;
 		}
-		for( var light of lights )
+		for( let light of lights )
 		{
 			light.intensity /= totalIntensity;
 			//console.log( light.intensity.toFixed(2), light.name );
