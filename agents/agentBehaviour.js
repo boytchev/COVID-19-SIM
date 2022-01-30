@@ -351,11 +351,11 @@ export class AgentBehaviour
 						break;
 				case BLOCK_HOUSES:
 						// 1.3 - house
-						var house = from.building;
+						let house = from.building;
 						
 						if( from.building === to.building )
 						{ // 1.3.1 - same house
-							var	fromInWingA  = house.zoneA.isInside( from.position ),
+							let	fromInWingA  = house.zoneA.isInside( from.position ),
 								toInWingA = house.zoneA.isInside( to.position );
 								
 							if( fromInWingA == toInWingA )
@@ -370,7 +370,7 @@ export class AgentBehaviour
 						}
 						else
 						{ // 1.3.2 - different house
-							var toHouse = to.building;
+							let toHouse = to.building;
 							
 							this.routerExitHouse( house );
 							this.routerGoToHouse( house, toHouse );
@@ -380,7 +380,7 @@ export class AgentBehaviour
 						break;
 				case BLOCK_APARTMENTS:
 						// 1.4
-						var fromApartment = from.building.rooms[from.number],
+						let fromApartment = from.building.rooms[from.number],
 							toApartment = to.building.rooms[to.number];
 							
 						if( from.building === to.building )
@@ -406,7 +406,7 @@ export class AgentBehaviour
 								this.addToRoute( fromApartment.insideZone.randomPos().setFloor(from.floor) ); 
 								this.addToRoute( fromApartment.outsideZone.randomPos().setFloor(from.floor) ); 
 
-								var elevator = pickDirection( from.position, from.building.elevators, to.position ),
+								let elevator = pickDirection( from.position, from.building.elevators, to.position ),
 									elevatorPos = elevator.zone.randomPos();
 								this.addToRoute( elevatorPos.newFloor(from.floor), elevator, Elevator.OUTSIDE );
 								this.addToRoute( elevatorPos.newFloor(to.floor), elevator, Elevator.INSIDE );
@@ -424,7 +424,7 @@ export class AgentBehaviour
 						break;
 				case BLOCK_OFFICE:
 						// 1.5 - same block and same building
-						var fromOffice = from.building.rooms[from.number],
+						let fromOffice = from.building.rooms[from.number],
 							toOffice = to.building.rooms[to.number];
 							
 						if( from.floor == to.floor )
@@ -449,7 +449,7 @@ export class AgentBehaviour
 							this.addToRoute( fromOffice.insideZone.randomPos().setFloor(from.floor) ); 
 							this.addToRoute( fromOffice.outsideZone.randomPos().setFloor(from.floor) ); 
 
-							var elevator = pickDirection( this.routePosition, from.building.elevators, to.position ),
+							let elevator = pickDirection( this.routePosition, from.building.elevators, to.position ),
 								elevatorPos = elevator.zone.randomPos();
 							this.addToRoute( clipLineRoute( this.routePosition, elevatorPos.newFloor(from.floor), to.building.rooms, 1/2 ), elevator, Elevator.OUTSIDE );
 							this.addToRoute( elevatorPos.newFloor(to.floor), elevator, Elevator.INSIDE );
@@ -478,7 +478,7 @@ export class AgentBehaviour
 						break;
 				case BLOCK_HOUSES:
 						// 2.3.1 - house
-						var house = from.building,
+						let house = from.building,
 							ringIndex = house.ringIndex;
 						this.routerExitHouse( house );
 						break;
@@ -488,16 +488,16 @@ export class AgentBehaviour
 						break;
 				case BLOCK_OFFICE:
 						// 2.5.1 todo
-						var fromOffice = from.building.rooms[from.number];
+						let fromOffice = from.building.rooms[from.number];
 							
 						this.addToRoute( fromOffice.insideZone.randomPos().setFloor(from.floor) ); 
 						this.addToRoute( fromOffice.outsideZone.randomPos().setFloor(from.floor) ); 
 						
 						// pick a crossings (as mid-target) which is suitable
 						// for reaching the final location
-						var crossing = pickDirection( this.routePosition, from.building.block.crossings, to.position );
-						var door = pickDirection( this.routePosition, from.building.doors, crossing.center );
-						var elevator = pickDirection( this.routePosition, from.building.elevators, door.insideZone.center ),
+						let crossing = pickDirection( this.routePosition, from.building.block.crossings, to.position ),
+							door = pickDirection( this.routePosition, from.building.doors, crossing.center ),
+							elevator = pickDirection( this.routePosition, from.building.elevators, door.insideZone.center ),
 							elevatorPos = elevator.zone.randomPos();
 						
 						this.addToRoute( clipLineRoute( this.routePosition, elevatorPos.newFloor(from.floor), from.building.rooms, 1/2 ), elevator, Elevator.OUTSIDE );
@@ -522,7 +522,7 @@ export class AgentBehaviour
 			while( this.routePosition.block !== to.block )
 			{
 				// find the next crossing
-				var block = this.routePosition.block,
+				let block = this.routePosition.block,
 					crossing = pickDirection( this.routePosition, block.crossings, to.position, lastCrossings );
 //console.log(block.id,'#'+(this.gotoPosition.length-1));
 				lastCrossings[2] = lastCrossings[1];
@@ -592,10 +592,10 @@ export class AgentBehaviour
 			if( loopIndex>=0 )
 			{
 				//console.log('check for loops from',loopIndex,'to',this.gotoPosition.length-1);
-				var end = this.gotoPosition.length-1;
+				let end = this.gotoPosition.length-1;
 				while( loopIndex < end )
 				{
-					var zone = this.gotoPosition[loopIndex].zone;
+					let zone = this.gotoPosition[loopIndex].zone;
 					if( zone )
 					{
 						while( end-- > loopIndex )
@@ -628,7 +628,7 @@ export class AgentBehaviour
 				case BLOCK_HOUSES:
 						// 2.3.3 - house
 						
-						var house = to.building;
+						let house = to.building;
 						this.routerGoToIndex( ringIndex, house.ringIndex );
 						this.routerEnterHouse( house, '548' );
 						this.addToRoute( to.position );
@@ -641,9 +641,9 @@ export class AgentBehaviour
 				case BLOCK_OFFICE:
 						// 2.5.3 todo
 
-						var toOffice = to.building.rooms[to.number];
-						var door = pickDistance( this.routePosition, to.building.doors, to.position );
-						var elevator = pickDistance( door.insideZone.center, to.building.elevators, toOffice.outsideZone.center ),
+						let toOffice = to.building.rooms[to.number],
+							door = pickDistance( this.routePosition, to.building.doors, to.position ),
+							elevator = pickDistance( door.insideZone.center, to.building.elevators, toOffice.outsideZone.center ),
 							elevatorPos = elevator.zone.randomPos();
 						
 						this.addToRoute( clipLineRoute( this.routePosition, door.outsideZone.randomPos(), to.block.buildings ) );
