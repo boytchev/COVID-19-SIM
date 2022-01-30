@@ -218,17 +218,18 @@ export class AgentBehaviour
 		// for reaching the final location, if there are no crossing,
 		// then use the destination
 		
+		var door;
 		if( address.building.block.crossings.length )
 		{
-			var crossing = pickDirection( this.routePosition, address.building.block.crossings, toAddress.position );
+			let crossing = pickDirection( this.routePosition, address.building.block.crossings, toAddress.position );
 		
 			// go to one of the doors, prefer the door which is suitable
 			// for reaching the crossing
-			var door = pickDirection( this.routePosition, elevator.doors, crossing.center );
+			door = pickDirection( this.routePosition, elevator.doors, crossing.center );
 		}
 		else
 		{
-			var door = pickDirection( this.routePosition, elevator.doors, toAddress );
+			door = pickDirection( this.routePosition, elevator.doors, toAddress );
 		}
 		this.addToRoute( door.insideZone ); 
 		this.addToRoute( door.outsideZone ); 
@@ -478,8 +479,7 @@ export class AgentBehaviour
 						break;
 				case BLOCK_HOUSES:
 						// 2.3.1 - house
-						let house = from.building,
-							ringIndex = house.ringIndex;
+						let house = from.building;
 						this.routerExitHouse( house );
 						break;
 				case BLOCK_APARTMENTS:

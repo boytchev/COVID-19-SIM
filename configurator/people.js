@@ -17,7 +17,7 @@ CFG.addHeader(
 	'people,male,female,adult,child,age' );
 
 		CFG.addNumericListSlider(
-			'damc', 'People count', 100, {values:[0,1,2,5,10,20,50,100,200,500,1000,2000,5000,10000], labels:['no|people'],	fav:true},
+			'damc', 'People count', 100, {values:[0,1,2,10,100,500,1000,5000,10000,50000], labels:['no|people'],	fav:true},
 			'The maximal number of people in the simulation. Their number might be smaller if the amount of houses and apartments are not sufficient for all of them.',
 			'people,debug' );
 
