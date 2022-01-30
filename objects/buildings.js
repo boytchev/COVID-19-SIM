@@ -71,22 +71,24 @@ export class Buildings
 	update()
 	{
 		// ask office buildings to update lamps
-
-		var userData = buildings.officesMesh?.material.userData;
+	
+		var userData, shader, lights, intensity;
+		
+		userData = buildings.officesMesh?.material.userData;
 		if( userData )
 		{
-			var shader = userData.shader;
+			shader = userData.shader;
 			if( shader )
 			{
 				shader.uniforms.uTime.value = dayTimeMs/400;
 
-				var lights = dayTimeMs<HOURS_12_MS ?
-								LAMP_OFFICE_AM_MS.smooth( dayTimeMs ) :
-								LAMP_OFFICE_PM_MS.smooth( dayTimeMs );
+				lights = dayTimeMs<HOURS_12_MS ?
+							LAMP_OFFICE_AM_MS.smooth( dayTimeMs ) :
+							LAMP_OFFICE_PM_MS.smooth( dayTimeMs );
 								
-				var intensity = dayTimeMs<HOURS_12_MS ?
-									LAMP_OFFICE_AM_INTENSITY_MS.smooth( dayTimeMs ) :
-									LAMP_OFFICE_PM_INTENSITY_MS.smooth( dayTimeMs );
+				intensity = dayTimeMs<HOURS_12_MS ?
+							LAMP_OFFICE_AM_INTENSITY_MS.smooth( dayTimeMs ) :
+							LAMP_OFFICE_PM_INTENSITY_MS.smooth( dayTimeMs );
 				
 				shader.uniforms.uLamps.value = THREE.Math.clamp( lights, 0.1, 0.3 );
 				shader.uniforms.uLampsIntensity.value = intensity;
@@ -94,21 +96,21 @@ export class Buildings
 		}			
 		
 		// ask apartment buildings to update lamps
-		var userData = buildings.apartmentsMesh?.material.userData;
+		userData = buildings.apartmentsMesh?.material.userData;
 		if( userData )
 		{
-			var shader = userData.shader;
+			shader = userData.shader;
 			if( shader )
 			{
 				shader.uniforms.uTime.value = dayTimeMs/400;
 
-				var lights = dayTimeMs<HOURS_12_MS ?
-								LAMP_APARTMENT_AM_MS.smooth( dayTimeMs ) :
-								LAMP_APARTMENT_PM_MS.smooth( dayTimeMs );
+				lights = dayTimeMs<HOURS_12_MS ?
+							LAMP_APARTMENT_AM_MS.smooth( dayTimeMs ) :
+							LAMP_APARTMENT_PM_MS.smooth( dayTimeMs );
 								
-				var intensity = dayTimeMs<HOURS_12_MS ?
-									LAMP_APARTMENT_AM_INTENSITY_MS.smooth( dayTimeMs ) :
-									LAMP_APARTMENT_PM_INTENSITY_MS.smooth( dayTimeMs );
+				intensity = dayTimeMs<HOURS_12_MS ?
+							LAMP_APARTMENT_AM_INTENSITY_MS.smooth( dayTimeMs ) :
+							LAMP_APARTMENT_PM_INTENSITY_MS.smooth( dayTimeMs );
 				
 				shader.uniforms.uLamps.value = THREE.Math.clamp( lights, 0.1, 0.7 );
 				shader.uniforms.uLampsIntensity.value = 0.05+intensity;
@@ -116,21 +118,21 @@ export class Buildings
 		}			
 		
 		// ask houses to update lamps
-		var userData = buildings.housesMesh?.material.userData;
+		userData = buildings.housesMesh?.material.userData;
 		if( userData )
 		{
-			var shader = userData.shader;
+			shader = userData.shader;
 			if( shader )
 			{
 				shader.uniforms.uTime.value = dayTimeMs/400;
 
-				var lights = dayTimeMs<HOURS_12_MS ?
-								LAMP_HOUSE_AM_MS.smooth( dayTimeMs ) :
-								LAMP_HOUSE_PM_MS.smooth( dayTimeMs );
+				lights = dayTimeMs<HOURS_12_MS ?
+							LAMP_HOUSE_AM_MS.smooth( dayTimeMs ) :
+							LAMP_HOUSE_PM_MS.smooth( dayTimeMs );
 								
-				var intensity = dayTimeMs<HOURS_12_MS ?
-									LAMP_HOUSE_AM_INTENSITY_MS.smooth( dayTimeMs ) :
-									LAMP_HOUSE_PM_INTENSITY_MS.smooth( dayTimeMs );
+				intensity = dayTimeMs<HOURS_12_MS ?
+							LAMP_HOUSE_AM_INTENSITY_MS.smooth( dayTimeMs ) :
+							LAMP_HOUSE_PM_INTENSITY_MS.smooth( dayTimeMs );
 				
 				shader.uniforms.uLamps.value = THREE.Math.clamp( lights, 0, 0.5 );
 				shader.uniforms.uLampsIntensity.value = 0.01+intensity;

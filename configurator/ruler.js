@@ -103,20 +103,22 @@ export function onMouseOver( event )
 // get pixel position depending on value
 function pos( value )
 {
+	var max, min;
+	
 	switch( data.type )
 	{
 		case NUMERIC_SLIDER:
 		case NUMERIC_RANGE_SLIDER:
 		case TEMPORAL_SLIDER:
 		case TEMPORAL_RANGE_SLIDER:
-			var max = data.options.max,
+				max = data.options.max,
 				min = data.options.min;
-			return EXT/2+11+Math.round((value-min)/(max-min) * (width-22));
+				return EXT/2+11+Math.round((value-min)/(max-min) * (width-22));
 			
 		case NUMERIC_LIST_SLIDER:
-			var max = data.options.values.length-1,
+				max = data.options.values.length-1,
 				min = 0;
-			return EXT/2+11+Math.round((value-min)/(max-min) * (width-22));
+				return EXT/2+11+Math.round((value-min)/(max-min) * (width-22));
 			
 		default:
 			throw 'Invalid configuration parameter type "'+data.type+'"';

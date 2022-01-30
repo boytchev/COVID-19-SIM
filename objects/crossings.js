@@ -268,20 +268,22 @@ newScan += onlyBlocks.length;
 			return null;
 		}
 		
+		var streetWidth, otherBlock, u, v, a, b, c, d;
+		
 		// vertical crossing	
-		var streetWidth = block.streets[TOP].width;
+		streetWidth = block.streets[TOP].width;
 		if( streetWidth )
 		{
 			// from A to top -----------------------------------
 
-			var u = zone.a.to(zone.b).lenX(SIDEWALK_WIDTH),
-				v = zone.d.to(zone.a).lenZ(streetWidth),
-				d = zone.a,
-				c = d.add(u),
-				a = d.add(v),
-				b = c.add(v);
+			u = zone.a.to(zone.b).lenX(SIDEWALK_WIDTH),
+			v = zone.d.to(zone.a).lenZ(streetWidth),
+			d = zone.a,
+			c = d.add(u),
+			a = d.add(v),
+			b = c.add(v);
 			
-			var otherBlock = existsBlockD( a, block.streets[TOP].blocks );
+			otherBlock = existsBlockD( a, block.streets[TOP].blocks );
 			if( otherBlock )
 			{	// crossing continues the sidewalk
 				add( this.xCrossings, new Crossing( new BlockZone(a,b,c,d), TOP, block.streets[TOP], block, otherBlock, 2 ) );
@@ -299,14 +301,14 @@ newScan += onlyBlocks.length;
 			}
 
 			// from B to top -----------------------------------
-			var u = zone.b.to(zone.a).lenX(SIDEWALK_WIDTH),
-				v = zone.c.to(zone.b).lenZ(streetWidth),
-				c = zone.b,
-				d = c.add(u),
-				a = d.add(v),
-				b = c.add(v);
+			u = zone.b.to(zone.a).lenX(SIDEWALK_WIDTH),
+			v = zone.c.to(zone.b).lenZ(streetWidth),
+			c = zone.b,
+			d = c.add(u),
+			a = d.add(v),
+			b = c.add(v);
 		
-			var otherBlock = existsBlockC( b, block.streets[TOP].blocks );
+			otherBlock = existsBlockC( b, block.streets[TOP].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
 				add( this.xCrossings, new Crossing( new BlockZone(a,b,c,d), TOP, block.streets[TOP], block, otherBlock,2 ) );
@@ -324,19 +326,19 @@ newScan += onlyBlocks.length;
 			}
 		}
 
-		var streetWidth = block.streets[BOTTOM].width;
+		streetWidth = block.streets[BOTTOM].width;
 		if( streetWidth )
 		{
 			// from D to bottom --------------------------------
 			
-			var u = zone.d.to(zone.c).lenX(SIDEWALK_WIDTH),
-				v = zone.a.to(zone.d).lenZ(streetWidth),
-				a = zone.d,
-				b = a.add(u),
-				d = a.add(v),
-				c = b.add(v);
+			u = zone.d.to(zone.c).lenX(SIDEWALK_WIDTH),
+			v = zone.a.to(zone.d).lenZ(streetWidth),
+			a = zone.d,
+			b = a.add(u),
+			d = a.add(v),
+			c = b.add(v);
 		
-			var otherBlock = existsBlockA( d, block.streets[BOTTOM].blocks );
+			otherBlock = existsBlockA( d, block.streets[BOTTOM].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
 				add( this.xCrossings, new Crossing( new BlockZone(a,b,c,d), BOTTOM, block.streets[BOTTOM], block, otherBlock, 2 ) );
@@ -356,14 +358,14 @@ newScan += onlyBlocks.length;
 
 			// from C to bottom --------------------------------
 			
-			var u = zone.c.to(zone.d).lenX(SIDEWALK_WIDTH),
-				v = zone.a.to(zone.d).lenZ(streetWidth),
-				b = zone.c,
-				a = b.add(u),
-				c = b.add(v),
-				d = a.add(v);
+			u = zone.c.to(zone.d).lenX(SIDEWALK_WIDTH),
+			v = zone.a.to(zone.d).lenZ(streetWidth),
+			b = zone.c,
+			a = b.add(u),
+			c = b.add(v),
+			d = a.add(v);
 			
-			var otherBlock = existsBlockB( c, block.streets[BOTTOM].blocks );
+			otherBlock = existsBlockB( c, block.streets[BOTTOM].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
 				add( this.xCrossings, new Crossing( new BlockZone(a,b,c,d), BOTTOM, block.streets[BOTTOM], block, otherBlock, 2 ) );
@@ -384,19 +386,19 @@ newScan += onlyBlocks.length;
 
 		// horizontal crossing
 		
-		var streetWidth = block.streets[LEFT].width;
+		streetWidth = block.streets[LEFT].width;
 		if( streetWidth )
 		{
 			// from A to left ----------------------------------
 			
-			var u = zone.a.to(zone.d).lenZ(SIDEWALK_WIDTH),
-				v = zone.b.to(zone.a).lenX(streetWidth),
-				b = zone.a,
-				c = b.add(u),
-				a = b.add(v),
-				d = c.add(v);
+			u = zone.a.to(zone.d).lenZ(SIDEWALK_WIDTH),
+			v = zone.b.to(zone.a).lenX(streetWidth),
+			b = zone.a,
+			c = b.add(u),
+			a = b.add(v),
+			d = c.add(v);
 		
-			var otherBlock = existsBlockB( a, block.streets[LEFT].blocks );
+			otherBlock = existsBlockB( a, block.streets[LEFT].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
 				add( this.zCrossings, new Crossing( new BlockZone(a,b,c,d), LEFT, block.streets[LEFT], block, otherBlock, 2 ) );
@@ -416,14 +418,14 @@ newScan += onlyBlocks.length;
 
 			// from D to left ----------------------------------
 			
-			var u = zone.d.to(zone.a).lenZ(SIDEWALK_WIDTH),
-				v = zone.c.to(zone.d).lenX(streetWidth),
-				c = zone.d,
-				b = c.add(u),
-				a = b.add(v),
-				d = c.add(v);
+			u = zone.d.to(zone.a).lenZ(SIDEWALK_WIDTH),
+			v = zone.c.to(zone.d).lenX(streetWidth),
+			c = zone.d,
+			b = c.add(u),
+			a = b.add(v),
+			d = c.add(v);
 		
-			var otherBlock = existsBlockC( d, block.streets[LEFT].blocks );
+			otherBlock = existsBlockC( d, block.streets[LEFT].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
 				add( this.zCrossings, new Crossing( new BlockZone(a,b,c,d), LEFT, block.streets[LEFT], block, otherBlock, 2 ) );
@@ -443,19 +445,19 @@ newScan += onlyBlocks.length;
 		}		
 
 
-		var streetWidth = block.streets[RIGHT].width;
+		streetWidth = block.streets[RIGHT].width;
 		if( streetWidth )
 		{
 			// from B to right ---------------------------------
 			
-			var u = zone.b.to(zone.c).lenZ(SIDEWALK_WIDTH),
-				v = zone.a.to(zone.b).lenX(streetWidth),
-				a = zone.b,
-				d = a.add(u),
-				b = a.add(v),
-				c = d.add(v);
+			u = zone.b.to(zone.c).lenZ(SIDEWALK_WIDTH),
+			v = zone.a.to(zone.b).lenX(streetWidth),
+			a = zone.b,
+			d = a.add(u),
+			b = a.add(v),
+			c = d.add(v);
 
-			var otherBlock = existsBlockA( b, block.streets[RIGHT].blocks );
+			otherBlock = existsBlockA( b, block.streets[RIGHT].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
 				add( this.zCrossings, new Crossing( new BlockZone(a,b,c,d), RIGHT, block.streets[RIGHT], block, otherBlock, 2 ) );
@@ -474,14 +476,14 @@ newScan += onlyBlocks.length;
 
 			// from C to right ---------------------------------
 			
-			var u = zone.c.to(zone.b).lenZ(SIDEWALK_WIDTH),
-				v = zone.d.to(zone.c).lenX(streetWidth),
-				d = zone.c,
-				a = d.add(u),
-				b = a.add(v),
-				c = d.add(v);
+			u = zone.c.to(zone.b).lenZ(SIDEWALK_WIDTH),
+			v = zone.d.to(zone.c).lenX(streetWidth),
+			d = zone.c,
+			a = d.add(u),
+			b = a.add(v),
+			c = d.add(v);
 		
-			var otherBlock = existsBlockD( c, block.streets[RIGHT].blocks );
+			otherBlock = existsBlockD( c, block.streets[RIGHT].blocks );
 			if( otherBlock )
 			{	// crossing contines the sidewalk
 				add( this.zCrossings, new Crossing( new BlockZone(a,b,c,d), RIGHT, block.streets[RIGHT], block, otherBlock, 2 ) );
