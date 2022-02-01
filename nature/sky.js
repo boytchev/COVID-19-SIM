@@ -8,7 +8,7 @@ import * as THREE from '../js/three.module.js';
 import {GROUND_EDGE, DEBUG_ALL_WHITE, SUN, STATIC_SUN, GROUND_SIZE, SHADOWS, NO_SHADOWS, FULL_SHADOWS, SHADOWS_MAP_SIZE, AGENTS_CAST_SHADOWS, DEBUG_SUN_POSITION_GUI, SUN_HORIZONTAL_ANGLE, SAFE_MODE } from '../config.js';
 import {Sun} from './sun.js';
 import {/*MoonLight, */Moon} from './moon.js';
-import {agents, scene, renderer} from '../main.js';
+import {agents, camera, scene, renderer, controls} from '../main.js';
 
 
 /* Comments:
@@ -98,7 +98,14 @@ class Sky
 		// in safe mode no sky is drawn
 		if( SAFE_MODE ) 
 		{
-			scene.background = new THREE.Color( 'pink' );
+			scene.background = new THREE.Color( 'white' );
+			
+			this.topLightTarget = new THREE.Object3D();
+			this.topLight =  new THREE.DirectionalLight( 'white', 0.6 );
+			this.topLight.target = this.topLightTarget;
+				
+			scene.add( this.topLight, new THREE.AmbientLight( 'white', 0.4 ), this.topLightTarget );
+
 			return;
 		}
 
@@ -167,7 +174,13 @@ class Sky
 	update( )
 	{
 		// in safe mode no sky is drawn
-		if( SAFE_MODE ) return;
+		if( SAFE_MODE )
+		{
+			this.topLight.position.copy( camera.position );
+			//this.topLight.target = this.topLightTarget;
+			this.topLightTarget.position.copy( controls.target );
+			return;
+		}
 
 		if( SUN )
 		{

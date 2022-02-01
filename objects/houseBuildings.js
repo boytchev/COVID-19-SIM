@@ -130,9 +130,17 @@ export class HouseBuildings
 		this.sysType = 'HouseBuildings';
 	}
 	
+	static geometrySafeMode()
+	{
+		var geometry = new THREE.BoxGeometry( 1, 1, 1 ).translate( 0, 0.5, 0 );
+		return geometry;
+		
+	} // HouseBuildings.geometrySafeMode
+
 	static geometry()
 	{
-		var geometry = new THREE.InstancedBufferGeometry();
+		//var geometry = new THREE.InstancedBufferGeometry();
+		var geometry = new THREE.BufferGeometry();
 
 		// x,y,z, nx,ny,nz, u,v
 		var R0=0.0,	// roof from V
@@ -270,6 +278,22 @@ export class HouseBuildings
 
 
 
+	static materialSafeMode()
+	{
+		var material = new THREE.MeshLambertMaterial({
+				color: 'white',
+				side: THREE.FrontSide,
+				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
+				opacity:     DEBUG_BUILDINGS_OPACITY,
+				depthWrite:  DEBUG_BUILDINGS_OPACITY>0.9,
+				//map: textures.grid.map(),
+			});
+		return material;
+		
+	} // HouseBuildings.materialSafeMode
+	
+	
+	
 	static material()
 	{
 		var material = new THREE.MeshPhongMaterial({
@@ -426,7 +450,7 @@ export class HouseBuildings
 	static generate( houses, sidewalks )
 	{
 		// in safe mode no house buildings are generated
-		if( SAFE_MODE ) return;
+		//if( SAFE_MODE ) return;
 		
 		for( var i=0; i<blocks.houses.length; i++ )
 		{
@@ -533,12 +557,12 @@ export class HouseBuildings
 	static image( houses, sidewalks )
 	{
 		// in safe mode no house buildings are generated
-		if( SAFE_MODE ) return;
+		//if( SAFE_MODE ) return;
 		
 		var instances = 2*houses.length; // two wings in a house
 
-		var geometry  = HouseBuildings.geometry(),
-			material  = HouseBuildings.material(),
+		var geometry  = SAFE_MODE ? HouseBuildings.geometrySafeMode() : HouseBuildings.geometry(),
+			material  = SAFE_MODE ? HouseBuildings.materialSafeMode() : HouseBuildings.material(),
 			mesh = new THREE.InstancedMesh( geometry, material, instances );
 			
 		// every house building has own grayish color
