@@ -335,7 +335,8 @@ export class AgentBehaviour
 		//this.gotoPosition = [];
 		
 		
-		var that = this;
+		var that = this,
+			ringIndex;
 
 		if( from.block === to.block )
 		{ // 1 - same blocks
@@ -480,6 +481,7 @@ export class AgentBehaviour
 				case BLOCK_HOUSES:
 						// 2.3.1 - house
 						let house = from.building;
+						ringIndex = house.ringIndex;
 						this.routerExitHouse( house );
 						break;
 				case BLOCK_APARTMENTS:
