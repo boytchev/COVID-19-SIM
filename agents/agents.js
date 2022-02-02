@@ -35,7 +35,7 @@ export class Agents
 		this.agents = [];
 
 		// in safe mode no agents are generated
-		if( SAFE_MODE ) return;
+		//if( SAFE_MODE ) return;
 
 		this.generateInfections();
 		

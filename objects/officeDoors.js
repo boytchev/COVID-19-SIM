@@ -9,7 +9,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {DEBUG_ALL_WHITE, OFFICE_DOOR_WIDTH, OFFICE_DOOR_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, FLOOR_HEIGHT} from '../config.js';
+import {DEBUG_ALL_WHITE, OFFICE_DOOR_WIDTH, OFFICE_DOOR_TEXTURE_SCALE, DEBUG_BUILDINGS_OPACITY, FLOOR_HEIGHT, SAFE_MODE} from '../config.js';
 import {navmesh, textures, scene} from '../main.js';
 
 
@@ -43,8 +43,7 @@ export class OfficeDoors
 	}
 	
 	
-	// geometry with specific normal
-	static geometry( nx, nz)
+	static geometry( )
 	{
 		var geometry = new THREE.InstancedBufferGeometry();
 		
@@ -139,8 +138,8 @@ export class OfficeDoors
 	
 	static image( doors )
 	{
-		// no doors if buildings are fully transparent
-		if( DEBUG_BUILDINGS_OPACITY < 0.01 ) return;
+		// no doors if buildings are fully transparent or in safe mode
+		if( SAFE_MODE || DEBUG_BUILDINGS_OPACITY < 0.01 ) return;
 
 		var instances = doors.length;
 		

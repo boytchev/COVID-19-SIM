@@ -567,7 +567,7 @@ export class OfficeBuildings
 				opacity: 0,
 				depthWrite: false,
 			});
-			shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
+			var shadowMesh = new THREE.InstancedMesh( geometry, material, instances );
 			
 			for( var i=0; i<instances; i++ )
 			{
