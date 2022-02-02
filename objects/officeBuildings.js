@@ -233,6 +233,13 @@ export class OfficeBuildings
 	}
 	
 	
+	static geometrySafeMode()
+	{
+		var geometry = new THREE.BoxGeometry( 1, 1, 1 ).translate( 0, 0.5, 0 );
+		return geometry;
+		
+	} // OfficeBuildings.geometrySafeMode
+
 	static geometry()
 	{
 		var geometry = new THREE.InstancedBufferGeometry();
@@ -311,6 +318,20 @@ export class OfficeBuildings
 	} // OfficeBuildings.geometry
 
 
+
+	static materialSafeMode()
+	{
+		var material = new THREE.MeshLambertMaterial({
+				color: 'white',
+				side: THREE.FrontSide,
+				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
+				opacity:     DEBUG_BUILDINGS_OPACITY,
+				depthWrite:  DEBUG_BUILDINGS_OPACITY>0.9,
+				map: textures.safeMode.map(),
+			});
+		return material;
+		
+	} // OfficeBuildings.materialSafeMode
 
 	static material()
 	{
@@ -453,7 +474,7 @@ export class OfficeBuildings
 	{
 		
 		// in safe mode no office buildings are generated
-		if( SAFE_MODE ) return;
+		//if( SAFE_MODE ) return;
 		
 		// create an office building occupying the square part
 		// of the block reduced by sidewalks from all directions
@@ -491,15 +512,15 @@ export class OfficeBuildings
 	{
 		
 		// in safe mode no office buildings are generated
-		if( SAFE_MODE ) return;
+		//if( SAFE_MODE ) return;
 		
 		// no buildings if they are fully transparent
 		if( DEBUG_BUILDINGS_OPACITY < 0.01 ) return;
 		
 		var instances = offices.length;
 		
-		var geometry  = OfficeBuildings.geometry(),
-			material  = OfficeBuildings.material(),
+		var geometry  = SAFE_MODE ? OfficeBuildings.geometrySafeMode() : OfficeBuildings.geometry(),
+			material  = SAFE_MODE ? OfficeBuildings.materialSafeMode() : OfficeBuildings.material(),
 			mesh = new THREE.InstancedMesh( geometry, material, instances );
 			
 		// every office building has own grayish color
@@ -534,6 +555,8 @@ export class OfficeBuildings
 
 		scene.add( mesh );
 
+		if( SAFE_MODE ) return;
+		
 		if( SHADOWS != NO_SHADOWS )
 		{
 			geometry  = OfficeBuildings.geometry();

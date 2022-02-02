@@ -199,6 +199,13 @@ export class ApartmentBuildings
 	}
 	
 	
+	static geometrySafeMode()
+	{
+		var geometry = new THREE.BoxGeometry( 1, 1, 1 ).translate( 0, 0.5, 0 );
+		return geometry;
+		
+	} // ApartmentBuildings.geometrySafeMode
+
 	static geometry()
 	{
 		var geometry = new THREE.InstancedBufferGeometry();
@@ -276,6 +283,20 @@ export class ApartmentBuildings
 	} // ApartmentBuildings.geometry
 
 
+
+	static materialSafeMode()
+	{
+		var material = new THREE.MeshLambertMaterial({
+				color: 'white',
+				side: THREE.FrontSide,
+				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
+				opacity:     DEBUG_BUILDINGS_OPACITY,
+				depthWrite:  DEBUG_BUILDINGS_OPACITY>0.9,
+				map: textures.safeMode.map(),
+			});
+		return material;
+		
+	} // ApartmentBuildings.materialSafeMode
 
 	static material()
 	{
@@ -420,7 +441,7 @@ export class ApartmentBuildings
 	static generate( apartments, doors )
 	{
 		// in safe mode no apartment buildings are generated
-		if( SAFE_MODE ) return;
+		//if( SAFE_MODE ) return;
 		
 		// create a set of apartment buildings
 		for( var i=0; i<blocks.apartments.length; i++ )
@@ -573,15 +594,15 @@ export class ApartmentBuildings
 	static image( apartments )
 	{
 		// in safe mode no apartment buildings are generated
-		if( SAFE_MODE ) return;
+		//if( SAFE_MODE ) return;
 		
 		// no buildings if they are fully transparent
 		if( DEBUG_BUILDINGS_OPACITY < 0.01 ) return;
 
 		var instances = apartments.length;
 		
-		var geometry  = ApartmentBuildings.geometry(),
-			material  = ApartmentBuildings.material(),
+		var geometry  = SAFE_MODE ? ApartmentBuildings.geometrySafeMode() : ApartmentBuildings.geometry(),
+			material  = SAFE_MODE ? ApartmentBuildings.materialSafeMode() : ApartmentBuildings.material(),
 			mesh = new THREE.InstancedMesh( geometry, material, instances );
 
 		// every office building has own grayish color
@@ -620,6 +641,8 @@ export class ApartmentBuildings
 		//mesh.position.y = 0;
 
 		scene.add( mesh );
+
+		if( SAFE_MODE ) return;
 
 		if( SHADOWS != NO_SHADOWS )
 		{

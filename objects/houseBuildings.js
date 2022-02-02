@@ -286,7 +286,7 @@ export class HouseBuildings
 				transparent: DEBUG_BUILDINGS_OPACITY<0.9,
 				opacity:     DEBUG_BUILDINGS_OPACITY,
 				depthWrite:  DEBUG_BUILDINGS_OPACITY>0.9,
-				//map: textures.grid.map(),
+				map: textures.safeMode.map(),
 			});
 		return material;
 		
