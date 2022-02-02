@@ -20,7 +20,7 @@ export class CrossingTexture extends ProceduralTexture
 			W = this.width,
 			H = this.height;
 
-		ctx.fillStyle = 'white';
+		ctx.fillStyle = 'gainsboro';
 		ctx.fillRect( 0.25*W, 0, 0.5*W, H );
 		
 	} // CrossingTexture.draw

@@ -23,7 +23,7 @@ import * as THREE from '../js/three.module.js';
 import {/*clock,*/ blocks, scene, navmesh, textures} from '../main.js';
 import {pick, sortRing} from '../coreNav.js';
 import {LEFT, RIGHT, BOTTOM, TOP, Size, BlockZone, timeMs, almostEqual} from '../core.js';
-import {SIDEWALK_WIDTH, CROSSING_MINIMAL_CLOSENESS, CROSSING_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY} from '../config.js';
+import {SIDEWALK_WIDTH, CROSSING_MINIMAL_CLOSENESS, CROSSING_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY, SAFE_MODE} from '../config.js';
 import {NatureMaterial, dayTimeMs} from '../nature/nature.js';
 
 
@@ -547,12 +547,22 @@ newScan += onlyBlocks.length;
 			}
 		}
 
-		var material = new NatureMaterial({
-				map: textures.crossing.map( 1/CROSSING_TEXTURE_SCALE, 1/CROSSING_TEXTURE_SCALE ),
-				depthTest: false,
-				transparent: DEBUG_BLOCKS_OPACITY<1,
-				opacity: DEBUG_BLOCKS_OPACITY,
-			});
+		var material;
+		if( SAFE_MODE )
+			material = new THREE.MeshBasicMaterial({
+					color: 'white',
+					map: textures.crossing.map( 1/CROSSING_TEXTURE_SCALE, 1/CROSSING_TEXTURE_SCALE ),
+					depthTest: false,
+					transparent: DEBUG_BLOCKS_OPACITY<1,
+					opacity: DEBUG_BLOCKS_OPACITY,
+				});
+		else
+			material = new NatureMaterial({
+					map: textures.crossing.map( 1/CROSSING_TEXTURE_SCALE, 1/CROSSING_TEXTURE_SCALE ),
+					depthTest: false,
+					transparent: DEBUG_BLOCKS_OPACITY<1,
+					opacity: DEBUG_BLOCKS_OPACITY,
+				});
 	
 		var geometry = new THREE.BufferGeometry();
 			geometry.setAttribute(

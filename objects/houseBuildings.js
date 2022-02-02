@@ -593,8 +593,8 @@ export class HouseBuildings
 		{
 			var house = houses[h];
 			
-			// wing A
-			matrix.makeScale( house.factory.sizeA.x, house.floorsA*FLOOR_HEIGHT, house.factory.sizeA.z );
+			// wing A (increase height in safe mode against z-fighting of roofs)
+			matrix.makeScale( house.factory.sizeA.x, house.floorsA*FLOOR_HEIGHT+(SAFE_MODE?0.1:0), house.factory.sizeA.z );
 			matrix.setPosition( house.center.x+house.factory.posA.x, 0, house.center.z+house.factory.posA.z );
 			mesh.setMatrixAt( i, matrix );
 			

@@ -207,7 +207,7 @@ export class Agents
 	update()
 	{
 		// in safe mode no agents are drawn
-		if( SAFE_MODE ) return;
+		//if( SAFE_MODE ) return;
 
 		var agentTime = dayTimeMs/400;
 

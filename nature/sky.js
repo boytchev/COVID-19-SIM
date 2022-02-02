@@ -98,13 +98,13 @@ class Sky
 		// in safe mode no sky is drawn
 		if( SAFE_MODE ) 
 		{
-			scene.background = new THREE.Color( 'black' );
+			scene.background = new THREE.Color( 'white' );
 			
 			this.topLightTarget = new THREE.Object3D();
 			this.topLight =  new THREE.DirectionalLight( 'white', 0.6 );
 			this.topLight.target = this.topLightTarget;
 				
-			scene.add( this.topLight, new THREE.AmbientLight( 'white', 0.4 ), this.topLightTarget );
+			scene.add( this.topLight, new THREE.AmbientLight( 'white', 0.5 ), this.topLightTarget );
 
 			return;
 		}

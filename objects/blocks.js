@@ -23,7 +23,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {GROUND_EDGE, GROUND_SIZE, SUBURB_TRESHOLD, BLOCK_PARK, BLOCK_PLAZA, OFFICE_VS_RESIDENTIAL, MAX_FLOORS, FLOOR_HEIGHT, BLOCK_APARTMENTS, BLOCK_HOUSES, DEBUG_BLOCK_WITH_ONLY_PARK, DEBUG_BLOCK_WITH_ONLY_PLAZA, DEBUG_BLOCK_WITH_ONLY_HOUSES, BLOCK_OFFICE, DEBUG_BLOCK_WITH_ONLY_OFFICES, DEBUG_BLOCK_WITH_ONLY_APARTMENTS, AVENUE_TRESHOLD, STREET_WIDTH, BLOCK_SPLIT_TRESHOLD, BLOCK_MARGIN, SIDEWALK_WIDTH, URBAN_RURAL, SIDEWALK_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, AVENUE_WIDTH} from '../config.js';
+import {GROUND_EDGE, GROUND_SIZE, SUBURB_TRESHOLD, BLOCK_PARK, BLOCK_PLAZA, OFFICE_VS_RESIDENTIAL, MAX_FLOORS, FLOOR_HEIGHT, BLOCK_APARTMENTS, BLOCK_HOUSES, DEBUG_BLOCK_WITH_ONLY_PARK, DEBUG_BLOCK_WITH_ONLY_PLAZA, DEBUG_BLOCK_WITH_ONLY_HOUSES, BLOCK_OFFICE, DEBUG_BLOCK_WITH_ONLY_OFFICES, DEBUG_BLOCK_WITH_ONLY_APARTMENTS, AVENUE_TRESHOLD, STREET_WIDTH, BLOCK_SPLIT_TRESHOLD, BLOCK_MARGIN, SIDEWALK_WIDTH, URBAN_RURAL, SIDEWALK_TEXTURE_SCALE, DEBUG_BLOCKS_OPACITY, GRASS_TEXTURE_SCALE, AVENUE_WIDTH, SAFE_MODE} from '../config.js';
 import {midX, midZ, Pos, BlockZone, round, BOTTOM, RIGHT, LEFT, TOP} from '../core.js';
 import {pick} from '../coreNav.js';
 import {textures, scene} from '../main.js';
@@ -341,7 +341,7 @@ export class Blocks
 			this.allTrueBlocks.push( block );
 	
 			// if block with houses, add shrinked park (yard) as overlayed block
-			if( type==BLOCK_HOUSES )
+			if( !SAFE_MODE && type==BLOCK_HOUSES )
 			{
 				var yardZone = zone.shrink( SIDEWALK_WIDTH ),
 					yard = new Block( yardZone, type );
@@ -383,6 +383,20 @@ export class Blocks
 	}
 
 	
+	materialSafeMode( blockType )
+	{
+		var material = new THREE.MeshBasicMaterial({
+				color: blockType.color,
+				side: THREE.FrontSide,
+				transparent: DEBUG_BLOCKS_OPACITY<0.9,
+				opacity:     DEBUG_BLOCKS_OPACITY,
+				//map: textures.safeMode.map(),
+				depthTest: false,
+			});
+		return material;
+		
+	} // Blocks.materialSafeMode
+
 	material( blockType, texture, textureScale )
 	{
 		var material = new NatureMaterial({
@@ -464,7 +478,11 @@ export class Blocks
 		var blocks = this[blockType.name],
 			instances = blocks.length;
 		
-		var mesh = new THREE.InstancedMesh( Blocks.geometry(), this.material( blockType, texture, textureScale ), instances );
+		var mesh;
+		if( SAFE_MODE )
+			mesh = new THREE.InstancedMesh( Blocks.geometry(), this.materialSafeMode( blockType ), instances );
+		else
+			mesh = new THREE.InstancedMesh( Blocks.geometry(), this.material( blockType, texture, textureScale ), instances );
 
 		// create an apartment building matrix
 		var matrix = new THREE.Matrix4();

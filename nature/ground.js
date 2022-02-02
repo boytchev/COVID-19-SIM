@@ -22,7 +22,7 @@ class Ground
 		this.sysType = 'Ground';
 		
 		// in safe mode no ground is generated
-		if( SAFE_MODE ) return;
+		//if( SAFE_MODE ) return;
 
 		this.constructGroundImage( );
 		
@@ -35,13 +35,23 @@ class Ground
 		// add black ground -- it imitates street asphalt
 		var geometry = new THREE.PlaneGeometry( GROUND_SIZE, GROUND_SIZE );
 
-		var material = new NatureMaterial( {
-				color: DEBUG_ALL_WHITE?'lightgray':'#303030',
-				depthTest: false,
-				// map: textures.grid.map( Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE), Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE) )
-				transparent: DEBUG_BLOCKS_OPACITY<1,
-				opacity: DEBUG_BLOCKS_OPACITY,
-			} );
+		var material;
+		if( SAFE_MODE )
+			material = new THREE.MeshBasicMaterial( {
+					color: DEBUG_ALL_WHITE?'lightgray':'dimgray',
+					depthTest: false,
+					// map: textures.grid.map( Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE), Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE) )
+					transparent: DEBUG_BLOCKS_OPACITY<1,
+					opacity: DEBUG_BLOCKS_OPACITY,
+				} );
+		else
+			material = new NatureMaterial( {
+					color: DEBUG_ALL_WHITE?'lightgray':'#303030',
+					depthTest: false,
+					// map: textures.grid.map( Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE), Math.round(GROUND_SIZE/GROUND_TEXTURE_SCALE) )
+					transparent: DEBUG_BLOCKS_OPACITY<1,
+					opacity: DEBUG_BLOCKS_OPACITY,
+				} );
 		
 		var image = new THREE.Mesh( geometry, material );
 			image.renderOrder = -100;
@@ -53,6 +63,9 @@ class Ground
 		
 		scene.add( image );
 
+		// in safe mode no mountains
+		if( SAFE_MODE ) return;
+		
 		// add green ground around the city
 		geometry = new THREE.RingGeometry( 0, EARTH_SIZE/2, 128, 5, true ).rotateX( -Math.PI/2 );
 		material = new NatureMaterial( {

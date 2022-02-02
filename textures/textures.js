@@ -29,8 +29,10 @@ export class Textures
 		if( SAFE_MODE )
 		{
 			this.safeMode = new SafeModeTexture( 1024, 1024, 'white' );
+			this.crossing = new CrossingTexture( 64*2, 2, DEBUG_ALL_WHITE?'lightgray':'dimgray' );
+/*TO-REMODE*/this.agent = new AgentTexture( 1024 );
 		}
-//		else
+		else
 		{
 			this.grid = new GridTexture( 64*2 );
 			this.sidewalk = new SidewalkTexture( 64, 64, DEBUG_ALL_WHITE?'white':'beige' );

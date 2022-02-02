@@ -130,11 +130,11 @@ export const BLOCK_MARGIN = Math.min(param('bm',30),Math.round(BLOCK_SPLIT_TRESH
 
 // types of blocks and their probabilities
 
-export const BLOCK_PARK = {name:'parks', probability:param('bpp',0.05), color:(DEBUG_ALL_WHITE?'white':'darkseagreen'), renderOrder:-80};
-export const BLOCK_PLAZA = {name:'plazas', probability:param('bzp',0.03), color:'white', renderOrder:-90};
-export const BLOCK_OFFICE = {name:'offices', /*probability:1.00,*/ color:'white', renderOrder:-90};
-export const BLOCK_APARTMENTS = {name:'apartments', /*probability:1.00,*/ color:'white', renderOrder:-90};
-export const BLOCK_HOUSES = {name:'houses', /*probability:1.00,*/ color:'white', renderOrder:-90};
+export const BLOCK_PARK = {name:'parks', probability:param('bpp',0.05), color:(SAFE_MODE?'gainsboro':(DEBUG_ALL_WHITE?'white':'darkseagreen')), renderOrder:-80};
+export const BLOCK_PLAZA = {name:'plazas', probability:param('bzp',0.03), color:SAFE_MODE?'gainsboro':'white', renderOrder:-90};
+export const BLOCK_OFFICE = {name:'offices', /*probability:1.00,*/ color:SAFE_MODE?'lightgray':'white', renderOrder:-90};
+export const BLOCK_APARTMENTS = {name:'apartments', /*probability:1.00,*/ color:SAFE_MODE?'gainsboro':'white', renderOrder:-90};
+export const BLOCK_HOUSES = {name:'houses', /*probability:1.00,*/ color:SAFE_MODE?'gainsboro':'white', renderOrder:-90};
 export const OFFICE_VS_RESIDENTIAL = param('ovr',0.05);		// -1=only houses; 0=mixed; 1=only offices
 
 

@@ -14,7 +14,7 @@
 
 
 import * as THREE from '../js/three.module.js';
-import {SIDEWALK_TEXTURE_SCALE,DEBUG_ALL_WHITE, SIDEWALK_WIDTH, DEBUG_BLOCKS_OPACITY} from '../config.js';
+import {SAFE_MODE, SIDEWALK_TEXTURE_SCALE,DEBUG_ALL_WHITE, SIDEWALK_WIDTH, DEBUG_BLOCKS_OPACITY} from '../config.js';
 import {RIGHT, TOP, LEFT, BOTTOM, Size} from '../core.js';
 import {NatureMaterial} from '../nature/nature.js';
 import {textures, scene} from '../main.js';
@@ -224,6 +224,8 @@ export class HouseSidewalks
 	
 	static image( sidewalks )
 	{
+		// no images of sidewalks in safe mode
+		if( SAFE_MODE ) return;
 
 		var instances = sidewalks.length;
 		
