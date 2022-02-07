@@ -12,7 +12,7 @@ import {timeMs, Pos} from '../core.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
 import {dayTimeMs, currentTimeMs} from '../nature/nature.js';
-import {CARTOON_STYLE, GROUND_SIZE, GROUND_EDGE, DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, /*AGENT_ADULTS_PER_HOUSE,*/ AGENT_MAX_COUNT, IMMUNE_STRENGTH, /*AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT,*/ DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED, AGENT_DRAW_MODE, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE_WHITE, AGENT_AGE_YEARS, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF, SAFE_MODE, DEBUG_PEOPLE_TIME_SPEED, AGENT_PEOPLE_PER_HOUSE, AGENT_PEOPLE_PER_APARTMENT} from '../config.js';
+import {CARTOON_STYLE, GROUND_SIZE, GROUND_EDGE, DEBUG_FORM_A_CIRCLE, DEBUG_FORM_A_LINE, INFECTION_PATTERNS_COUNT, /*AGENT_ADULTS_PER_HOUSE,*/ AGENT_MAX_COUNT, IMMUNE_STRENGTH, /*AGENT_CHILDREN_PER_HOUSE, AGENT_ADULTS_PER_APARTMENT, AGENT_CHILDREN_PER_APARTMENT,*/ DEBUG_CENTER_VIEW_ON_AGENTS, DEBUG_SHOW_AGENTS_AGE_DISTRIBUTION, DEBUG_AGENT_LOCATIONS, DEBUG_AGENT_HEALTH, DEBUG_FOLLOW_AGENT, AGENTS_CAST_SHADOWS, DEBUG_TIME_SPEED, AGENT_DRAW_MODE, AGENT_DRAW_MODE_CLOTHES, AGENT_DRAW_MODE_WHITE, AGENT_AGE_YEARS, ADULT_MASK_ON, ADULT_MASK_OFF, CHILD_MASK_ON, CHILD_MASK_OFF, SAFE_MODE, DEBUG_PEOPLE_TIME_SPEED, AGENT_PEOPLE_PER_HOUSE, AGENT_PEOPLE_PER_APARTMENT, INFECTION_COLOR_INDICATOR} from '../config.js';
 
 import vertexShader from './agents_vertex_shader.js';
 import fragmentShader from './agents_fragment_shader.js';
@@ -255,11 +255,28 @@ export class Agents
 				this.images.instanceMatrix.array[i*16+13] = agent.position.y;
 				this.images.instanceMatrix.array[i*16+14] = agent.position.z;
 				
-				if( !SAFE_MODE )
+				if( SAFE_MODE )
 				{
-					// set agent image infection level
-					//this.images.instanceColor.array[i*3] = agent.infectionLevel/100;
-					//this.images.instanceColor.array[i*3+1] = i;
+					if( INFECTION_COLOR_INDICATOR )
+					{
+						// set agent image infection level -- in safe mode the level affects the instance color
+						if( agent.infectionLevel > 0 )
+						{
+							this.images.instanceColor.array[i*3] = agent.infectionLevel/100;
+							this.images.instanceColor.array[i*3+1] = 1-Math.pow(agent.infectionLevel,10);
+							this.images.instanceColor.array[i*3+2] = 1-agent.infectionLevel/100;
+						}
+						else
+						{
+							this.images.instanceColor.array[i*3] = 1;
+							this.images.instanceColor.array[i*3+1] = 1;
+							this.images.instanceColor.array[i*3+2] = 1;
+						}
+					}
+				}
+				else
+				{
+					// set agent image infection level -- the level is processed in the shader
 					this.images.infectionLevel.array[i] = agent.infectionLevel/100;
 					this.images.mask.array[i] = agent.mask;
 				}
@@ -328,7 +345,14 @@ export class Agents
 
 			this.images.instanceMatrix.needsUpdate = true;
 			//this.images.instanceColor.needsUpdate = true;
-			if( !SAFE_MODE )
+			if( SAFE_MODE )
+			{
+				if( INFECTION_COLOR_INDICATOR )
+				{
+					this.images.instanceColor.needsUpdate = true;
+				}
+			}
+			else
 			{
 				this.images.infectionLevel.needsUpdate = true;
 				this.images.mask.needsUpdate = true;
@@ -586,7 +610,6 @@ var topologyData = [2, 2, 2, 0, 0, 2, 9, 9, 9, 0, 2, 4, 0, 3, 2, 2, 0, 2, 8, 8, 
 			material  = SAFE_MODE ? this.materialSafeMode() : this.material(),
 			mesh = new THREE.InstancedMesh( geometry, material, instances );
 
-		//mesh.instanceColor = new THREE.InstancedBufferAttribute( new Float32Array(3*instances), 3, false, 1 );
 		mesh.infectionLevel = geometry.getAttribute( 'infectionLevel' );
 		mesh.motionType = geometry.getAttribute( 'motionType' );
 		mesh.mask = geometry.getAttribute( 'mask' );
@@ -595,7 +618,9 @@ var topologyData = [2, 2, 2, 0, 0, 2, 9, 9, 9, 0, 2, 4, 0, 3, 2, 2, 0, 2, 8, 8, 
 //console.log(geometry.getAttribute('agentId').array);
 
 		// create agents matrices
-		var matrix = new THREE.Matrix4();
+		var matrix = new THREE.Matrix4(),
+			white = new THREE.Color( 'black' );
+			
 		for( var i=0; i<instances; i++ )
 		{
 			var agent = this.agents[i];
@@ -616,6 +641,8 @@ var topologyData = [2, 2, 2, 0, 0, 2, 9, 9, 9, 0, 2, 4, 0, 3, 2, 2, 0, 2, 8, 8, 
 			}
 			
 			mesh.setMatrixAt( i, matrix );
+			if( SAFE_MODE )
+				mesh.setColorAt( i, white );
 		}
 		
 		mesh.receiveShadow = true;
