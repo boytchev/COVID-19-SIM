@@ -7,8 +7,8 @@
 //
 
 import * as THREE from '../js/three.module.js';
-import {scene, camera, controls, buildings, agents, textures} from '../main.js';
-import {timeMs, Pos} from '../core.js';
+import {scene, camera, controls, buildings, textures} from '../main.js';
+import {/*timeMs,*/ Pos} from '../core.js';
 import {Adult, Child} from './agent.js';
 import {Address, BlockAddress} from './address.js';
 import {dayTimeMs, currentTimeMs} from '../nature/nature.js';
@@ -59,7 +59,7 @@ export class Agents
 		for( var i=0; i<buildings.houses.length; i++ )
 		{
 
-			var agentHome = new Address( buildings.houses[i] ),
+			let agentHome = new Address( buildings.houses[i] ),
 				agentCount = AGENT_PEOPLE_PER_HOUSE.randInt();
 			
 			// create people in this house
@@ -67,7 +67,7 @@ export class Agents
 			{
 				if( this.agents.length>=AGENT_MAX_COUNT ) break loopHouses;
 
-				var age = AGENT_AGE_YEARS.randInt()
+				let age = AGENT_AGE_YEARS.randInt()
 				if( age>17 )
 					this.agents.push( new Adult(agentHome) );
 				else
@@ -81,7 +81,7 @@ export class Agents
 		for( var floor=buildings.apartments[i].floors-1; floor>=0; floor-- )
 		for( var room=0; room<buildings.apartments[i].rooms.length; room++ )
 		{
-			var agentHome = new Address( buildings.apartments[i], floor, room ),
+			let agentHome = new Address( buildings.apartments[i], floor, room ),
 				agentCount = AGENT_PEOPLE_PER_HOUSE.randInt();
 			
 			// create people in this apartment
@@ -89,67 +89,21 @@ export class Agents
 			{
 				if( this.agents.length>=AGENT_MAX_COUNT ) break loopApartments;
 
-				var age = AGENT_AGE_YEARS.randInt()
+				let age = AGENT_AGE_YEARS.randInt()
 				if( age>17 )
 					this.agents.push( new Adult(agentHome) );
 				else
 					this.agents.push( new Child(agentHome) );
 			}
 		}
-/*
-		// add agents to all houses
-		for( var i=0; i<buildings.houses.length; i++ )
-		{
-			var agentHome = new Address( buildings.houses[i] );
-			
-			// create adults
-			var n = AGENT_ADULTS_PER_HOUSE.randInt();
-			if( AGENT_AGE_YEARS.max<18 ) n = 0;
-			for( var j=0; j<n; j++ )
-				if( this.agents.length<AGENT_MAX_COUNT )
-					this.agents.push( new Adult(agentHome) );
-				
-			// create children
-			var n = AGENT_CHILDREN_PER_HOUSE.randInt();
-			if( AGENT_AGE_YEARS.min>17 ) n = 0;
-			for( var j=0; j<n; j++ )
-				if( this.agents.length<AGENT_MAX_COUNT )
-					this.agents.push( new Child(agentHome) );
 
-			if( this.agents.length>=AGENT_MAX_COUNT ) break;
-		}
-	
-		// add agents to all apartments
-		for( var i=0; i<buildings.apartments.length; i++ )
-		for( var floor=buildings.apartments[i].floors-1; floor>=0; floor-- )
-		for( var room=0; room<buildings.apartments[i].rooms.length; room++ )
-		{
-			var agentHome = new Address( buildings.apartments[i], floor, room );
-			
-			// create adults
-			var n = AGENT_ADULTS_PER_APARTMENT.randInt();
-			if( AGENT_AGE_YEARS.max<18 ) n = 0;
-			for( var j=0; j<n; j++ )
-				if( this.agents.length<AGENT_MAX_COUNT )
-					this.agents.push( new Adult(agentHome) );
-			
-			// create children
-			var n = AGENT_CHILDREN_PER_APARTMENT.randInt();
-			if( AGENT_AGE_YEARS.min>17 ) n = 0;
-			for( var j=0; j<n; j++ )
-				if( this.agents.length<AGENT_MAX_COUNT )
-					this.agents.push( new Child(agentHome) );
-
-			if( this.agents.length>=AGENT_MAX_COUNT ) break;
-		}
-*/					
 		// if no agents are created, but there is request to create, create 100 in a random block
 		if( this.agents.length==0 && AGENT_MAX_COUNT )
 		{
 			for( var i=0; i<AGENT_MAX_COUNT; i++ )
 			{
-				var agentHome = new BlockAddress( );
-				var age = AGENT_AGE_YEARS.randInt()
+				let agentHome = new BlockAddress( );
+				let age = AGENT_AGE_YEARS.randInt()
 				if( age>17 )
 					this.agents.push( new Adult(agentHome) );
 				else
@@ -285,8 +239,8 @@ export class Agents
 				
 				if( i==DEBUG_FOLLOW_AGENT )
 				{
-					var pos = agent.position.vector(),
-						dVect = pos.sub( controls.target );
+					var pos = agent.position.vector();
+						/*dVect = pos.sub( controls.target );*/
 					var t = currentTimeMs/DEBUG_TIME_SPEED/5000,
 						q = 0.6+0.5*Math.sin(t/1.4),
 						r = 25+17*Math.sin(t/2);
@@ -548,8 +502,8 @@ var topologyData = [2, 2, 2, 0, 0, 2, 9, 9, 9, 0, 2, 4, 0, 3, 2, 2, 0, 2, 8, 8, 
 
 //console.log('size=',vertexData.length + normalData.length/3*2 + normalData.length + topologyData.length,'values');
 
-		var geometry = new THREE.CylinderGeometry( 0.2, 0.5, 1, 3 );
-			geometry = new THREE.BufferGeometry();
+		//var geometry = new THREE.CylinderGeometry( 0.2, 0.5, 1, 3 );
+		var	geometry = new THREE.BufferGeometry();
 			geometry.setAttribute( 'position', new THREE.BufferAttribute(new Float32Array(vertexData),3) );
 			geometry.setAttribute( 'normal', new THREE.BufferAttribute(new Float32Array(normalData),3) );
 			geometry.setAttribute( 'uv', new THREE.BufferAttribute(new Float32Array(textureData),2) );
