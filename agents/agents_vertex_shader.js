@@ -373,36 +373,36 @@ void main() {
 		}
 
 
-///		if( CLOSEUP )
-///		{
-///			// toes
-///			if( TOES == aVertexTopology )
-///			{
-///				float a = 0.3*pow(0.5+0.5*leftRight*cosTime2(1.0,0.95),5.0);
-///
-///				rot = rotX(a);
-///				applyMatrix ( rot, JOINT_TOE );
-///			}
-///
-///			// feet
-///			if( FEET == aVertexTopology || TOES == aVertexTopology )
-///			{
-///				float a = -0.2*pow(0.5+0.5*leftRight*sine,3.0);
-///
-///				rot = rotX(a);
-///				applyMatrix ( rot, JOINT_ANKLE );
-///			}
-///		
-///			// knees
-///			if( TOES >= aVertexTopology && aVertexTopology >= KNEES )
-///			{
-///				float k = -leftRight*cosine,
-///					  a = 0.5*k*(1.0-k);
-///
-///				rot = rotX(a);
-///				applyMatrix ( rot, JOINT_KNEE );
-///			}
-///		} // CLOSEUP
+		if( CLOSEUP )
+		{
+			// toes
+			if( TOES == aVertexTopology )
+			{
+				float a = 0.3*pow(0.5+0.5*leftRight*cosTime2(1.0,0.95),5.0);
+
+				rot = rotX(a);
+				applyMatrix ( rot, JOINT_TOE );
+			}
+
+			// feet
+			if( FEET == aVertexTopology || TOES == aVertexTopology )
+			{
+				float a = -0.2*pow(0.5+0.5*leftRight*sine,3.0);
+
+				rot = rotX(a);
+				applyMatrix ( rot, JOINT_ANKLE );
+			}
+		
+			// knees
+			if( TOES >= aVertexTopology && aVertexTopology >= KNEES )
+			{
+				float k = -leftRight*cosine,
+					  a = 0.5*k*(1.0-k);
+
+				rot = rotX(a);
+				applyMatrix ( rot, JOINT_KNEE );
+			}
+		} // CLOSEUP
 ///
 ///		// legs
 ///		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
@@ -447,7 +447,7 @@ void main() {
 ///				float a = 0.04*cosTime2(2.0,-0.25);
 ///				applyMatrix( rotX(a), JOINT_WAIST );
 ///			}
-///		} // CLOSEUP
+		} // CLOSEUP
 		
 	}
 	else if( motionType == MOTION_TYPE_SLEEP ) //--------------------------------- SLEEP
