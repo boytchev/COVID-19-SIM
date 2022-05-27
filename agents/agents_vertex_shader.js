@@ -372,6 +372,7 @@ void main() {
 			}
 		}
 
+/* secten isolated for debug purposes May 2022
 
 		if( CLOSEUP )
 		{
@@ -403,7 +404,7 @@ void main() {
 				applyMatrix ( rot, JOINT_KNEE );
 			}
 		} // CLOSEUP
-
+*/
 
 		// legs
 		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
