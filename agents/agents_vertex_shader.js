@@ -372,7 +372,7 @@ void main() {
 			}
 		}
 
-/***
+
 		if( CLOSEUP )
 		{
 			// toes
@@ -403,51 +403,51 @@ void main() {
 				applyMatrix ( rot, JOINT_KNEE );
 			}
 		} // CLOSEUP
-***/
-///
-///		// legs
-///		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
-///		{
-///			
-///			float a = (CLOSEUP?0.1:0.0)+0.267*leftRight*sine;
-///			
-///			rot = rotX(a);
-///
-///			// closing legs for women
-///			if( CLOSEUP && !man )
-///			{
-///				float a = 0.09*leftRight;
-///				rot = rot * rotZ(a);
-///			} // legs			
-///
-///			applyMatrix( rot, JOINT_HIP );
-///		}
-///
-///		if( CLOSEUP )
-///		{
-///			// adjust sliding feet
-///			transformed.z += 0.046*(0.5+0.7*cosTime2(2.0,-0.25));
-///			transformed.z += 0.020*pow(cosTime2(1.0,+1.23),6.0);
-///			transformed.y -= 0.002*pow(0.5+0.5*cosTime2(2.0,0.025),2.0);
-///			
-///			float t = mod(rawTime, PI)/PI,
-///			   from = 0.4,
-///			   to = 0.9;
-///			if( from<=t && t<=to)
-///			{
-///				float span = (to-from)/2.0,
-///					  halfSpan = (to+from)/2.0,
-///					cospan = 0.5+0.5*cos(PI*(t-halfSpan)/span);
-///				transformed.z += 0.01*cospan;
-///				transformed.y -= 0.005*cospan;
-///			}
-///			
-///			// upper body
-///			if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
-///			{
-///				float a = 0.04*cosTime2(2.0,-0.25);
-///				applyMatrix( rotX(a), JOINT_WAIST );
-///			}
+
+
+		// legs
+		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
+		{
+			
+			float a = (CLOSEUP?0.1:0.0)+0.267*leftRight*sine;
+			
+			rot = rotX(a);
+
+			// closing legs for women
+			if( CLOSEUP && !man )
+			{
+				float a = 0.09*leftRight;
+				rot = rot * rotZ(a);
+			} // legs			
+
+			applyMatrix( rot, JOINT_HIP );
+		}
+
+		if( CLOSEUP )
+		{
+			// adjust sliding feet
+			transformed.z += 0.046*(0.5+0.7*cosTime2(2.0,-0.25));
+			transformed.z += 0.020*pow(cosTime2(1.0,+1.23),6.0);
+			transformed.y -= 0.002*pow(0.5+0.5*cosTime2(2.0,0.025),2.0);
+			
+			float t = mod(rawTime, PI)/PI,
+			   from = 0.4,
+			   to = 0.9;
+			if( from<=t && t<=to)
+			{
+				float span = (to-from)/2.0,
+					  halfSpan = (to+from)/2.0,
+					cospan = 0.5+0.5*cos(PI*(t-halfSpan)/span);
+				transformed.z += 0.01*cospan;
+				transformed.y -= 0.005*cospan;
+			}
+			
+			// upper body
+			if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
+			{
+				float a = 0.04*cosTime2(2.0,-0.25);
+				applyMatrix( rotX(a), JOINT_WAIST );
+			}
 		} // CLOSEUP
 		
 	}
