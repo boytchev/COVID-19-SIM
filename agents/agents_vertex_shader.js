@@ -327,6 +327,7 @@ void main() {
 	
 	if( motionType == MOTION_TYPE_WALK ) //--------------------------------- WALK
 	{
+/*		
 		// head
 		if( CLOSEUP && aVertexTopology == HEAD )
 		{
@@ -447,7 +448,7 @@ void main() {
 				applyMatrix( rotX(a), JOINT_WAIST );
 			}
 		} // CLOSEUP
-		
+*/		
 	}
 	else if( motionType == MOTION_TYPE_SLEEP ) //--------------------------------- SLEEP
 	{
