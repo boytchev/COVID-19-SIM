@@ -421,7 +421,6 @@ void main() {
 			applyMatrix( rot, JOINT_HIP );
 		}
 
-/* section isolated for debug purposes May 2022
 		if( CLOSEUP )
 		{
 			// adjust sliding feet
@@ -429,6 +428,7 @@ void main() {
 			transformed.z += 0.020*pow(cosTime2(1.0,+1.23),6.0);
 			transformed.y -= 0.002*pow(0.5+0.5*cosTime2(2.0,0.025),2.0);
 			
+/* section isolated for debug purposes May 2022
 			float t = mod(rawTime, PI)/PI,
 			   from = 0.4,
 			   to = 0.9;
@@ -447,8 +447,8 @@ void main() {
 				float a = 0.04*cosTime2(2.0,-0.25);
 				applyMatrix( rotX(a), JOINT_WAIST );
 			}
-		} // CLOSEUP
 */		
+		} // CLOSEUP
 	}
 	else if( motionType == MOTION_TYPE_SLEEP ) //--------------------------------- SLEEP
 	{
