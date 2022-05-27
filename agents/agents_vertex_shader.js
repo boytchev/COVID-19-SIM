@@ -372,8 +372,6 @@ void main() {
 			}
 		}
 
-/* section isolated for debug purposes May 2022
-
 		if( CLOSEUP )
 		{
 			// toes
@@ -404,9 +402,7 @@ void main() {
 				applyMatrix ( rot, JOINT_KNEE );
 			}
 		} // CLOSEUP
-*/
 
-/* section isolated for debug purposes May 2022
 		// legs
 		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
 		{
@@ -424,7 +420,7 @@ void main() {
 
 			applyMatrix( rot, JOINT_HIP );
 		}
-*/
+
 /* section isolated for debug purposes May 2022
 		if( CLOSEUP )
 		{
