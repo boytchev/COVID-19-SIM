@@ -329,48 +329,48 @@ void main() {
 	{
 		
 		// head
-///		if( CLOSEUP && aVertexTopology == HEAD )
-///		{
-///			float a = 0.4*sinTime(0.3)*sinTime(0.5);
-///			float b = 0.1*cosine;
-///				  
-///			rot = rotY(a)*rotX(b);
-///			applyMatrix( rot, JOINT_NECK );
-///		}
+		if( CLOSEUP && aVertexTopology == HEAD )
+		{
+			float a = 0.4*sinTime(0.3)*sinTime(0.5);
+			float b = 0.1*cosine;
+				  
+			rot = rotY(a)*rotX(b);
+			applyMatrix( rot, JOINT_NECK );
+		}
 
 		// swing hands 
-///		if( aVertexTopology == HANDS )
-///		{
-///			float a = -0.25*leftRight*sine+0.1;
-///			
-///			rot = rotX(a);
-///			applyMatrix( rot, JOINT_HANDS );
-///		}
+		if( aVertexTopology == HANDS )
+		{
+			float a = -0.25*leftRight*sine+0.1;
+			
+			rot = rotX(a);
+			applyMatrix( rot, JOINT_HANDS );
+		}
 
 		// skirt - extrude it 
-///		if( hasSkirt && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM) )
-///		{
-///			float skirtLength = 0.15+0.20*fract(3.81/randomId);
-///			float skirtWidth = 1.2+1.8*pow(fract(2.37/randomId),1.0)*(0.6-skirtLength);
-///
-///			if( aVertexTopology == SKIRT_TOP )
-///			{
-///				transformed.x += 0.030*sign(transformed.x);
-///				transformed.y -= 0.04;
-///				transformed.z += 0.02*sign(transformed.z)-0.005;
-///			}
-///
-///			if( aVertexTopology == SKIRT_BOTTOM )
-///			{
-///				transformed.x *= skirtWidth;
-///				transformed.y -= skirtLength;
-///				transformed.z += 0.03*sign(transformed.z)*skirtWidth;
-///				
-///				// walking forward - skirt motion
-///				transformed.z += 0.1*leftRight*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.3,2.2);
-///				transformed.x += 0.1*leftRight*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.1,0.3);
-///			}
-///		}
+		if( hasSkirt && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM) )
+		{
+			float skirtLength = 0.15+0.20*fract(3.81/randomId);
+			float skirtWidth = 1.2+1.8*pow(fract(2.37/randomId),1.0)*(0.6-skirtLength);
+
+			if( aVertexTopology == SKIRT_TOP )
+			{
+				transformed.x += 0.030*sign(transformed.x);
+				transformed.y -= 0.04;
+				transformed.z += 0.02*sign(transformed.z)-0.005;
+			}
+
+			if( aVertexTopology == SKIRT_BOTTOM )
+			{
+				transformed.x *= skirtWidth;
+				transformed.y -= skirtLength;
+				transformed.z += 0.03*sign(transformed.z)*skirtWidth;
+				
+				// walking forward - skirt motion
+				transformed.z += 0.1*leftRight*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.3,2.2);
+				transformed.x += 0.1*leftRight*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.1,0.3);
+			}
+		}
 
 
 ///		if( CLOSEUP )
