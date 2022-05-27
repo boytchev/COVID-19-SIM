@@ -372,7 +372,7 @@ void main() {
 			}
 		}
 
-
+/***
 		if( CLOSEUP )
 		{
 			// toes
@@ -403,6 +403,7 @@ void main() {
 				applyMatrix ( rot, JOINT_KNEE );
 			}
 		} // CLOSEUP
+***/
 ///
 ///		// legs
 ///		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
