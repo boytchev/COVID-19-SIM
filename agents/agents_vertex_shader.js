@@ -372,7 +372,7 @@ void main() {
 			}
 		}
 
-/* secten isolated for debug purposes May 2022
+/* section isolated for debug purposes May 2022
 
 		if( CLOSEUP )
 		{
@@ -406,7 +406,7 @@ void main() {
 		} // CLOSEUP
 */
 
-/* secten isolated for debug purposes May 2022
+/* section isolated for debug purposes May 2022
 		// legs
 		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
 		{
@@ -425,6 +425,7 @@ void main() {
 			applyMatrix( rot, JOINT_HIP );
 		}
 */
+/* section isolated for debug purposes May 2022
 		if( CLOSEUP )
 		{
 			// adjust sliding feet
@@ -451,7 +452,7 @@ void main() {
 				applyMatrix( rotX(a), JOINT_WAIST );
 			}
 		} // CLOSEUP
-		
+*/		
 	}
 	else if( motionType == MOTION_TYPE_SLEEP ) //--------------------------------- SLEEP
 	{
