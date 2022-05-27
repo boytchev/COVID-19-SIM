@@ -327,128 +327,128 @@ void main() {
 	
 	if( motionType == MOTION_TYPE_WALK ) //--------------------------------- WALK
 	{
-/*		
+		
 		// head
-		if( CLOSEUP && aVertexTopology == HEAD )
-		{
-			float a = 0.4*sinTime(0.3)*sinTime(0.5);
-			float b = 0.1*cosine;
-				  
-			rot = rotY(a)*rotX(b);
-			applyMatrix( rot, JOINT_NECK );
-		}
+///		if( CLOSEUP && aVertexTopology == HEAD )
+///		{
+///			float a = 0.4*sinTime(0.3)*sinTime(0.5);
+///			float b = 0.1*cosine;
+///				  
+///			rot = rotY(a)*rotX(b);
+///			applyMatrix( rot, JOINT_NECK );
+///		}
 
 		// swing hands 
-		if( aVertexTopology == HANDS )
-		{
-			float a = -0.25*leftRight*sine+0.1;
-			
-			rot = rotX(a);
-			applyMatrix( rot, JOINT_HANDS );
-		}
+///		if( aVertexTopology == HANDS )
+///		{
+///			float a = -0.25*leftRight*sine+0.1;
+///			
+///			rot = rotX(a);
+///			applyMatrix( rot, JOINT_HANDS );
+///		}
 
 		// skirt - extrude it 
-		if( hasSkirt && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM) )
-		{
-			float skirtLength = 0.15+0.20*fract(3.81/randomId);
-			float skirtWidth = 1.2+1.8*pow(fract(2.37/randomId),1.0)*(0.6-skirtLength);
+///		if( hasSkirt && (aVertexTopology == SKIRT_TOP || aVertexTopology == SKIRT_BOTTOM) )
+///		{
+///			float skirtLength = 0.15+0.20*fract(3.81/randomId);
+///			float skirtWidth = 1.2+1.8*pow(fract(2.37/randomId),1.0)*(0.6-skirtLength);
+///
+///			if( aVertexTopology == SKIRT_TOP )
+///			{
+///				transformed.x += 0.030*sign(transformed.x);
+///				transformed.y -= 0.04;
+///				transformed.z += 0.02*sign(transformed.z)-0.005;
+///			}
+///
+///			if( aVertexTopology == SKIRT_BOTTOM )
+///			{
+///				transformed.x *= skirtWidth;
+///				transformed.y -= skirtLength;
+///				transformed.z += 0.03*sign(transformed.z)*skirtWidth;
+///				
+///				// walking forward - skirt motion
+///				transformed.z += 0.1*leftRight*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.3,2.2);
+///				transformed.x += 0.1*leftRight*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.1,0.3);
+///			}
+///		}
 
-			if( aVertexTopology == SKIRT_TOP )
-			{
-				transformed.x += 0.030*sign(transformed.x);
-				transformed.y -= 0.04;
-				transformed.z += 0.02*sign(transformed.z)-0.005;
-			}
 
-			if( aVertexTopology == SKIRT_BOTTOM )
-			{
-				transformed.x *= skirtWidth;
-				transformed.y -= skirtLength;
-				transformed.z += 0.03*sign(transformed.z)*skirtWidth;
-				
-				// walking forward - skirt motion
-				transformed.z += 0.1*leftRight*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.3,2.2);
-				transformed.x += 0.1*leftRight*sine/(0.2+skirtWidth)*mapLinear(skirtLength,0.15,0.40,0.1,0.3);
-			}
-		}
-
-
-		if( CLOSEUP )
-		{
-			// toes
-			if( TOES == aVertexTopology )
-			{
-				float a = 0.3*pow(0.5+0.5*leftRight*cosTime2(1.0,0.95),5.0);
-
-				rot = rotX(a);
-				applyMatrix ( rot, JOINT_TOE );
-			}
-
-			// feet
-			if( FEET == aVertexTopology || TOES == aVertexTopology )
-			{
-				float a = -0.2*pow(0.5+0.5*leftRight*sine,3.0);
-
-				rot = rotX(a);
-				applyMatrix ( rot, JOINT_ANKLE );
-			}
+///		if( CLOSEUP )
+///		{
+///			// toes
+///			if( TOES == aVertexTopology )
+///			{
+///				float a = 0.3*pow(0.5+0.5*leftRight*cosTime2(1.0,0.95),5.0);
+///
+///				rot = rotX(a);
+///				applyMatrix ( rot, JOINT_TOE );
+///			}
+///
+///			// feet
+///			if( FEET == aVertexTopology || TOES == aVertexTopology )
+///			{
+///				float a = -0.2*pow(0.5+0.5*leftRight*sine,3.0);
+///
+///				rot = rotX(a);
+///				applyMatrix ( rot, JOINT_ANKLE );
+///			}
+///		
+///			// knees
+///			if( TOES >= aVertexTopology && aVertexTopology >= KNEES )
+///			{
+///				float k = -leftRight*cosine,
+///					  a = 0.5*k*(1.0-k);
+///
+///				rot = rotX(a);
+///				applyMatrix ( rot, JOINT_KNEE );
+///			}
+///		} // CLOSEUP
+///
+///		// legs
+///		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
+///		{
+///			
+///			float a = (CLOSEUP?0.1:0.0)+0.267*leftRight*sine;
+///			
+///			rot = rotX(a);
+///
+///			// closing legs for women
+///			if( CLOSEUP && !man )
+///			{
+///				float a = 0.09*leftRight;
+///				rot = rot * rotZ(a);
+///			} // legs			
+///
+///			applyMatrix( rot, JOINT_HIP );
+///		}
+///
+///		if( CLOSEUP )
+///		{
+///			// adjust sliding feet
+///			transformed.z += 0.046*(0.5+0.7*cosTime2(2.0,-0.25));
+///			transformed.z += 0.020*pow(cosTime2(1.0,+1.23),6.0);
+///			transformed.y -= 0.002*pow(0.5+0.5*cosTime2(2.0,0.025),2.0);
+///			
+///			float t = mod(rawTime, PI)/PI,
+///			   from = 0.4,
+///			   to = 0.9;
+///			if( from<=t && t<=to)
+///			{
+///				float span = (to-from)/2.0,
+///					  halfSpan = (to+from)/2.0,
+///					cospan = 0.5+0.5*cos(PI*(t-halfSpan)/span);
+///				transformed.z += 0.01*cospan;
+///				transformed.y -= 0.005*cospan;
+///			}
+///			
+///			// upper body
+///			if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
+///			{
+///				float a = 0.04*cosTime2(2.0,-0.25);
+///				applyMatrix( rotX(a), JOINT_WAIST );
+///			}
+///		} // CLOSEUP
 		
-			// knees
-			if( TOES >= aVertexTopology && aVertexTopology >= KNEES )
-			{
-				float k = -leftRight*cosine,
-					  a = 0.5*k*(1.0-k);
-
-				rot = rotX(a);
-				applyMatrix ( rot, JOINT_KNEE );
-			}
-		} // CLOSEUP
-
-		// legs
-		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
-		{
-			
-			float a = (CLOSEUP?0.1:0.0)+0.267*leftRight*sine;
-			
-			rot = rotX(a);
-
-			// closing legs for women
-			if( CLOSEUP && !man )
-			{
-				float a = 0.09*leftRight;
-				rot = rot * rotZ(a);
-			} // legs			
-
-			applyMatrix( rot, JOINT_HIP );
-		}
-
-		if( CLOSEUP )
-		{
-			// adjust sliding feet
-			transformed.z += 0.046*(0.5+0.7*cosTime2(2.0,-0.25));
-			transformed.z += 0.020*pow(cosTime2(1.0,+1.23),6.0);
-			transformed.y -= 0.002*pow(0.5+0.5*cosTime2(2.0,0.025),2.0);
-			
-			float t = mod(rawTime, PI)/PI,
-			   from = 0.4,
-			   to = 0.9;
-			if( from<=t && t<=to)
-			{
-				float span = (to-from)/2.0,
-					  halfSpan = (to+from)/2.0,
-					cospan = 0.5+0.5*cos(PI*(t-halfSpan)/span);
-				transformed.z += 0.01*cospan;
-				transformed.y -= 0.005*cospan;
-			}
-			
-			// upper body
-			if( aVertexTopology >= BODY && aVertexTopology <= OVERHEAD || aVertexTopology >= SKIRT_TOP )
-			{
-				float a = 0.04*cosTime2(2.0,-0.25);
-				applyMatrix( rotX(a), JOINT_WAIST );
-			}
-		} // CLOSEUP
-*/		
 	}
 	else if( motionType == MOTION_TYPE_SLEEP ) //--------------------------------- SLEEP
 	{
