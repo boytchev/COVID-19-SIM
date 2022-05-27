@@ -406,6 +406,7 @@ void main() {
 		} // CLOSEUP
 */
 
+/* secten isolated for debug purposes May 2022
 		// legs
 		if( TOES >= aVertexTopology && aVertexTopology >= LEGS )
 		{
@@ -423,7 +424,7 @@ void main() {
 
 			applyMatrix( rot, JOINT_HIP );
 		}
-
+*/
 		if( CLOSEUP )
 		{
 			// adjust sliding feet
