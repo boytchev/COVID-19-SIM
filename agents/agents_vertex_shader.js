@@ -425,14 +425,7 @@ void main() {
 		{
 			// adjust sliding feet
 			transformed.z += 0.046*(0.5+0.7*cosTime2(2.0,-0.25));
-			
-			// float c = cosTime2(1.0,1.23);
-			// c = c*c*c;
-			// c = c*c;
-			// transformed.z += 0.020*c;
-			transformed.z += 0.020*pow(abs(cosTime2(1.0,1.23)),6.0); /// this line cause shader crash in Oculus Quest
-			//transformed.z += 0.020*pow(cosTime2(1.0,1.23),6.0); /// this line cause shader crash in Oculus Quest
-			
+			transformed.z += 0.020*pow(abs(cosTime2(1.0,1.23)),6.0); /// this line cause shader crash in Oculus Quest -- using abs() fixes it
 			transformed.y -= 0.002*pow(0.5+0.5*cosTime2(2.0,0.025),2.0);
 			
 			float t = mod(rawTime, PI)/PI,
